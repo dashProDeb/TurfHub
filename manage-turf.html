@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TurfHub — Manage Turfs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              lime: '#7ED321',
+              'lime-dark': '#6ab81c',
+              forest: '#0F2B1D',
+              'forest-mid': '#1a4029',
+              'off-white': '#F7F8F5',
+              charcoal: '#1E1E1E',
+              'gray-mid': '#6B7280',
+              amber: '#F5A623',
+              success: '#4CAF50',
+              danger: '#E53935'
+            },
+            fontFamily: {
+              sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif']
+            }
+          }
+        }
+      };
+    </script>
+    <style>body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; background-color: #F7F8F5; color: #1E1E1E; }</style>
+  </head>
+  <body>
+    <div class="flex min-h-screen bg-off-white">
+      <!-- Sidebar -->
+      <div class="w-56 bg-forest min-h-screen flex flex-col flex-shrink-0">
+        <div class="p-5 border-b border-white/10">
+          <a href="index.html" class="flex items-center gap-2">
+            <div class="w-7 h-7 bg-lime rounded-lg flex items-center justify-center"><span class="text-forest font-black text-xs leading-none">TH</span></div>
+            <span class="font-black text-white text-lg">TurfHub</span>
+          </a>
+        </div>
+        <div class="p-4 border-b border-white/10">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 bg-lime rounded-full flex items-center justify-center flex-shrink-0"><span class="text-forest font-black text-sm">R</span></div>
+            <div class="overflow-hidden"><div class="text-white font-semibold text-sm truncate">Rafiqul Islam</div><div class="text-white/50 text-xs">Turf Owner</div></div>
+          </div>
+        </div>
+        <nav class="flex-1 p-3 space-y-0.5 overflow-y-auto">
+          <a href="owner-dashboard.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>📊</span><span>Dashboard</span></a>
+          <a href="manage-turf.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors bg-lime text-forest"><span>🏟️</span><span>Manage Turfs</span></a>
+          <a href="slot-calendar.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>📅</span><span>Slot Calendar</span></a>
+          <a href="create-tournament.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>🏆</span><span>Tournaments</span></a>
+          <a href="score-entry.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>⚽</span><span>Score Entry</span></a>
+          <a href="chat.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>💬</span><span>Messages</span></a>
+          <a href="owner-reports.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>📄</span><span>Reports</span></a>
+        </nav>
+        <div class="p-3 border-t border-white/10">
+          <a href="index.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/40 hover:text-white/70 transition-colors"><span>🚪</span><span>Sign Out</span></a>
+        </div>
+      </div>
+
+      <div class="flex-1 overflow-y-auto">
+        <div class="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between">
+          <div><h1 class="text-xl font-black text-charcoal">Manage Turfs</h1><p class="text-sm text-gray-mid">Add, edit, and manage your sports grounds</p></div>
+          <a href="#" class="bg-lime hover:bg-lime-dark text-forest font-bold px-4 py-2 rounded-lg text-sm transition-colors">+ Add New Turf</a>
+        </div>
+
+        <div class="p-8 space-y-8">
+          <div>
+            <h2 class="font-black text-charcoal text-lg mb-4">Your Turfs (3)</h2>
+            <div class="space-y-4">
+              <!-- Turf 1 -->
+              <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="flex items-start gap-5 p-5">
+                  <div class="w-28 h-20 rounded-xl overflow-hidden bg-gray-200 flex-shrink-0"><img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=400&h=250&fit=crop&auto=format" alt="The Green Arena" class="w-full h-full object-cover" /></div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 mb-1">
+                      <h3 class="font-black text-charcoal">The Green Arena</h3>
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800"><span class="w-1.5 h-1.5 rounded-full bg-success"></span>Active</span>
+                    </div>
+                    <div class="text-sm text-gray-mid">Football · 5-a-side · Outdoor · ৳800/hr</div>
+                    <div class="flex gap-4 mt-2 text-xs text-gray-mid"><span>📅 34 bookings this month</span><span>·</span><span>Floodlights · Parking · Changing Room</span></div>
+                  </div>
+                  <div class="flex gap-2 flex-shrink-0">
+                    <a href="#" class="border border-gray-200 hover:border-gray-300 text-charcoal font-semibold px-4 py-2 rounded-lg text-sm transition-colors">✏️ Edit</a>
+                    <a href="slot-calendar.html" class="bg-lime/10 hover:bg-lime/20 text-forest font-semibold px-4 py-2 rounded-lg text-sm transition-colors">📅 Calendar</a>
+                    <a href="#" class="border border-danger/30 hover:border-danger/60 text-danger font-semibold px-4 py-2 rounded-lg text-sm transition-colors">🗑️</a>
+                  </div>
+                </div>
+                <div class="border-t border-gray-50 px-5 py-3 flex gap-6 bg-off-white/50">
+                  <div><div class="text-xs text-gray-mid">This Month</div><div class="font-black text-charcoal text-sm">৳27,200</div></div>
+                  <div><div class="text-xs text-gray-mid">Utilization</div><div class="font-black text-charcoal text-sm">71%</div></div>
+                  <div><div class="text-xs text-gray-mid">Avg Rating</div><div class="font-black text-charcoal text-sm">4.7 ★</div></div>
+                </div>
+              </div>
+              <!-- Turf 2 -->
+              <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="flex items-start gap-5 p-5">
+                  <div class="w-28 h-20 rounded-xl overflow-hidden bg-gray-200 flex-shrink-0"><img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?w=400&h=250&fit=crop&auto=format" alt="Court Pro Indoor" class="w-full h-full object-cover" /></div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 mb-1">
+                      <h3 class="font-black text-charcoal">Court Pro Indoor</h3>
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800"><span class="w-1.5 h-1.5 rounded-full bg-success"></span>Active</span>
+                    </div>
+                    <div class="text-sm text-gray-mid">Basketball · Badminton · Indoor · ৳600/hr</div>
+                    <div class="flex gap-4 mt-2 text-xs text-gray-mid"><span>📅 28 bookings this month</span><span>·</span><span>AC · Changing Room · Equipment Rental</span></div>
+                  </div>
+                  <div class="flex gap-2 flex-shrink-0">
+                    <a href="#" class="border border-gray-200 hover:border-gray-300 text-charcoal font-semibold px-4 py-2 rounded-lg text-sm transition-colors">✏️ Edit</a>
+                    <a href="slot-calendar.html" class="bg-lime/10 hover:bg-lime/20 text-forest font-semibold px-4 py-2 rounded-lg text-sm transition-colors">📅 Calendar</a>
+                    <a href="#" class="border border-danger/30 hover:border-danger/60 text-danger font-semibold px-4 py-2 rounded-lg text-sm transition-colors">🗑️</a>
+                  </div>
+                </div>
+                <div class="border-t border-gray-50 px-5 py-3 flex gap-6 bg-off-white/50">
+                  <div><div class="text-xs text-gray-mid">This Month</div><div class="font-black text-charcoal text-sm">৳16,800</div></div>
+                  <div><div class="text-xs text-gray-mid">Utilization</div><div class="font-black text-charcoal text-sm">58%</div></div>
+                  <div><div class="text-xs text-gray-mid">Avg Rating</div><div class="font-black text-charcoal text-sm">4.7 ★</div></div>
+                </div>
+              </div>
+              <!-- Turf 3 -->
+              <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="flex items-start gap-5 p-5">
+                  <div class="w-28 h-20 rounded-xl overflow-hidden bg-gray-200 flex-shrink-0"><img src="https://images.unsplash.com/photo-1624880357913-a8539238245b?w=400&h=250&fit=crop&auto=format" alt="Champions Field" class="w-full h-full object-cover" /></div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 mb-1">
+                      <h3 class="font-black text-charcoal">Champions Field</h3>
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600"><span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span>Maintenance</span>
+                    </div>
+                    <div class="text-sm text-gray-mid">Cricket · Football · Outdoor · ৳1,200/hr</div>
+                    <div class="flex gap-4 mt-2 text-xs text-gray-mid"><span>📅 14 bookings this month</span><span>·</span><span>Pavilion · Practice Nets · Scoreboard</span></div>
+                  </div>
+                  <div class="flex gap-2 flex-shrink-0">
+                    <a href="#" class="border border-gray-200 hover:border-gray-300 text-charcoal font-semibold px-4 py-2 rounded-lg text-sm transition-colors">✏️ Edit</a>
+                    <a href="slot-calendar.html" class="bg-lime/10 hover:bg-lime/20 text-forest font-semibold px-4 py-2 rounded-lg text-sm transition-colors">📅 Calendar</a>
+                    <a href="#" class="border border-danger/30 hover:border-danger/60 text-danger font-semibold px-4 py-2 rounded-lg text-sm transition-colors">🗑️</a>
+                  </div>
+                </div>
+                <div class="border-t border-gray-50 px-5 py-3 flex gap-6 bg-off-white/50">
+                  <div><div class="text-xs text-gray-mid">This Month</div><div class="font-black text-charcoal text-sm">৳16,800</div></div>
+                  <div><div class="text-xs text-gray-mid">Utilization</div><div class="font-black text-charcoal text-sm">29%</div></div>
+                  <div><div class="text-xs text-gray-mid">Avg Rating</div><div class="font-black text-charcoal text-sm">4.7 ★</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

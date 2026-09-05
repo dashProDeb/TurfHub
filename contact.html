@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TurfHub — Contact Us</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+      :root {
+        --color-lime: #7ED321;
+        --color-lime-dark: #6ab81c;
+        --color-forest: #0F2B1D;
+        --color-forest-mid: #1a4029;
+        --color-off-white: #F7F8F5;
+        --color-charcoal: #1E1E1E;
+        --color-gray-mid: #6B7280;
+        --color-amber: #F5A623;
+        --color-success: #4CAF50;
+        --color-danger: #E53935;
+        --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+      }
+    </style>
+    <style>body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; background-color: #ffffff; color: #1E1E1E; }</style>
+  </head>
+  <body>
+    <div class="min-h-screen bg-white">
+      <nav class="px-6 py-4 flex items-center justify-between bg-white border-b border-gray-100">
+        <a href="index.html" class="flex items-center gap-2">
+          <div class="w-8 h-8 bg-lime rounded-lg flex items-center justify-center"><span class="text-forest font-black text-sm leading-none">TH</span></div>
+          <span class="font-black text-xl text-charcoal">TurfHub</span>
+        </a>
+        <div class="hidden md:flex items-center gap-6 text-sm">
+          <a href="index.html" class="transition-colors text-gray-mid hover:text-charcoal">Home</a>
+          <a href="turf-detail.html" class="transition-colors text-gray-mid hover:text-charcoal">Turfs</a>
+          <a href="fixtures.html" class="transition-colors text-gray-mid hover:text-charcoal">Fixtures</a>
+          <a href="contact.html" class="font-semibold text-charcoal">Contact</a>
+        </div>
+        <div class="flex items-center gap-3">
+          <a href="login.html" class="bg-lime hover:bg-lime-dark text-forest font-bold px-5 py-2 rounded-full text-sm transition-colors">Get Started</a>
+        </div>
+      </nav>
+
+      <!-- Hero -->
+      <section class="bg-forest py-16 text-center relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10" style="background-image: url(https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=1440&h=400&fit=crop&auto=format); background-size: cover;"></div>
+        <div class="relative">
+          <h1 class="text-4xl font-black text-white mb-3">Get in Touch</h1>
+          <p class="text-white/60 max-w-xl mx-auto">Questions about bookings, partnerships, or listing your turf? We're here to help.</p>
+        </div>
+      </section>
+
+      <div class="max-w-7xl mx-auto px-6 py-16">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <!-- Contact Form -->
+          <div>
+            <h2 class="text-2xl font-black text-charcoal mb-2">Send us a message</h2>
+            <p class="text-gray-mid text-sm mb-6">We typically respond within 2–4 hours on business days.</p>
+            <form class="space-y-4">
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-1.5">Full Name</label>
+                  <input placeholder="Arif Hossain" required class="w-full px-4 py-3 rounded-xl border border-gray-200 text-charcoal text-sm outline-none focus:border-lime transition-colors placeholder-gray-300" />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-1.5">Phone</label>
+                  <input placeholder="+91 98200 12345" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-charcoal text-sm outline-none focus:border-lime transition-colors placeholder-gray-300" />
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-1.5">Email</label>
+                <input type="email" placeholder="you@example.com" required class="w-full px-4 py-3 rounded-xl border border-gray-200 text-charcoal text-sm outline-none focus:border-lime transition-colors placeholder-gray-300" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-1.5">Subject</label>
+                <select required class="w-full px-4 py-3 rounded-xl border border-gray-200 text-charcoal text-sm outline-none focus:border-lime transition-colors bg-white">
+                  <option value="">Select a topic</option>
+                  <option>Booking Issue</option>
+                  <option>List My Turf</option>
+                  <option>Tournament Support</option>
+                  <option>Payment Query</option>
+                  <option>Partnership</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-1.5">Message</label>
+                <textarea placeholder="Describe your query in detail..." rows="5" required class="w-full px-4 py-3 rounded-xl border border-gray-200 text-charcoal text-sm outline-none focus:border-lime transition-colors placeholder-gray-300 resize-none"></textarea>
+              </div>
+              <button type="submit" class="w-full bg-lime hover:bg-lime-dark text-forest font-black py-3.5 rounded-xl text-sm transition-colors">Send Message →</button>
+            </form>
+          </div>
+
+          <!-- Info Panel -->
+          <div class="space-y-6">
+            <div>
+              <h2 class="text-2xl font-black text-charcoal mb-6">Contact Info</h2>
+              <div class="space-y-4">
+                <div class="flex items-start gap-4 p-4 rounded-xl border border-gray-100 hover:border-lime/30 transition-colors">
+                  <div class="w-10 h-10 bg-lime/10 rounded-xl flex items-center justify-center flex-shrink-0 text-xl">📞</div>
+                  <div>
+                    <div class="text-xs font-bold text-gray-mid uppercase tracking-wider mb-0.5">Support Hotline</div>
+                    <div class="font-bold text-charcoal text-sm">1800-TURF-HUB (Toll Free)</div>
+                    <div class="text-xs text-gray-mid">Mon–Sat · 8:00 AM – 10:00 PM</div>
+                  </div>
+                </div>
+                <div class="flex items-start gap-4 p-4 rounded-xl border border-gray-100 hover:border-lime/30 transition-colors">
+                  <div class="w-10 h-10 bg-lime/10 rounded-xl flex items-center justify-center flex-shrink-0 text-xl">📧</div>
+                  <div>
+                    <div class="text-xs font-bold text-gray-mid uppercase tracking-wider mb-0.5">General Enquiries</div>
+                    <div class="font-bold text-charcoal text-sm">hello@turfhub.in</div>
+                    <div class="text-xs text-gray-mid">Response within 4 hours</div>
+                  </div>
+                </div>
+                <div class="flex items-start gap-4 p-4 rounded-xl border border-gray-100 hover:border-lime/30 transition-colors">
+                  <div class="w-10 h-10 bg-lime/10 rounded-xl flex items-center justify-center flex-shrink-0 text-xl">🏢</div>
+                  <div>
+                    <div class="text-xs font-bold text-gray-mid uppercase tracking-wider mb-0.5">Head Office</div>
+                    <div class="font-bold text-charcoal text-sm">Dhaka, Bangladesh</div>
+                    <div class="text-xs text-gray-mid">Gulshan Avenue</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="font-black text-charcoal text-lg mb-4">Our Offices</h3>
+              <div class="space-y-4">
+                <div class="bg-off-white rounded-xl p-5">
+                  <div class="font-black text-charcoal mb-1">Dhaka</div>
+                  <div class="text-sm text-gray-mid leading-relaxed mb-2">14th Floor, Gulshan Tower, Gulshan Avenue, Dhaka 1212</div>
+                  <div class="text-sm text-gray-mid">+880 2 4000 1234</div>
+                  <div class="text-sm text-lime font-medium">dhaka@turfhub.com.bd</div>
+                </div>
+                <div class="bg-off-white rounded-xl p-5">
+                  <div class="font-black text-charcoal mb-1">Chittagong</div>
+                  <div class="text-sm text-gray-mid leading-relaxed mb-2">3rd Floor, Agrabad Commercial Area, Chittagong 4100</div>
+                  <div class="text-sm text-gray-mid">+880 31 4100 5678</div>
+                  <div class="text-sm text-lime font-medium">ctg@turfhub.com.bd</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-forest rounded-2xl p-6">
+              <h3 class="font-black text-white text-base mb-4">Frequently Asked</h3>
+              <div class="space-y-3">
+                <div class="border-b border-white/10 pb-3">
+                  <div class="text-white font-semibold text-sm mb-1">How do I cancel a booking?</div>
+                  <div class="text-white/50 text-xs leading-relaxed">You can cancel up to 4 hours before the slot for a full refund.</div>
+                </div>
+                <div class="border-b border-white/10 pb-3">
+                  <div class="text-white font-semibold text-sm mb-1">How long does owner approval take?</div>
+                  <div class="text-white/50 text-xs leading-relaxed">Turf owner accounts are approved within 24 hours of submission.</div>
+                </div>
+                <div class="border-b border-white/10 pb-3 last:border-0 last:pb-0">
+                  <div class="text-white font-semibold text-sm mb-1">Can I book for a tournament?</div>
+                  <div class="text-white/50 text-xs leading-relaxed">Yes! Create a team, then use the Book Turf feature to block multiple slots.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="bg-forest text-white">
+        <div class="max-w-7xl mx-auto px-6 py-12">
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+            <div class="col-span-2 md:col-span-1">
+              <div class="flex items-center gap-2 mb-4">
+                <div class="w-8 h-8 bg-lime rounded-lg flex items-center justify-center"><span class="text-forest font-black text-sm">TH</span></div>
+                <span class="font-black text-xl">TurfHub</span>
+              </div>
+              <p class="text-white/50 text-sm leading-relaxed">India's premier sports turf booking and tournament management platform.</p>
+              <div class="flex gap-3 mt-4">
+                <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">⚽</span>
+                <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🏀</span>
+                <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🏏</span>
+                <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🎾</span>
+                <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🏸</span>
+              </div>
+            </div>
+            <div>
+              <h4 class="font-bold mb-4 text-white/80 text-sm uppercase tracking-wider">Platform</h4>
+              <ul class="space-y-2.5">
+                <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Find Turfs</a></li>
+                <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Tournaments</a></li>
+                <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Fixtures</a></li>
+                <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Leaderboard</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-bold mb-4 text-white/80 text-sm uppercase tracking-wider">For Owners</h4>
+              <ul class="space-y-2.5">
+                <li><a href="login.html" class="text-white/50 text-sm hover:text-lime transition-colors">List Your Turf</a></li>
+                <li><a href="login.html" class="text-white/50 text-sm hover:text-lime transition-colors">Manage Bookings</a></li>
+                <li><a href="login.html" class="text-white/50 text-sm hover:text-lime transition-colors">Run Tournaments</a></li>
+                <li><a href="login.html" class="text-white/50 text-sm hover:text-lime transition-colors">Analytics</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-bold mb-4 text-white/80 text-sm uppercase tracking-wider">Support</h4>
+              <ul class="space-y-2.5">
+                <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Help Center</a></li>
+                <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Privacy Policy</a></li>
+                <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Terms of Service</a></li>
+                <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Contact Us</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-3">
+            <p class="text-white/30 text-sm">© 2025 TurfHub Technologies Pvt. Ltd. All rights reserved.</p>
+            <p class="text-white/30 text-sm">Made with ❤️ for sport</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TurfHub — Book a Turf Slot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+      @theme {
+        --color-lime: #7ED321; --color-lime-dark: #6ab81c; --color-forest: #0F2B1D; --color-forest-mid: #1a4029;
+        --color-off-white: #F7F8F5; --color-charcoal: #1E1E1E; --color-gray-mid: #6B7280; --color-amber: #F5A623;
+        --color-success: #4CAF50; --color-danger: #E53935; --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+      }
+    </style>
+    <style>body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; background-color: #F7F8F5; color: #1E1E1E; }</style>
+  </head>
+  <body>
+    <div class="flex min-h-screen bg-off-white">
+      <div class="w-56 bg-forest min-h-screen flex flex-col flex-shrink-0">
+        <div class="p-5 border-b border-white/10">
+          <a href="index.html" class="flex items-center gap-2">
+            <div class="w-7 h-7 bg-lime rounded-lg flex items-center justify-center"><span class="text-forest font-black text-xs leading-none">TH</span></div>
+            <span class="font-black text-white text-lg">TurfHub</span>
+          </a>
+        </div>
+        <div class="p-4 border-b border-white/10">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 bg-lime rounded-full flex items-center justify-center flex-shrink-0"><span class="text-forest font-black text-sm">F</span></div>
+            <div class="overflow-hidden"><div class="text-white font-semibold text-sm truncate">Fatema Begum</div><div class="text-white/50 text-xs">Team Captain</div></div>
+          </div>
+        </div>
+        <nav class="flex-1 p-3 space-y-0.5 overflow-y-auto">
+          <a href="captain-dashboard.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>📊</span><span>Dashboard</span></a>
+          <a href="book-turf.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors bg-lime text-forest"><span>📅</span><span>Book Turf</span></a>
+          <a href="tournament-registration.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>🏆</span><span>Tournaments</span></a>
+          <a href="fixtures.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>📈</span><span>Fixtures</span></a>
+          <a href="booking-receipt.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>🧾</span><span>Receipts</span></a>
+          <a href="chat.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>💬</span><span>Messages</span></a>
+        </nav>
+        <div class="p-3 border-t border-white/10">
+          <a href="index.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/40 hover:text-white/70 transition-colors"><span>🚪</span><span>Sign Out</span></a>
+        </div>
+      </div>
+
+      <div class="flex-1 overflow-y-auto">
+        <div class="bg-white border-b border-gray-100 px-8 py-4">
+          <h1 class="text-xl font-black text-charcoal">Book a Turf Slot</h1>
+          <p class="text-sm text-gray-mid">Find and reserve your perfect playing ground</p>
+        </div>
+
+        <!-- Stepper -->
+        <div class="bg-white border-b border-gray-100 px-8 py-4">
+          <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold bg-forest text-white"><span class="font-black">1</span><span>Choose Turf</span></div>
+            <div class="w-8 h-0.5 bg-gray-200"></div>
+            <div class="flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold bg-gray-100 text-gray-mid"><span class="font-black">2</span><span>Pick Slot</span></div>
+            <div class="w-8 h-0.5 bg-gray-200"></div>
+            <div class="flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold bg-gray-100 text-gray-mid"><span class="font-black">3</span><span>Payment</span></div>
+            <div class="w-8 h-0.5 bg-gray-200"></div>
+            <div class="flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold bg-gray-100 text-gray-mid"><span class="font-black">4</span><span>Confirmed</span></div>
+          </div>
+        </div>
+
+        <div class="p-8">
+          <div>
+            <div class="flex items-center justify-between mb-5">
+              <h2 class="font-black text-charcoal text-lg">Available Turfs</h2>
+              <select class="px-3 py-2 border border-gray-200 rounded-xl text-sm text-charcoal outline-none bg-white">
+                <option value="">All Sports</option><option>Football</option><option>Basketball</option><option>Cricket</option>
+              </select>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+              <!-- Turf 1 (selected) -->
+              <div class="cursor-pointer transition-all ring-2 ring-lime rounded-xl">
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group">
+                  <div class="relative h-48 bg-gray-200 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=400&h=250&fit=crop&auto=format" alt="The Green Arena" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                    <div class="absolute top-3 left-3"><span class="px-2.5 py-1 rounded-full text-xs font-bold bg-lime text-forest">Outdoor</span></div>
+                  </div>
+                  <div class="p-4">
+                    <div class="text-xs text-gray-mid font-semibold uppercase tracking-wider mb-1">Football · 5-a-side</div>
+                    <h3 class="font-bold text-charcoal text-lg mb-3 leading-tight">The Green Arena</h3>
+                    <div class="flex flex-wrap gap-1.5 mb-4">
+                      <span class="text-xs bg-off-white text-gray-mid px-2 py-0.5 rounded-full font-medium">Floodlights</span>
+                      <span class="text-xs bg-off-white text-gray-mid px-2 py-0.5 rounded-full font-medium">Parking</span>
+                      <span class="text-xs bg-off-white text-gray-mid px-2 py-0.5 rounded-full font-medium">Changing Room</span>
+                      <span class="text-xs bg-off-white text-gray-mid px-2 py-0.5 rounded-full font-medium">+1 more</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                      <div><span class="text-xl font-black text-charcoal">৳800</span><span class="text-sm text-gray-mid font-medium">/hr</span></div>
+                      <a href="#" class="bg-lime hover:bg-lime-dark text-forest font-bold px-4 py-2 rounded-lg text-sm transition-colors">Book Now</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Turf 2 -->
+              <div class="cursor-pointer transition-all">
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group">
+                  <div class="relative h-48 bg-gray-200 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?w=400&h=250&fit=crop&auto=format" alt="Court Pro Indoor" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                    <div class="absolute top-3 left-3"><span class="px-2.5 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-800">Indoor</span></div>
+                  </div>
+                  <div class="p-4">
+                    <div class="text-xs text-gray-mid font-semibold uppercase tracking-wider mb-1">Basketball · Badminton</div>
+                    <h3 class="font-bold text-charcoal text-lg mb-3 leading-tight">Court Pro Indoor</h3>
+                    <div class="flex flex-wrap gap-1.5 mb-4">
+                      <span class="text-xs bg-off-white text-gray-mid px-2 py-0.5 rounded-full font-medium">AC</span>
+                      <span class="text-xs bg-off-white text-gray-mid px-2 py-0.5 rounded-full font-medium">Changing Room</span>
+                      <span class="text-xs bg-off-white text-gray-mid px-2 py-0.5 rounded-full font-medium">Equipment Rental</span>
+                      <span class="text-xs bg-off-white text-gray-mid px-2 py-0.5 rounded-full font-medium">+1 more</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                      <div><span class="text-xl font-black text-charcoal">৳600</span><span class="text-sm text-gray-mid font-medium">/hr</span></div>
+                      <a href="#" class="bg-lime hover:bg-lime-dark text-forest font-bold px-4 py-2 rounded-lg text-sm transition-colors">Book Now</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Turf 3 (fully booked) -->
+              <div class="cursor-pointer transition-all">
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group">
+                  <div class="relative h-48 bg-gray-200 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1624880357913-a8539238245b?w=400&h=250&fit=crop&auto=format" alt="Champions Field" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                    <div class="absolute top-3 left-3"><span class="px-2.5 py-1 rounded-full text-xs font-bold bg-lime text-forest">Outdoor</span></div>
+                    <div class="absolute inset-0 bg-black/50 flex items-center justify-center"><span class="bg-danger text-white px-3 py-1 rounded-full text-sm font-bold">Fully Booked</span></div>
+                  </div>
+                  <div class="p-4">
+                    <div class="text-xs text-gray-mid font-semibold uppercase tracking-wider mb-1">Cricket · Football</div>
+                    <h3 class="font-bold text-charcoal text-lg mb-3 leading-tight">Champions Field</h3>
+                    <div class="flex flex-wrap gap-1.5 mb-4">
+                      <span class="text-xs bg-off-white text-gray-mid px-2 py-0.5 rounded-full font-medium">Pavilion</span>
+                      <span class="text-xs bg-off-white text-gray-mid px-2 py-0.5 rounded-full font-medium">Practice Nets</span>
+                      <span class="text-xs bg-off-white text-gray-mid px-2 py-0.5 rounded-full font-medium">Scoreboard</span>
+                      <span class="text-xs bg-off-white text-gray-mid px-2 py-0.5 rounded-full font-medium">+1 more</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                      <div><span class="text-xl font-black text-charcoal">৳1,200</span><span class="text-sm text-gray-mid font-medium">/hr</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-6 flex justify-end">
+              <a href="#" class="bg-lime hover:bg-lime-dark text-forest font-black px-8 py-3 rounded-xl text-sm transition-colors">Continue with The Green Arena →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

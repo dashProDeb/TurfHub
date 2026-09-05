@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TurfHub — Fixtures & Results</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+      :root {
+        --lime: #7ED321;
+        --lime-dark: #6ab81c;
+        --forest: #0F2B1D;
+        --forest-mid: #1a4029;
+        --off-white: #F7F8F5;
+        --charcoal: #1E1E1E;
+        --gray-mid: #6B7280;
+        --amber: #F5A623;
+        --success: #4CAF50;
+        --danger: #E53935;
+      }
+
+      .bg-lime { background-color: var(--lime); }
+      .bg-lime-dark { background-color: var(--lime-dark); }
+      .bg-forest { background-color: var(--forest); }
+      .bg-off-white { background-color: var(--off-white); }
+      .bg-charcoal { background-color: var(--charcoal); }
+      .bg-amber { background-color: var(--amber); }
+      .text-forest { color: var(--forest); }
+      .text-charcoal { color: var(--charcoal); }
+      .text-gray-mid { color: var(--gray-mid); }
+      .text-amber-800 { color: #92400e; }
+      .border-forest { border-color: var(--forest); }
+      .border-gray-100 { border-color: #f3f4f6; }
+      .border-gray-200 { border-color: #e5e7eb; }
+      .border-gray-300 { border-color: #d1d5db; }
+      .border-amber\/30 { border-color: rgba(245, 166, 35, 0.3); }
+      body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; background-color: #F7F8F5; color: #1E1E1E; }
+    </style>
+  </head>
+  <body>
+    <div class="min-h-screen bg-off-white">
+      <!-- Navbar -->
+      <nav class="px-6 py-4 flex items-center justify-between bg-white border-b border-gray-100">
+        <a href="index.html" class="flex items-center gap-2">
+          <div class="w-8 h-8 bg-lime rounded-lg flex items-center justify-center"><span class="text-forest font-black text-sm leading-none">TH</span></div>
+          <span class="font-black text-xl text-charcoal">TurfHub</span>
+        </a>
+        <div class="hidden md:flex items-center gap-6 text-sm">
+          <a href="index.html" class="transition-colors text-gray-mid hover:text-charcoal">Home</a>
+          <a href="turf-detail.html" class="transition-colors text-gray-mid hover:text-charcoal">Turfs</a>
+          <a href="fixtures.html" class="font-semibold text-charcoal">Fixtures</a>
+          <a href="contact.html" class="transition-colors text-gray-mid hover:text-charcoal">Contact</a>
+        </div>
+        <div class="flex items-center gap-3">
+          <a href="login.html" class="bg-lime hover:bg-lime-dark text-forest font-bold px-5 py-2 rounded-full text-sm transition-colors">Get Started</a>
+        </div>
+      </nav>
+
+      <div class="flex-1 overflow-y-auto">
+        <div class="bg-white border-b border-gray-100 px-8 py-4">
+          <h1 class="text-xl font-black text-charcoal">Fixtures & Results</h1>
+          <p class="text-sm text-gray-mid">Live scores, upcoming matches, and standings</p>
+        </div>
+
+        <div class="p-8 space-y-6">
+          <!-- Tournament Tabs -->
+          <div class="flex gap-2 flex-wrap">
+            <span class="px-4 py-2 rounded-full text-sm font-semibold transition-all border bg-forest text-white border-forest">Inter-City League</span>
+            <span class="px-4 py-2 rounded-full text-sm font-semibold transition-all border bg-white text-charcoal border-gray-200 hover:border-gray-300 cursor-pointer">Summer Smash Cup</span>
+            <span class="px-4 py-2 rounded-full text-sm font-semibold transition-all border bg-white text-charcoal border-gray-200 hover:border-gray-300 cursor-pointer">Monsoon Carnival</span>
+          </div>
+
+          <!-- Live match banner -->
+          <div class="bg-amber/10 border border-amber/30 rounded-xl px-5 py-3 flex items-center gap-3">
+            <span class="w-2.5 h-2.5 bg-amber rounded-full animate-pulse flex-shrink-0"></span>
+            <span class="font-bold text-amber-800 text-sm">LIVE:</span>
+            <span class="text-charcoal text-sm font-semibold">Blaze United vs City Kickers — 47' min · The Green Arena</span>
+            <span class="ml-auto bg-amber/20 text-amber-800 font-black text-lg px-3 py-1 rounded-lg">1 – 1</span>
+          </div>
+
+          <!-- View Tabs -->
+          <div class="flex gap-1 bg-white rounded-xl p-1 border border-gray-100 w-fit">
+            <span class="px-5 py-2 rounded-lg text-sm font-semibold bg-forest text-white shadow-sm">📅 Fixtures</span>
+            <span class="px-5 py-2 rounded-lg text-sm font-semibold text-gray-mid hover:text-charcoal cursor-pointer">📊 Standings</span>
+          </div>
+
+          <!-- Filter pills -->
+          <div class="flex gap-2 mb-4">
+            <span class="px-3 py-1.5 rounded-full text-xs font-semibold bg-charcoal text-white">all</span>
+            <span class="px-3 py-1.5 rounded-full text-xs font-semibold bg-white border border-gray-200 text-gray-mid hover:border-gray-300 cursor-pointer">upcoming</span>
+            <span class="px-3 py-1.5 rounded-full text-xs font-semibold bg-white border border-gray-200 text-gray-mid hover:border-gray-300 cursor-pointer">live</span>
+            <span class="px-3 py-1.5 rounded-full text-xs font-semibold bg-white border border-gray-200 text-gray-mid hover:border-gray-300 cursor-pointer">completed</span>
+          </div>
+
+          <div class="space-y-3">
+            <!-- Fixture 1 -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold text-gray-mid uppercase tracking-wider">Inter-City League</span>
+                  <span class="text-xs bg-off-white text-gray-mid px-2 py-0.5 rounded-full font-semibold">QF</span>
+                </div>
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800"><span class="w-1.5 h-1.5 rounded-full bg-amber"></span>Pending</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex-1 text-right"><div class="font-black text-charcoal text-lg">Thunder FC</div></div>
+                <div class="px-6 text-center"><span class="text-gray-mid font-bold text-base">vs</span><div class="text-xs text-gray-mid mt-1">Sat, 26 Jul · 6:00 PM</div></div>
+                <div class="flex-1"><div class="font-black text-charcoal text-lg">Rising Stars</div></div>
+              </div>
+              <div class="mt-2 text-xs text-gray-mid text-center">📍 The Green Arena</div>
+            </div>
+            <!-- Fixture 2 (live) -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold text-gray-mid uppercase tracking-wider">Inter-City League</span>
+                  <span class="text-xs bg-off-white text-gray-mid px-2 py-0.5 rounded-full font-semibold">QF</span>
+                </div>
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800"><span class="w-1.5 h-1.5 rounded-full bg-amber animate-pulse"></span>Live</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex-1 text-right"><div class="font-black text-charcoal text-lg">Blaze United</div></div>
+                <div class="px-6 text-center"><span class="text-amber font-black text-base">LIVE</span><div class="text-xs text-gray-mid mt-1">Sat, 26 Jul · 8:00 PM</div></div>
+                <div class="flex-1"><div class="font-black text-charcoal text-lg">City Kickers</div></div>
+              </div>
+              <div class="mt-2 text-xs text-gray-mid text-center">📍 The Green Arena</div>
+            </div>
+            <!-- Fixture 3 -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold text-gray-mid uppercase tracking-wider">Inter-City League</span>
+                  <span class="text-xs bg-off-white text-gray-mid px-2 py-0.5 rounded-full font-semibold">QF</span>
+                </div>
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800"><span class="w-1.5 h-1.5 rounded-full bg-amber"></span>Pending</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex-1 text-right"><div class="font-black text-charcoal text-lg">FC Dynamo</div></div>
+                <div class="px-6 text-center"><span class="text-gray-mid font-bold text-base">vs</span><div class="text-xs text-gray-mid mt-1">Sun, 27 Jul · 5:00 PM</div></div>
+                <div class="flex-1"><div class="font-black text-charcoal text-lg">Green Eagles</div></div>
+              </div>
+              <div class="mt-2 text-xs text-gray-mid text-center">📍 Champions Field</div>
+            </div>
+            <!-- Fixture 4 -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold text-gray-mid uppercase tracking-wider">Inter-City League</span>
+                  <span class="text-xs bg-off-white text-gray-mid px-2 py-0.5 rounded-full font-semibold">QF</span>
+                </div>
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800"><span class="w-1.5 h-1.5 rounded-full bg-amber"></span>Pending</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex-1 text-right"><div class="font-black text-charcoal text-lg">Rapid FC</div></div>
+                <div class="px-6 text-center"><span class="text-gray-mid font-bold text-base">vs</span><div class="text-xs text-gray-mid mt-1">Sun, 27 Jul · 7:00 PM</div></div>
+                <div class="flex-1"><div class="font-black text-charcoal text-lg">Storm United</div></div>
+              </div>
+              <div class="mt-2 text-xs text-gray-mid text-center">📍 Champions Field</div>
+            </div>
+            <!-- Fixture 5 (completed) -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold text-gray-mid uppercase tracking-wider">Inter-City League</span>
+                  <span class="text-xs bg-off-white text-gray-mid px-2 py-0.5 rounded-full font-semibold">Group</span>
+                </div>
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>Completed</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex-1 text-right"><div class="font-black text-charcoal text-lg">Thunder FC</div></div>
+                <div class="px-6 text-center">
+                  <div class="flex items-center gap-3"><span class="text-2xl font-black text-success">3</span><span class="text-gray-mid font-medium">–</span><span class="text-2xl font-black text-gray-mid">1</span></div>
+                  <div class="text-xs text-gray-mid mt-1">Tue, 22 Jul · 6:00 PM</div>
+                </div>
+                <div class="flex-1"><div class="font-black text-charcoal text-lg">Blaze United</div></div>
+              </div>
+              <div class="mt-2 text-xs text-gray-mid text-center">📍 The Green Arena</div>
+            </div>
+            <!-- Fixture 6 (completed) -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold text-gray-mid uppercase tracking-wider">Inter-City League</span>
+                  <span class="text-xs bg-off-white text-gray-mid px-2 py-0.5 rounded-full font-semibold">Group</span>
+                </div>
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>Completed</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex-1 text-right"><div class="font-black text-charcoal text-lg">Rising Stars</div></div>
+                <div class="px-6 text-center">
+                  <div class="flex items-center gap-3"><span class="text-2xl font-black text-charcoal">2</span><span class="text-gray-mid font-medium">–</span><span class="text-2xl font-black text-charcoal">2</span></div>
+                  <div class="text-xs text-gray-mid mt-1">Wed, 23 Jul · 7:00 PM</div>
+                </div>
+                <div class="flex-1"><div class="font-black text-charcoal text-lg">City Kickers</div></div>
+              </div>
+              <div class="mt-2 text-xs text-gray-mid text-center">📍 Court Pro</div>
+            </div>
+            <!-- Fixture 7 (completed) -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold text-gray-mid uppercase tracking-wider">Inter-City League</span>
+                  <span class="text-xs bg-off-white text-gray-mid px-2 py-0.5 rounded-full font-semibold">Group</span>
+                </div>
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>Completed</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex-1 text-right"><div class="font-black text-charcoal text-lg">FC Dynamo</div></div>
+                <div class="px-6 text-center">
+                  <div class="flex items-center gap-3"><span class="text-2xl font-black text-gray-mid">0</span><span class="text-gray-mid font-medium">–</span><span class="text-2xl font-black text-success">2</span></div>
+                  <div class="text-xs text-gray-mid mt-1">Thu, 24 Jul · 6:00 PM</div>
+                </div>
+                <div class="flex-1"><div class="font-black text-charcoal text-lg">Thunder FC</div></div>
+              </div>
+              <div class="mt-2 text-xs text-gray-mid text-center">📍 Champions Field</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="bg-forest text-white">
+        <div class="max-w-7xl mx-auto px-6 py-12">
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+            <div class="col-span-2 md:col-span-1">
+              <div class="flex items-center gap-2 mb-4">
+                <div class="w-8 h-8 bg-lime rounded-lg flex items-center justify-center"><span class="text-forest font-black text-sm">TH</span></div>
+                <span class="font-black text-xl">TurfHub</span>
+              </div>
+              <p class="text-white/50 text-sm leading-relaxed">India's premier sports turf booking and tournament management platform.</p>
+              <div class="flex gap-3 mt-4">
+                <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">⚽</span>
+                <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🏀</span>
+                <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🏏</span>
+                <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🎾</span>
+                <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🏸</span>
+              </div>
+            </div>
+            <div>
+              <h4 class="font-bold mb-4 text-white/80 text-sm uppercase tracking-wider">Platform</h4>
+              <ul class="space-y-2.5">
+                <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Find Turfs</a></li>
+                <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Tournaments</a></li>
+                <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Fixtures</a></li>
+                <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Leaderboard</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-bold mb-4 text-white/80 text-sm uppercase tracking-wider">For Owners</h4>
+              <ul class="space-y-2.5">
+                <li><a href="login.html" class="text-white/50 text-sm hover:text-lime transition-colors">List Your Turf</a></li>
+                <li><a href="login.html" class="text-white/50 text-sm hover:text-lime transition-colors">Manage Bookings</a></li>
+                <li><a href="login.html" class="text-white/50 text-sm hover:text-lime transition-colors">Run Tournaments</a></li>
+                <li><a href="login.html" class="text-white/50 text-sm hover:text-lime transition-colors">Analytics</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-bold mb-4 text-white/80 text-sm uppercase tracking-wider">Support</h4>
+              <ul class="space-y-2.5">
+                <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Help Center</a></li>
+                <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Privacy Policy</a></li>
+                <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Terms of Service</a></li>
+                <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Contact Us</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-3">
+            <p class="text-white/30 text-sm">© 2025 TurfHub Technologies Pvt. Ltd. All rights reserved.</p>
+            <p class="text-white/30 text-sm">Made with ❤️ for sport</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

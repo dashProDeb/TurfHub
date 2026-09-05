@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TurfHub — Player Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+      @theme {
+        --color-lime: #7ED321; --color-lime-dark: #6ab81c; --color-forest: #0F2B1D; --color-forest-mid: #1a4029;
+        --color-off-white: #F7F8F5; --color-charcoal: #1E1E1E; --color-gray-mid: #6B7280; --color-amber: #F5A623;
+        --color-success: #4CAF50; --color-danger: #E53935; --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+      }
+    </style>
+    <style>body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; background-color: #F7F8F5; color: #1E1E1E; }</style>
+  </head>
+  <body>
+    <div class="flex min-h-screen bg-off-white">
+      <div class="w-56 bg-forest min-h-screen flex flex-col flex-shrink-0">
+        <div class="p-5 border-b border-white/10">
+          <a href="index.html" class="flex items-center gap-2">
+            <div class="w-7 h-7 bg-lime rounded-lg flex items-center justify-center"><span class="text-forest font-black text-xs leading-none">TH</span></div>
+            <span class="font-black text-white text-lg">TurfHub</span>
+          </a>
+        </div>
+        <div class="p-4 border-b border-white/10">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 bg-lime rounded-full flex items-center justify-center flex-shrink-0"><span class="text-forest font-black text-sm">A</span></div>
+            <div class="overflow-hidden"><div class="text-white font-semibold text-sm truncate">Arif Hossain</div><div class="text-white/50 text-xs">Player</div></div>
+          </div>
+        </div>
+        <nav class="flex-1 p-3 space-y-0.5 overflow-y-auto">
+          <a href="player-dashboard.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors bg-lime text-forest"><span>📊</span><span>Dashboard</span></a>
+          <a href="join-team.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>➕</span><span>Join a Team</span></a>
+          <a href="fixtures.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>📈</span><span>Fixtures</span></a>
+          <a href="chat.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>💬</span><span>Messages</span></a>
+        </nav>
+        <div class="p-3 border-t border-white/10">
+          <a href="index.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/40 hover:text-white/70 transition-colors"><span>🚪</span><span>Sign Out</span></a>
+        </div>
+      </div>
+
+      <div class="flex-1 overflow-y-auto">
+        <div class="bg-white border-b border-gray-100 px-8 py-4">
+          <h1 class="text-xl font-black text-charcoal">Player Dashboard</h1>
+          <p class="text-sm text-gray-mid">Arif Hossain · Thunder FC · Striker #9</p>
+        </div>
+
+        <div class="p-8 space-y-8">
+          <!-- Stats -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 flex items-start gap-4 hover:shadow-md transition-shadow"><div class="w-12 h-12 rounded-xl bg-lime/10 flex items-center justify-center text-2xl flex-shrink-0">⚽</div><div><div class="text-2xl font-black text-charcoal">7</div><div class="text-sm text-gray-mid font-medium">Goals This Season</div><div class="text-xs font-semibold mt-1 text-success">↑ 2nd in team</div></div></div>
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 flex items-start gap-4 hover:shadow-md transition-shadow"><div class="w-12 h-12 rounded-xl bg-lime/10 flex items-center justify-center text-2xl flex-shrink-0">🎯</div><div><div class="text-2xl font-black text-charcoal">4</div><div class="text-sm text-gray-mid font-medium">Assists</div><div class="text-xs font-semibold mt-1 text-success">↑ Total 11 contributions</div></div></div>
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 flex items-start gap-4 hover:shadow-md transition-shadow"><div class="w-12 h-12 rounded-xl bg-lime/10 flex items-center justify-center text-2xl flex-shrink-0">📅</div><div><div class="text-2xl font-black text-charcoal">6/6</div><div class="text-sm text-gray-mid font-medium">Matches Attended</div><div class="text-xs font-semibold mt-1 text-success">↑ 100% attendance</div></div></div>
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 flex items-start gap-4 hover:shadow-md transition-shadow"><div class="w-12 h-12 rounded-xl bg-lime/10 flex items-center justify-center text-2xl flex-shrink-0">⭐</div><div><div class="text-2xl font-black text-charcoal">8.1</div><div class="text-sm text-gray-mid font-medium">Avg Match Rating</div><div class="text-xs font-semibold mt-1 text-success">↑ Top rated in team</div></div></div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Availability Confirmation -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+              <div class="px-6 py-4 border-b border-gray-100">
+                <h2 class="font-black text-charcoal text-base">Match Availability</h2>
+                <p class="text-sm text-gray-mid">Confirm your availability for upcoming matches</p>
+              </div>
+              <div class="divide-y divide-gray-50">
+                <div class="px-6 py-4">
+                  <div class="mb-3">
+                    <div class="flex items-center gap-2 mb-1"><span class="font-semibold text-charcoal text-sm">Thunder FC vs Rising Stars</span></div>
+                    <div class="text-xs text-gray-mid">Sat, 26 Jul · 6:00 PM</div>
+                    <div class="text-xs text-gray-mid">The Green Arena · Inter-City League QF</div>
+                  </div>
+                  <div class="flex gap-2">
+                    <span class="flex-1 py-1.5 rounded-lg text-xs font-bold text-center bg-success text-white border-2 border-transparent">✓ Available</span>
+                    <span class="flex-1 py-1.5 rounded-lg text-xs font-bold text-center bg-white border-gray-200 text-gray-mid hover:border-gray-300 border-2 cursor-pointer">? Uncertain</span>
+                    <span class="flex-1 py-1.5 rounded-lg text-xs font-bold text-center bg-white border-gray-200 text-gray-mid hover:border-gray-300 border-2 cursor-pointer">✕ Unavailable</span>
+                  </div>
+                </div>
+                <div class="px-6 py-4">
+                  <div class="mb-3">
+                    <div class="flex items-center gap-2 mb-1"><span class="font-semibold text-charcoal text-sm">Thunder FC vs City Kickers</span></div>
+                    <div class="text-xs text-gray-mid">Wed, 30 Jul · 7:00 PM</div>
+                    <div class="text-xs text-gray-mid">Champions Field · Summer Cup R16</div>
+                  </div>
+                  <div class="flex gap-2">
+                    <span class="flex-1 py-1.5 rounded-lg text-xs font-bold text-center bg-white border-gray-200 text-gray-mid hover:border-gray-300 border-2 cursor-pointer">✓ Available</span>
+                    <span class="flex-1 py-1.5 rounded-lg text-xs font-bold text-center bg-amber text-white border-2 border-transparent">? Uncertain</span>
+                    <span class="flex-1 py-1.5 rounded-lg text-xs font-bold text-center bg-white border-gray-200 text-gray-mid hover:border-gray-300 border-2 cursor-pointer">✕ Unavailable</span>
+                  </div>
+                </div>
+                <div class="px-6 py-4">
+                  <div class="mb-3">
+                    <div class="flex items-center gap-2 mb-1"><span class="font-semibold text-charcoal text-sm">Thunder FC vs FC Dynamo</span></div>
+                    <div class="text-xs text-gray-mid">Sat, 2 Aug · 5:00 PM</div>
+                    <div class="text-xs text-gray-mid">Court Pro Indoor · Inter-City League SF</div>
+                  </div>
+                  <div class="flex gap-2">
+                    <span class="flex-1 py-1.5 rounded-lg text-xs font-bold text-center bg-success text-white border-2 border-transparent">✓ Available</span>
+                    <span class="flex-1 py-1.5 rounded-lg text-xs font-bold text-center bg-white border-gray-200 text-gray-mid hover:border-gray-300 border-2 cursor-pointer">? Uncertain</span>
+                    <span class="flex-1 py-1.5 rounded-lg text-xs font-bold text-center bg-white border-gray-200 text-gray-mid hover:border-gray-300 border-2 cursor-pointer">✕ Unavailable</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recent Stats -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+              <div class="px-6 py-4 border-b border-gray-100"><h2 class="font-black text-charcoal text-base">Recent Performances</h2></div>
+              <div class="divide-y divide-gray-50">
+                <div class="px-6 py-4 flex items-center gap-4">
+                  <div class="w-8 h-8 rounded-full flex items-center justify-center font-black text-sm flex-shrink-0 bg-success/10 text-success">W</div>
+                  <div class="flex-1 min-w-0"><div class="font-semibold text-charcoal text-sm truncate">Thunder FC 3–1 Blaze United</div><div class="text-xs text-gray-mid">22 Jul</div></div>
+                  <div class="flex gap-4 text-center flex-shrink-0"><div><div class="text-sm font-black text-charcoal">2</div><div class="text-xs text-gray-mid">Goals</div></div><div><div class="text-sm font-black text-charcoal">1</div><div class="text-xs text-gray-mid">Assists</div></div><div><div class="text-sm font-black text-success">8.5</div><div class="text-xs text-gray-mid">Rating</div></div></div>
+                </div>
+                <div class="px-6 py-4 flex items-center gap-4">
+                  <div class="w-8 h-8 rounded-full flex items-center justify-center font-black text-sm flex-shrink-0 bg-success/10 text-success">W</div>
+                  <div class="flex-1 min-w-0"><div class="font-semibold text-charcoal text-sm truncate">FC Dynamo 0–2 Thunder FC</div><div class="text-xs text-gray-mid">24 Jul</div></div>
+                  <div class="flex gap-4 text-center flex-shrink-0"><div><div class="text-sm font-black text-charcoal">1</div><div class="text-xs text-gray-mid">Goals</div></div><div><div class="text-sm font-black text-charcoal">0</div><div class="text-xs text-gray-mid">Assists</div></div><div><div class="text-sm font-black text-amber-600">7.8</div><div class="text-xs text-gray-mid">Rating</div></div></div>
+                </div>
+                <div class="px-6 py-4 flex items-center gap-4">
+                  <div class="w-8 h-8 rounded-full flex items-center justify-center font-black text-sm flex-shrink-0 bg-amber/10 text-amber-700">D</div>
+                  <div class="flex-1 min-w-0"><div class="font-semibold text-charcoal text-sm truncate">Thunder FC 1–1 Rising Stars</div><div class="text-xs text-gray-mid">19 Jul</div></div>
+                  <div class="flex gap-4 text-center flex-shrink-0"><div><div class="text-sm font-black text-charcoal">0</div><div class="text-xs text-gray-mid">Goals</div></div><div><div class="text-sm font-black text-charcoal">1</div><div class="text-xs text-gray-mid">Assists</div></div><div><div class="text-sm font-black text-danger">6.9</div><div class="text-xs text-gray-mid">Rating</div></div></div>
+                </div>
+                <div class="px-6 py-4 flex items-center gap-4">
+                  <div class="w-8 h-8 rounded-full flex items-center justify-center font-black text-sm flex-shrink-0 bg-success/10 text-success">W</div>
+                  <div class="flex-1 min-w-0"><div class="font-semibold text-charcoal text-sm truncate">Green Eagles 0–3 Thunder FC</div><div class="text-xs text-gray-mid">15 Jul</div></div>
+                  <div class="flex gap-4 text-center flex-shrink-0"><div><div class="text-sm font-black text-charcoal">1</div><div class="text-xs text-gray-mid">Goals</div></div><div><div class="text-sm font-black text-charcoal">2</div><div class="text-xs text-gray-mid">Assists</div></div><div><div class="text-sm font-black text-success">9.1</div><div class="text-xs text-gray-mid">Rating</div></div></div>
+                </div>
+              </div>
+              <div class="px-6 py-3 border-t border-gray-50">
+                <a href="fixtures.html" class="text-lime text-sm font-bold hover:underline">View All Fixtures →</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Season Progress -->
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="font-black text-charcoal text-base mb-5">Season Progress — Inter-City League 2025</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div><div class="flex justify-between text-sm mb-2"><span class="font-semibold text-charcoal">Goals</span><span class="font-black text-charcoal">7/15</span></div><div class="h-2 bg-gray-100 rounded-full overflow-hidden"><div class="h-full rounded-full bg-success" style="width:46.67%"></div></div></div>
+              <div><div class="flex justify-between text-sm mb-2"><span class="font-semibold text-charcoal">Assists</span><span class="font-black text-charcoal">4/10</span></div><div class="h-2 bg-gray-100 rounded-full overflow-hidden"><div class="h-full rounded-full bg-lime" style="width:40%"></div></div></div>
+              <div><div class="flex justify-between text-sm mb-2"><span class="font-semibold text-charcoal">Attendance</span><span class="font-black text-charcoal">6/6</span></div><div class="h-2 bg-gray-100 rounded-full overflow-hidden"><div class="h-full rounded-full bg-forest" style="width:100%"></div></div></div>
+              <div><div class="flex justify-between text-sm mb-2"><span class="font-semibold text-charcoal">Clean Sheets</span><span class="font-black text-charcoal">2/6</span></div><div class="h-2 bg-gray-100 rounded-full overflow-hidden"><div class="h-full rounded-full bg-amber" style="width:33.33%"></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

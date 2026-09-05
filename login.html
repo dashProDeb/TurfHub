@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TurfHub — Sign In</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+      :root {
+        --color-lime: #7ED321;
+        --color-lime-dark: #6ab81c;
+        --color-forest: #0F2B1D;
+        --color-forest-mid: #1a4029;
+        --color-off-white: #F7F8F5;
+        --color-charcoal: #1E1E1E;
+        --color-gray-mid: #6B7280;
+        --color-amber: #F5A623;
+        --color-success: #4CAF50;
+        --color-danger: #E53935;
+      }
+
+      .bg-lime { background-color: var(--color-lime); }
+      .bg-lime-dark { background-color: var(--color-lime-dark); }
+      .bg-forest { background-color: var(--color-forest); }
+      .bg-off-white { background-color: var(--color-off-white); }
+      .text-lime { color: var(--color-lime); }
+      .text-forest { color: var(--color-forest); }
+      .text-charcoal { color: var(--color-charcoal); }
+      .text-gray-mid { color: var(--color-gray-mid); }
+      .border-lime { border-color: var(--color-lime); }
+      .bg-lime\/10 { background-color: rgba(126, 211, 33, 0.10); }
+      .text-white\/50 { color: rgba(255, 255, 255, 0.50); }
+      .text-white\/30 { color: rgba(255, 255, 255, 0.30); }
+      body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; background-color: #ffffff; color: #1E1E1E; }
+    </style>
+  </head>
+  <body>
+    <div class="min-h-screen flex">
+      <!-- Left Panel -->
+      <div class="hidden md:flex w-2/5 bg-forest flex-col justify-between p-12 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10" style="background-image: url(https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=800&h=1000&fit=crop&auto=format); background-size: cover; background-position: center;"></div>
+        <div class="relative">
+          <a href="index.html" class="flex items-center gap-2">
+            <div class="w-9 h-9 bg-lime rounded-xl flex items-center justify-center"><span class="text-forest font-black text-sm">TH</span></div>
+            <span class="font-black text-white text-2xl">TurfHub</span>
+          </a>
+        </div>
+        <div class="relative">
+          <h2 class="text-4xl font-black text-white leading-tight mb-4">Your game,<br /><span class="text-lime">your ground,</span><br />your rules.</h2>
+          <p class="text-white/50 leading-relaxed">India's most powerful sports turf booking and tournament management platform. 12,000+ players. 50+ premium turfs.</p>
+          <div class="mt-8 flex gap-4">
+            <span class="text-2xl opacity-60">⚽</span><span class="text-2xl opacity-60">🏀</span><span class="text-2xl opacity-60">🏏</span><span class="text-2xl opacity-60">🎾</span><span class="text-2xl opacity-60">🏸</span>
+          </div>
+        </div>
+        <div class="relative text-white/30 text-xs">© 2025 TurfHub Technologies Pvt. Ltd.</div>
+      </div>
+
+      <!-- Right Panel -->
+      <div class="flex-1 flex items-center justify-center px-6 py-12 bg-white">
+        <div class="w-full max-w-md">
+          <div class="mb-2 md:hidden">
+            <a href="index.html" class="flex items-center gap-2 mb-6">
+              <div class="w-8 h-8 bg-lime rounded-lg flex items-center justify-center"><span class="text-forest font-black text-sm">TH</span></div>
+              <span class="font-black text-charcoal text-xl">TurfHub</span>
+            </a>
+          </div>
+
+          <h1 class="text-2xl font-black text-charcoal mb-1">Welcome back</h1>
+          <p class="text-gray-mid text-sm mb-6">Sign in to your account to continue.</p>
+
+          <!-- Mode Toggle -->
+          <div class="flex bg-off-white rounded-xl p-1 mb-6">
+            <span class="flex-1 py-2 rounded-lg text-sm font-semibold transition-all bg-white shadow-sm text-charcoal text-center">Sign In</span>
+            <span class="flex-1 py-2 rounded-lg text-sm font-semibold transition-all text-gray-mid text-center cursor-pointer">Sign Up</span>
+          </div>
+
+          <!-- Role Selector -->
+          <div class="mb-6">
+            <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-2">I am a...</label>
+            <div class="grid grid-cols-2 gap-2">
+              <div class="p-3 rounded-xl border-2 text-left transition-all border-gray-100 hover:border-gray-200 bg-white">
+                <div class="text-xl mb-1">🏟️</div>
+                <div class="text-sm font-bold text-charcoal">Turf Owner</div>
+                <div class="text-xs text-gray-mid leading-tight mt-0.5">Manage your turfs, bookings & tournaments</div>
+              </div>
+              <div class="p-3 rounded-xl border-2 text-left transition-all border-lime bg-lime/10">
+                <div class="text-xl mb-1">🏆</div>
+                <div class="text-sm font-bold text-forest">Team Captain</div>
+                <div class="text-xs text-gray-mid leading-tight mt-0.5">Book turfs, register teams & track fixtures</div>
+              </div>
+              <div class="p-3 rounded-xl border-2 text-left transition-all border-gray-100 hover:border-gray-200 bg-white">
+                <div class="text-xl mb-1">⚽</div>
+                <div class="text-sm font-bold text-charcoal">Player</div>
+                <div class="text-xs text-gray-mid leading-tight mt-0.5">Join teams, view fixtures & confirm availability</div>
+              </div>
+              <div class="p-3 rounded-xl border-2 text-left transition-all border-gray-100 hover:border-gray-200 bg-white">
+                <div class="text-xl mb-1">🛡️</div>
+                <div class="text-sm font-bold text-charcoal">Admin</div>
+                <div class="text-xs text-gray-mid leading-tight mt-0.5">Manage the platform, approvals & analytics</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Form -->
+          <form class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-1.5">Email Address</label>
+              <input type="email" placeholder="you@example.com" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-charcoal text-sm outline-none focus:border-lime transition-colors placeholder-gray-300" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-1.5">Password</label>
+              <input type="password" placeholder="••••••••" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-charcoal text-sm outline-none focus:border-lime transition-colors" />
+            </div>
+            <a href="captain-dashboard.html" class="block text-center w-full bg-lime hover:bg-lime-dark text-forest font-black py-3.5 rounded-xl transition-colors text-sm">Sign In as Team Captain</a>
+          </form>
+
+          <p class="text-center text-xs text-gray-mid mt-4">
+            Don't have an account? <span class="text-lime font-bold hover:underline cursor-pointer">Sign up free</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

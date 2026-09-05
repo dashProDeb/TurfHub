@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TurfHub — Tournaments</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+      :root {
+        --color-lime: #7ED321;
+        --color-lime-dark: #6ab81c;
+        --color-forest: #0F2B1D;
+        --color-forest-mid: #1a4029;
+        --color-off-white: #F7F8F5;
+        --color-charcoal: #1E1E1E;
+        --color-gray-mid: #6B7280;
+        --color-amber: #F5A623;
+        --color-success: #4CAF50;
+        --color-danger: #E53935;
+      }
+
+      .bg-lime { background-color: var(--color-lime); }
+      .bg-lime-dark { background-color: var(--color-lime-dark); }
+      .bg-forest { background-color: var(--color-forest); }
+      .bg-forest-mid { background-color: var(--color-forest-mid); }
+      .bg-off-white { background-color: var(--color-off-white); }
+      .bg-charcoal { background-color: var(--color-charcoal); }
+      .bg-amber { background-color: var(--color-amber); }
+      .text-forest { color: var(--color-forest); }
+      .text-charcoal { color: var(--color-charcoal); }
+      .text-gray-mid { color: var(--color-gray-mid); }
+      .text-lime { color: var(--color-lime); }
+      .border-lime { border-color: var(--color-lime); }
+      .focus\:border-lime:focus { border-color: var(--color-lime); }
+      body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; background-color: #F7F8F5; color: #1E1E1E; }
+    </style>
+  </head>
+  <body>
+    <div class="flex min-h-screen bg-off-white">
+      <div class="w-56 bg-forest min-h-screen flex flex-col flex-shrink-0">
+        <div class="p-5 border-b border-white/10">
+          <a href="index.html" class="flex items-center gap-2">
+            <div class="w-7 h-7 bg-lime rounded-lg flex items-center justify-center"><span class="text-forest font-black text-xs leading-none">TH</span></div>
+            <span class="font-black text-white text-lg">TurfHub</span>
+          </a>
+        </div>
+        <div class="p-4 border-b border-white/10">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 bg-lime rounded-full flex items-center justify-center flex-shrink-0"><span class="text-forest font-black text-sm">R</span></div>
+            <div class="overflow-hidden"><div class="text-white font-semibold text-sm truncate">Rafiqul Islam</div><div class="text-white/50 text-xs">Turf Owner</div></div>
+          </div>
+        </div>
+        <nav class="flex-1 p-3 space-y-0.5 overflow-y-auto">
+          <a href="owner-dashboard.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>📊</span><span>Dashboard</span></a>
+          <a href="manage-turf.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>🏟️</span><span>Manage Turfs</span></a>
+          <a href="slot-calendar.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>📅</span><span>Slot Calendar</span></a>
+          <a href="create-tournament.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors bg-lime text-forest"><span>🏆</span><span>Tournaments</span></a>
+          <a href="score-entry.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>⚽</span><span>Score Entry</span></a>
+          <a href="chat.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>💬</span><span>Messages</span></a>
+          <a href="owner-reports.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>📄</span><span>Reports</span></a>
+        </nav>
+        <div class="p-3 border-t border-white/10">
+          <a href="index.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/40 hover:text-white/70 transition-colors"><span>🚪</span><span>Sign Out</span></a>
+        </div>
+      </div>
+
+      <div class="flex-1 overflow-y-auto">
+        <div class="bg-white border-b border-gray-100 px-8 py-4">
+          <h1 class="text-xl font-black text-charcoal">Tournaments</h1>
+          <p class="text-sm text-gray-mid">Create and manage sports tournaments</p>
+        </div>
+
+        <div class="p-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- Create Form -->
+          <div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+              <h2 class="font-black text-charcoal text-lg mb-5">Create New Tournament</h2>
+              <form class="space-y-4">
+                <div>
+                  <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-1.5">Tournament Name</label>
+                  <input placeholder="Inter-City Football League 2025" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-charcoal text-sm outline-none focus:border-lime transition-colors placeholder-gray-300" />
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-1.5">Sport</label>
+                    <select class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-charcoal text-sm outline-none focus:border-lime transition-colors bg-white">
+                      <option value="">Select Sport</option>
+                      <option>Football</option><option>Cricket</option><option>Basketball</option><option>Badminton</option><option>Tennis</option><option>Volleyball</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-1.5">Format</label>
+                    <select class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-charcoal text-sm outline-none focus:border-lime transition-colors bg-white">
+                      <option value="knockout">Knockout</option><option value="round-robin">Round Robin</option><option value="league">League</option><option value="double-elim">Double Elimination</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-1.5">Entry Fee (৳)</label>
+                    <input placeholder="2000" type="number" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-charcoal text-sm outline-none focus:border-lime transition-colors placeholder-gray-300" />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-1.5">Max Teams</label>
+                    <select class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-charcoal text-sm outline-none focus:border-lime transition-colors bg-white">
+                      <option>4 teams</option><option>8 teams</option><option>12 teams</option><option>16 teams</option><option>24 teams</option><option>32 teams</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-1.5">Start Date</label>
+                    <input type="date" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-charcoal text-sm outline-none focus:border-lime transition-colors" />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-1.5">End Date</label>
+                    <input type="date" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-charcoal text-sm outline-none focus:border-lime transition-colors" />
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-1.5">Venue</label>
+                  <input placeholder="The Green Arena, Dhaka" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-charcoal text-sm outline-none focus:border-lime transition-colors placeholder-gray-300" />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-1.5">Description</label>
+                  <textarea placeholder="Brief description of the tournament..." rows="3" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-charcoal text-sm outline-none focus:border-lime transition-colors placeholder-gray-300 resize-none"></textarea>
+                </div>
+                <div class="flex gap-3 pt-2">
+                  <button type="button" class="flex-1 border-2 border-gray-200 hover:border-gray-300 text-charcoal font-bold py-3 rounded-xl text-sm transition-colors">Save as Draft</button>
+                  <button type="submit" class="flex-1 bg-lime hover:bg-lime-dark text-forest font-black py-3 rounded-xl text-sm transition-colors">Publish Tournament</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Existing Tournaments -->
+          <div>
+            <h2 class="font-black text-charcoal text-lg mb-4">Active Tournaments</h2>
+            <div class="space-y-4">
+              <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                <div class="flex items-start justify-between mb-3">
+                  <div>
+                    <h3 class="font-bold text-charcoal text-sm leading-tight">Inter-City Football League 2025</h3>
+                    <div class="text-xs text-gray-mid mt-0.5">Football · 12 teams · ৳2,000/team</div>
+                  </div>
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800"><span class="w-1.5 h-1.5 rounded-full bg-amber animate-pulse"></span>Live</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <div class="text-xs text-gray-mid">1 Aug 2025 → 30 Aug 2025</div>
+                  <a href="fixtures.html" class="text-xs font-bold text-lime hover:underline">View Fixtures →</a>
+                </div>
+                <div class="mt-3">
+                  <div class="flex justify-between text-xs text-gray-mid mb-1"><span>Teams registered</span><span>12/12</span></div>
+                  <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden"><div class="h-full bg-lime rounded-full" style="width:100%"></div></div>
+                </div>
+              </div>
+              <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                <div class="flex items-start justify-between mb-3">
+                  <div>
+                    <h3 class="font-bold text-charcoal text-sm leading-tight">Summer Smash Basketball Cup</h3>
+                    <div class="text-xs text-gray-mid mt-0.5">Basketball · 8 teams · ৳1,500/team</div>
+                  </div>
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600"><span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span>Draft</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <div class="text-xs text-gray-mid">15 Aug 2025 → 20 Aug 2025</div>
+                  <a href="fixtures.html" class="text-xs font-bold text-lime hover:underline">View Fixtures →</a>
+                </div>
+                <div class="mt-3">
+                  <div class="flex justify-between text-xs text-gray-mid mb-1"><span>Teams registered</span><span>8/4</span></div>
+                  <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden"><div class="h-full bg-lime rounded-full" style="width:60%"></div></div>
+                </div>
+              </div>
+              <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                <div class="flex items-start justify-between mb-3">
+                  <div>
+                    <h3 class="font-bold text-charcoal text-sm leading-tight">Monsoon Cricket Carnival</h3>
+                    <div class="text-xs text-gray-mid mt-0.5">Cricket · 16 teams · ৳3,000/team</div>
+                  </div>
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600"><span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span>Draft</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <div class="text-xs text-gray-mid">10 Sep 2025 → 28 Sep 2025</div>
+                  <a href="fixtures.html" class="text-xs font-bold text-lime hover:underline">View Fixtures →</a>
+                </div>
+                <div class="mt-3">
+                  <div class="flex justify-between text-xs text-gray-mid mb-1"><span>Teams registered</span><span>16/9</span></div>
+                  <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden"><div class="h-full bg-lime rounded-full" style="width:60%"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

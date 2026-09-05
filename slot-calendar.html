@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TurfHub — Slot Calendar & Approvals</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+      :root {
+        --color-lime: #7ED321;
+        --color-lime-dark: #6ab81c;
+        --color-forest: #0F2B1D;
+        --color-forest-mid: #1a4029;
+        --color-off-white: #F7F8F5;
+        --color-charcoal: #1E1E1E;
+        --color-gray-mid: #6B7280;
+        --color-amber: #F5A623;
+        --color-success: #4CAF50;
+        --color-danger: #E53935;
+        --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+      }
+    </style>
+    <style>body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; background-color: #F7F8F5; color: #1E1E1E; }</style>
+  </head>
+  <body>
+    <div class="flex min-h-screen bg-off-white">
+      <!-- Sidebar -->
+      <div class="w-56 bg-forest min-h-screen flex flex-col flex-shrink-0">
+        <div class="p-5 border-b border-white/10">
+          <a href="index.html" class="flex items-center gap-2">
+            <div class="w-7 h-7 bg-lime rounded-lg flex items-center justify-center"><span class="text-forest font-black text-xs leading-none">TH</span></div>
+            <span class="font-black text-white text-lg">TurfHub</span>
+          </a>
+        </div>
+        <div class="p-4 border-b border-white/10">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 bg-lime rounded-full flex items-center justify-center flex-shrink-0"><span class="text-forest font-black text-sm">R</span></div>
+            <div class="overflow-hidden"><div class="text-white font-semibold text-sm truncate">Rafiqul Islam</div><div class="text-white/50 text-xs">Turf Owner</div></div>
+          </div>
+        </div>
+        <nav class="flex-1 p-3 space-y-0.5 overflow-y-auto">
+          <a href="owner-dashboard.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>📊</span><span>Dashboard</span></a>
+          <a href="manage-turf.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>🏟️</span><span>Manage Turfs</span></a>
+          <a href="slot-calendar.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors bg-lime text-forest"><span>📅</span><span>Slot Calendar</span></a>
+          <a href="create-tournament.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>🏆</span><span>Tournaments</span></a>
+          <a href="score-entry.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>⚽</span><span>Score Entry</span></a>
+          <a href="chat.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>💬</span><span>Messages</span></a>
+          <a href="owner-reports.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>📄</span><span>Reports</span></a>
+        </nav>
+        <div class="p-3 border-t border-white/10">
+          <a href="index.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/40 hover:text-white/70 transition-colors"><span>🚪</span><span>Sign Out</span></a>
+        </div>
+      </div>
+
+      <div class="flex-1 overflow-y-auto">
+        <div class="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between">
+          <div><h1 class="text-xl font-black text-charcoal">Slot Calendar & Approvals</h1><p class="text-sm text-gray-mid">Manage availability and approve booking requests</p></div>
+          <div class="flex items-center gap-2">
+            <span class="flex items-center gap-1.5 text-xs font-semibold bg-amber/10 text-amber-800 px-3 py-1.5 rounded-full"><span class="w-1.5 h-1.5 bg-amber rounded-full"></span>3 pending</span>
+          </div>
+        </div>
+
+        <div class="p-8">
+          <!-- Tabs -->
+          <div class="flex gap-1 bg-white rounded-xl p-1 border border-gray-100 mb-6 w-fit">
+            <span class="px-5 py-2 rounded-lg text-sm font-semibold bg-forest text-white shadow-sm">📅 Calendar View</span>
+            <span class="px-5 py-2 rounded-lg text-sm font-semibold text-gray-mid hover:text-charcoal cursor-pointer">✅ Booking Requests</span>
+          </div>
+
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div class="flex items-center justify-between mb-6">
+              <div><h2 class="font-black text-charcoal text-lg">The Green Arena — Week of Jul 21–27</h2><p class="text-sm text-gray-mid mt-0.5">Click available slots to block for maintenance. Red slots are booked.</p></div>
+              <div class="flex gap-2">
+                <a href="#" class="px-3 py-1.5 border border-gray-200 rounded-lg text-sm text-gray-mid hover:border-gray-300 transition-colors">← Prev Week</a>
+                <a href="#" class="px-3 py-1.5 border border-gray-200 rounded-lg text-sm text-gray-mid hover:border-gray-300 transition-colors">Next Week →</a>
+              </div>
+            </div>
+
+            <!-- Legend -->
+            <div class="flex items-center gap-4 mb-4 text-xs font-medium">
+              <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-white border border-gray-200"></span><span class="text-gray-mid">Available</span></div>
+              <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-lime/20 border border-lime"></span><span class="text-gray-mid">Selected</span></div>
+              <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-red-50 border border-red-100"></span><span class="text-gray-mid">Booked</span></div>
+              <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-gray-100 border border-gray-200"></span><span class="text-gray-mid">Maintenance</span></div>
+            </div>
+
+            <!-- Grid -->
+            <div class="overflow-x-auto">
+              <div class="min-w-[700px]">
+                <div class="grid grid-cols-8 gap-1 mb-1">
+                  <div class="text-xs text-gray-mid font-medium text-right pr-2 py-2"></div>
+                  <div class="text-xs font-bold text-charcoal text-center py-2">Mon</div>
+                  <div class="text-xs font-bold text-charcoal text-center py-2">Tue</div>
+                  <div class="text-xs font-bold text-charcoal text-center py-2">Wed</div>
+                  <div class="text-xs font-bold text-charcoal text-center py-2">Thu</div>
+                  <div class="text-xs font-bold text-charcoal text-center py-2">Fri</div>
+                  <div class="text-xs font-bold text-charcoal text-center py-2">Sat</div>
+                  <div class="text-xs font-bold text-charcoal text-center py-2">Sun</div>
+                </div>
+                <!-- 6:00 AM -->
+                <div class="grid grid-cols-8 gap-1 mb-1">
+                  <div class="text-xs text-gray-mid font-medium text-right pr-2 py-2 whitespace-nowrap">6:00 AM</div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-gray-100 border border-gray-200 cursor-not-allowed"><span class="text-[10px] text-gray-400">🔧</span></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                </div>
+                <!-- 7:00 AM -->
+                <div class="grid grid-cols-8 gap-1 mb-1">
+                  <div class="text-xs text-gray-mid font-medium text-right pr-2 py-2 whitespace-nowrap">7:00 AM</div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-red-50 border border-red-100 cursor-not-allowed"><span class="text-[10px] text-red-500 font-semibold truncate px-1 leading-none">FC</span></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                </div>
+                <!-- 8:00 AM -->
+                <div class="grid grid-cols-8 gap-1 mb-1">
+                  <div class="text-xs text-gray-mid font-medium text-right pr-2 py-2 whitespace-nowrap">8:00 AM</div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-red-50 border border-red-100 cursor-not-allowed"><span class="text-[10px] text-red-500 font-semibold truncate px-1 leading-none">Thunder</span></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                </div>
+                <!-- 9:00 AM -->
+                <div class="grid grid-cols-8 gap-1 mb-1">
+                  <div class="text-xs text-gray-mid font-medium text-right pr-2 py-2 whitespace-nowrap">9:00 AM</div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-red-50 border border-red-100 cursor-not-allowed"><span class="text-[10px] text-red-500 font-semibold truncate px-1 leading-none">Thunder</span></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                </div>
+                <!-- 10:00 AM -->
+                <div class="grid grid-cols-8 gap-1 mb-1">
+                  <div class="text-xs text-gray-mid font-medium text-right pr-2 py-2 whitespace-nowrap">10:00 AM</div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-red-50 border border-red-100 cursor-not-allowed"><span class="text-[10px] text-red-500 font-semibold truncate px-1 leading-none">City</span></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                </div>
+                <!-- 11:00 AM -->
+                <div class="grid grid-cols-8 gap-1 mb-1">
+                  <div class="text-xs text-gray-mid font-medium text-right pr-2 py-2 whitespace-nowrap">11:00 AM</div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-red-50 border border-red-100 cursor-not-allowed"><span class="text-[10px] text-red-500 font-semibold truncate px-1 leading-none">Rising</span></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-red-50 border border-red-100 cursor-not-allowed"><span class="text-[10px] text-red-500 font-semibold truncate px-1 leading-none">City</span></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                </div>
+                <!-- 12:00 PM -->
+                <div class="grid grid-cols-8 gap-1 mb-1">
+                  <div class="text-xs text-gray-mid font-medium text-right pr-2 py-2 whitespace-nowrap">12:00 PM</div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-red-50 border border-red-100 cursor-not-allowed"><span class="text-[10px] text-red-500 font-semibold truncate px-1 leading-none">Rapid</span></div>
+                </div>
+                <!-- 1:00 PM -->
+                <div class="grid grid-cols-8 gap-1 mb-1">
+                  <div class="text-xs text-gray-mid font-medium text-right pr-2 py-2 whitespace-nowrap">1:00 PM</div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-red-50 border border-red-100 cursor-not-allowed"><span class="text-[10px] text-red-500 font-semibold truncate px-1 leading-none">Rapid</span></div>
+                </div>
+                <!-- 2:00 PM -->
+                <div class="grid grid-cols-8 gap-1 mb-1">
+                  <div class="text-xs text-gray-mid font-medium text-right pr-2 py-2 whitespace-nowrap">2:00 PM</div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-red-50 border border-red-100 cursor-not-allowed"><span class="text-[10px] text-red-500 font-semibold truncate px-1 leading-none">Blaze</span></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                </div>
+                <!-- 3:00 PM -->
+                <div class="grid grid-cols-8 gap-1 mb-1">
+                  <div class="text-xs text-gray-mid font-medium text-right pr-2 py-2 whitespace-nowrap">3:00 PM</div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                </div>
+                <!-- 4:00 PM -->
+                <div class="grid grid-cols-8 gap-1 mb-1">
+                  <div class="text-xs text-gray-mid font-medium text-right pr-2 py-2 whitespace-nowrap">4:00 PM</div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-red-50 border border-red-100 cursor-not-allowed"><span class="text-[10px] text-red-500 font-semibold truncate px-1 leading-none">Green</span></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                </div>
+                <!-- 5:00 PM -->
+                <div class="grid grid-cols-8 gap-1 mb-1">
+                  <div class="text-xs text-gray-mid font-medium text-right pr-2 py-2 whitespace-nowrap">5:00 PM</div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                </div>
+                <!-- 6:00 PM -->
+                <div class="grid grid-cols-8 gap-1 mb-1">
+                  <div class="text-xs text-gray-mid font-medium text-right pr-2 py-2 whitespace-nowrap">6:00 PM</div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                </div>
+                <!-- 7:00 PM -->
+                <div class="grid grid-cols-8 gap-1 mb-1">
+                  <div class="text-xs text-gray-mid font-medium text-right pr-2 py-2 whitespace-nowrap">7:00 PM</div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                </div>
+                <!-- 8:00 PM -->
+                <div class="grid grid-cols-8 gap-1 mb-1">
+                  <div class="text-xs text-gray-mid font-medium text-right pr-2 py-2 whitespace-nowrap">8:00 PM</div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-gray-100 border border-gray-200 cursor-not-allowed"><span class="text-[10px] text-gray-400">🔧</span></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                </div>
+                <!-- 9:00 PM -->
+                <div class="grid grid-cols-8 gap-1 mb-1">
+                  <div class="text-xs text-gray-mid font-medium text-right pr-2 py-2 whitespace-nowrap">9:00 PM</div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-gray-100 border border-gray-200 cursor-not-allowed"><span class="text-[10px] text-gray-400">🔧</span></div>
+                  <div class="rounded-md h-9 flex items-center justify-center bg-white border border-gray-100 hover:bg-lime/10 hover:border-lime cursor-pointer"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

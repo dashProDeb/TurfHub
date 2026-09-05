@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TurfHub — Join a Team</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+      @theme {
+        --color-lime: #7ED321; --color-lime-dark: #6ab81c; --color-forest: #0F2B1D; --color-forest-mid: #1a4029;
+        --color-off-white: #F7F8F5; --color-charcoal: #1E1E1E; --color-gray-mid: #6B7280; --color-amber: #F5A623;
+        --color-success: #4CAF50; --color-danger: #E53935; --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+      }
+    </style>
+    <style>body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; background-color: #F7F8F5; color: #1E1E1E; }</style>
+  </head>
+  <body>
+    <div class="flex min-h-screen bg-off-white">
+      <div class="w-56 bg-forest min-h-screen flex flex-col flex-shrink-0">
+        <div class="p-5 border-b border-white/10">
+          <a href="index.html" class="flex items-center gap-2">
+            <div class="w-7 h-7 bg-lime rounded-lg flex items-center justify-center"><span class="text-forest font-black text-xs leading-none">TH</span></div>
+            <span class="font-black text-white text-lg">TurfHub</span>
+          </a>
+        </div>
+        <div class="p-4 border-b border-white/10">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 bg-lime rounded-full flex items-center justify-center flex-shrink-0"><span class="text-forest font-black text-sm">A</span></div>
+            <div class="overflow-hidden"><div class="text-white font-semibold text-sm truncate">Arif Hossain</div><div class="text-white/50 text-xs">Player</div></div>
+          </div>
+        </div>
+        <nav class="flex-1 p-3 space-y-0.5 overflow-y-auto">
+          <a href="player-dashboard.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>📊</span><span>Dashboard</span></a>
+          <a href="join-team.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors bg-lime text-forest"><span>➕</span><span>Join a Team</span></a>
+          <a href="fixtures.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>📈</span><span>Fixtures</span></a>
+          <a href="chat.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>💬</span><span>Messages</span></a>
+        </nav>
+        <div class="p-3 border-t border-white/10">
+          <a href="index.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/40 hover:text-white/70 transition-colors"><span>🚪</span><span>Sign Out</span></a>
+        </div>
+      </div>
+
+      <div class="flex-1 overflow-y-auto">
+        <div class="bg-white border-b border-gray-100 px-8 py-4">
+          <h1 class="text-xl font-black text-charcoal">Join a Team</h1>
+          <p class="text-sm text-gray-mid">Enter your invitation code to join a team</p>
+        </div>
+
+        <div class="p-8 max-w-xl mx-auto">
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center">
+            <div class="text-5xl mb-4">🎟️</div>
+            <h2 class="text-2xl font-black text-charcoal mb-2">Enter Invitation Code</h2>
+            <p class="text-gray-mid text-sm mb-6">Your team captain has shared a code with you. Enter it below to preview the team and join.</p>
+            <div class="text-left mb-4">
+              <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-2">Invitation Code</label>
+              <input placeholder="e.g. TFC-2025" class="w-full px-5 py-3.5 border-2 border-gray-200 focus:border-lime rounded-xl text-charcoal font-mono text-lg text-center outline-none transition-colors tracking-widest" />
+              <p class="text-gray-mid text-xs mt-2 text-center">Hint: try TFC-2025 to demo the flow</p>
+            </div>
+            <a href="#" class="block w-full bg-lime hover:bg-lime-dark text-forest font-black py-3.5 rounded-xl text-sm transition-colors">Look Up Team →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
