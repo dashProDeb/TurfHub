@@ -1,214 +1,252 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TurfHub — Score Entry</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <style>
-      :root {
-        --color-lime: #7ED321;
-        --color-lime-dark: #6ab81c;
-        --color-forest: #0F2B1D;
-        --color-forest-mid: #1a4029;
-        --color-off-white: #F7F8F5;
-        --color-charcoal: #1E1E1E;
-        --color-gray-mid: #6B7280;
-        --color-amber: #F5A623;
-        --color-success: #4CAF50;
-        --color-danger: #E53935;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TurfHub — Score Entry</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    .form-label { display:block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#6b7280;margin-bottom:6px; }
+    .form-input { width:100%;padding:11px 14px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:.88rem;font-family:inherit;outline:none;transition:border-color .2s;background:#fff;color:#1a1a1a; }
+    .form-input:focus { border-color:#7ed321;box-shadow:0 0 0 3px rgba(126,211,33,.12); }
+    .score-box { text-align:center;padding:10px; }
+    .score-input { width:72px;text-align:center;font-size:2rem;font-weight:900;border:2px solid #e5e7eb;border-radius:14px;padding:10px 0;outline:none;color:#1a1a1a;font-family:inherit;transition:border-color .2s;background:#fff; }
+    .score-input:focus { border-color:#7ed321;box-shadow:0 0 0 3px rgba(126,211,33,.12); }
+    .vs-sep { font-size:1.2rem;font-weight:900;color:#9ca3af;padding:0 8px;align-self:center;margin-top:8px; }
+    .scorer-row { display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f3f4f6; }
+    .scorer-row:last-child { border-bottom:none; }
+    .goal-btn { width:28px;height:28px;border-radius:8px;border:1.5px solid #e5e7eb;background:#fff;cursor:pointer;font-size:.9rem;font-weight:800;color:#6b7280;transition:all .15s;display:flex;align-items:center;justify-content:center; }
+    .goal-btn:hover { border-color:#7ed321;color:#5a9e12;background:rgba(126,211,33,.08); }
+    .goal-count { min-width:24px;text-align:center;font-weight:700;font-size:.88rem; }
+  </style>
+</head>
+<body>
+<div id="app-wrapper">
+  <!-- Standalone Owner Sidebar -->
+  <aside id="sidebar" class="sidebar">
+    <a href="index.html" class="sidebar-logo">
+      <div class="sidebar-logo-icon">TH</div>
+      <span class="sidebar-logo-text">TurfHub</span>
+    </a>
+    <div class="sidebar-user">
+      <div class="sidebar-avatar">R</div>
+      <div class="sidebar-user-info">
+        <span class="sidebar-user-name">Rafiqul Islam</span>
+        <span class="sidebar-user-role">Turf Owner</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="owner-dashboard.html" class="sidebar-nav-item"><span class="sidebar-icon">📊</span><span class="sidebar-label">Dashboard</span></a>
+      <a href="manage-turf.html" class="sidebar-nav-item"><span class="sidebar-icon">🏟️</span><span class="sidebar-label">Manage Turfs</span></a>
+      <a href="slot-calendar.html" class="sidebar-nav-item"><span class="sidebar-icon">📅</span><span class="sidebar-label">Slot Calendar</span></a>
+      <a href="create-tournament.html" class="sidebar-nav-item"><span class="sidebar-icon">🏆</span><span class="sidebar-label">Tournaments</span></a>
+      <a href="score-entry.html" class="sidebar-nav-item active"><span class="sidebar-icon">⚽</span><span class="sidebar-label">Score Entry</span></a>
+      <a href="chat.html" class="sidebar-nav-item"><span class="sidebar-icon">💬</span><span class="sidebar-label">Messages</span></a>
+      <a href="owner-reports.html" class="sidebar-nav-item"><span class="sidebar-icon">📈</span><span class="sidebar-label">Reports</span></a>
+    </nav>
+    <a href="login.html" class="sidebar-signout">
+      <span class="sidebar-icon">🚪</span>
+      <span class="sidebar-label">Sign Out</span>
+    </a>
+  </aside>
 
-      .bg-lime { background-color: var(--color-lime); }
-      .bg-lime-dark { background-color: var(--color-lime-dark); }
-      .bg-forest { background-color: var(--color-forest); }
-      .bg-off-white { background-color: var(--color-off-white); }
-      .text-lime { color: var(--color-lime); }
-      .text-forest { color: var(--color-forest); }
-      .text-charcoal { color: var(--color-charcoal); }
-      .text-gray-mid { color: var(--color-gray-mid); }
-      .text-success { color: var(--color-success); }
-      .text-danger { color: var(--color-danger); }
-      .border-lime { border-color: var(--color-lime); }
-      body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; background-color: #ffffff; color: #1E1E1E; }
-    </style>
-  </head>
-  <body>
-    <div class="min-h-screen bg-white">
-      <!-- Navbar -->
-      <nav class="px-6 py-4 flex items-center justify-between bg-forest">
-        <a href="index.html" class="flex items-center gap-2">
-          <div class="w-8 h-8 bg-lime rounded-lg flex items-center justify-center"><span class="text-forest font-black text-sm leading-none">TH</span></div>
-          <span class="font-black text-xl text-white">TurfHub</span>
-        </a>
-        <div class="hidden md:flex items-center gap-6 text-sm">
-          <a href="index.html" class="font-semibold text-white">Home</a>
-          <a href="turf-detail.html" class="transition-colors text-white/70 hover:text-white">Turfs</a>
-          <a href="fixtures.html" class="transition-colors text-white/70 hover:text-white">Fixtures</a>
-          <a href="contact.html" class="transition-colors text-white/70 hover:text-white">Contact</a>
-        </div>
-        <div class="flex items-center gap-3">
-          <a href="login.html" class="bg-lime hover:bg-lime-dark text-forest font-bold px-5 py-2 rounded-full text-sm transition-colors">Get Started</a>
-        </div>
-      </nav>
-
-      <!-- Score Entry -->
-      <main class="max-w-3xl mx-auto px-6 py-12">
-        <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
-          <div class="flex items-center gap-3 mb-6">
-            <div class="w-10 h-10 bg-lime/10 rounded-xl flex items-center justify-center flex-shrink-0"><span class="text-lime font-black text-lg">⚽</span></div>
-            <div>
-              <h1 class="text-3xl font-black text-charcoal">Enter Match Score</h1>
-              <p class="text-gray-mid">Update the match result for your tournament</p>
-            </div>
-          </div>
+  <div id="main-content">
+    <div id="topbar">
+      <div class="topbar-title">
+        <span class="topbar-heading">Score Entry</span>
+        <span class="topbar-sub">Update match results for your tournament</span>
+      </div>
+      <div class="topbar-actions">
+        <span class="badge badge-owner">Owner Portal</span>
+      </div>
+    </div>
+    <div class="page-body">
+      <div class="content-grid">
+        <!-- Score Entry Form -->
+        <div class="content-panel">
+          <div class="panel-header"><span class="panel-title">Enter Match Score</span></div>
 
           <!-- Match Selection -->
-          <div class="bg-gray-50 rounded-xl p-6 mb-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <div style="background:#f5f5f0;border-radius:12px;padding:16px;margin-bottom:20px">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px">
               <div>
-                <label class="block text-sm text-gray-mid uppercase tracking-wider mb-2">Tournament</label>
-                <select class="w-full px-4 py-3 rounded-xl border border-gray-200 text-charcoal text-sm outline-none focus:border-lime transition-colors placeholder-gray-300">
+                <label class="form-label">Tournament</label>
+                <select class="form-input" style="padding:9px 12px">
                   <option>Inter-City Football League</option>
+                  <option>Summer Smash Cup</option>
+                  <option>Monsoon Cricket Carnival</option>
                 </select>
               </div>
               <div>
-                <label class="block text-sm text-gray-mid uppercase tracking-wider mb-2">Match</label>
-                <select class="w-full px-4 py-3 rounded-xl border border-gray-200 text-charcoal text-sm outline-none focus:border-lime transition-colors placeholder-gray-300">
-                  <option>Thunder FC vs Rising Stars</option>
+                <label class="form-label">Stage</label>
+                <select class="form-input" style="padding:9px 12px">
+                  <option>Quarter Final</option>
+                  <option>Semi Final</option>
+                  <option>Final</option>
                 </select>
               </div>
               <div>
-                <label class="block text-sm text-gray-mid uppercase tracking-wider mb-2">Date</label>
-                <select class="w-full px-4 py-3 rounded-xl border border-gray-200 text-charcoal text-sm outline-none focus:border-lime transition-colors placeholder-gray-300">
-                  <option>Saturday, 26 July 2025</option>
-                </select>
+                <label class="form-label">Match Date</label>
+                <input type="date" class="form-input" style="padding:9px 12px" />
               </div>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
               <div>
-                <label class="block text-sm text-gray-mid uppercase tracking-wider mb-1">Thunder FC</label>
-                <input type="number" placeholder="0" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-charcoal text-sm outline-none focus:border-lime transition-colors placeholder-gray-300" maxlength="5" />
-              </div>
-              <div class="flex items-center justify-between">
-                <span class="text-sm text-gray-mid">-</span>
-                <span class="text-lg font-black text-lime">3</span>
+                <label class="form-label">Home Team</label>
+                <select class="form-input" style="padding:9px 12px" id="home-select" onchange="updateTeamName('home',this)">
+                  <option>Thunder FC</option>
+                  <option>Blaze United</option>
+                  <option>Rising Stars</option>
+                  <option>City Kickers</option>
+                  <option>FC Dynamo</option>
+                </select>
               </div>
               <div>
-                <label class="block text-sm text-gray-mid uppercase tracking-wider mb-1">Rising Stars</label>
-                <input type="number" placeholder="0" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-charcoal text-sm outline-none focus:border-lime transition-colors placeholder-gray-300" maxlength="5" />
+                <label class="form-label">Away Team</label>
+                <select class="form-input" style="padding:9px 12px" id="away-select" onchange="updateTeamName('away',this)">
+                  <option>Rising Stars</option>
+                  <option>Blaze United</option>
+                  <option>Thunder FC</option>
+                  <option>City Kickers</option>
+                  <option>FC Dynamo</option>
+                </select>
               </div>
             </div>
           </div>
 
-          <!-- Score Form -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div>
-              <h2 class="font-bold text-charcoal text-sm uppercase tracking-wider mb-4">Goal Scorers</h2>
-              <div space-y-3>
-                <div class="bg-gray-50 rounded-xl p-4 mb-3">
-                  <div class="flex items-center gap-3">
-                    <span class="w-3 h-3 rounded-full bg-lime flex-shrink-0"></span>
-                    <div>
-                      <span class="font-medium text-charcoal">Rahim</span>
-                      <span class="text-xs text-gray-mid">(12')</span>
-                    </div>
+          <!-- Score Entry -->
+          <div style="background:#fff;border:1.5px solid #e8ede8;border-radius:14px;padding:24px;margin-bottom:20px">
+            <div style="display:flex;align-items:flex-end;justify-content:center;gap:16px">
+              <div class="score-box">
+                <div style="font-weight:800;font-size:.88rem;color:#1a1a1a;margin-bottom:8px" id="home-team-label">Thunder FC</div>
+                <input class="score-input" type="number" id="home-score" value="2" min="0" onchange="updateGoalLists()" />
+              </div>
+              <div class="vs-sep">&ndash;</div>
+              <div class="score-box">
+                <div style="font-weight:800;font-size:.88rem;color:#1a1a1a;margin-bottom:8px" id="away-team-label">Rising Stars</div>
+                <input class="score-input" type="number" id="away-score" value="1" min="0" onchange="updateGoalLists()" />
+              </div>
+            </div>
+            <div style="display:flex;justify-content:center;gap:8px;margin-top:16px">
+              <span style="display:inline-flex;align-items:center;gap:5px;background:rgba(126,211,33,.1);color:#5a9e12;font-size:.78rem;font-weight:700;padding:5px 14px;border-radius:100px">&#128308; Live &middot; 67&prime;</span>
+              <label style="display:flex;align-items:center;gap:6px;font-size:.82rem;font-weight:600;color:#6b7280;cursor:pointer">
+                <input type="checkbox" id="full-time" /> Full Time
+              </label>
+            </div>
+          </div>
+
+          <!-- Goal Scorers -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+            <div class="content-panel" style="padding:16px">
+              <div class="panel-header" style="margin-bottom:10px"><span style="font-weight:700;font-size:.88rem">Thunder FC Scorers</span></div>
+              <div id="home-scorers">
+                <div class="scorer-row">
+                  <div style="font-size:.85rem;font-weight:600;color:#1a1a1a">Arif Hossain</div>
+                  <div style="display:flex;align-items:center;gap:8px">
+                    <button class="goal-btn" onclick="changeGoals(this,-1)">&#8722;</button>
+                    <span class="goal-count">2</span>
+                    <button class="goal-btn" onclick="changeGoals(this,1)">+</button>
                   </div>
-                  <input type="text" placeholder="Goal description" class="w-full px-4 py-2 rounded border border-gray-200 text-charcoal text-sm outline-none placeholder-gray-300 mt-2" />
                 </div>
-                <div class="bg-gray-50 rounded-xl p-4 mb-3">
-                  <div class="flex items-center gap-3">
-                    <span class="w-3 h-3 rounded-full bg-lime flex-shrink-0"></span>
-                    <div>
-                      <span class="font-medium text-charcoal">Sakib</span>
-                      <span class="text-xs text-gray-mid">(35')</span>
-                    </div>
+                <div class="scorer-row">
+                  <div style="font-size:.85rem;font-weight:600;color:#1a1a1a">Sabbir Ahmed</div>
+                  <div style="display:flex;align-items:center;gap:8px">
+                    <button class="goal-btn" onclick="changeGoals(this,-1)">&#8722;</button>
+                    <span class="goal-count">0</span>
+                    <button class="goal-btn" onclick="changeGoals(this,1)">+</button>
                   </div>
-                  <input type="text" placeholder="Goal description" class="w-full px-4 py-2 rounded border border-gray-200 text-charcoal text-sm outline-none placeholder-gray-300 mt-2" />
+                </div>
+                <div class="scorer-row">
+                  <div style="font-size:.85rem;font-weight:600;color:#1a1a1a">Delwar Khan</div>
+                  <div style="display:flex;align-items:center;gap:8px">
+                    <button class="goal-btn" onclick="changeGoals(this,-1)">&#8722;</button>
+                    <span class="goal-count">0</span>
+                    <button class="goal-btn" onclick="changeGoals(this,1)">+</button>
+                  </div>
                 </div>
               </div>
             </div>
-
-            <div>
-              <h2 class="font-bold text-charcoal text-sm uppercase tracking-wider mb-4">Yellow/Red Cards</h2>
-              <div space-y-3>
-                <div class="flex items-center gap-3">
-                  <span class="w-3 h-3 rounded-full bg-yellow-500 flex-shrink-0"></span>
-                  <span class="text-sm font-medium text-charcoal">Yellow Card - Rahim</span>
+            <div class="content-panel" style="padding:16px">
+              <div class="panel-header" style="margin-bottom:10px"><span style="font-weight:700;font-size:.88rem">Rising Stars Scorers</span></div>
+              <div id="away-scorers">
+                <div class="scorer-row">
+                  <div style="font-size:.85rem;font-weight:600;color:#1a1a1a">Nayeem Ali</div>
+                  <div style="display:flex;align-items:center;gap:8px">
+                    <button class="goal-btn" onclick="changeGoals(this,-1)">&#8722;</button>
+                    <span class="goal-count">1</span>
+                    <button class="goal-btn" onclick="changeGoals(this,1)">+</button>
+                  </div>
                 </div>
-                <div class="flex items-center gap-3">
-                  <span class="w-3 h-3 rounded-full bg-red-500 flex-shrink-0"></span>
-                  <span class="text-sm font-medium text-charcoal">Red Card - Opponent</span>
+                <div class="scorer-row">
+                  <div style="font-size:.85rem;font-weight:600;color:#1a1a1a">Tanvir Hasan</div>
+                  <div style="display:flex;align-items:center;gap:8px">
+                    <button class="goal-btn" onclick="changeGoals(this,-1)">&#8722;</button>
+                    <span class="goal-count">0</span>
+                    <button class="goal-btn" onclick="changeGoals(this,1)">+</button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Submit Button -->
-          <div class="mt-8">
-            <button class="w-full bg-lime hover:bg-lime-dark text-forest font-black px-8 py-3 rounded-xl transition-colors text-sm">
-              Submit Score
-            </button>
+          <div style="display:flex;gap:12px;justify-content:flex-end">
+            <button class="btn-outline">Cancel</button>
+            <button class="btn-lime" onclick="saveScore()">&#9999; Update Score</button>
           </div>
         </div>
-      </main>
 
-      <!-- Footer -->
-      <footer class="bg-forest text-white">
-        <div class="max-w-7xl mx-auto px-6 py-12">
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
-            <div class="col-span-2 md:col-span-1">
-              <div class="flex items-center gap-2 mb-4">
-                <div class="w-8 h-8 bg-lime rounded-lg flex items-center justify-center"><span class="text-forest font-black text-sm">TH</span></div>
-                <span class="font-black text-xl">TurfHub</span>
+        <!-- Recent Scores -->
+        <div>
+          <div class="content-panel">
+            <div class="panel-header"><span class="panel-title">Recent Results</span></div>
+            <div style="display:flex;flex-direction:column;gap:0">
+              <div style="padding:12px 0;border-bottom:1px solid #f3f4f6">
+                <div style="font-size:.68rem;font-weight:700;color:#7ed321;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Inter-City League &middot; QF</div>
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <span style="font-weight:700;font-size:.88rem">Thunder FC</span>
+                  <span style="font-weight:900;font-size:1.1rem;color:#1a1a1a">3 &ndash; 1</span>
+                  <span style="font-weight:700;font-size:.88rem">City Kickers</span>
+                </div>
+                <div style="font-size:.72rem;color:#9ca3af;margin-top:3px">Wed, 23 Jul &middot; Champions Field</div>
               </div>
-              <p class="text-white/50 text-sm leading-relaxed">India's premier sports turf booking and tournament management platform.</p>
-              <div class="flex gap-3 mt-4">
-                <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">⚽</span>
-                <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🏀</span>
-                <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🏏</span>
-                <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🎾</span>
-                <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🏸</span>
+              <div style="padding:12px 0;border-bottom:1px solid #f3f4f6">
+                <div style="font-size:.68rem;font-weight:700;color:#7ed321;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Inter-City League &middot; QF</div>
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <span style="font-weight:700;font-size:.88rem">Blaze United</span>
+                  <span style="font-weight:900;font-size:1.1rem;color:#1a1a1a">2 &ndash; 0</span>
+                  <span style="font-weight:700;font-size:.88rem">Green Eagles</span>
+                </div>
+                <div style="font-size:.72rem;color:#9ca3af;margin-top:3px">Tue, 22 Jul &middot; The Green Arena</div>
+              </div>
+              <div style="padding:12px 0">
+                <div style="font-size:.68rem;font-weight:700;color:#7ed321;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Summer Cup &middot; R16</div>
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <span style="font-weight:700;font-size:.88rem">Rising Stars</span>
+                  <span style="font-weight:900;font-size:1.1rem;color:#1a1a1a">1 &ndash; 1</span>
+                  <span style="font-weight:700;font-size:.88rem">FC Dynamo</span>
+                </div>
+                <div style="font-size:.72rem;color:#9ca3af;margin-top:3px">Mon, 21 Jul &middot; Court Pro Indoor</div>
               </div>
             </div>
-            <div>
-              <h4 class="font-bold mb-4 text-white/80 text-sm uppercase tracking-wider">Platform</h4>
-              <ul class="space-y-2.5">
-                <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Find Turfs</a></li>
-                <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Tournaments</a></li>
-                <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Fixtures</a></li>
-                <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Leaderboard</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 class="font-bold mb-4 text-white/80 text-sm uppercase tracking-wider">For Owners</h4>
-              <ul class="space-y-2.5">
-                <li><a href="login.html" class="text-white/50 text-sm hover:text-lime transition-colors">List Your Turf</a></li>
-                <li><a href="login.html" class="text-white/50 text-sm hover:text-lime transition-colors">Manage Bookings</a></li>
-                <li><a href="login.html" class="text-white/50 text-sm hover:text-lime transition-colors">Run Tournaments</a></li>
-                <li><a href="login.html" class="text-white/50 text-sm hover:text-lime transition-colors">Analytics</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 class="font-bold mb-4 text-white/80 text-sm uppercase tracking-wider">Support</h4>
-              <ul class="space-y-2.5">
-                <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Help Center</a></li>
-                <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Privacy Policy</a></li>
-                <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Terms of Service</a></li>
-                <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Contact Us</a></li>
-              </ul>
-            </div>
-          </div>
-          <div class="border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-3">
-            <p class="text-white/30 text-sm">© 2025 TurfHub Technologies Pvt. Ltd. All rights reserved.</p>
-            <p class="text-white/30 text-sm">Made with ❤️ for sport</p>
           </div>
         </div>
-      </footer>
+      </div>
     </div>
-  </body>
+  </div>
+<script>
+  function updateTeamName(side, sel) {
+    document.getElementById(side + '-team-label').textContent = sel.value;
+  }
+  function changeGoals(btn, delta) {
+    const row = btn.closest('.scorer-row');
+    const countEl = row.querySelector('.goal-count');
+    const val = Math.max(0, parseInt(countEl.textContent) + delta);
+    countEl.textContent = val;
+  }
+  function saveScore() {
+    alert('Score updated successfully!');
+  }
+</script>
+</body>
 </html>

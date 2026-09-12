@@ -1,327 +1,771 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TurfHub — The Green Arena</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <style type="text/tailwindcss">
-      :root {
-        --color-lime: #7ED321;
-        --color-lime-dark: #6ab81c;
-        --color-forest: #0F2B1D;
-        --color-forest-mid: #1a4029;
-        --color-off-white: #F7F8F5;
-        --color-charcoal: #1E1E1E;
-        --color-gray-mid: #6B7280;
-        --color-amber: #F5A623;
-        --color-success: #4CAF50;
-        --color-danger: #E53935;
-        --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
-      }
-    </style>
-    <style>
-      :root {
-        --color-lime: #7ED321;
-        --color-lime-dark: #6ab81c;
-        --color-forest: #0F2B1D;
-        --color-forest-mid: #1a4029;
-        --color-off-white: #F7F8F5;
-        --color-charcoal: #1E1E1E;
-        --color-gray-mid: #6B7280;
-        --color-amber: #F5A623;
-        --color-success: #4CAF50;
-        --color-danger: #E53935;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TurfHub — Find Turfs</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    /* Turf Explorer & Detail Styles */
+    .filter-btn {
+      padding: 8px 18px;
+      border-radius: 100px;
+      border: 1.5px solid #e5e7eb;
+      background: #fff;
+      font-size: .82rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: #6b7280;
+      font-family: inherit;
+      transition: all .15s;
+    }
+    .filter-btn.active {
+      background: #0d2818;
+      border-color: #0d2818;
+      color: #fff;
+    }
+    .filter-btn:hover:not(.active) {
+      border-color: #9ca3af;
+      color: #1a1a1a;
+    }
 
-      body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; background-color: #ffffff; color: #1E1E1E; }
+    .turf-nav-card {
+      display: flex;
+      gap: 14px;
+      padding: 12px;
+      border-radius: 14px;
+      background: #fff;
+      border: 1.5px solid #e8ede8;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .turf-nav-card:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,.07);
+      border-color: #cbd5e1;
+    }
+    .turf-nav-card.active {
+      border-color: #7ed321;
+      background: #fbfdf9;
+      box-shadow: 0 0 0 3px rgba(126,211,33,.18);
+    }
+    .turf-nav-thumb {
+      width: 90px;
+      height: 74px;
+      border-radius: 10px;
+      overflow: hidden;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .turf-nav-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .turf-nav-tag {
+      position: absolute;
+      bottom: 4px;
+      left: 4px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: .62rem;
+      font-weight: 800;
+    }
 
-      .bg-lime { background-color: var(--color-lime); }
-      .bg-lime-dark { background-color: var(--color-lime-dark); }
-      .text-forest { color: var(--color-forest); }
-      .text-charcoal { color: var(--color-charcoal); }
-      .text-gray-mid { color: var(--color-gray-mid); }
-      .text-lime { color: var(--color-lime); }
-      .bg-off-white { background-color: var(--color-off-white); }
-      .bg-amber { background-color: var(--color-amber); }
-      .bg-success { background-color: var(--color-success); }
-      .bg-danger { background-color: var(--color-danger); }
-      .border-lime { border-color: var(--color-lime); }
-      .hover\:text-lime:hover { color: var(--color-lime); }
-    </style>
-  </head>
-  <body>
-    <div class="min-h-screen bg-white">
-      <!-- Navbar -->
-      <nav class="px-6 py-4 flex items-center justify-between bg-white border-b border-gray-100">
-        <a href="index.html" class="flex items-center gap-2">
-          <div class="w-8 h-8 bg-lime rounded-lg flex items-center justify-center">
-            <span class="text-forest font-black text-sm leading-none">TH</span>
-          </div>
-          <span class="font-black text-xl text-charcoal">TurfHub</span>
-        </a>
-        <div class="hidden md:flex items-center gap-6 text-sm">
-          <a href="index.html" class="transition-colors text-gray-mid hover:text-charcoal">Home</a>
-          <a href="turf-detail.html" class="transition-colors text-gray-mid hover:text-charcoal">Turfs</a>
-          <a href="fixtures.html" class="transition-colors text-gray-mid hover:text-charcoal">Fixtures</a>
-          <a href="contact.html" class="transition-colors text-gray-mid hover:text-charcoal">Contact</a>
-        </div>
-        <div class="flex items-center gap-3">
-          <a href="login.html" class="bg-lime hover:bg-lime-dark text-forest font-bold px-5 py-2 rounded-full text-sm transition-colors">Get Started</a>
-        </div>
-      </nav>
+    .slot-pill {
+      padding: 9px 12px;
+      border-radius: 10px;
+      border: 1.5px solid #e5e7eb;
+      background: #fff;
+      text-align: center;
+      cursor: pointer;
+      transition: all .15s;
+      font-size: .78rem;
+      font-weight: 700;
+    }
+    .slot-pill.available:hover {
+      border-color: #7ed321;
+      background: rgba(126,211,33,.08);
+      color: #5a9e12;
+    }
+    .slot-pill.selected {
+      background: #7ed321 !important;
+      border-color: #7ed321 !important;
+      color: #0d2818 !important;
+      font-weight: 800;
+    }
+    .slot-pill.booked {
+      background: #f3f4f6;
+      border-color: #f3f4f6;
+      color: #9ca3af;
+      cursor: not-allowed;
+      text-decoration: line-through;
+    }
 
-      <div class="max-w-7xl mx-auto px-6 py-8">
-        <!-- Breadcrumb -->
-        <div class="flex items-center gap-2 text-sm text-gray-mid mb-6">
-          <a href="index.html" class="hover:text-lime transition-colors">Home</a>
-          <span>/</span>
-          <a href="index.html" class="hover:text-lime transition-colors">Turfs</a>
-          <span>/</span>
-          <span class="text-charcoal font-semibold">The Green Arena</span>
-        </div>
+    .amenity-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: #f5f5f0;
+      font-size: .78rem;
+      font-weight: 600;
+      color: #4b5563;
+    }
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <!-- Left -->
-          <div class="lg:col-span-2 space-y-6">
-            <!-- Gallery -->
-            <div class="space-y-3">
-              <div class="relative h-80 md:h-96 bg-gray-200 rounded-2xl overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=900&h=500&fit=crop&auto=format" alt="Turf" class="w-full h-full object-cover" />
-                <div class="absolute top-4 left-4 flex gap-2">
-                  <span class="bg-lime text-forest font-bold text-xs px-3 py-1.5 rounded-full">Outdoor</span>
-                  <span class="bg-white/90 text-charcoal font-bold text-xs px-3 py-1.5 rounded-full">Football · 5-a-side</span>
-                </div>
-                <div class="absolute bottom-4 right-4 bg-black/50 text-white text-xs font-semibold px-3 py-1.5 rounded-full">1 / 4</div>
-              </div>
-              <div class="flex gap-3">
-                <a href="#" class="flex-1 h-20 rounded-xl overflow-hidden border-2 border-lime"><img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=900&h=500&fit=crop&auto=format" alt="" class="w-full h-full object-cover" /></a>
-                <a href="#" class="flex-1 h-20 rounded-xl overflow-hidden border-2 border-transparent"><img src="https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=900&h=500&fit=crop&auto=format" alt="" class="w-full h-full object-cover" /></a>
-                <a href="#" class="flex-1 h-20 rounded-xl overflow-hidden border-2 border-transparent"><img src="https://images.unsplash.com/photo-1551958219-acbc04d5f1a0?w=900&h=500&fit=crop&auto=format" alt="" class="w-full h-full object-cover" /></a>
-                <a href="#" class="flex-1 h-20 rounded-xl overflow-hidden border-2 border-transparent"><img src="https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=900&h=500&fit=crop&auto=format" alt="" class="w-full h-full object-cover" /></a>
-              </div>
-            </div>
+    .spec-box {
+      background: #f8faf8;
+      border: 1px solid #e8ede8;
+      border-radius: 12px;
+      padding: 12px 14px;
+      text-align: center;
+    }
 
-            <!-- Header -->
-            <div>
-              <div class="flex items-start justify-between">
-                <div>
-                  <h1 class="text-3xl font-black text-charcoal">The Green Arena</h1>
-                  <div class="flex items-center gap-3 mt-2 text-sm text-gray-mid">
-                    <span>📍 Gulshan, Dhaka</span>
-                    <span>·</span>
-                    <span>⭐ 4.8 (128 reviews)</span>
-                    <span>·</span>
-                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800"><span class="w-1.5 h-1.5 rounded-full bg-success"></span>Available</span>
-                  </div>
-                </div>
-                <div class="text-right">
-                  <div class="text-3xl font-black text-charcoal">৳800</div>
-                  <div class="text-sm text-gray-mid">per hour</div>
-                </div>
-              </div>
-            </div>
+    .stat-badge-box {
+      background: #fbfdf9;
+      border: 1px solid #e8ede8;
+      border-radius: 12px;
+      padding: 12px 14px;
+      text-align: center;
+    }
 
-            <!-- Facilities -->
-            <div class="bg-off-white rounded-2xl p-6">
-              <h2 class="font-black text-charcoal text-lg mb-4">Facilities & Amenities</h2>
-              <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="flex items-center gap-2.5"><span class="text-xl flex-shrink-0">💡</span><span class="text-sm font-medium text-charcoal">Floodlights</span></div>
-                <div class="flex items-center gap-2.5"><span class="text-xl flex-shrink-0">🚗</span><span class="text-sm font-medium text-charcoal">Free Parking (50 cars)</span></div>
-                <div class="flex items-center gap-2.5"><span class="text-xl flex-shrink-0">🚿</span><span class="text-sm font-medium text-charcoal">Changing Rooms</span></div>
-                <div class="flex items-center gap-2.5"><span class="text-xl flex-shrink-0">☕</span><span class="text-sm font-medium text-charcoal">Cafeteria</span></div>
-                <div class="flex items-center gap-2.5"><span class="text-xl flex-shrink-0">📶</span><span class="text-sm font-medium text-charcoal">Free WiFi</span></div>
-                <div class="flex items-center gap-2.5"><span class="text-xl flex-shrink-0">🥤</span><span class="text-sm font-medium text-charcoal">Water Dispensers</span></div>
-                <div class="flex items-center gap-2.5"><span class="text-xl flex-shrink-0">🏥</span><span class="text-sm font-medium text-charcoal">First-Aid Room</span></div>
-                <div class="flex items-center gap-2.5"><span class="text-xl flex-shrink-0">🎥</span><span class="text-sm font-medium text-charcoal">CCTV Security</span></div>
-              </div>
-            </div>
+    .gallery-thumb {
+      height: 72px;
+      border-radius: 10px;
+      overflow: hidden;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: border-color .15s;
+    }
+    .gallery-thumb.active {
+      border-color: #7ed321;
+    }
+  </style>
+</head>
+<body>
+<div id="app-wrapper">
+  <!-- Standalone Player Sidebar -->
+  <aside id="sidebar" class="sidebar">
+    <a href="index.html" class="sidebar-logo">
+      <div class="sidebar-logo-icon">TH</div>
+      <span class="sidebar-logo-text">TurfHub</span>
+    </a>
+    <div class="sidebar-user">
+      <div class="sidebar-avatar" style="background:#7ed321;color:#0d2818">P</div>
+      <div class="sidebar-user-info">
+        <span class="sidebar-user-name">Sabbir Ahmed</span>
+        <span class="sidebar-user-role">Player</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="player-dashboard.html" class="sidebar-nav-item"><span class="sidebar-icon">📊</span><span class="sidebar-label">Dashboard</span></a>
+      <a href="turf-detail.html" class="sidebar-nav-item active"><span class="sidebar-icon">🏟️</span><span class="sidebar-label">Find Turf</span></a>
+      <a href="join-team.html" class="sidebar-nav-item"><span class="sidebar-icon">👥</span><span class="sidebar-label">Join Team</span></a>
+      <a href="fixtures.html" class="sidebar-nav-item"><span class="sidebar-icon">🏆</span><span class="sidebar-label">Fixtures</span></a>
+      <a href="booking-receipt.html" class="sidebar-nav-item"><span class="sidebar-icon">🧾</span><span class="sidebar-label">My Receipts</span></a>
+      <a href="chat.html" class="sidebar-nav-item"><span class="sidebar-icon">💬</span><span class="sidebar-label">Team Chat</span></a>
+    </nav>
+    <a href="login.html" class="sidebar-signout">
+      <span class="sidebar-icon">🚪</span>
+      <span class="sidebar-label">Sign Out</span>
+    </a>
+  </aside>
 
-            <!-- About -->
-            <div>
-              <h2 class="font-black text-charcoal text-lg mb-3">About This Turf</h2>
-              <p class="text-gray-mid text-sm leading-relaxed">
-                The Green Arena is Dhaka's premier 5-a-side football ground, built on FIFA-standard artificial turf. Established in 2019, we have hosted over 200 tournaments and welcome 500+ teams annually. The ground features high-output LED floodlights for perfect evening play, a dedicated referee's room, and an on-site sports café. We offer hourly slots and package deals for regular teams.
-              </p>
-              <div class="mt-4 grid grid-cols-3 gap-4">
-                <div class="bg-off-white rounded-xl p-4 text-center"><div class="font-black text-charcoal">60×40 m</div><div class="text-xs text-gray-mid mt-0.5">Ground Size</div></div>
-                <div class="bg-off-white rounded-xl p-4 text-center"><div class="font-black text-charcoal">Artificial (FIFA)</div><div class="text-xs text-gray-mid mt-0.5">Turf Type</div></div>
-                <div class="bg-off-white rounded-xl p-4 text-center"><div class="font-black text-charcoal">12 per side</div><div class="text-xs text-gray-mid mt-0.5">Max Players</div></div>
-              </div>
-            </div>
+  <div id="main-content">
+    <!-- Topbar -->
+    <div id="topbar">
+      <div class="topbar-title">
+        <span class="topbar-heading">Find &amp; Book Turfs</span>
+        <span class="topbar-sub">Discover top sports grounds, check slot availability, and reserve in seconds</span>
+      </div>
+      <div class="topbar-actions">
+        <a href="booking-receipt.html" class="btn-ghost" style="text-decoration:none">My Bookings</a>
+      </div>
+    </div>
 
-            <!-- Reviews -->
-            <div>
-              <div class="flex items-center justify-between mb-4">
-                <h2 class="font-black text-charcoal text-lg">Reviews</h2>
-                <div class="flex items-center gap-2">
-                  <div class="text-2xl font-black text-charcoal">4.8</div>
-                  <div>
-                    <div class="flex"><span class="text-amber text-sm">★</span><span class="text-amber text-sm">★</span><span class="text-amber text-sm">★</span><span class="text-amber text-sm">★</span><span class="text-amber text-sm">★</span></div>
-                    <div class="text-xs text-gray-mid">128 reviews</div>
-                  </div>
-                </div>
-              </div>
-              <div class="space-y-4">
-                <div class="border border-gray-100 rounded-xl p-4">
-                  <div class="flex items-center justify-between mb-2">
-                    <div class="flex items-center gap-2">
-                      <div class="w-8 h-8 bg-lime/20 rounded-full flex items-center justify-center"><span class="text-forest font-black text-sm">R</span></div>
-                      <span class="font-semibold text-charcoal text-sm">Rafiq M.</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                      <div class="flex"><span class="text-amber text-xs">★</span><span class="text-amber text-xs">★</span><span class="text-amber text-xs">★</span><span class="text-amber text-xs">★</span><span class="text-amber text-xs">★</span></div>
-                      <span class="text-xs text-gray-mid">22 Jul</span>
-                    </div>
-                  </div>
-                  <p class="text-sm text-gray-mid leading-relaxed">Excellent turf quality! The floodlights are top-notch and the ground is always well-maintained.</p>
-                </div>
-                <div class="border border-gray-100 rounded-xl p-4">
-                  <div class="flex items-center justify-between mb-2">
-                    <div class="flex items-center gap-2">
-                      <div class="w-8 h-8 bg-lime/20 rounded-full flex items-center justify-center"><span class="text-forest font-black text-sm">P</span></div>
-                      <span class="font-semibold text-charcoal text-sm">Parvin S.</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                      <div class="flex"><span class="text-amber text-xs">★</span><span class="text-amber text-xs">★</span><span class="text-amber text-xs">★</span><span class="text-amber text-xs">★</span><span class="text-amber text-xs">★</span></div>
-                      <span class="text-xs text-gray-mid">18 Jul</span>
-                    </div>
-                  </div>
-                  <p class="text-sm text-gray-mid leading-relaxed">Best football ground in Dhaka. Easy online booking, quick confirmation. Highly recommend!</p>
-                </div>
-                <div class="border border-gray-100 rounded-xl p-4">
-                  <div class="flex items-center justify-between mb-2">
-                    <div class="flex items-center gap-2">
-                      <div class="w-8 h-8 bg-lime/20 rounded-full flex items-center justify-center"><span class="text-forest font-black text-sm">K</span></div>
-                      <span class="font-semibold text-charcoal text-sm">Karim J.</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                      <div class="flex"><span class="text-amber text-xs">★</span><span class="text-amber text-xs">★</span><span class="text-amber text-xs">★</span><span class="text-amber text-xs">★</span></div>
-                      <span class="text-xs text-gray-mid">10 Jul</span>
-                    </div>
-                  </div>
-                  <p class="text-sm text-gray-mid leading-relaxed">Great facilities. Parking could be improved on weekends but overall a great experience.</p>
-                </div>
-              </div>
-            </div>
+    <!-- Page Body -->
+    <div class="page-body">
+      <!-- Search & Filters Bar -->
+      <div class="content-panel" style="margin-bottom:20px;padding:16px 20px">
+        <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between">
+          <!-- Search Input -->
+          <div style="display:flex;align-items:center;gap:10px;background:#f9fafb;border:1.5px solid #e5e7eb;border-radius:10px;padding:8px 14px;flex:1;min-width:240px">
+            <span style="font-size:1.1rem;color:#9ca3af">🔍</span>
+            <input type="text" id="search-input" placeholder="Search by turf name, area (Gulshan, Banani, Dhanmondi)..." oninput="applyFilters()" style="border:none;background:transparent;outline:none;font-family:inherit;font-size:.85rem;width:100%;color:#1a1a1a" />
           </div>
 
-          <!-- Right — Booking Panel -->
-          <div class="space-y-4">
-            <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-5 sticky top-6">
-              <h3 class="font-black text-charcoal text-lg mb-4">Book a Slot</h3>
-              <div class="mb-4">
-                <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-2">Select Date</label>
-                <input type="date" value="2025-07-26" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-charcoal text-sm outline-none focus:border-lime transition-colors" />
-              </div>
-              <div class="mb-5">
-                <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-2">Available Slots — Saturday, 26 Jul</label>
-                <div class="grid grid-cols-2 gap-2">
-                  <span class="py-2 rounded-lg text-xs font-semibold transition-all border bg-white border-gray-200 text-charcoal hover:border-lime cursor-pointer">6:00 AM</span>
-                  <span class="py-2 rounded-lg text-xs font-semibold transition-all border bg-white border-gray-200 text-charcoal hover:border-lime cursor-pointer">7:00 AM</span>
-                  <span class="py-2 rounded-lg text-xs font-semibold transition-all border bg-gray-50 border-gray-100 text-gray-300 cursor-not-allowed line-through">8:00 AM</span>
-                  <span class="py-2 rounded-lg text-xs font-semibold transition-all border bg-gray-50 border-gray-100 text-gray-300 cursor-not-allowed line-through">9:00 AM</span>
-                  <span class="py-2 rounded-lg text-xs font-semibold transition-all border bg-white border-gray-200 text-charcoal hover:border-lime cursor-pointer">10:00 AM</span>
-                  <span class="py-2 rounded-lg text-xs font-semibold transition-all border bg-white border-gray-200 text-charcoal hover:border-lime cursor-pointer">11:00 AM</span>
-                  <span class="py-2 rounded-lg text-xs font-semibold transition-all border bg-gray-50 border-gray-100 text-gray-300 cursor-not-allowed line-through">12:00 PM</span>
-                  <span class="py-2 rounded-lg text-xs font-semibold transition-all border bg-white border-gray-200 text-charcoal hover:border-lime cursor-pointer">1:00 PM</span>
-                  <span class="py-2 rounded-lg text-xs font-semibold transition-all border bg-white border-gray-200 text-charcoal hover:border-lime cursor-pointer">2:00 PM</span>
-                  <span class="py-2 rounded-lg text-xs font-semibold transition-all border bg-gray-50 border-gray-100 text-gray-300 cursor-not-allowed line-through">3:00 PM</span>
-                  <span class="py-2 rounded-lg text-xs font-semibold transition-all border bg-gray-50 border-gray-100 text-gray-300 cursor-not-allowed line-through">4:00 PM</span>
-                  <span class="py-2 rounded-lg text-xs font-semibold transition-all border bg-white border-gray-200 text-charcoal hover:border-lime cursor-pointer">5:00 PM</span>
-                  <span class="py-2 rounded-lg text-xs font-semibold transition-all border bg-gray-50 border-gray-100 text-gray-300 cursor-not-allowed line-through">6:00 PM</span>
-                  <span class="py-2 rounded-lg text-xs font-semibold transition-all border bg-gray-50 border-gray-100 text-gray-300 cursor-not-allowed line-through">7:00 PM</span>
-                  <span class="py-2 rounded-lg text-xs font-semibold transition-all border bg-white border-gray-200 text-charcoal hover:border-lime cursor-pointer">8:00 PM</span>
-                  <span class="py-2 rounded-lg text-xs font-semibold transition-all border bg-white border-gray-200 text-charcoal hover:border-lime cursor-pointer">9:00 PM</span>
-                </div>
-                <div class="flex items-center gap-4 mt-3 text-xs">
-                  <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-lime/30 border border-lime"></span><span class="text-gray-mid">Selected</span></div>
-                  <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-gray-100 border border-gray-200"></span><span class="text-gray-mid">Booked</span></div>
-                </div>
-              </div>
-              <a href="login.html" class="block text-center w-full bg-lime hover:bg-lime-dark text-forest font-black py-3.5 rounded-xl text-sm transition-colors">Select a Slot to Book</a>
-              <p class="text-center text-xs text-gray-mid mt-3">Sign in required to complete booking</p>
-
-              <!-- Owner info -->
-              <div class="mt-4 pt-4 border-t border-gray-100 flex items-center gap-3">
-                <div class="w-10 h-10 bg-forest rounded-full flex items-center justify-center flex-shrink-0"><span class="text-lime font-black text-sm">R</span></div>
-                <div>
-                  <div class="font-semibold text-charcoal text-sm">Rafiqul Islam</div>
-                  <div class="text-xs text-gray-mid">Turf Owner · Member since 2021</div>
-                </div>
-                <a href="chat.html" class="ml-auto text-xs font-bold text-lime hover:underline">Message</a>
-              </div>
-            </div>
-
-            <!-- Location -->
-            <div class="bg-off-white rounded-2xl p-5">
-              <h3 class="font-bold text-charcoal text-sm mb-3">Location</h3>
-              <div class="h-32 bg-gray-200 rounded-xl overflow-hidden mb-3 flex items-center justify-center"><span class="text-gray-mid text-sm">📍 Map View</span></div>
-              <div class="text-sm text-gray-mid">
-                <p class="font-semibold text-charcoal mb-0.5">The Green Arena</p>
-                <p>Plot 14, Gulshan Avenue,</p>
-                <p>Gulshan-1, Dhaka 1212</p>
-              </div>
-            </div>
+          <!-- Location Selector -->
+          <div style="display:flex;align-items:center;gap:6px">
+            <span style="font-size:.78rem;font-weight:700;color:#6b7280;text-transform:uppercase">Location:</span>
+            <select id="location-filter" onchange="applyFilters()" style="padding:8px 12px;border:1.5px solid #e5e7eb;border-radius:10px;font-family:inherit;font-size:.82rem;font-weight:600;outline:none;background:#fff;color:#1a1a1a;cursor:pointer">
+              <option value="all">All Locations</option>
+              <option value="Gulshan">Gulshan, Dhaka</option>
+              <option value="Banani">Banani, Dhaka</option>
+              <option value="Dhanmondi">Dhanmondi, Dhaka</option>
+              <option value="Bashundhara">Bashundhara, Dhaka</option>
+              <option value="Uttara">Uttara, Dhaka</option>
+            </select>
           </div>
+        </div>
+
+        <!-- Sport Tabs -->
+        <div style="display:flex;gap:8px;margin-top:14px;overflow-x:auto;padding-bottom:2px">
+          <button class="filter-btn active" data-sport="all" onclick="filterSport('all', this)">⚽ All Sports</button>
+          <button class="filter-btn" data-sport="Football" onclick="filterSport('Football', this)">⚽ Football</button>
+          <button class="filter-btn" data-sport="Basketball" onclick="filterSport('Basketball', this)">🏀 Basketball</button>
+          <button class="filter-btn" data-sport="Cricket" onclick="filterSport('Cricket', this)">🏏 Cricket</button>
+          <button class="filter-btn" data-sport="Badminton" onclick="filterSport('Badminton', this)">🏸 Badminton</button>
         </div>
       </div>
 
-      <!-- Footer -->
-      <footer class="bg-forest text-white">
-        <div class="max-w-7xl mx-auto px-6 py-12">
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
-            <div class="col-span-2 md:col-span-1">
-              <div class="flex items-center gap-2 mb-4">
-                <div class="w-8 h-8 bg-lime rounded-lg flex items-center justify-center"><span class="text-forest font-black text-sm">TH</span></div>
-                <span class="font-black text-xl">TurfHub</span>
-              </div>
-              <p class="text-white/50 text-sm leading-relaxed">India's premier sports turf booking and tournament management platform.</p>
-              <div class="flex gap-3 mt-4">
-                <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">⚽</span>
-                <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🏀</span>
-                <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🏏</span>
-                <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🎾</span>
-                <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🏸</span>
-              </div>
-            </div>
-            <div>
-              <h4 class="font-bold mb-4 text-white/80 text-sm uppercase tracking-wider">Platform</h4>
-              <ul class="space-y-2.5">
-                <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Find Turfs</a></li>
-                <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Tournaments</a></li>
-                <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Fixtures</a></li>
-                <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Leaderboard</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 class="font-bold mb-4 text-white/80 text-sm uppercase tracking-wider">For Owners</h4>
-              <ul class="space-y-2.5">
-                <li><a href="login.html" class="text-white/50 text-sm hover:text-lime transition-colors">List Your Turf</a></li>
-                <li><a href="login.html" class="text-white/50 text-sm hover:text-lime transition-colors">Manage Bookings</a></li>
-                <li><a href="login.html" class="text-white/50 text-sm hover:text-lime transition-colors">Run Tournaments</a></li>
-                <li><a href="login.html" class="text-white/50 text-sm hover:text-lime transition-colors">Analytics</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 class="font-bold mb-4 text-white/80 text-sm uppercase tracking-wider">Support</h4>
-              <ul class="space-y-2.5">
-                <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Help Center</a></li>
-                <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Privacy Policy</a></li>
-                <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Terms of Service</a></li>
-                <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Contact Us</a></li>
-              </ul>
-            </div>
+      <!-- Main Layout: Left Column (Turf Directory List) + Right Column (Rich Turf Detail & Slot Booking) -->
+      <div style="display:grid;grid-template-columns:360px 1fr;gap:20px;align-items:start" id="turf-explorer-grid">
+        
+        <!-- Left: Turf Directory -->
+        <div class="content-panel" style="padding:16px">
+          <div class="panel-header" style="margin-bottom:12px">
+            <span class="panel-title" id="turf-count-label">Available Turfs (3)</span>
           </div>
-          <div class="border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-3">
-            <p class="text-white/30 text-sm">© 2025 TurfHub Technologies Pvt. Ltd. All rights reserved.</p>
-            <p class="text-white/30 text-sm">Made with ❤️ for sport</p>
+
+          <div style="display:flex;flex-direction:column;gap:12px" id="turf-nav-list">
+            <!-- Dynamically populated / interactive turf cards -->
           </div>
         </div>
-      </footer>
+
+        <!-- Right: Active Turf Details & Booking View -->
+        <div style="display:flex;flex-direction:column;gap:20px" id="turf-detail-container">
+          
+          <!-- Detailed Card Header & Hero Gallery -->
+          <div class="content-panel" style="padding:22px">
+            
+            <!-- Breadcrumbs & Status -->
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+              <div style="display:flex;align-items:center;gap:6px;font-size:.8rem;color:#6b7280">
+                <span>Turf Directory</span>
+                <span>/</span>
+                <span id="detail-category-crumb" style="font-weight:600;color:#0d2818">Football &middot; Outdoor</span>
+                <span>/</span>
+                <span id="detail-name-crumb" style="font-weight:700;color:#1a1a1a">The Green Arena</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <span class="badge badge-success badge-dot" id="detail-status-badge">Available Today</span>
+                <span style="font-size:.8rem;font-weight:700;color:#0d2818;background:#e8f5e9;padding:4px 10px;border-radius:100px" id="detail-type-badge">Outdoor 5-a-side</span>
+              </div>
+            </div>
+
+            <!-- Title & Pricing Row -->
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap">
+              <div>
+                <h1 id="detail-title" style="font-size:1.65rem;font-weight:900;color:#0d2818;line-height:1.2;margin-bottom:6px">The Green Arena</h1>
+                <div style="display:flex;align-items:center;gap:12px;font-size:.84rem;color:#6b7280;flex-wrap:wrap">
+                  <span id="detail-location">📍 Plot 14, Gulshan Avenue, Dhaka</span>
+                  <span>&middot;</span>
+                  <span style="display:flex;align-items:center;gap:4px"><span style="color:#f59e0b">★</span> <strong style="color:#1a1a1a" id="detail-rating">4.8</strong> (<span id="detail-reviews-count">128 reviews</span>)</span>
+                  <span>&middot;</span>
+                  <span id="detail-timing" style="color:#059669;font-weight:600">🕒 6:00 AM – 11:00 PM</span>
+                </div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-size:1.75rem;font-weight:900;color:#0d2818;line-height:1" id="detail-price">&#2547;800</div>
+                <div style="font-size:.75rem;font-weight:600;color:#9ca3af;margin-top:2px">per hour slot</div>
+              </div>
+            </div>
+
+            <!-- Gallery -->
+            <div style="margin-bottom:20px">
+              <div style="height:320px;border-radius:16px;overflow:hidden;position:relative;background:#e5e7eb;margin-bottom:10px">
+                <img id="main-gallery-img" src="turf_football.jpg" alt="Turf preview" style="width:100%;height:100%;object-fit:cover;transition:transform .3s" />
+                <div style="position:absolute;bottom:12px;right:14px;background:rgba(0,0,0,.65);color:#fff;font-size:.72rem;font-weight:700;padding:4px 12px;border-radius:100px;backdrop-filter:blur(4px)" id="gallery-counter">
+                  Photo 1 of 4
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px" id="gallery-thumbnails">
+                <div class="gallery-thumb active" onclick="switchMainImage(0)">
+                  <img src="turf_football.jpg" style="width:100%;height:100%;object-fit:cover" />
+                </div>
+                <div class="gallery-thumb" onclick="switchMainImage(1)">
+                  <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=500&h=300&fit=crop&auto=format" style="width:100%;height:100%;object-fit:cover" />
+                </div>
+                <div class="gallery-thumb" onclick="switchMainImage(2)">
+                  <img src="https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=500&h=300&fit=crop&auto=format" style="width:100%;height:100%;object-fit:cover" />
+                </div>
+                <div class="gallery-thumb" onclick="switchMainImage(3)">
+                  <img src="https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=500&h=300&fit=crop&auto=format" style="width:100%;height:100%;object-fit:cover" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Ground Specifications -->
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:24px">
+              <div class="spec-box">
+                <div style="font-size:.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase">Dimensions</div>
+                <div style="font-size:1.05rem;font-weight:900;color:#0d2818;margin-top:2px" id="spec-dim">60 &times; 40 m</div>
+              </div>
+              <div class="spec-box">
+                <div style="font-size:.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase">Surface</div>
+                <div style="font-size:1.05rem;font-weight:900;color:#0d2818;margin-top:2px" id="spec-surface">FIFA 2-Star Astro</div>
+              </div>
+              <div class="spec-box">
+                <div style="font-size:.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase">Capacity</div>
+                <div style="font-size:1.05rem;font-weight:900;color:#0d2818;margin-top:2px" id="spec-capacity">12 vs 12 Max</div>
+              </div>
+              <div class="spec-box">
+                <div style="font-size:.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase">Light Level</div>
+                <div style="font-size:1.05rem;font-weight:900;color:#0d2818;margin-top:2px" id="spec-light">500 Lux LED</div>
+              </div>
+            </div>
+
+            <!-- Facilities & Amenities -->
+            <div style="margin-bottom:24px">
+              <h3 style="font-size:.95rem;font-weight:800;color:#0d2818;margin-bottom:12px">Facilities &amp; Amenities</h3>
+              <div style="display:flex;flex-wrap:wrap;gap:8px" id="amenities-container">
+                <div class="amenity-chip"><span>💡</span> High-Output LED Floodlights</div>
+                <div class="amenity-chip"><span>🚗</span> Free Parking (50+ Cars)</div>
+                <div class="amenity-chip"><span>🚿</span> Changing Rooms &amp; Showers</div>
+                <div class="amenity-chip"><span>☕</span> Sports Cafeteria &amp; Refreshments</div>
+                <div class="amenity-chip"><span>📶</span> High-Speed WiFi</div>
+                <div class="amenity-chip"><span>🥤</span> Chilled Mineral Water</div>
+                <div class="amenity-chip"><span>🏥</span> Certified First-Aid Station</div>
+                <div class="amenity-chip"><span>🎥</span> HD CCTV &amp; Match Recording</div>
+              </div>
+            </div>
+
+            <!-- About Text -->
+            <div style="margin-bottom:24px;background:#f9fafb;padding:16px;border-radius:12px;border:1px solid #eef0ee">
+              <h3 style="font-size:.9rem;font-weight:800;color:#0d2818;margin-bottom:6px">About this Ground</h3>
+              <p id="detail-about" style="font-size:.85rem;color:#4b5563;line-height:1.6">
+                Dhaka's premier 5-a-side and 7-a-side football ground built to international standards with shock-absorbent infill. Hosted over 200+ competitive matches with full referee support and digital score tracking.
+              </p>
+            </div>
+
+            <!-- Owner Card -->
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:#fff;border:1.5px solid #e8ede8;border-radius:12px;margin-bottom:24px">
+              <div style="display:flex;align-items:center;gap:12px">
+                <div style="width:42px;height:42px;border-radius:50%;background:#0d2818;color:#7ed321;font-weight:900;font-size:1.1rem;display:flex;align-items:center;justify-content:center" id="owner-avatar">R</div>
+                <div>
+                  <div style="font-weight:800;font-size:.9rem;color:#1a1a1a" id="owner-name">Rafiqul Islam</div>
+                  <div style="font-size:.74rem;color:#6b7280">Turf Owner &middot; Verified Host &middot; 99% Response Rate</div>
+                </div>
+              </div>
+              <a href="chat.html" class="btn-ghost" style="font-size:.8rem;padding:7px 14px;text-decoration:none">💬 Message Host</a>
+            </div>
+
+          </div>
+
+          <!-- Interactive Slot Booking Matrix Panel -->
+          <div class="content-panel" style="padding:22px">
+            <div class="panel-header" style="margin-bottom:16px">
+              <div>
+                <span class="panel-title" style="font-size:1.1rem">Reserve a Time Slot</span>
+                <span class="panel-sub" style="display:block;font-size:.78rem;color:#6b7280;margin-top:2px">Select your preferred date and slot to proceed to checkout</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="font-size:.78rem;font-weight:700;color:#6b7280">Date:</span>
+                <input type="date" id="booking-date" value="2025-07-26" onchange="generateSlots()" style="padding:6px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-family:inherit;font-size:.82rem;font-weight:600;outline:none" />
+              </div>
+            </div>
+
+            <!-- Slot Legend -->
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;font-size:.75rem;font-weight:600;color:#6b7280;flex-wrap:wrap">
+              <div style="display:flex;align-items:center;gap:6px">
+                <span style="width:14px;height:14px;border-radius:4px;border:1.5px solid #e5e7eb;background:#fff"></span>
+                <span>Available</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px">
+                <span style="width:14px;height:14px;border-radius:4px;background:#7ed321"></span>
+                <span style="color:#0d2818;font-weight:700">Selected</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px">
+                <span style="width:14px;height:14px;border-radius:4px;background:#f3f4f6"></span>
+                <span style="color:#9ca3af;text-decoration:line-through">Booked / Occupied</span>
+              </div>
+            </div>
+
+            <!-- Slots Grid -->
+            <div style="margin-bottom:20px">
+              <div style="font-size:.75rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:8px">Morning &middot; Afternoon &middot; Evening Slots</div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:8px" id="slots-grid">
+                <!-- Slot Pills dynamically created -->
+              </div>
+            </div>
+
+            <!-- Booking Cost Breakdown & Action -->
+            <div style="background:#f8faf8;border:1.5px solid #e8ede8;border-radius:14px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+              <div>
+                <div style="font-size:.78rem;color:#6b7280">Selected Slot: <strong style="color:#0d2818" id="selected-slot-text">6:00 PM – 7:00 PM</strong></div>
+                <div style="display:flex;align-items:baseline;gap:8px;margin-top:2px">
+                  <span style="font-size:1.5rem;font-weight:900;color:#0d2818" id="total-price-text">&#2547;800</span>
+                  <span style="font-size:.75rem;color:#6b7280">(Incl. floodlight fee &amp; all taxes)</span>
+                </div>
+              </div>
+
+              <div style="display:flex;align-items:center;gap:10px">
+                <button onclick="confirmSlotBooking()" class="btn-lime" style="padding:10px 24px;font-size:.88rem;cursor:pointer">
+                  Proceed to Booking &rarr;
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Verified Reviews Section -->
+          <div class="content-panel" style="padding:22px">
+            <div class="panel-header">
+              <span class="panel-title">Player Reviews &amp; Ratings</span>
+              <span style="font-size:.82rem;font-weight:700;color:#7ed321">&#10003; 100% Verified Bookings</span>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-top:6px" id="reviews-list">
+              <div style="background:#fff;border:1px solid #f0f2f0;border-radius:12px;padding:14px">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+                  <div style="display:flex;align-items:center;gap:8px">
+                    <div style="width:30px;height:30px;border-radius:50%;background:rgba(126,211,33,.2);color:#0d2818;font-weight:800;font-size:.8rem;display:flex;align-items:center;justify-content:center">R</div>
+                    <span style="font-weight:700;font-size:.84rem;color:#1a1a1a">Rafiq M.</span>
+                  </div>
+                  <span style="color:#f59e0b;font-size:.8rem">★★★★★</span>
+                </div>
+                <p style="font-size:.8rem;color:#6b7280;line-height:1.5">Excellent turf quality! The floodlights are bright and even, perfect for night tournaments.</p>
+              </div>
+
+              <div style="background:#fff;border:1px solid #f0f2f0;border-radius:12px;padding:14px">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+                  <div style="display:flex;align-items:center;gap:8px">
+                    <div style="width:30px;height:30px;border-radius:50%;background:rgba(126,211,33,.2);color:#0d2818;font-weight:800;font-size:.8rem;display:flex;align-items:center;justify-content:center">F</div>
+                    <span style="font-weight:700;font-size:.84rem;color:#1a1a1a">Fatema Begum</span>
+                  </div>
+                  <span style="color:#f59e0b;font-size:.8rem">★★★★★</span>
+                </div>
+                <p style="font-size:.8rem;color:#6b7280;line-height:1.5">Best venue for our team practice. Changing rooms are clean and host is extremely helpful.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
     </div>
-  </body>
+  </div>
+</div>
+<script>
+  // Database of turfs for rich exploration
+  const TURFS = [
+    {
+      id: 'green-arena',
+      name: 'The Green Arena',
+      sport: 'Football',
+      type: 'Outdoor 5-a-side',
+      location: 'Gulshan, Dhaka',
+      fullAddress: 'Plot 14, Gulshan Avenue, Gulshan-1, Dhaka 1212',
+      rating: 4.8,
+      reviewsCount: '128 reviews',
+      price: 800,
+      timing: '6:00 AM – 11:00 PM',
+      dimensions: '60 × 40 m',
+      surface: 'FIFA 2-Star Astro',
+      capacity: '12 vs 12 Max',
+      light: '500 Lux LED',
+      ownerName: 'Rafiqul Islam',
+      ownerAvatar: 'R',
+      about: "The Green Arena is Dhaka's premier 5-a-side and 7-a-side football ground, built with FIFA-certified artificial grass and rubber infill. Features high-power LED floodlights for seamless evening matches, full referee support, and an on-site sports café.",
+      images: [
+        'turf_football.jpg',
+        'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&h=450&fit=crop&auto=format',
+        'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=800&h=450&fit=crop&auto=format',
+        'https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=800&h=450&fit=crop&auto=format'
+      ],
+      amenities: [
+        '💡 High-Output LED Floodlights',
+        '🚗 Free Parking (50+ Cars)',
+        '🚿 Changing Rooms & Showers',
+        '☕ Sports Cafeteria & Refreshments',
+        '📶 High-Speed WiFi',
+        '🥤 Chilled Mineral Water',
+        '🏥 Certified First-Aid Station',
+        '🎥 HD CCTV & Match Recording'
+      ],
+      bookedSlots: ['8:00 AM', '9:00 AM', '12:00 PM', '3:00 PM', '4:00 PM', '7:00 PM', '8:00 PM']
+    },
+    {
+      id: 'court-pro',
+      name: 'Court Pro Indoor Arena',
+      sport: 'Basketball',
+      type: 'Indoor Multi-Sport',
+      location: 'Banani, Dhaka',
+      fullAddress: 'Road 11, Block D, Banani, Dhaka 1213',
+      rating: 4.9,
+      reviewsCount: '94 reviews',
+      price: 600,
+      timing: '7:00 AM – 10:00 PM',
+      dimensions: '28 × 15 m',
+      surface: 'Hardwood Maple Flooring',
+      capacity: '10 vs 10 Max',
+      light: '600 Lux Diffused LED',
+      ownerName: 'Zahid Karim',
+      ownerAvatar: 'Z',
+      about: 'State-of-the-art climate-controlled indoor arena with FIBA-regulation hardwood courts. Perfect for competitive basketball and badminton tournaments with high-speed air conditioning and electronic scoreboards.',
+      images: [
+        'turf_basketball.jpg',
+        'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&h=450&fit=crop&auto=format',
+        'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800&h=450&fit=crop&auto=format',
+        'https://images.unsplash.com/photo-1519766304817-4f37bda74a29?w=800&h=450&fit=crop&auto=format'
+      ],
+      amenities: [
+        '❄️ Central Air Conditioning',
+        '🏀 FIBA Regulation Hoops',
+        '🚿 Premium Shower Rooms',
+        '🎽 Jersey & Equipment Rental',
+        '📶 Free WiFi',
+        '🅿️ Underground Reserved Parking',
+        '🥤 Sports Drinks Bar',
+        '📊 Digital Scoreboard Display'
+      ],
+      bookedSlots: ['9:00 AM', '10:00 AM', '2:00 PM', '5:00 PM', '6:00 PM']
+    },
+    {
+      id: 'champions-field',
+      name: 'Champions Cricket Ground',
+      sport: 'Cricket',
+      type: 'Outdoor Turf Pitch',
+      location: 'Bashundhara, Dhaka',
+      fullAddress: 'Block I, Bashundhara R/A, Dhaka 1229',
+      rating: 4.7,
+      reviewsCount: '162 reviews',
+      price: 1200,
+      timing: '6:00 AM – 11:00 PM',
+      dimensions: '75 × 55 m',
+      surface: 'Natural Clay & Turf Pitch',
+      capacity: '16 vs 16 Max',
+      light: '750 Lux Pro Stadium Lights',
+      ownerName: 'Tanvir Hossain',
+      ownerAvatar: 'T',
+      about: 'Expansive cricket and football sports ground with three enclosed turf practice nets, professional pavilion seating for 200 spectators, and electronic scoreboards. Suitable for day and night league matches.',
+      images: [
+        'turf_champions.jpg',
+        'https://images.unsplash.com/photo-1624880357913-a8539238245b?w=800&h=450&fit=crop&auto=format',
+        'https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=800&h=450&fit=crop&auto=format',
+        'https://images.unsplash.com/photo-1587280501635-68a0e82cd5ff?w=800&h=450&fit=crop&auto=format'
+      ],
+      amenities: [
+        '🏏 3 Enclosed Practice Nets',
+        '🏟️ 200-Seat Pavilion',
+        '💡 Pro Stadium Lighting',
+        '🅿️ Huge Open Parking Field',
+        '🚿 Locker & Shower Suites',
+        '🍔 Food Trucks & Drinks',
+        '🔊 Audio PA System',
+        '🚑 On-call Medical Support'
+      ],
+      bookedSlots: ['7:00 AM', '11:00 AM', '1:00 PM', '4:00 PM', '8:00 PM', '9:00 PM']
+    }
+  ];
+
+  let selectedTurfIndex = 0;
+  let activeSport = 'all';
+  let activeSelectedSlot = '6:00 PM';
+
+  const ALL_SLOTS = [
+    '6:00 AM', '7:00 AM', '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM',
+    '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM',
+    '6:00 PM', '7:00 PM', '8:00 PM', '9:00 PM', '10:00 PM'
+  ];
+
+  function renderTurfNavList(turfsToRender) {
+    const list = document.getElementById('turf-nav-list');
+    const countLabel = document.getElementById('turf-count-label');
+    countLabel.textContent = `Available Turfs (${turfsToRender.length})`;
+
+    if (turfsToRender.length === 0) {
+      list.innerHTML = `
+        <div style="padding:24px;text-align:center;color:#9ca3af;font-size:.85rem">
+          No turfs match your search or filter.
+        </div>`;
+      return;
+    }
+
+    list.innerHTML = turfsToRender.map((t) => {
+      const originalIdx = TURFS.findIndex(x => x.id === t.id);
+      const isSelected = originalIdx === selectedTurfIndex;
+      return `
+        <div class="turf-nav-card ${isSelected ? 'active' : ''}" onclick="selectTurfByIndex(${originalIdx})">
+          <div class="turf-nav-thumb">
+            <img src="${t.images[0]}" alt="${t.name}" />
+            <span style="position:absolute;top:4px;left:4px;font-size:.62rem;font-weight:800;background:rgba(0,0,0,.65);color:#fff;padding:2px 6px;border-radius:4px">${t.sport}</span>
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px">
+              <h4 style="font-weight:800;font-size:.88rem;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t.name}</h4>
+            </div>
+            <div style="font-size:.72rem;color:#6b7280;margin-bottom:6px">📍 ${t.location}</div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span style="font-weight:900;font-size:.9rem;color:#0d2818">&#2547;${t.price}<span style="font-size:.68rem;font-weight:500;color:#9ca3af">/hr</span></span>
+              <span style="font-size:.74rem;font-weight:700;color:#f59e0b">★ ${t.rating}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function renderTurfDetails() {
+    const t = TURFS[selectedTurfIndex];
+    if (!t) return;
+
+    document.getElementById('detail-title').textContent = t.name;
+    document.getElementById('detail-name-crumb').textContent = t.name;
+    document.getElementById('detail-category-crumb').textContent = `${t.sport} · ${t.type}`;
+    document.getElementById('detail-type-badge').textContent = t.type;
+    document.getElementById('detail-location').textContent = `📍 ${t.fullAddress}`;
+    document.getElementById('detail-rating').textContent = t.rating;
+    document.getElementById('detail-reviews-count').textContent = t.reviewsCount;
+    document.getElementById('detail-timing').textContent = `🕒 ${t.timing}`;
+    document.getElementById('detail-price').innerHTML = `&#2547;${t.price}`;
+    document.getElementById('total-price-text').innerHTML = `&#2547;${t.price}`;
+
+    // Specs
+    document.getElementById('spec-dim').textContent = t.dimensions;
+    document.getElementById('spec-surface').textContent = t.surface;
+    document.getElementById('spec-capacity').textContent = t.capacity;
+    document.getElementById('spec-light').textContent = t.light;
+
+    // About & Owner
+    document.getElementById('detail-about').textContent = t.about;
+    document.getElementById('owner-name').textContent = t.ownerName;
+    document.getElementById('owner-avatar').textContent = t.ownerAvatar;
+
+    // Amenities
+    const amContainer = document.getElementById('amenities-container');
+    amContainer.innerHTML = t.amenities.map(a => {
+      const parts = a.split(' ');
+      const icon = parts[0];
+      const text = parts.slice(1).join(' ');
+      return `<div class="amenity-chip"><span>${icon}</span> ${text}</div>`;
+    }).join('');
+
+    // Gallery
+    document.getElementById('main-gallery-img').src = t.images[0];
+    const thumbs = document.getElementById('gallery-thumbnails');
+    thumbs.innerHTML = t.images.map((img, i) => `
+      <div class="gallery-thumb ${i === 0 ? 'active' : ''}" onclick="switchMainImage(${i})">
+        <img src="${img}" style="width:100%;height:100%;object-fit:cover" />
+      </div>
+    `).join('');
+
+    generateSlots();
+  }
+
+  function switchMainImage(idx) {
+    const t = TURFS[selectedTurfIndex];
+    document.getElementById('main-gallery-img').src = t.images[idx];
+    document.getElementById('gallery-counter').textContent = `Photo ${idx + 1} of ${t.images.length}`;
+    document.querySelectorAll('.gallery-thumb').forEach((el, i) => {
+      el.classList.toggle('active', i === idx);
+    });
+  }
+
+  function generateSlots() {
+    const t = TURFS[selectedTurfIndex];
+    const grid = document.getElementById('slots-grid');
+    
+    // Choose active slot if currently chosen slot is booked
+    if (t.bookedSlots.includes(activeSelectedSlot)) {
+      const firstAvailable = ALL_SLOTS.find(s => !t.bookedSlots.includes(s));
+      activeSelectedSlot = firstAvailable || '';
+    }
+
+    grid.innerHTML = ALL_SLOTS.map(slot => {
+      const isBooked = t.bookedSlots.includes(slot);
+      const isSelected = slot === activeSelectedSlot;
+      return `
+        <button 
+          type="button"
+          class="slot-pill ${isBooked ? 'booked' : ''} ${isSelected ? 'selected' : ''}" 
+          ${isBooked ? 'disabled' : `onclick="selectSlot('${slot}')"`}
+        >
+          ${slot}
+        </button>
+      `;
+    }).join('');
+
+    updateSlotSelectionDisplay();
+  }
+
+  function selectSlot(slot) {
+    activeSelectedSlot = slot;
+    document.querySelectorAll('.slot-pill').forEach(btn => {
+      if (btn.textContent.trim() === slot) {
+        btn.classList.add('selected');
+      } else {
+        btn.classList.remove('selected');
+      }
+    });
+    updateSlotSelectionDisplay();
+  }
+
+  function updateSlotSelectionDisplay() {
+    const t = TURFS[selectedTurfIndex];
+    const dateInput = document.getElementById('booking-date').value || '2025-07-26';
+    document.getElementById('selected-slot-text').textContent = activeSelectedSlot ? `${dateInput} · ${activeSelectedSlot}` : 'None Selected';
+    document.getElementById('total-price-text').innerHTML = `&#2547;${t.price}`;
+  }
+
+  function selectTurfByIndex(idx) {
+    selectedTurfIndex = idx;
+    applyFilters();
+    renderTurfDetails();
+  }
+
+  function filterSport(sport, btn) {
+    activeSport = sport;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    applyFilters();
+  }
+
+  function applyFilters() {
+    const search = (document.getElementById('search-input').value || '').toLowerCase();
+    const loc = document.getElementById('location-filter').value;
+
+    const filtered = TURFS.filter(t => {
+      const matchSport = activeSport === 'all' || t.sport.toLowerCase() === activeSport.toLowerCase();
+      const matchLoc = loc === 'all' || t.location.toLowerCase().includes(loc.toLowerCase());
+      const matchSearch = !search || 
+        t.name.toLowerCase().includes(search) || 
+        t.location.toLowerCase().includes(search) || 
+        t.sport.toLowerCase().includes(search);
+
+      return matchSport && matchLoc && matchSearch;
+    });
+
+    renderTurfNavList(filtered);
+  }
+
+  function confirmSlotBooking() {
+    const t = TURFS[selectedTurfIndex];
+    const date = document.getElementById('booking-date').value || '2025-07-26';
+    if (!activeSelectedSlot) {
+      alert('Please select an available slot timing first.');
+      return;
+    }
+    // Save booking intent details for receipt page
+    localStorage.setItem('turfhub_recent_booking', JSON.stringify({
+      turfName: t.name,
+      turfLocation: t.location,
+      sport: t.sport,
+      date: date,
+      time: activeSelectedSlot,
+      price: t.price,
+      refId: '#BK-' + Math.floor(100000 + Math.random() * 900000)
+    }));
+    window.location.href = 'booking-receipt.html';
+  }
+
+  // Initial Boot
+  applyFilters();
+  renderTurfDetails();
+</script>
+</body>
 </html>

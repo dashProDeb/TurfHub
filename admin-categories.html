@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TurfHub — Sport Categories &amp; Policies</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    .sport-card {
+      background: #fff;
+      border: 1.5px solid #e8ede8;
+      border-radius: 14px;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all .2s;
+    }
+    .sport-card:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,.06);
+    }
+    .form-input-admin {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: .85rem;
+      outline: none;
+      background: #fff;
+    }
+    .form-input-admin:focus {
+      border-color: #7ed321;
+    }
+  </style>
+</head>
+<body>
+<div id="app-wrapper">
+  
+  <!-- Standalone Admin Sidebar -->
+  <aside id="sidebar" class="sidebar">
+    <a href="index.html" class="sidebar-logo">
+      <div class="sidebar-logo-icon">TH</div>
+      <span class="sidebar-logo-text">TurfHub</span>
+    </a>
+    <div class="sidebar-user">
+      <div class="sidebar-avatar">A</div>
+      <div class="sidebar-user-info">
+        <span class="sidebar-user-name">Admin User</span>
+        <span class="sidebar-user-role">Platform Admin</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="admin-dashboard.html" class="sidebar-nav-item"><span class="sidebar-icon">📊</span><span class="sidebar-label">Overview</span></a>
+      <a href="admin-approvals.html" class="sidebar-nav-item"><span class="sidebar-icon">✅</span><span class="sidebar-label">Approvals</span></a>
+      <a href="admin-analytics.html" class="sidebar-nav-item"><span class="sidebar-icon">📈</span><span class="sidebar-label">Analytics</span></a>
+      <a href="admin-categories.html" class="sidebar-nav-item active"><span class="sidebar-icon">🏷️</span><span class="sidebar-label">Categories</span></a>
+      <a href="admin-reports.html" class="sidebar-nav-item"><span class="sidebar-icon">📄</span><span class="sidebar-label">Reports</span></a>
+      <a href="admin-announcements.html" class="sidebar-nav-item"><span class="sidebar-icon">📢</span><span class="sidebar-label">Announce</span></a>
+    </nav>
+    <a href="login.html" class="sidebar-signout">
+      <span class="sidebar-icon">🚪</span>
+      <span class="sidebar-label">Sign Out</span>
+    </a>
+  </aside>
+
+  <div id="main-content">
+    
+    <!-- Topbar -->
+    <div id="topbar">
+      <div class="topbar-title">
+        <span class="topbar-heading">Sport Categories &amp; Global Policies</span>
+        <span class="topbar-sub">Manage platform sports, commissions, cancellation limits, and advance booking windows</span>
+      </div>
+      <div class="topbar-actions">
+        <button onclick="openAddSportModal()" class="btn-lime" style="font-size:.82rem;padding:7px 16px;cursor:pointer">
+          + Add Sport Category
+        </button>
+      </div>
+    </div>
+
+    <!-- Page Body -->
+    <div class="page-body">
+      
+      <div style="display:grid;grid-template-columns:3fr 2fr;gap:20px;align-items:start">
+        
+        <!-- Left: Sport Categories List -->
+        <div class="content-panel" style="padding:22px">
+          <div class="panel-header" style="margin-bottom:16px">
+            <div>
+              <span class="panel-title">Active Sports (5)</span>
+              <span class="panel-sub" style="display:block;font-size:.78rem;color:#6b7280;margin-top:2px">Categories shown on search and tournament registration</span>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:12px" id="sports-list">
+            
+            <div class="sport-card">
+              <div style="display:flex;align-items:center;gap:12px">
+                <div style="font-size:2rem;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:#f3f4f6;border-radius:10px">⚽</div>
+                <div>
+                  <h4 style="font-weight:800;font-size:.95rem;color:#1a1a1a">Football</h4>
+                  <div style="font-size:.75rem;color:#6b7280">28 Grounds &middot; 5-a-side, 7-a-side, FIFA Astro Turf</div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px">
+                <span class="badge badge-success badge-dot">Active</span>
+                <button class="btn-ghost" style="font-size:.75rem;padding:4px 10px">Edit</button>
+              </div>
+            </div>
+
+            <div class="sport-card">
+              <div style="display:flex;align-items:center;gap:12px">
+                <div style="font-size:2rem;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:#f3f4f6;border-radius:10px">🏏</div>
+                <div>
+                  <h4 style="font-weight:800;font-size:.95rem;color:#1a1a1a">Cricket</h4>
+                  <div style="font-size:.75rem;color:#6b7280">14 Grounds &middot; Box Cricket, Turf Pitch, Practice Nets</div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px">
+                <span class="badge badge-success badge-dot">Active</span>
+                <button class="btn-ghost" style="font-size:.75rem;padding:4px 10px">Edit</button>
+              </div>
+            </div>
+
+            <div class="sport-card">
+              <div style="display:flex;align-items:center;gap:12px">
+                <div style="font-size:2rem;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:#f3f4f6;border-radius:10px">🏀</div>
+                <div>
+                  <h4 style="font-weight:800;font-size:.95rem;color:#1a1a1a">Basketball</h4>
+                  <div style="font-size:.75rem;color:#6b7280">6 Grounds &middot; FIBA Hardwood, Indoor Climate Controlled</div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px">
+                <span class="badge badge-success badge-dot">Active</span>
+                <button class="btn-ghost" style="font-size:.75rem;padding:4px 10px">Edit</button>
+              </div>
+            </div>
+
+            <div class="sport-card">
+              <div style="display:flex;align-items:center;gap:12px">
+                <div style="font-size:2rem;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:#f3f4f6;border-radius:10px">🏸</div>
+                <div>
+                  <h4 style="font-weight:800;font-size:.95rem;color:#1a1a1a">Badminton</h4>
+                  <div style="font-size:.75rem;color:#6b7280">8 Grounds &middot; Synthetic Mat, Wooden Court</div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px">
+                <span class="badge badge-success badge-dot">Active</span>
+                <button class="btn-ghost" style="font-size:.75rem;padding:4px 10px">Edit</button>
+              </div>
+            </div>
+
+            <div class="sport-card">
+              <div style="display:flex;align-items:center;gap:12px">
+                <div style="font-size:2rem;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:#f3f4f6;border-radius:10px">🎾</div>
+                <div>
+                  <h4 style="font-weight:800;font-size:.95rem;color:#1a1a1a">Tennis</h4>
+                  <div style="font-size:.75rem;color:#6b7280">3 Grounds &middot; Hard Clay, Synthetic Court</div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px">
+                <span class="badge badge-success badge-dot">Active</span>
+                <button class="btn-ghost" style="font-size:.75rem;padding:4px 10px">Edit</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Right: Global Platform Policies -->
+        <div class="content-panel" style="padding:22px">
+          <div class="panel-header" style="margin-bottom:16px">
+            <div>
+              <span class="panel-title">Global Booking Rules</span>
+              <span class="panel-sub" style="display:block;font-size:.78rem;color:#6b7280;margin-top:2px">Platform-wide constraints</span>
+            </div>
+          </div>
+
+          <form onsubmit="savePolicies(event)" style="display:flex;flex-direction:column;gap:14px">
+            <div>
+              <label style="display:block;font-size:.75rem;font-weight:700;color:#374151;margin-bottom:4px">Platform Commission Fee (%)</label>
+              <input type="number" class="form-input-admin" value="5" min="0" max="25" />
+              <span style="font-size:.7rem;color:#6b7280">Deducted from gross booking revenue per slot</span>
+            </div>
+
+            <div>
+              <label style="display:block;font-size:.75rem;font-weight:700;color:#374151;margin-bottom:4px">Max Advance Booking Days</label>
+              <input type="number" class="form-input-admin" value="30" min="1" max="90" />
+              <span style="font-size:.7rem;color:#6b7280">How far in advance players can book slots</span>
+            </div>
+
+            <div>
+              <label style="display:block;font-size:.75rem;font-weight:700;color:#374151;margin-bottom:4px">Cancellation Window (Hours)</label>
+              <input type="number" class="form-input-admin" value="6" min="1" max="48" />
+              <span style="font-size:.7rem;color:#6b7280">Full refund eligible if cancelled before this cutoff</span>
+            </div>
+
+            <div>
+              <label style="display:block;font-size:.75rem;font-weight:700;color:#374151;margin-bottom:4px">Tournament Escrow Lock (%)</label>
+              <input type="number" class="form-input-admin" value="100" min="50" max="100" />
+              <span style="font-size:.7rem;color:#6b7280">Prize pool locked in escrow prior to tournament commencement</span>
+            </div>
+
+            <div style="margin-top:8px">
+              <button type="submit" class="btn-lime" style="width:100%;padding:10px;font-size:.85rem;cursor:pointer">
+                Save Platform Policies
+              </button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Add Sport Modal -->
+<div id="add-sport-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:16px;width:90%;max-width:400px;padding:22px;box-shadow:0 20px 40px rgba(0,0,0,.2)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <h3 style="font-weight:900;font-size:1.05rem;color:#0d2818">Add New Sport Category</h3>
+      <button onclick="closeAddSportModal()" style="border:none;background:none;font-size:1.2rem;cursor:pointer;color:#9ca3af">&times;</button>
+    </div>
+    
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:18px">
+      <div>
+        <label style="display:block;font-size:.72rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:4px">Sport Emoji Icon</label>
+        <input type="text" id="new-sport-emoji" value="🏐" class="form-input-admin" style="font-size:1.2rem;width:80px;text-align:center" />
+      </div>
+      <div>
+        <label style="display:block;font-size:.72rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:4px">Sport Title</label>
+        <input type="text" id="new-sport-title" placeholder="e.g. Volleyball, Squash" class="form-input-admin" />
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;gap:8px">
+      <button onclick="closeAddSportModal()" class="btn-ghost" style="font-size:.82rem">Cancel</button>
+      <button onclick="submitAddSport()" class="btn-lime" style="font-size:.82rem;padding:8px 16px">Add Category</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openAddSportModal() {
+    document.getElementById('add-sport-modal').style.display = 'flex';
+  }
+
+  function closeAddSportModal() {
+    document.getElementById('add-sport-modal').style.display = 'none';
+  }
+
+  function submitAddSport() {
+    const emoji = document.getElementById('new-sport-emoji').value || '🏐';
+    const title = document.getElementById('new-sport-title').value.trim();
+    if (!title) return;
+
+    const list = document.getElementById('sports-list');
+    const newCard = document.createElement('div');
+    newCard.className = 'sport-card';
+    newCard.innerHTML = `
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="font-size:2rem;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:#f3f4f6;border-radius:10px">${emoji}</div>
+        <div>
+          <h4 style="font-weight:800;font-size:.95rem;color:#1a1a1a">${title}</h4>
+          <div style="font-size:.75rem;color:#6b7280">0 Grounds &middot; Newly Created</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span class="badge badge-success badge-dot">Active</span>
+      </div>
+    `;
+    list.prepend(newCard);
+    closeAddSportModal();
+  }
+
+  function savePolicies(e) {
+    e.preventDefault();
+    alert('Platform policies saved successfully.');
+  }
+</script>
+</body>
+</html>
