@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TurfHub — Messages</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+      :root {
+        --color-lime: #7ED321;
+        --color-lime-dark: #6ab81c;
+        --color-forest: #0F2B1D;
+        --color-forest-mid: #1a4029;
+        --color-off-white: #F7F8F5;
+        --color-charcoal: #1E1E1E;
+        --color-gray-mid: #6B7280;
+        --color-amber: #F5A623;
+        --color-success: #4CAF50;
+        --color-danger: #E53935;
+      }
+
+      .bg-lime { background-color: var(--color-lime); }
+      .bg-lime-dark { background-color: var(--color-lime-dark); }
+      .bg-forest { background-color: var(--color-forest); }
+      .bg-off-white { background-color: var(--color-off-white); }
+      .text-lime { color: var(--color-lime); }
+      .text-forest { color: var(--color-forest); }
+      .text-charcoal { color: var(--color-charcoal); }
+      .text-gray-mid { color: var(--color-gray-mid); }
+      .text-success { color: var(--color-success); }
+      .text-danger { color: var(--color-danger); }
+      .border-lime { border-color: var(--color-lime); }
+      body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; background-color: #ffffff; color: #1E1E1E; }
+    </style>
+  </head>
+  <body>
+    <div class="min-h-screen bg-white">
+      <!-- Navbar -->
+      <nav class="px-6 py-4 flex items-center justify-between bg-forest">
+        <a href="index.html" class="flex items-center gap-2">
+          <div class="w-8 h-8 bg-lime rounded-lg flex items-center justify-center"><span class="text-forest font-black text-sm leading-none">TH</span></div>
+          <span class="font-black text-xl text-white">TurfHub</span>
+        </a>
+        <div class="hidden md:flex items-center gap-6 text-sm">
+          <a href="index.html" class="font-semibold text-white">Home</a>
+          <a href="turf-detail.html" class="transition-colors text-white/70 hover:text-white">Turfs</a>
+          <a href="fixtures.html" class="transition-colors text-white/70 hover:text-white">Fixtures</a>
+          <a href="contact.html" class="transition-colors text-white/70 hover:text-white">Contact</a>
+        </div>
+        <div class="flex items-center gap-3">
+          <a href="login.html" class="bg-lime hover:bg-lime-dark text-forest font-bold px-5 py-2 rounded-full text-sm transition-colors">Get Started</a>
+        </div>
+      </nav>
+
+      <!-- Chat -->
+      <main class="max-w-4xl mx-auto px-6 py-12">
+        <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 bg-lime/10 rounded-xl flex items-center justify-center flex-shrink-0"><span class="text-lime font-black text-lg">💬</span></div>
+            <div>
+              <h1 class="text-3xl font-black text-charcoal">Messages</h1>
+              <p class="text-gray-mid">Communicate with your team and tournament participants</p>
+            </div>
+          </div>
+
+          <!-- Chat Sidebar -->
+          <div class="bg-gray-50 rounded-xl p-6 mb-8 max-h-80 overflow-y-auto">
+            <div class="space-y-2">
+              <!-- Recent Chat 1 -->
+              <div class="p-3 rounded-xl border border-gray-100 hover:bg-lime/5 cursor-pointer transition-colors" tabindex="0" role="button">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 bg-lime rounded-full flex items-center justify-center flex-shrink-0"><span class="text-white font-black text-sm">R</span></div>
+                  <div>
+                    <span class="font-medium text-charcoal">Team Captain</span>
+                    <span class="text-xs text-gray-mid">• 2 min ago</span>
+                  </div>
+                </div>
+                <p class="text-sm text-gray-mid mt-1 leading-relaxed">Hey! Are we still on for the match today?</p>
+              </div>
+
+              <!-- Recent Chat 2 -->
+              <div class="p-3 rounded-xl border border-gray-100 hover:bg-lime/5 cursor-pointer transition-colors" tabindex="0" role="button">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 bg-lime rounded-full flex items-center justify-center flex-shrink-0"><span class="text-white font-black text-sm">C</span></div>
+                  <div>
+                    <span class="font-medium text-charcoal">Rising Stars</span>
+                    <span class="text-xs text-gray-mid">• 15 min ago</span>
+                  </div>
+                </div>
+                <p class="text-sm text-gray-mid mt-1 leading-relaxed">Confirmation received for the tournament fixture.</p>
+              </div>
+
+              <!-- Recent Chat 3 -->
+              <div class="p-3 rounded-xl border border-gray-100 hover:bg-lime/5 cursor-pointer transition-colors" tabindex="0" role="button">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 bg-lime rounded-full flex items-center justify-center flex-shrink-0"><span class="text-white font-black text-sm">F</span></div>
+                  <div>
+                    <span class="font-medium text-charcoal">FC Dynamo</span>
+                    <span class="text-xs text-gray-mid">• 1 hr ago</span>
+                  </div>
+                </div>
+                <p class="text-sm text-gray-mid mt-1 leading-relaxed">Thanks for the pitch update.</p>
+              </div>
+
+              <!-- Recent Chat 4 -->
+              <div class="p-3 rounded-xl border border-gray-100 hover:bg-lime/5 cursor-pointer transition-colors" tabindex="0" role="button">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 bg-lime rounded-full flex items-center justify-center flex-shrink-0"><span class="text-white font-black text-sm">O</span></div>
+                  <div>
+                    <span class="font-medium text-charcoal">Officials</span>
+                    <span class="text-xs text-gray-mid">• Yesterday</span>
+                  </div>
+                </div>
+                <p class="text-sm text-gray-mid mt-1 leading-relaxed">Field conditions verified for Saturday.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chat Area -->
+          <div class="grid grid-cols-1 lg:grid-cols-[250px]_gap-6">
+            <!-- Chat Participants -->
+            <div class="bg-gray-50 rounded-lg p-4 flex flex-col gap-2">
+              <span class="text-xs text-gray-mid uppercase tracking-wider">Recent Chats</span>
+              <div class="flex-1">
+                <span class="block px-3 py-2 rounded-md text-sm text-gray-mid hover:text-charcoal hover:bg-white transition-colors">All</span>
+                <span class="block px-3 py-2 rounded-md text-sm text-gray-mid hover:text-charcoal hover:bg-white transition-colors">Teams</span>
+                <span class="block px-3 py-2 rounded-md text-sm text-gray-mid hover:text-charcoal hover:bg-white transition-colors">Tournament</span>
+              </div>
+            </div>
+
+            <!-- Chat Messages -->
+            <div class="space-y-4 flex-1">
+              <!-- Message 1 -->
+              <div class="flex items-start gap-3">
+                <div class="w-10 h-10 bg-lime/10 rounded-lg flex items-center justify-center flex-shrink-0"><span class="text-lime font-black text-sm">R</span></div>
+                <div class="bg-lime/10 rounded-xl p-4 max-w-xs">
+                  <p class="text-charcoal text-sm leading-relaxed">Hi there! Yes, we're all set for the match today. The ground is ready and the team is ready to play.</p>
+                  <p class="text-xs text-gray-mid mt-1">Team Captain · Just now</p>
+                </div>
+              </div>
+
+              <!-- Message 2 -->
+              <div class="flex items-end gap-3">
+                <div class="bg-lime rounded-xl p-4 max-w-xs"><span class="text-white text-sm font-bold">Team Captain</span></div>
+                <div class="w-10 h-10 bg-lime rounded-lg flex items-center justify-center flex-shrink-0"><span class="text-white font-black text-sm">C</span></div>
+              </div>
+
+              <!-- Message 3 -->
+              <div class="flex items-start gap-3">
+                <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0"><span class="text-gray-600 text-sm">O</span></div>
+                <div class="bg-gray-100 rounded-xl p-4 max-w-xs">
+                  <p class="text-gray-mid text-sm leading-relaxed">Great! See you at 4 PM at the Green Arena.</p>
+                  <p class="text-xs text-gray-mid mt-1">Officials · 10 min ago</p>
+                </div>
+              </div>
+
+              <!-- Message 4 -->
+              <div class="flex items-end gap-3">
+                <div class="bg-gray-100 rounded-xl p-4 max-w-xs"><span class="text-gray-mid text-sm font-medium">Rising Stars</span></div>
+                <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0"><span class="text-gray-600 text-sm">R</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- New Message Form -->
+        <div class="bg-gray-50 rounded-2xl p-6 mb-8">
+          <div class="flex gap-3">
+            <input type="text" placeholder="Type a message..." class="flex-1 px-4 py-3 rounded-xl border border-gray-200 text-charcoal text-sm outline-none focus:border-lime transition-colors placeholder-gray-300" />
+            <button class="bg-lime hover:bg-lime-dark text-forest font-bold px-5 py-3 rounded-xl transition-colors text-sm">Send</button>
+          </div>
+        </div>
+      </main>
+
+      <!-- Footer -->
+      <footer class="bg-forest text-white">
+        <div class="max-w-7xl mx-auto px-6 py-12">
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+            <div class="col-span-2 md:col-span-1">
+              <div class="flex items-center gap-2 mb-4">
+                <div class="w-8 h-8 bg-lime rounded-lg flex items-center justify-center"><span class="text-forest font-black text-sm">TH</span></div>
+                <span class="font-black text-xl">TurfHub</span>
+              </div>
+              <p class="text-white/50 text-sm leading-relaxed">India's premier sports turf booking and tournament management platform.</p>
+              <div class="flex gap-3 mt-4">
+                <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">⚽</span>
+                <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🏀</span>
+                <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🏏</span>
+                <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🎾</span>
+                <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🏸</span>
+              </div>
+            </div>
+            <div>
+              <h4 class="font-bold mb-4 text-white/80 text-sm uppercase tracking-wider">Platform</h4>
+              <ul class="space-y-2.5">
+                <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Find Turfs</a></li>
+                <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Tournaments</a></li>
+                <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Fixtures</a></li>
+                <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Leaderboard</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-bold mb-4 text-white/80 text-sm uppercase tracking-wider">For Owners</h4>
+              <ul class="space-y-2.5">
+                <li><a href="login.html" class="text-white/50 text-sm hover:text-lime transition-colors">List Your Turf</a></li>
+                <li><a href="login.html" class="text-white/50 text-sm hover:text-lime transition-colors">Manage Bookings</a></li>
+                <li><a href="login.html" class="text-white/50 text-sm hover:text-lime transition-colors">Run Tournaments</a></li>
+                <li><a href="login.html" class="text-white/50 text-sm hover:text-lime transition-colors">Analytics</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-bold mb-4 text-white/80 text-sm uppercase tracking-wider">Support</h4>
+              <ul class="space-y-2.5">
+                <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Help Center</a></li>
+                <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Privacy Policy</a></li>
+                <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Terms of Service</a></li>
+                <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Contact Us</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-3">
+            <p class="text-white/30 text-sm">© 2025 TurfHub Technologies Pvt. Ltd. All rights reserved.</p>
+            <p class="text-white/30 text-sm">Made with ❤️ for sport</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

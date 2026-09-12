@@ -8,14 +8,41 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <style type="text/tailwindcss">
-      @theme {
-        --color-lime: #7ED321; --color-lime-dark: #6ab81c; --color-forest: #0F2B1D; --color-forest-mid: #1a4029;
-        --color-off-white: #F7F8F5; --color-charcoal: #1E1E1E; --color-gray-mid: #6B7280; --color-amber: #F5A623;
-        --color-success: #4CAF50; --color-danger: #E53935; --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    <style>
+      :root {
+        --color-lime: #7ED321;
+        --color-lime-dark: #6ab81c;
+        --color-forest: #0F2B1D;
+        --color-forest-mid: #1a4029;
+        --color-off-white: #F7F8F5;
+        --color-charcoal: #1E1E1E;
+        --color-gray-mid: #6B7280;
+        --color-amber: #F5A623;
+        --color-success: #4CAF50;
+        --color-danger: #E53935;
+        --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+      }
+
+      .bg-lime { background-color: var(--color-lime); }
+      .bg-lime-dark { background-color: var(--color-lime-dark); }
+      .bg-forest { background-color: var(--color-forest); }
+      .bg-forest-mid { background-color: var(--color-forest-mid); }
+      .bg-off-white { background-color: var(--color-off-white); }
+      .bg-charcoal { background-color: var(--color-charcoal); }
+      .text-forest { color: var(--color-forest); }
+      .text-charcoal { color: var(--color-charcoal); }
+      .text-gray-mid { color: var(--color-gray-mid); }
+      .border-gray-mid { border-color: var(--color-gray-mid); }
+      .bg-amber { background-color: var(--color-amber); }
+      .bg-success { background-color: var(--color-success); }
+      .bg-danger { background-color: var(--color-danger); }
+
+      body {
+        font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+        background-color: #F7F8F5;
+        color: #1E1E1E;
       }
     </style>
-    <style>body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; background-color: #F7F8F5; color: #1E1E1E; }</style>
   </head>
   <body>
     <div class="flex min-h-screen bg-off-white">

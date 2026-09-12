@@ -8,61 +8,195 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <style type="text/tailwindcss">
-      @theme {
-        --color-lime: #7ED321; --color-lime-dark: #6ab81c; --color-forest: #0F2B1D; --color-forest-mid: #1a4029;
-        --color-off-white: #F7F8F5; --color-charcoal: #1E1E1E; --color-gray-mid: #6B7280; --color-amber: #F5A623;
-        --color-success: #4CAF50; --color-danger: #E53935; --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    <style>
+      :root {
+        --color-lime: #7ED321;
+        --color-lime-dark: #6ab81c;
+        --color-forest: #0F2B1D;
+        --color-forest-mid: #1a4029;
+        --color-off-white: #F7F8F5;
+        --color-charcoal: #1E1E1E;
+        --color-gray-mid: #6B7280;
+        --color-amber: #F5A623;
+        --color-success: #4CAF50;
+        --color-danger: #E53935;
       }
+
+      .bg-lime { background-color: var(--color-lime); }
+      .bg-lime-dark { background-color: var(--color-lime-dark); }
+      .bg-forest { background-color: var(--color-forest); }
+      .bg-off-white { background-color: var(--color-off-white); }
+      .text-lime { color: var(--color-lime); }
+      .text-forest { color: var(--color-forest); }
+      .text-charcoal { color: var(--color-charcoal); }
+      .text-gray-mid { color: var(--color-gray-mid); }
+      .text-danger { color: var(--color-danger); }
+      .border-lime { border-color: var(--color-lime); }
+      .border-gray-100 { border-color: #f3f4f6; }
+      .border-gray-200 { border-color: #e5e7eb; }
+      body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; background-color: #ffffff; color: #1E1E1E; }
     </style>
-    <style>body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; background-color: #F7F8F5; color: #1E1E1E; }</style>
   </head>
-  <body>
+  <body class="min-h-screen bg-off-white">
     <div class="flex min-h-screen bg-off-white">
-      <div class="w-56 bg-forest min-h-screen flex flex-col flex-shrink-0">
-        <div class="p-5 border-b border-white/10">
-          <a href="index.html" class="flex items-center gap-2">
-            <div class="w-7 h-7 bg-lime rounded-lg flex items-center justify-center"><span class="text-forest font-black text-xs leading-none">TH</span></div>
-            <span class="font-black text-white text-lg">TurfHub</span>
+
+      <!-- Sidebar -->
+      <aside class="w-64 bg-white border-r border-gray-100 flex-shrink-0">
+        <div class="px-6 py-4 border-b border-gray-100">
+          <h2 class="text-xl font-black text-charcoal">TurfHub</h2>
+          <p class="text-sm text-gray-mid">Join a Team</p>
+        </div>
+        <nav class="px-6 py-3 space-y-2">
+          <a href="player-dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-gray-mid hover:text-charcoal">
+            <span class="text-xl">📊</span>
+            <span>Dashboard</span>
           </a>
-        </div>
-        <div class="p-4 border-b border-white/10">
-          <div class="flex items-center gap-3">
-            <div class="w-9 h-9 bg-lime rounded-full flex items-center justify-center flex-shrink-0"><span class="text-forest font-black text-sm">A</span></div>
-            <div class="overflow-hidden"><div class="text-white font-semibold text-sm truncate">Arif Hossain</div><div class="text-white/50 text-xs">Player</div></div>
-          </div>
-        </div>
-        <nav class="flex-1 p-3 space-y-0.5 overflow-y-auto">
-          <a href="player-dashboard.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>📊</span><span>Dashboard</span></a>
-          <a href="join-team.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors bg-lime text-forest"><span>➕</span><span>Join a Team</span></a>
-          <a href="fixtures.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>📈</span><span>Fixtures</span></a>
-          <a href="chat.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>💬</span><span>Messages</span></a>
+          <a href="fixtures.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-gray-mid hover:text-charcoal">
+            <span class="text-xl">📅</span>
+            <span>Fixtures</span>
+          </a>
+          <a href="tournament-registration.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-gray-mid hover:text-charcoal">
+            <span class="text-xl">🏆</span>
+            <span>Tournaments</span>
+          </a>
+          <a href="contact.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-gray-mid hover:text-charcoal">
+            <span class="text-xl">📞</span>
+            <span>Contact</span>
+          </a>
         </nav>
-        <div class="p-3 border-t border-white/10">
-          <a href="index.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/40 hover:text-white/70 transition-colors"><span>🚪</span><span>Sign Out</span></a>
+        <div class="p-6 border-t border-gray-100">
+          <h3 class="font-bold text-charcoal text-sm mb-3">Quick Links</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-mid text-sm hover:text-lime transition-colors">View Teams</a></li>
+            <li><a href="#" class="text-gray-mid text-sm hover:text-lime transition-colors">Log Out</a></li>
+          </ul>
         </div>
-      </div>
+      </aside>
 
-      <div class="flex-1 overflow-y-auto">
-        <div class="bg-white border-b border-gray-100 px-8 py-4">
-          <h1 class="text-xl font-black text-charcoal">Join a Team</h1>
-          <p class="text-sm text-gray-mid">Enter your invitation code to join a team</p>
-        </div>
-
-        <div class="p-8 max-w-xl mx-auto">
-          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center">
-            <div class="text-5xl mb-4">🎟️</div>
-            <h2 class="text-2xl font-black text-charcoal mb-2">Enter Invitation Code</h2>
-            <p class="text-gray-mid text-sm mb-6">Your team captain has shared a code with you. Enter it below to preview the team and join.</p>
-            <div class="text-left mb-4">
-              <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-2">Invitation Code</label>
-              <input placeholder="e.g. TFC-2025" class="w-full px-5 py-3.5 border-2 border-gray-200 focus:border-lime rounded-xl text-charcoal font-mono text-lg text-center outline-none transition-colors tracking-widest" />
-              <p class="text-gray-mid text-xs mt-2 text-center">Hint: try TFC-2025 to demo the flow</p>
-            </div>
-            <a href="#" class="block w-full bg-lime hover:bg-lime-dark text-forest font-black py-3.5 rounded-xl text-sm transition-colors">Look Up Team →</a>
+      <!-- Main Content -->
+      <div class="flex-1 p-8">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center mb-8">
+          <div class="text-5xl mb-4">🎟️</div>
+          <h2 class="text-2xl font-black text-charcoal mb-2">Enter Invitation Code</h2>
+          <p class="text-gray-mid text-sm mb-6">
+            Your team captain has shared a code with you. Enter it below to preview the team and join.
+          </p>
+          <div class="text-left mb-4">
+            <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-2">Invitation Code</label>
+            <input
+              type="text"
+              placeholder="e.g. TFC-2025"
+              class="w-full px-5 py-3.5 border-2 rounded-xl text-charcoal font-mono text-lg text-center outline-none transition-colors tracking-widest"
+            />
           </div>
+          <button
+            class="w-full bg-lime hover:bg-lime-dark disabled:opacity-40 text-forest font-black py-3.5 rounded-xl text-sm transition-colors"
+          >
+            Look Up Team →
+          </button>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-8">
+          <div class="relative h-40 bg-gray-200">
+            <img
+              src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600&h=300&fit=crop&auto=format"
+              alt=""
+              class="w-full h-full object-cover"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-forest/80 to-transparent" />
+            <div class="absolute bottom-4 left-5">
+              <div class="font-black text-white text-2xl">Thunder FC</div>
+              <div class="text-white/70 text-sm">Football 5-a-side</div>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="grid grid-cols-2 gap-4 mb-5">
+              <div>
+                <div class="text-xs font-bold text-gray-mid uppercase tracking-wider mb-0.5">Captain</div>
+                <div class="font-semibold text-charcoal text-sm">Fatema Begum</div>
+              </div>
+              <div>
+                <div class="text-xs font-bold text-gray-mid uppercase tracking-wider mb-0.5">League</div>
+                <div class="font-semibold text-charcoal text-sm">Inter-City Football League 2025</div>
+              </div>
+              <div>
+                <div class="text-xs font-bold text-gray-mid uppercase tracking-wider mb-0.5">Standing</div>
+                <div class="font-semibold text-charcoal text-sm">2nd Place</div>
+              </div>
+              <div>
+                <div class="text-xs font-bold text-gray-mid uppercase tracking-wider mb-0.5">Record</div>
+                <div class="font-semibold text-charcoal text-sm">5W / 1L</div>
+              </div>
+            </div>
+            <div class="border-t border-gray-100 pt-4">
+              <div class="flex justify-between text-sm mb-2">
+                <span class="font-semibold text-charcoal">Roster</span>
+                <span class="text-gray-mid">10/14 players</span>
+              </div>
+              <div class="h-2 bg-gray-100 rounded-full overflow-hidden mb-2">
+                <div class="h-full bg-lime rounded-full" style="width: 71.4%"></div>
+              </div>
+              <p class="text-xs text-gray-mid">4 spots available</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex gap-3">
+          <button
+            class="border-2 border-gray-200 hover:border-gray-300 text-charcoal font-bold px-5 py-3 rounded-xl text-sm transition-colors"
+          >
+            ← Back
+          </button>
+          <button
+            class="flex-1 bg-lime hover:bg-lime-dark text-forest font-black py-3 rounded-xl text-sm transition-colors"
+          >
+            ✓ Join Thunder FC
+          </button>
         </div>
       </div>
     </div>
+
+    <footer class="bg-forest text-white mt-auto">
+      <div class="max-w-7xl mx-auto px-6 py-12">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+          <div class="col-span-2 md:col-span-1">
+            <div class="flex items-center gap-2 mb-4">
+              <div class="w-8 h-8 bg-lime rounded-lg flex items-center justify-center"><span class="text-forest font-black text-sm">TH</span></div>
+              <span class="font-black text-xl">TurfHub</span>
+            </div>
+            <p class="text-white/50 text-sm leading-relaxed">India's premier sports turf booking and tournament management platform.</p>
+            <div class="flex gap-3 mt-4">
+              <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">⚽</span>
+              <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🏀</span>
+              <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🏏</span>
+              <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🎾</span>
+              <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🏸</span>
+            </div>
+          </div>
+          <div>
+            <h4 class="font-bold mb-4 text-white/80 text-sm uppercase tracking-wider">Platform</h4>
+            <ul class="space-y-2.5">
+              <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Find Turfs</a></li>
+              <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Tournaments</a></li>
+              <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Fixtures</a></li>
+              <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Leaderboard</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-bold mb-4 text-white/80 text-sm uppercase tracking-wider">Support</h4>
+            <ul class="space-y-2.5">
+              <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Help Center</a></li>
+              <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Privacy Policy</a></li>
+              <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Terms of Service</a></li>
+              <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Contact Us</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-3">
+          <p class="text-white/30 text-sm">© 2025 TurfHub Technologies Pvt. Ltd. All rights reserved.</p>
+          <p class="text-white/30 text-sm">Made with ❤️ for sport</p>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>
