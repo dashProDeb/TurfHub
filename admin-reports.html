@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TurfHub — Admin Financial Reports</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    .table-custom { width: 100%; border-collapse: collapse; text-align: left; font-size: .85rem; }
+    .table-custom th { background: #0d2818; color: #fff; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: 12px 16px; }
+    .table-custom td { padding: 12px 16px; border-bottom: 1px solid #f3f4f6; color: #374151; }
+    .table-custom tr:last-child td { border-bottom: none; }
+    .table-custom tr:hover { background: #fbfdf9; }
+  </style>
+</head>
+<body>
+<div id="app-wrapper">
+  
+  <!-- Standalone Admin Sidebar -->
+  <aside id="sidebar" class="sidebar">
+    <a href="index.html" class="sidebar-logo">
+      <div class="sidebar-logo-icon">TH</div>
+      <span class="sidebar-logo-text">TurfHub</span>
+    </a>
+    <div class="sidebar-user">
+      <div class="sidebar-avatar">A</div>
+      <div class="sidebar-user-info">
+        <span class="sidebar-user-name">Admin User</span>
+        <span class="sidebar-user-role">Platform Admin</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="admin-dashboard.html" class="sidebar-nav-item"><span class="sidebar-icon">📊</span><span class="sidebar-label">Overview</span></a>
+      <a href="admin-approvals.html" class="sidebar-nav-item"><span class="sidebar-icon">✅</span><span class="sidebar-label">Approvals</span></a>
+      <a href="admin-analytics.html" class="sidebar-nav-item"><span class="sidebar-icon">📈</span><span class="sidebar-label">Analytics</span></a>
+      <a href="admin-categories.html" class="sidebar-nav-item"><span class="sidebar-icon">🏷️</span><span class="sidebar-label">Categories</span></a>
+      <a href="admin-reports.html" class="sidebar-nav-item active"><span class="sidebar-icon">📄</span><span class="sidebar-label">Reports</span></a>
+      <a href="admin-announcements.html" class="sidebar-nav-item"><span class="sidebar-icon">📢</span><span class="sidebar-label">Announce</span></a>
+    </nav>
+    <a href="login.html" class="sidebar-signout">
+      <span class="sidebar-icon">🚪</span>
+      <span class="sidebar-label">Sign Out</span>
+    </a>
+  </aside>
+
+  <div id="main-content">
+    
+    <!-- Topbar -->
+    <div id="topbar">
+      <div class="topbar-title">
+        <span class="topbar-heading">Financial Audits &amp; Platform Reports</span>
+        <span class="topbar-sub">Date-range filtered revenue audits, owner payout schedules, and commission earnings</span>
+      </div>
+      <div class="topbar-actions">
+        <button onclick="window.print()" class="btn-lime" style="font-size:.82rem;padding:7px 16px;cursor:pointer">
+          📄 Export Statement (PDF)
+        </button>
+      </div>
+    </div>
+
+    <!-- Page Body -->
+    <div class="page-body">
+      
+      <!-- Financial Summary Metric Cards -->
+      <div class="stat-grid" style="margin-bottom:24px">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#dcfce7">💰</div>
+          <div class="stat-body">
+            <div class="stat-value">&#2547;5,24,000</div>
+            <div class="stat-label">Gross Platform GMV</div>
+            <div class="stat-trend up">↑ 100% Collected</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#dbeafe">🏷️</div>
+          <div class="stat-body">
+            <div class="stat-value">&#2547;26,200</div>
+            <div class="stat-label">Platform 5% Commission</div>
+            <div class="stat-trend up">Net Platform Revenue</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#fef3c7">🏦</div>
+          <div class="stat-body">
+            <div class="stat-value">&#2547;4,97,800</div>
+            <div class="stat-label">Disbursed to Turf Owners</div>
+            <div class="stat-trend" style="color:#6b7280">Auto Bank/bKash Payout</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#fee2e2">↩️</div>
+          <div class="stat-body">
+            <div class="stat-value">&#2547;3,200</div>
+            <div class="stat-label">Refunds Processed</div>
+            <div class="stat-trend" style="color:#dc2626">4 weather cancellations</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Statements Table -->
+      <div class="content-panel" style="padding:22px">
+        <div class="panel-header" style="margin-bottom:16px">
+          <div>
+            <span class="panel-title">Recent Settled Dispatches</span>
+            <span class="panel-sub" style="display:block;font-size:.78rem;color:#6b7280;margin-top:2px">Weekly payout audit ledger with invoice references</span>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn-ghost" style="font-size:.78rem">Download CSV</button>
+          </div>
+        </div>
+
+        <div style="overflow-x:auto">
+          <table class="table-custom">
+            <thead>
+              <tr>
+                <th>Disbursement ID</th>
+                <th>Ground / Host</th>
+                <th>Gross Volume</th>
+                <th>Platform 5%</th>
+                <th>Net Payout</th>
+                <th>Payout Channel</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong style="color:#1a1a1a">#DIS-2025-0726-01</strong></td>
+                <td>Rafiqul Islam &middot; The Green Arena</td>
+                <td>&#2547;72,000</td>
+                <td>&#2547;3,600</td>
+                <td><strong style="color:#16a34a">&#2547;68,400</strong></td>
+                <td>City Bank A/C &middot;&middot;4875</td>
+                <td><span class="badge badge-success badge-dot">Disbursed</span></td>
+              </tr>
+              <tr>
+                <td><strong style="color:#1a1a1a">#DIS-2025-0726-02</strong></td>
+                <td>Zahid Karim &middot; Court Pro Indoor</td>
+                <td>&#2547;48,000</td>
+                <td>&#2547;2,400</td>
+                <td><strong style="color:#16a34a">&#2547;45,600</strong></td>
+                <td>bKash Merchant &middot;&middot;1122</td>
+                <td><span class="badge badge-success badge-dot">Disbursed</span></td>
+              </tr>
+              <tr>
+                <td><strong style="color:#1a1a1a">#DIS-2025-0726-03</strong></td>
+                <td>Tanvir Hossain &middot; Champions Field</td>
+                <td>&#2547;64,000</td>
+                <td>&#2547;3,200</td>
+                <td><strong style="color:#16a34a">&#2547;60,800</strong></td>
+                <td>BRAC Bank A/C &middot;&middot;9921</td>
+                <td><span class="badge badge-success badge-dot">Disbursed</span></td>
+              </tr>
+              <tr>
+                <td><strong style="color:#1a1a1a">#DIS-2025-0726-04</strong></td>
+                <td>Mahbubur Rahman &middot; Uttara Arena</td>
+                <td>&#2547;38,000</td>
+                <td>&#2547;1,900</td>
+                <td><strong style="color:#16a34a">&#2547;36,100</strong></td>
+                <td>Nagad Merchant &middot;&middot;7788</td>
+                <td><span class="badge badge-success badge-dot">Disbursed</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>

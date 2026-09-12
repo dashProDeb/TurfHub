@@ -1,334 +1,232 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TurfHub — Player Dashboard</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <style>
-      :root {
-        --color-lime: #7ED321;
-        --color-lime-dark: #6ab81c;
-        --color-forest: #0F2B1D;
-        --color-forest-mid: #1a4029;
-        --color-off-white: #F7F8F5;
-        --color-charcoal: #1E1E1E;
-        --color-gray-mid: #6B7280;
-        --color-amber: #F5A623;
-        --color-success: #4CAF50;
-        --color-danger: #E53935;
-      }
-
-      .bg-lime { background-color: var(--color-lime); }
-      .bg-lime-dark { background-color: var(--color-lime-dark); }
-      .bg-forest { background-color: var(--color-forest); }
-      .bg-off-white { background-color: var(--color-off-white); }
-      .text-lime { color: var(--color-lime); }
-      .text-forest { color: var(--color-forest); }
-      .text-charcoal { color: var(--color-charcoal); }
-      .text-gray-mid { color: var(--color-gray-mid); }
-      .text-success { color: var(--color-success); }
-      .text-danger { color: var(--color-danger); }
-      .text-amber-600 { color: #e5a00f; }
-      .border-lime { border-color: var(--color-lime); }
-      .border-gray-100 { border-color: #f3f4f6; }
-      .border-gray-200 { border-color: #e5e7eb; }
-      .border-gray-50 { border-color: #f9fafb; }
-      body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; background-color: #ffffff; color: #1E1E1E; }
-    </style>
-  </head>
-  <body class="min-h-screen bg-off-white">
-    <div class="flex min-h-screen bg-off-white">
-
-      <!-- Sidebar -->
-      <aside class="w-64 bg-white border-r border-gray-100 flex-shrink-0">
-        <div class="px-6 py-4 border-b border-gray-100">
-          <h2 class="text-xl font-black text-charcoal">TurfHub</h2>
-          <p class="text-sm text-gray-mid">Player Dashboard</p>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TurfHub — Player Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    .fixture-row { display:flex; align-items:center; gap:12px; padding:13px 0; border-bottom:1px solid #f3f4f6; }
+    .fixture-row:last-child { border-bottom:none; }
+    .fix-date { min-width:54px; text-align:center; }
+    .fix-date-day { font-size:1.2rem; font-weight:900; color:#1a1a1a; line-height:1; }
+    .fix-date-month { font-size:.68rem; font-weight:600; color:#9ca3af; text-transform:uppercase; }
+    .fix-team { font-weight:700; font-size:.88rem; color:#1a1a1a; }
+    .fix-meta { font-size:.75rem; color:#6b7280; }
+    .avail-btn { padding:6px 14px; border-radius:8px; border:none; font-size:.75rem; font-weight:700; cursor:pointer; font-family:inherit; transition:background .15s; }
+    .avail-btn.yes { background:rgba(126,211,33,.12); color:#5a9e12; }
+    .avail-btn.yes:hover { background:rgba(126,211,33,.25); }
+    .avail-btn.no { background:rgba(229,57,53,.1); color:#e53935; }
+    .avail-btn.no:hover { background:rgba(229,57,53,.2); }
+    .quick-action { display:flex; align-items:center; justify-content:space-between; padding:11px 0; border-bottom:1px solid #f3f4f6; text-decoration:none; }
+    .quick-action:last-child { border-bottom:none; }
+    .quick-action-left { display:flex; align-items:center; gap:10px; font-size:.85rem; font-weight:600; color:#1a1a1a; }
+    .badge-pill { display:inline-flex; align-items:center; gap:5px; padding:4px 12px; border-radius:100px; font-size:.72rem; font-weight:700; }
+  </style>
+</head>
+<body>
+  <div id="app-wrapper">
+    <!-- Standalone Player Sidebar -->
+    <aside id="sidebar" class="sidebar">
+      <a href="index.html" class="sidebar-logo">
+        <div class="sidebar-logo-icon">TH</div>
+        <span class="sidebar-logo-text">TurfHub</span>
+      </a>
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" style="background:#7ed321;color:#0d2818">P</div>
+        <div class="sidebar-user-info">
+          <span class="sidebar-user-name">Sabbir Ahmed</span>
+          <span class="sidebar-user-role">Player (Striker)</span>
         </div>
-        <nav class="px-6 py-3 space-y-2">
-          <a href="player-dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium ${
-            '' ? 'bg-lime/10 text-lime' : ''
-          } transition-colors">
-            <span class="text-xl">📊</span>
-            <span>Dashboard</span>
-          </a>
-          <a href="fixtures.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-gray-mid hover:text-charcoal">
-            <span class="text-xl">📅</span>
-            <span>Fixtures</span>
-          </a>
-          <a href="tournament-registration.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-gray-mid hover:text-charcoal">
-            <span class="text-xl">🏆</span>
-            <span>Tournaments</span>
-          </a>
-          <a href="contact.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-gray-mid hover:text-charcoal">
-            <span class="text-xl">📞</span>
-            <span>Contact</span>
-          </a>
-        </nav>
-        <div class="p-6 border-t border-gray-100">
-          <h3 class="font-bold text-charcoal text-sm mb-3">Quick Links</h3>
-          <ul class="space-y-2">
-            <li><a href="#" class="text-gray-mid text-sm hover:text-lime transition-colors">View Profile</a></li>
-            <li><a href="#" class="text-gray-mid text-sm hover:text-lime transition-colors">Log Out</a></li>
-          </ul>
-        </div>
-      </aside>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="player-dashboard.html" class="sidebar-nav-item active"><span class="sidebar-icon">📊</span><span class="sidebar-label">Dashboard</span></a>
+        <a href="turf-detail.html" class="sidebar-nav-item"><span class="sidebar-icon">🏟️</span><span class="sidebar-label">Find Turf</span></a>
+        <a href="join-team.html" class="sidebar-nav-item"><span class="sidebar-icon">👥</span><span class="sidebar-label">Join Team</span></a>
+        <a href="fixtures.html" class="sidebar-nav-item"><span class="sidebar-icon">🏆</span><span class="sidebar-label">Fixtures</span></a>
+        <a href="booking-receipt.html" class="sidebar-nav-item"><span class="sidebar-icon">🧾</span><span class="sidebar-label">My Receipts</span></a>
+        <a href="chat.html" class="sidebar-nav-item"><span class="sidebar-icon">💬</span><span class="sidebar-label">Team Chat</span></a>
+      </nav>
+      <a href="login.html" class="sidebar-signout">
+        <span class="sidebar-icon">🚪</span>
+        <span class="sidebar-label">Sign Out</span>
+      </a>
+    </aside>
 
-      <!-- Main Content -->
-      <div class="flex-1 p-8">
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 mb-8">
-          <h1 class="text-3xl font-black text-charcoal">Player Dashboard</h1>
-          <p class="text-sm text-gray-mid mt-1">Arif Hossain · Thunder FC · Striker #9</p>
+    <div id="main-content">
+      <div id="topbar">
+        <div class="topbar-title">
+          <span class="topbar-heading">Player Dashboard</span>
+          <span class="topbar-sub">Thunder FC &middot; Inter-City Football League 2025</span>
         </div>
+        <div class="topbar-actions">
+          <a href="turf-detail.html" class="btn-lime">Find Turfs</a>
+        </div>
+      </div>
 
-        {/* Stats */}
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-            <div class="w-12 h-12 rounded-xl bg-lime/10 flex items-center justify-center text-2xl flex-shrink-0">
-              👥
-            </div>
-            <div>
-              <div class="text-2xl font-black text-charcoal">7</div>
-              <div class="text-sm text-gray-mid font-medium">Goals This Season</div>
+      <div class="page-body">
+        <!-- Stats -->
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#dbeafe">📅</div>
+            <div class="stat-body">
+              <div class="stat-value">3</div>
+              <div class="stat-label">Upcoming Matches</div>
+              <div class="stat-trend up">↑ Next: Sat 8 PM</div>
             </div>
           </div>
-          <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-            <div class="w-12 h-12 rounded-xl bg-lime/10 flex items-center justify-center text-2xl flex-shrink-0">
-              🎯
-            </div>
-            <div>
-              <div class="text-2xl font-black text-charcoal">4</div>
-              <div class="text-sm text-gray-mid font-medium">Assists</div>
-            </div>
-          </div>
-          <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-            <div class="w-12 h-12 rounded-xl bg-forest/10 flex items-center justify-center text-2xl flex-shrink-0">
-              📅
-            </div>
-            <div>
-              <div class="text-2xl font-black text-charcoal">6/6</div>
-              <div class="text-sm text-gray-mid font-medium">Matches Attended</div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#dcfce7">⚽</div>
+            <div class="stat-body">
+              <div class="stat-value">7</div>
+              <div class="stat-label">Goals Scored</div>
+              <div class="stat-trend up">↑ Season best</div>
             </div>
           </div>
-          <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-            <div class="w-12 h-12 rounded-xl bg-amber/10 flex items-center justify-center text-2xl flex-shrink-0">
-              ⭐
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#f3e8ff">👥</div>
+            <div class="stat-body">
+              <div class="stat-value">2</div>
+              <div class="stat-label">Teams Joined</div>
             </div>
-            <div>
-              <div class="text-2xl font-black text-charcoal">8.1</div>
-              <div class="text-sm text-gray-mid font-medium">Avg Match Rating</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#fef3c7">🏅</div>
+            <div class="stat-body">
+              <div class="stat-value">4</div>
+              <div class="stat-label">Badges Earned</div>
+              <div class="stat-trend up">↑ 1 new</div>
             </div>
           </div>
         </div>
 
-        {/* Availability Confirmation */}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 mb-8">
-          <div class="px-6 py-4 border-b border-gray-100">
-            <h2 class="font-black text-charcoal text-base">Match Availability</h2>
-            <p class="text-sm text-gray-mid">Confirm your availability for upcoming matches</p>
-          </div>
-          <div class="divide-y divide-gray-50">
-            <div class="px-6 py-4">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="font-semibold text-charcoal text-sm">Thunder FC vs Rising Stars</span>
-                <span class="text-xs text-gray-mid">Sat, 26 Jul · 6:00 PM</span>
-              </div>
-              <div class="flex gap-2">
-                <button class="flex-1 py-1.5 rounded-lg text-xs font-bold capitalize transition-all border-2 bg-success text-white border-transparent">
-                  ✓ Available
-                </button>
-                <button class="flex-1 py-1.5 rounded-lg text-xs font-bold capitalize transition-all bg-white border border-gray-200 text-gray-mid hover:border-gray-300">
-                  ? Uncertain
-                </button>
-                <button class="flex-1 py-1.5 rounded-lg text-xs font-bold capitalize transition-all bg-white border border-gray-200 text-gray-mid hover:border-gray-300">
-                  ✕ Unavailable
-                </button>
-              </div>
+        <div class="content-grid">
+          <!-- My Fixtures -->
+          <div class="content-panel">
+            <div class="panel-header">
+              <span class="panel-title">My Upcoming Fixtures</span>
+              <a href="fixtures.html" class="panel-action">View All &rarr;</a>
             </div>
-            <div class="px-6 py-4">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="font-semibold text-charcoal text-sm">Thunder FC vs City Kickers</span>
-                <span class="text-xs text-gray-mid">Wed, 30 Jul · 7:00 PM</span>
-              </div>
-              <div class="flex gap-2">
-                <button class="flex-1 py-1.5 rounded-lg text-xs font-bold capitalize transition-all bg-white border border-gray-200 text-gray-mid hover:border-gray-300">
-                  ✓ Available
-                </button>
-                <button class="flex-1 py-1.5 rounded-lg text-xs font-bold capitalize transition-all bg-white border border-gray-200 text-gray-mid hover:border-gray-300">
-                  ? Uncertain
-                </button>
-                <button class="flex-1 py-1.5 rounded-lg text-xs font-bold capitalize transition-all bg-white border border-gray-200 text-gray-mid hover:border-gray-300">
-                  ✕ Unavailable
-                </button>
-              </div>
-            </div>
-            <div class="px-6 py-4">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="font-semibold text-charcoal text-sm">Thunder FC vs FC Dynamo</span>
-                <span class="text-xs text-gray-mid">Sat, 2 Aug · 5:00 PM</span>
-              </div>
-              <div class="flex gap-2">
-                <button class="flex-1 py-1.5 rounded-lg text-xs font-bold capitalize transition-all bg-success text-white border-transparent">
-                  ✓ Available
-                </button>
-                <button class="flex-1 py-1.5 rounded-lg text-xs font-bold capitalize transition-all bg-white border border-gray-200 text-gray-mid hover:border-gray-300">
-                  ? Uncertain
-                </button>
-                <button class="flex-1 py-1.5 rounded-lg text-xs font-bold capitalize transition-all bg-white border border-gray-200 text-gray-mid hover:border-gray-300">
-                  ✕ Unavailable
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        {/* Recent Performances */}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 mb-8">
-          <div class="px-6 py-4 border-b border-gray-100">
-            <h2 class="font-black text-charcoal text-base">Recent Performances</h2>
-          </div>
-          <div class="divide-y divide-gray-50">
-            <div class="px-6 py-4 flex items-center gap-4">
-              <div class="w-8 h-8 rounded-full flex items-center justify-center font-black text-sm flex-shrink-0 bg-success/10 text-success">W</div>
-              <div class="flex-1 min-w-0">
-                <div class="font-semibold text-charcoal text-sm truncate">Thunder FC 3–1 Blaze United</div>
-                <div class="text-xs text-gray-mid">22 Jul</div>
-              </div>
-              <div class="text-center flex-shrink-0">
-                <div class="text-sm font-black text-charcoal">2</div>
-                <div class="text-xs text-gray-mid">Goals</div>
-                <div class="text-xs text-gray-mid">Assists</div>
-              </div>
+            <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+              <button onclick="filterFix('all',this)" class="avail-btn yes" style="border-radius:20px;padding:6px 16px">All</button>
+              <button onclick="filterFix('upcoming',this)" class="avail-btn" style="border-radius:20px;padding:6px 16px;background:#f3f4f6;color:#6b7280">Upcoming</button>
+              <button onclick="filterFix('live',this)" class="avail-btn" style="border-radius:20px;padding:6px 16px;background:#f3f4f6;color:#6b7280">Live</button>
+              <button onclick="filterFix('completed',this)" class="avail-btn" style="border-radius:20px;padding:6px 16px;background:#f3f4f6;color:#6b7280">Completed</button>
             </div>
-            <div class="px-6 py-4 flex items-center gap-4">
-              <div class="w-8 h-8 rounded-full flex items-center justify-center font-black text-sm flex-shrink-0 bg-amber/10 text-amber-700">D</div>
-              <div class="flex-1 min-w-0">
-                <div class="font-semibold text-charcoal text-sm truncate">Thunder FC 1–1 Rising Stars</div>
-                <div class="text-xs text-gray-mid">19 Jul</div>
-              </div>
-              <div class="text-center flex-shrink-0">
-                <div class="text-sm font-black text-charcoal">0</div>
-                <div class="text-xs text-gray-mid">Goals</div>
-                <div class="text-xs text-gray-mid">Assists</div>
-              </div>
-            </div>
-            <div class="px-6 py-4 flex items-center gap-4">
-              <div class="w-8 h-8 rounded-full flex items-center justify-center font-black text-sm flex-shrink-0 bg-danger/10 text-danger">W</div>
-              <div class="flex-1 min-w-0">
-                <div class="font-semibold text-charcoal text-sm truncate">FC Dynamo 0–2 Thunder FC</div>
-                <div class="text-xs text-gray-mid">24 Jul</div>
-              </div>
-              <div class="text-center flex-shrink-0">
-                <div class="text-sm font-black text-success">2</div>
-                <div class="text-xs text-gray-mid">Goals</div>
-                <div class="text-xs text-gray-mid">Assists</div>
-              </div>
-            </div>
-            <div class="px-6 py-4 flex items-center gap-4">
-              <div class="w-8 h-8 rounded-full flex items-center justify-center font-black text-sm flex-shrink-0 bg-success/10 text-success">W</div>
-              <div class="flex-1 min-w-0">
-                <div class="font-semibold text-charcoal text-sm truncate">Green Eagles 0–3 Thunder FC</div>
-                <div class="text-xs text-gray-mid">15 Jul</div>
-              </div>
-              <div class="text-center flex-shrink-0">
-                <div class="text-sm font-black text-success">1</div>
-                <div class="text-xs text-gray-mid">Goals</div>
-                <div class="text-xs text-gray-mid">Assists</div>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        {/* Season Progress */}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 class="font-black text-charcoal text-base mb-5">Season Progress — Inter-City League 2025</h2>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div>
-              <div class="flex justify-between text-sm mb-2">
-                <span class="font-semibold text-charcoal">Goals</span>
-                <span class="font-black text-charcoal">7/15</span>
+            <div class="fixture-row">
+              <div class="fix-date"><div class="fix-date-day">26</div><div class="fix-date-month">Jul</div></div>
+              <div style="flex:1">
+                <div class="fix-team">Thunder FC <span style="font-weight:400;color:#9ca3af;font-size:.82rem">vs</span> Rising Stars</div>
+                <div class="fix-meta">6:00 PM &middot; The Green Arena &middot; Inter-City League QF</div>
               </div>
-              <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
-                <div class="h-full bg-success transition-all" style="width: 46.7%"></div>
-              </div>
-            </div>
-            <div>
-              <div class="flex justify-between text-sm mb-2">
-                <span class="font-semibold text-charcoal">Assists</span>
-                <span class="font-black text-charcoal">4/10</span>
-              </div>
-              <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
-                <div class="h-full bg-lime transition-all" style="width: 40%"></div>
+              <span class="badge badge-pending badge-dot">Pending</span>
+              <div style="display:flex;gap:6px">
+                <button class="avail-btn yes">✓ Yes</button>
+                <button class="avail-btn no">✗ No</button>
               </div>
             </div>
-            <div>
-              <div class="flex justify-between text-sm mb-2">
-                <span class="font-semibold text-charcoal">Attendance</span>
-                <span class="font-black text-charcoal">6/6</span>
+            <div class="fixture-row">
+              <div class="fix-date"><div class="fix-date-day">26</div><div class="fix-date-month">Jul</div></div>
+              <div style="flex:1">
+                <div class="fix-team">Blaze United <span style="font-weight:400;color:#9ca3af;font-size:.82rem">vs</span> City Kickers</div>
+                <div class="fix-meta">8:00 PM &middot; The Green Arena &middot; Inter-City League QF</div>
               </div>
-              <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
-                <div class="h-full bg-forest transition-all" style="width: 100%"></div>
+              <span class="badge badge-live badge-dot">Live</span>
+              <span style="font-weight:900;font-size:1rem;color:#1a1a1a;min-width:36px;text-align:center">1–1</span>
+            </div>
+            <div class="fixture-row">
+              <div class="fix-date"><div class="fix-date-day">27</div><div class="fix-date-month">Jul</div></div>
+              <div style="flex:1">
+                <div class="fix-team">FC Dynamo <span style="font-weight:400;color:#9ca3af;font-size:.82rem">vs</span> Green Eagles</div>
+                <div class="fix-meta">5:00 PM &middot; Champions Field &middot; Inter-City League QF</div>
+              </div>
+              <span class="badge badge-pending badge-dot">Pending</span>
+              <div style="display:flex;gap:6px">
+                <button class="avail-btn yes">✓ Yes</button>
+                <button class="avail-btn no">✗ No</button>
               </div>
             </div>
-            <div>
-              <div class="flex justify-between text-sm mb-2">
-                <span class="font-semibold text-charcoal">Clean Sheets</span>
-                <span class="font-black text-charcoal">2/6</span>
+            <div class="fixture-row">
+              <div class="fix-date"><div class="fix-date-day">30</div><div class="fix-date-month">Jul</div></div>
+              <div style="flex:1">
+                <div class="fix-team">Thunder FC <span style="font-weight:400;color:#9ca3af;font-size:.82rem">vs</span> City Kickers</div>
+                <div class="fix-meta">7:00 PM &middot; Champions Field &middot; Summer Cup R16</div>
               </div>
-              <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
-                <div class="h-full bg-amber transition-all" style="width: 33.3%"></div>
+              <span class="badge badge-pending badge-dot">Pending</span>
+              <div style="display:flex;gap:6px">
+                <button class="avail-btn yes">✓ Yes</button>
+                <button class="avail-btn no">✗ No</button>
               </div>
             </div>
+          </div>
+
+          <!-- Right column -->
+          <div style="display:flex;flex-direction:column;gap:16px">
+
+            <!-- My Badges -->
+            <div class="content-panel">
+              <div class="panel-header"><span class="panel-title">My Badges</span></div>
+              <div style="display:flex;flex-wrap:wrap;gap:10px;padding:4px 0">
+                <div style="text-align:center;width:72px">
+                  <div style="font-size:2rem">🏆</div>
+                  <div style="font-size:.68rem;font-weight:600;color:#1a1a1a;margin-top:4px">Top Scorer</div>
+                </div>
+                <div style="text-align:center;width:72px">
+                  <div style="font-size:2rem">⚡</div>
+                  <div style="font-size:.68rem;font-weight:600;color:#1a1a1a;margin-top:4px">Hat-trick</div>
+                </div>
+                <div style="text-align:center;width:72px">
+                  <div style="font-size:2rem">🤝</div>
+                  <div style="font-size:.68rem;font-weight:600;color:#1a1a1a;margin-top:4px">Team Player</div>
+                </div>
+                <div style="text-align:center;width:72px">
+                  <div style="font-size:2rem">📅</div>
+                  <div style="font-size:.68rem;font-weight:600;color:#1a1a1a;margin-top:4px">100% Attend.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="content-panel">
+              <div class="panel-header"><span class="panel-title">Quick Actions</span></div>
+              <a href="turf-detail.html" class="quick-action">
+                <div class="quick-action-left"><span>🏟️</span> Find &amp; Book Turf</div>
+                <span style="color:#9ca3af">&rarr;</span>
+              </a>
+              <a href="join-team.html" class="quick-action">
+                <div class="quick-action-left"><span>👥</span> Join a Team</div>
+                <span style="color:#9ca3af">&rarr;</span>
+              </a>
+              <a href="tournament-registration.html" class="quick-action">
+                <div class="quick-action-left"><span>🏆</span> Register Tournament</div>
+                <span style="color:#9ca3af">&rarr;</span>
+              </a>
+              <a href="fixtures.html" class="quick-action">
+                <div class="quick-action-left"><span>📋</span> View Fixtures</div>
+                <span style="color:#9ca3af">&rarr;</span>
+              </a>
+              <a href="chat.html" class="quick-action">
+                <div class="quick-action-left"><span>💬</span> Team Chat</div>
+                <span style="color:#9ca3af">&rarr;</span>
+              </a>
+            </div>
+
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <footer class="bg-forest text-white mt-auto">
-      <div class="max-w-7xl mx-auto px-6 py-12">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
-          <div class="col-span-2 md:col-span-1">
-            <div class="flex items-center gap-2 mb-4">
-              <div class="w-8 h-8 bg-lime rounded-lg flex items-center justify-center"><span class="text-forest font-black text-sm">TH</span></div>
-              <span class="font-black text-xl">TurfHub</span>
-            </div>
-            <p class="text-white/50 text-sm leading-relaxed">India's premier sports turf booking and tournament management platform.</p>
-            <div class="flex gap-3 mt-4">
-              <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">⚽</span>
-              <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🏀</span>
-              <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🏏</span>
-              <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🎾</span>
-              <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🏸</span>
-            </div>
-          </div>
-          <div>
-            <h4 class="font-bold mb-4 text-white/80 text-sm uppercase tracking-wider">Platform</h4>
-            <ul class="space-y-2.5">
-              <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Find Turfs</a></li>
-              <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Tournaments</a></li>
-              <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Fixtures</a></li>
-              <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Leaderboard</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4 class="font-bold mb-4 text-white/80 text-sm uppercase tracking-wider">Support</h4>
-            <ul class="space-y-2.5">
-              <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Help Center</a></li>
-              <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Privacy Policy</a></li>
-              <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Terms of Service</a></li>
-              <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Contact Us</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-3">
-          <p class="text-white/30 text-sm">© 2025 TurfHub Technologies Pvt. Ltd. All rights reserved.</p>
-          <p class="text-white/30 text-sm">Made with ❤️ for sport</p>
-        </div>
-      </div>
-    </footer>
-  </body>
+  <script>
+    function filterFix(type, btn) {
+      document.querySelectorAll('.avail-btn[onclick^="filterFix"]').forEach(b => {
+        b.style.background = '#f3f4f6'; b.style.color = '#6b7280';
+      });
+      btn.style.background = 'rgba(126,211,33,.12)'; btn.style.color = '#5a9e12';
+    }
+  </script>
+</body>
 </html>

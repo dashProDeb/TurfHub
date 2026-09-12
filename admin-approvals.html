@@ -1,0 +1,921 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TurfHub — Admin Pending Approvals</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    .approval-card {
+      background: #fff;
+      border: 1.5px solid #e8ede8;
+      border-radius: 14px;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      transition: all .2s;
+    }
+    .approval-card:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,.06);
+    }
+    
+    .tab-btn {
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-size: .84rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .15s;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: inherit;
+    }
+    .tab-btn.active {
+      background: #0d2818;
+      color: #ffffff;
+      box-shadow: 0 2px 6px rgba(13,40,24,.2);
+    }
+    .tab-btn:not(.active) {
+      background: transparent;
+      color: #6b7280;
+    }
+    .tab-btn:not(.active):hover {
+      color: #1a1a1a;
+      background: rgba(0,0,0,.03);
+    }
+
+    .doc-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: #f3f4f6;
+      font-size: .72rem;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    /* ─── KYC Dialog & Verification Card Styles ─── */
+    .kyc-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(7, 30, 20, 0.75);
+      backdrop-filter: blur(6px);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .kyc-modal-overlay.open {
+      display: flex;
+    }
+    .kyc-modal-container {
+      background: #ffffff;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 820px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+      border: 1.5px solid rgba(126, 211, 33, 0.35);
+      animation: modalFadeIn 0.22s ease-out;
+    }
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.96) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .kyc-subtab-btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: .8rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1.5px solid #e5e7eb;
+      background: #f9fafb;
+      color: #4b5563;
+      transition: all .15s;
+    }
+    .kyc-subtab-btn.active {
+      background: #0d2818;
+      border-color: #0d2818;
+      color: #7ed321;
+    }
+
+    /* Smart NID Card Styles */
+    .nid-card-frame {
+      width: 100%;
+      max-width: 370px;
+      background: linear-gradient(135deg, #eef9f0 0%, #f7fdf9 50%, #e2f5e8 100%);
+      border: 1.5px solid #bbf7d0;
+      border-radius: 14px;
+      padding: 14px 16px;
+      box-shadow: 0 6px 18px rgba(13, 40, 24, 0.08);
+      position: relative;
+      overflow: hidden;
+    }
+    .nid-card-frame::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(126, 211, 33, 0.12) 1px, transparent 1px);
+      background-size: 10px 10px;
+      opacity: 0.7;
+      pointer-events: none;
+    }
+    .nid-header {
+      border-bottom: 1.5px solid #86efac;
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nid-emblem {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #dc2626;
+      border: 2px solid #facc15;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #facc15;
+      font-size: 11px;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+    .nid-chip {
+      width: 32px;
+      height: 24px;
+      background: linear-gradient(135deg, #fef08a 0%, #ca8a04 100%);
+      border-radius: 4px;
+      border: 1px solid #a16207;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      color: #713f12;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .nid-photo-box {
+      width: 76px;
+      height: 92px;
+      border-radius: 8px;
+      background: #0d2818;
+      border: 2px solid #86efac;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #7ed321;
+      font-weight: 900;
+      font-size: 1.8rem;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .nid-photo-watermark {
+      position: absolute;
+      bottom: 2px;
+      font-size: 7px;
+      font-weight: 700;
+      color: #fff;
+      background: rgba(13, 40, 24, 0.85);
+      padding: 1px 4px;
+      border-radius: 3px;
+    }
+    .nid-data-lbl {
+      font-size: .62rem;
+      color: #4b5563;
+      font-weight: 600;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+    .nid-data-val {
+      font-size: .78rem;
+      color: #0f172a;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    /* Character Certificate Card */
+    .cert-frame {
+      background: #fffdfa;
+      border: 2px solid #d4af37;
+      border-radius: 12px;
+      padding: 20px 24px;
+      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.12);
+      position: relative;
+    }
+    .cert-seal {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      border: 2px dashed #b45309;
+      background: rgba(254, 243, 199, 0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: .58rem;
+      font-weight: 800;
+      color: #92400e;
+      line-height: 1.1;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+<div id="app-wrapper">
+  
+  <!-- Standalone Admin Sidebar -->
+  <aside id="sidebar" class="sidebar">
+    <a href="index.html" class="sidebar-logo">
+      <div class="sidebar-logo-icon">TH</div>
+      <span class="sidebar-logo-text">TurfHub</span>
+    </a>
+    <div class="sidebar-user">
+      <div class="sidebar-avatar">A</div>
+      <div class="sidebar-user-info">
+        <span class="sidebar-user-name">Admin User</span>
+        <span class="sidebar-user-role">Platform Admin</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="admin-dashboard.html" class="sidebar-nav-item"><span class="sidebar-icon">📊</span><span class="sidebar-label">Overview</span></a>
+      <a href="admin-approvals.html" class="sidebar-nav-item active"><span class="sidebar-icon">✅</span><span class="sidebar-label">Approvals</span></a>
+      <a href="admin-analytics.html" class="sidebar-nav-item"><span class="sidebar-icon">📈</span><span class="sidebar-label">Analytics</span></a>
+      <a href="admin-categories.html" class="sidebar-nav-item"><span class="sidebar-icon">🏷️</span><span class="sidebar-label">Categories</span></a>
+      <a href="admin-reports.html" class="sidebar-nav-item"><span class="sidebar-icon">📄</span><span class="sidebar-label">Reports</span></a>
+      <a href="admin-announcements.html" class="sidebar-nav-item"><span class="sidebar-icon">📢</span><span class="sidebar-label">Announce</span></a>
+    </nav>
+    <a href="login.html" class="sidebar-signout">
+      <span class="sidebar-icon">🚪</span>
+      <span class="sidebar-label">Sign Out</span>
+    </a>
+  </aside>
+
+  <div id="main-content">
+    
+    <!-- Topbar -->
+    <div id="topbar">
+      <div class="topbar-title">
+        <span class="topbar-heading">Pending Approvals Queue</span>
+        <span class="topbar-sub">Verify new turf listings, ground owner trade credentials, and tournament prize pools</span>
+      </div>
+      <div class="topbar-actions">
+        <span style="font-size:.78rem;font-weight:700;background:rgba(245,158,11,.12);color:#92400e;padding:6px 14px;border-radius:100px" id="total-pending-pill">
+          ⚡ 6 Pending Review
+        </span>
+      </div>
+    </div>
+
+    <!-- Page Body -->
+    <div class="page-body">
+      
+      <!-- Sub-tabs -->
+      <div style="display:flex;gap:4px;background:#ffffff;border:1px solid #e5e7eb;border-radius:10px;padding:4px;margin-bottom:20px;width:fit-content">
+        <button class="tab-btn active" id="btn-tab-turfs" onclick="switchTab('turfs')">
+          <span>🏟️</span> Turfs <span style="background:#f59e0b;color:#fff;padding:1px 7px;border-radius:100px;font-size:.7rem" id="badge-count-turfs">3</span>
+        </button>
+        <button class="tab-btn" id="btn-tab-owners" onclick="switchTab('owners')">
+          <span>👥</span> Owners <span style="background:#e5e7eb;color:#374151;padding:1px 7px;border-radius:100px;font-size:.7rem" id="badge-count-owners">2</span>
+        </button>
+        <button class="tab-btn" id="btn-tab-tournaments" onclick="switchTab('tournaments')">
+          <span>🏆</span> Tournaments <span style="background:#e5e7eb;color:#374151;padding:1px 7px;border-radius:100px;font-size:.7rem" id="badge-count-tourn">1</span>
+        </button>
+      </div>
+
+      <!-- TAB 1: TURFS APPROVAL -->
+      <div id="tab-content-turfs" class="content-panel" style="padding:22px">
+        <div class="panel-header" style="margin-bottom:16px">
+          <div>
+            <span class="panel-title">New Turf Listing Applications</span>
+            <span class="panel-sub" style="display:block;font-size:.78rem;color:#6b7280;margin-top:2px">Verify pitch dimensions, surface certifications, and pricing before publishing to public search</span>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:14px" id="turfs-list">
+          
+          <div class="approval-card" id="card-turf-1">
+            <div style="display:flex;align-items:center;gap:16px">
+              <div style="width:90px;height:70px;border-radius:10px;overflow:hidden;background:#e5e7eb;flex-shrink:0">
+                <img src="turf_football.jpg" style="width:100%;height:100%;object-fit:cover" />
+              </div>
+              <div>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <h4 style="font-weight:800;font-size:.95rem;color:#1a1a1a">Dhanmondi Arena Pro</h4>
+                  <span class="badge badge-pending badge-dot">Submitted 2h ago</span>
+                </div>
+                <div style="font-size:.78rem;color:#6b7280;margin-top:2px">
+                  📍 Road 27, Dhanmondi, Dhaka &middot; ⚽ Football 5-a-side (50&times;32m) &middot; Rate: <strong>&#2547;900/hr</strong>
+                </div>
+                <div style="display:flex;gap:6px;margin-top:6px">
+                  <span class="doc-badge">📄 Trade License Verified</span>
+                  <span class="doc-badge">📸 6 High-Res Photos</span>
+                  <span class="doc-badge">💡 500 Lux Floodlights</span>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+              <button onclick="approveItem('card-turf-1', 'Dhanmondi Arena Pro')" class="btn-lime" style="font-size:.78rem;padding:7px 16px">✓ Approve</button>
+              <button onclick="rejectItem('card-turf-1')" class="btn-ghost" style="font-size:.78rem;padding:7px 12px;color:#dc2626;border-color:#fecaca">✕ Reject</button>
+            </div>
+          </div>
+
+          <div class="approval-card" id="card-turf-2">
+            <div style="display:flex;align-items:center;gap:16px">
+              <div style="width:90px;height:70px;border-radius:10px;overflow:hidden;background:#e5e7eb;flex-shrink:0">
+                <img src="turf_basketball.jpg" style="width:100%;height:100%;object-fit:cover" />
+              </div>
+              <div>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <h4 style="font-weight:800;font-size:.95rem;color:#1a1a1a">Bashundhara Smash Badminton Complex</h4>
+                  <span class="badge badge-pending badge-dot">Submitted 5h ago</span>
+                </div>
+                <div style="font-size:.78rem;color:#6b7280;margin-top:2px">
+                  📍 Block G, Bashundhara R/A &middot; 🏸 Badminton 4 Courts &middot; Rate: <strong>&#2547;500/hr</strong>
+                </div>
+                <div style="display:flex;gap:6px;margin-top:6px">
+                  <span class="doc-badge">📄 Trade License Verified</span>
+                  <span class="doc-badge">❄️ Central AC</span>
+                  <span class="doc-badge">🚿 4 Shower Rooms</span>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+              <button onclick="approveItem('card-turf-2', 'Bashundhara Smash')" class="btn-lime" style="font-size:.78rem;padding:7px 16px">✓ Approve</button>
+              <button onclick="rejectItem('card-turf-2')" class="btn-ghost" style="font-size:.78rem;padding:7px 12px;color:#dc2626;border-color:#fecaca">✕ Reject</button>
+            </div>
+          </div>
+
+          <div class="approval-card" id="card-turf-3">
+            <div style="display:flex;align-items:center;gap:16px">
+              <div style="width:90px;height:70px;border-radius:10px;overflow:hidden;background:#e5e7eb;flex-shrink:0">
+                <img src="turf_champions.jpg" style="width:100%;height:100%;object-fit:cover" />
+              </div>
+              <div>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <h4 style="font-weight:800;font-size:.95rem;color:#1a1a1a">Mirpur Cricket Box Pro</h4>
+                  <span class="badge badge-pending badge-dot">Submitted Yesterday</span>
+                </div>
+                <div style="font-size:.78rem;color:#6b7280;margin-top:2px">
+                  📍 Section 2, Mirpur, Dhaka &middot; 🏏 Box Cricket &middot; Rate: <strong>&#2547;1,100/hr</strong>
+                </div>
+                <div style="display:flex;gap:6px;margin-top:6px">
+                  <span class="doc-badge">📄 Trade License Pending</span>
+                  <span class="doc-badge">🏏 2 Astro Nets</span>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+              <button onclick="approveItem('card-turf-3', 'Mirpur Cricket Box')" class="btn-lime" style="font-size:.78rem;padding:7px 16px">✓ Approve</button>
+              <button onclick="rejectItem('card-turf-3')" class="btn-ghost" style="font-size:.78rem;padding:7px 12px;color:#dc2626;border-color:#fecaca">✕ Reject</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- TAB 2: OWNERS APPROVAL -->
+      <div id="tab-content-owners" class="content-panel" style="display:none;padding:22px">
+        <div class="panel-header" style="margin-bottom:16px">
+          <div>
+            <span class="panel-title">Ground Owner KYC &amp; Merchant Applications</span>
+            <span class="panel-sub" style="display:block;font-size:.78rem;color:#6b7280;margin-top:2px">Verify national identity (NID) and payout bank accounts</span>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="approval-card" id="card-owner-1">
+            <div style="display:flex;align-items:center;gap:14px">
+              <div style="width:44px;height:44px;border-radius:12px;background:#0d2818;color:#7ed321;font-weight:900;font-size:1.1rem;display:flex;align-items:center;justify-content:center">S</div>
+              <div>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <h4 style="font-weight:800;font-size:.95rem;color:#1a1a1a">Shahidul Alam</h4>
+                  <span class="badge badge-pending badge-dot">KYC Under Review</span>
+                </div>
+                <div style="font-size:.78rem;color:#6b7280;margin-top:2px">Dhaka Turfs &middot; Phone: +880 1711-987654 &middot; Email: shahidul@dhakaturfs.com</div>
+                <div style="display:flex;gap:6px;margin-top:6px">
+                  <span class="doc-badge">🪪 NID (Both Sides) Uploaded</span>
+                  <span class="doc-badge">📜 Character Certificate Attached</span>
+                  <span class="doc-badge">🏦 City Bank Verified</span>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <button onclick="openKycModal('card-owner-1')" class="btn-lime" style="font-size:.78rem;padding:8px 18px">🔍 Verify Owner &amp; KYC</button>
+              <button onclick="rejectItem('card-owner-1')" class="btn-ghost" style="font-size:.78rem;padding:8px 12px;color:#dc2626;border-color:#fecaca">✕ Reject</button>
+            </div>
+          </div>
+
+          <div class="approval-card" id="card-owner-2">
+            <div style="display:flex;align-items:center;gap:14px">
+              <div style="width:44px;height:44px;border-radius:12px;background:#0d2818;color:#7ed321;font-weight:900;font-size:1.1rem;display:flex;align-items:center;justify-content:center">N</div>
+              <div>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <h4 style="font-weight:800;font-size:.95rem;color:#1a1a1a">Nusrat Jahan</h4>
+                  <span class="badge badge-pending badge-dot">KYC Under Review</span>
+                </div>
+                <div style="font-size:.78rem;color:#6b7280;margin-top:2px">Arena 360 Sports &middot; Phone: +880 1812-445566 &middot; Email: nusrat@arena360.bd</div>
+                <div style="display:flex;gap:6px;margin-top:6px">
+                  <span class="doc-badge">🪪 NID (Both Sides) Uploaded</span>
+                  <span class="doc-badge">📜 Character Certificate Attached</span>
+                  <span class="doc-badge">📱 bKash Merchant Verified</span>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <button onclick="openKycModal('card-owner-2')" class="btn-lime" style="font-size:.78rem;padding:8px 18px">🔍 Verify Owner &amp; KYC</button>
+              <button onclick="rejectItem('card-owner-2')" class="btn-ghost" style="font-size:.78rem;padding:8px 12px;color:#dc2626;border-color:#fecaca">✕ Reject</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: TOURNAMENTS APPROVAL -->
+      <div id="tab-content-tournaments" class="content-panel" style="display:none;padding:22px">
+        <div class="panel-header" style="margin-bottom:16px">
+          <div>
+            <span class="panel-title">Public Tournament Creation Review</span>
+            <span class="panel-sub" style="display:block;font-size:.78rem;color:#6b7280;margin-top:2px">Validate entry fee handling and prize guarantee before opening public team registration</span>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="approval-card" id="card-tourn-1">
+            <div style="display:flex;align-items:center;gap:14px">
+              <div style="width:44px;height:44px;border-radius:12px;background:#fef3c7;color:#92400e;font-weight:900;font-size:1.2rem;display:flex;align-items:center;justify-content:center">🏆</div>
+              <div>
+                <h4 style="font-weight:800;font-size:.95rem;color:#1a1a1a">Dhaka Corporate Futsal Championship 2025</h4>
+                <div style="font-size:.78rem;color:#6b7280">Organizer: Rafiqul Islam (The Green Arena) &middot; Max Teams: 16 &middot; Entry: <strong>&#2547;4,000/team</strong></div>
+                <div style="font-size:.74rem;color:#16a34a;font-weight:700;margin-top:4px">Prize Pool: &#2547;50,000 (Escrow Guaranteed)</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <button onclick="approveItem('card-tourn-1', 'Corporate Futsal Championship')" class="btn-lime" style="font-size:.78rem;padding:7px 16px">✓ Publish Tournament</button>
+              <button onclick="rejectItem('card-tourn-1')" class="btn-ghost" style="font-size:.78rem;padding:7px 12px;color:#dc2626;border-color:#fecaca">✕ Reject</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- KYC & OWNER IDENTITY VERIFICATION DIALOG MODAL                     -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div id="kyc-modal" class="kyc-modal-overlay">
+  <div class="kyc-modal-container">
+    
+    <!-- Modal Header -->
+    <div style="background:#0d2818;padding:20px 24px;border-top-left-radius:18px;border-top-right-radius:18px;display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="width:38px;height:38px;border-radius:10px;background:#7ed321;color:#0d2818;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:1.1rem">🪪</div>
+        <div>
+          <h3 style="color:#ffffff;font-weight:800;font-size:1.1rem;margin:0">Ground Owner KYC Verification</h3>
+          <span style="color:rgba(255,255,255,0.65);font-size:.75rem">Review National ID (Both Sides), Character Certificate, and Merchant Payouts</span>
+        </div>
+      </div>
+      <button onclick="closeKycModal()" style="background:rgba(255,255,255,0.1);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:background .2s">&times;</button>
+    </div>
+
+    <!-- Modal Content -->
+    <div style="padding:22px 24px">
+      
+      <!-- Applicant Overview Header Box -->
+      <div style="background:#f5f5f0;border:1px solid #e8ede8;border-radius:14px;padding:14px 18px;margin-bottom:18px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div id="modal-owner-avatar" style="width:46px;height:46px;border-radius:12px;background:#0d2818;color:#7ed321;font-weight:900;font-size:1.2rem;display:flex;align-items:center;justify-content:center">S</div>
+          <div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <h4 id="modal-owner-name" style="font-weight:800;font-size:1.05rem;color:#1a1a1a">Shahidul Alam</h4>
+              <span class="badge badge-pending" id="modal-status-badge">⏳ Under Review</span>
+            </div>
+            <div id="modal-owner-meta" style="font-size:.78rem;color:#6b7280;margin-top:2px">
+              Dhaka Turfs &middot; Phone: +880 1711-987654 &middot; Email: shahidul@dhakaturfs.com
+            </div>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <span style="font-size:.7rem;color:#6b7280;text-transform:uppercase;font-weight:700">Govt NID Reference</span>
+          <div id="modal-nid-num" style="font-weight:900;font-size:.92rem;color:#0d2818;letter-spacing:.03em">19882691234567890</div>
+        </div>
+      </div>
+
+      <!-- KYC Document Sub-Navigation Tabs -->
+      <div style="display:flex;gap:8px;margin-bottom:16px;border-bottom:1px solid #e5e7eb;padding-bottom:10px">
+        <button class="kyc-subtab-btn active" id="subtab-btn-nid" onclick="switchKycDocTab('nid')">
+          <span>🪪</span> National ID (Part 1 &amp; 2)
+        </button>
+        <button class="kyc-subtab-btn" id="subtab-btn-cert" onclick="switchKycDocTab('cert')">
+          <span>📜</span> Character Certificate (চরিত্র সনদপত্র)
+        </button>
+        <button class="kyc-subtab-btn" id="subtab-btn-payout" onclick="switchKycDocTab('payout')">
+          <span>🏦</span> Payout &amp; Trade Details
+        </button>
+      </div>
+
+      <!-- ═════ TAB A: NID BOTH PARTS ═════ -->
+      <div id="kyc-view-nid">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <span style="font-size:.82rem;font-weight:700;color:#0d2818">Smart National Identity Card (NID) — Front &amp; Back Sides</span>
+          <span style="font-size:.72rem;background:#dcfce7;color:#15803d;padding:2px 8px;border-radius:6px;font-weight:700">✓ Optical OCR Matched</span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px;margin-bottom:18px">
+          
+          <!-- NID PART 1: FRONT PART -->
+          <div class="nid-card-frame">
+            <div class="nid-header">
+              <div style="display:flex;align-items:center;gap:8px">
+                <div class="nid-emblem">★</div>
+                <div>
+                  <div style="font-size:.58rem;font-weight:800;color:#065f46;line-height:1.1">গণপ্রজাতন্ত্রী বাংলাদেশ সরকার</div>
+                  <div style="font-size:.54rem;font-weight:700;color:#047857;letter-spacing:-0.01em">Government of the People's Republic of Bangladesh</div>
+                  <div style="font-size:.55rem;font-weight:900;color:#dc2626;letter-spacing:.02em">National ID Card / জাতীয় পরিচয় পত্র</div>
+                </div>
+              </div>
+              <div class="nid-chip">CHIP</div>
+            </div>
+
+            <div style="display:flex;gap:12px;position:relative;z-index:2">
+              <div class="nid-photo-box">
+                <span id="nid-photo-initial">S</span>
+                <div class="nid-photo-watermark">GOVT VERIFIED</div>
+              </div>
+              <div style="flex:1;min-width:0">
+                <div class="nid-data-lbl">নাম / Name</div>
+                <div class="nid-data-val" id="nid-front-name">Shahidul Alam</div>
+                
+                <div class="nid-data-lbl">পিতা / Father's Name</div>
+                <div class="nid-data-val" id="nid-front-father" style="font-size:.72rem">Late Shamsul Alam</div>
+                
+                <div class="nid-data-lbl">মাতা / Mother's Name</div>
+                <div class="nid-data-val" id="nid-front-mother" style="font-size:.72rem">Rokeya Begum</div>
+                
+                <div style="display:flex;justify-content:space-between;margin-top:4px">
+                  <div>
+                    <div class="nid-data-lbl">Date of Birth</div>
+                    <div class="nid-data-val" id="nid-front-dob" style="font-size:.72rem">14 Oct 1988</div>
+                  </div>
+                  <div>
+                    <div class="nid-data-lbl">NID NO</div>
+                    <div class="nid-data-val" id="nid-front-no" style="font-size:.72rem;color:#047857">19882691234567890</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:10px;padding-top:6px;border-top:1px dashed #86efac;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2">
+              <span style="font-size:.58rem;font-weight:700;color:#065f46">Holder Signature: <em style="font-family:cursive;font-size:.72rem;color:#0d2818" id="nid-signature">Shahidul Alam</em></span>
+              <span style="font-size:.54rem;color:#059669;font-weight:800">PART 1: FRONT</span>
+            </div>
+          </div>
+
+          <!-- NID PART 2: BACK PART -->
+          <div class="nid-card-frame">
+            <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1.5px solid #86efac;padding-bottom:6px;margin-bottom:8px">
+              <span style="font-size:.62rem;font-weight:800;color:#065f46">PART 2: REVERSE / পিছনের অংশ</span>
+              <span style="font-size:.58rem;background:#0d2818;color:#7ed321;padding:1px 6px;border-radius:4px;font-weight:700">RFID ENABLED</span>
+            </div>
+
+            <div style="font-size:.62rem;color:#374151;margin-bottom:6px;position:relative;z-index:2">
+              <div class="nid-data-lbl">ঠিকানা / Residential Address:</div>
+              <div style="font-size:.75rem;font-weight:700;color:#111827;line-height:1.3;margin-top:2px" id="nid-back-address">
+                House 42, Road 11, Block D, Banani, Ward 19, Dhaka-1213
+              </div>
+            </div>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;margin:8px 0;background:rgba(255,255,255,0.7);border-radius:8px;padding:6px 10px;position:relative;z-index:2">
+              <div>
+                <span class="nid-data-lbl">Blood Group</span>
+                <div style="font-weight:900;font-size:.85rem;color:#dc2626" id="nid-back-blood">B+ (Positive)</div>
+              </div>
+              <div>
+                <span class="nid-data-lbl">Issue Date</span>
+                <div style="font-weight:700;font-size:.72rem;color:#1e293b" id="nid-back-issue">08 May 2018</div>
+              </div>
+              <div>
+                <span class="nid-data-lbl">Pradanikari</span>
+                <div style="font-weight:700;font-size:.68rem;color:#059669">NID Wing, EC</div>
+              </div>
+            </div>
+
+            <!-- Barcode MRZ -->
+            <div style="background:#0d2818;color:#7ed321;padding:6px 8px;border-radius:6px;font-family:monospace;font-size:.62rem;letter-spacing:.12em;text-align:center;margin-top:8px;position:relative;z-index:2">
+              ||||| | |||| |||| || ||||| |||| || ||||||<br>
+              <span style="color:#ffffff;font-size:.58rem" id="nid-back-mrz">IDBGD19882691234567890<<<<<<<<8810145</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ═════ TAB B: CHARACTER CERTIFICATE ═════ -->
+      <div id="kyc-view-cert" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <span style="font-size:.82rem;font-weight:700;color:#0d2818">Ward Councilor / Chairman Character Certificate (চারিত্রিক সনদপত্র)</span>
+          <span style="font-size:.72rem;background:#fef3c7;color:#92400e;padding:2px 8px;border-radius:6px;font-weight:700">Official Municipal Attestation</span>
+        </div>
+
+        <div class="cert-frame">
+          <!-- Certificate Header -->
+          <div style="text-align:center;border-bottom:2px double #d4af37;padding-bottom:12px;margin-bottom:14px">
+            <div style="font-size:.78rem;font-weight:800;color:#92400e;letter-spacing:.05em">OFFICE OF THE WARD COUNCILOR</div>
+            <div style="font-size:1.05rem;font-weight:900;color:#0d2818;margin:2px 0" id="cert-councilor-header">Dhaka North City Corporation &middot; Ward No. 19</div>
+            <div style="display:inline-block;border-bottom:2px solid #b45309;font-weight:900;font-size:.92rem;color:#b45309;padding:2px 14px;margin-top:4px;letter-spacing:.08em">
+              চারিত্রিক সনদপত্র / CHARACTER CERTIFICATE
+            </div>
+          </div>
+
+          <!-- Certificate Meta Row -->
+          <div style="display:flex;justify-content:space-between;font-size:.72rem;color:#6b7280;margin-bottom:12px">
+            <span>Certificate No: <strong style="color:#1a1a1a" id="cert-no">CC-DNCC-W19-2025-0842</strong></span>
+            <span>Date of Issue: <strong style="color:#1a1a1a" id="cert-date">02 July 2025</strong></span>
+          </div>
+
+          <!-- Certificate Body Text -->
+          <p style="font-size:.82rem;color:#1e293b;line-height:1.7;margin-bottom:16px;text-align:justify">
+            This is to certify that <strong style="color:#0d2818;font-size:.88rem" id="cert-applicant-name">Shahidul Alam</strong>, Son/Daughter of <strong id="cert-father-name">Late Shamsul Alam</strong> and <strong id="cert-mother-name">Rokeya Begum</strong>, holding National ID No: <strong style="color:#047857" id="cert-nid-num">19882691234567890</strong>, is a permanent resident of <span id="cert-residence">House 42, Road 11, Banani, Ward 19, Dhaka-1213</span> under this ward jurisdiction.
+          </p>
+          <p style="font-size:.82rem;color:#1e293b;line-height:1.7;margin-bottom:20px;text-align:justify">
+            To the best of my knowledge and belief, he/she bears a <strong>good moral character</strong>, maintains an honorable reputation in the sports and commercial community, and is not involved in any unlawful, anti-social, or anti-state activities. He/she is deemed fit and authorized to operate commercial sports grounds and turf facilities.
+          </p>
+
+          <!-- Seal and Signature Row -->
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;padding-top:12px;border-top:1px dashed #d4af37">
+            <div class="cert-seal">
+              <span>DNCC WARD 19</span>
+              <span style="font-size:.5rem;color:#b45309">SEAL &amp; STAMP</span>
+              <span>VERIFIED</span>
+            </div>
+            <div style="text-align:center">
+              <div style="font-family:cursive;font-size:1.1rem;color:#0d2818;margin-bottom:2px">M. H. Chowdhury</div>
+              <div style="border-top:1.5px solid #1a1a1a;padding-top:4px;font-size:.72rem;font-weight:800;color:#1a1a1a">Elected Ward Councilor</div>
+              <div style="font-size:.65rem;color:#6b7280">Dhaka North City Corporation</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═════ TAB C: PAYOUT & TRADE ═════ -->
+      <div id="kyc-view-payout" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <span style="font-size:.82rem;font-weight:700;color:#0d2818">Merchant Bank Account &amp; Trade License Validation</span>
+          <span style="font-size:.72rem;background:#dbeafe;color:#1e40af;padding:2px 8px;border-radius:6px;font-weight:700">Bank Routing Matched</span>
+        </div>
+
+        <div style="background:#fff;border:1.5px solid #e8ede8;border-radius:14px;padding:18px;margin-bottom:16px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <div>
+              <div class="form-label" style="font-size:.68rem;color:#6b7280;font-weight:700;text-transform:uppercase">Settlement Payout Account</div>
+              <div style="font-weight:800;font-size:.9rem;color:#1a1a1a" id="payout-acc-title">The City Bank Ltd.</div>
+              <div style="font-size:.78rem;color:#6b7280;margin-top:2px" id="payout-acc-details">A/C No: 1102938475 &middot; Branch: Gulshan-1 (Routing: 225271890)</div>
+            </div>
+            <div>
+              <div class="form-label" style="font-size:.68rem;color:#6b7280;font-weight:700;text-transform:uppercase">Trade License Number</div>
+              <div style="font-weight:800;font-size:.9rem;color:#1a1a1a">TRAD/DNCC/041920/2024</div>
+              <div style="font-size:.78rem;color:#16a34a;font-weight:700;margin-top:2px">✓ Valid through 30 June 2026</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Verification Checklist Box -->
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px 18px;margin-top:16px">
+        <div style="font-weight:800;font-size:.82rem;color:#1e293b;margin-bottom:8px">Admin KYC Checklist:</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px">
+          <label style="display:flex;align-items:center;gap:6px;font-size:.78rem;color:#334155;cursor:pointer">
+            <input type="checkbox" checked style="accent-color:#7ed321" /> NID Name matches Registered Owner
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:.78rem;color:#334155;cursor:pointer">
+            <input type="checkbox" checked style="accent-color:#7ed321" /> NID Part 1 &amp; Part 2 High Resolution
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:.78rem;color:#334155;cursor:pointer">
+            <input type="checkbox" checked style="accent-color:#7ed321" /> Character Certificate Signed &amp; Sealed
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:.78rem;color:#334155;cursor:pointer">
+            <input type="checkbox" checked style="accent-color:#7ed321" /> Payout Title matches NID identity
+          </label>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Modal Footer Actions -->
+    <div style="background:#f5f5f0;border-top:1px solid #e8ede8;padding:16px 24px;border-bottom-left-radius:18px;border-bottom-right-radius:18px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+      <button onclick="closeKycModal()" class="btn-ghost" style="font-size:.82rem">Cancel</button>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button onclick="requestReuploadFromModal()" class="btn-ghost" style="font-size:.82rem;color:#b45309;border-color:#fde68a">⚠️ Request Re-upload</button>
+        <button onclick="rejectKycFromModal()" class="btn-ghost" style="font-size:.82rem;color:#dc2626;border-color:#fecaca">✕ Reject</button>
+        <button onclick="approveKycFromModal()" class="btn-lime" style="font-size:.84rem;padding:10px 22px;font-weight:800">✓ Approve KYC &amp; Verify Owner</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ─── Ground Owner KYC Database ───
+  const OWNER_KYC_DATA = {
+    'card-owner-1': {
+      cardId: 'card-owner-1',
+      name: 'Shahidul Alam',
+      initial: 'S',
+      turfName: 'Dhaka Turfs & Sports Complex',
+      phone: '+880 1711-987654',
+      email: 'shahidul@dhakaturfs.com',
+      nid: '19882691234567890',
+      dob: '14 Oct 1988',
+      fatherName: 'Late Shamsul Alam',
+      motherName: 'Rokeya Begum',
+      address: 'House 42, Road 11, Block D, Banani, Ward 19, Dhaka-1213',
+      bloodGroup: 'B+ (Positive)',
+      issueDate: '08 May 2018',
+      mrz: 'IDBGD19882691234567890<<<<<<<<8810145',
+      payoutTitle: 'The City Bank Ltd. (Gulshan Branch)',
+      payoutDetails: 'A/C No: 1102938475 · Title: Shahidul Alam · Routing: 225271890',
+      certNo: 'CC-DNCC-W19-2025-0842',
+      certDate: '02 July 2025',
+      councilorHeader: 'Dhaka North City Corporation · Ward No. 19',
+      councilorName: 'M. H. Chowdhury',
+      councilorDesignation: 'Elected Ward Councilor, Ward 19'
+    },
+    'card-owner-2': {
+      cardId: 'card-owner-2',
+      name: 'Nusrat Jahan',
+      initial: 'N',
+      turfName: 'Arena 360 Sports & Futsal',
+      phone: '+880 1812-445566',
+      email: 'nusrat@arena360.bd',
+      nid: '19922695566778899',
+      dob: '28 Mar 1992',
+      fatherName: 'Md. Anisur Rahman',
+      motherName: 'Nasreen Jahan',
+      address: 'Plot 18, Block D, Bashundhara R/A, Ward 40, Dhaka-1229',
+      bloodGroup: 'O+ (Positive)',
+      issueDate: '12 Sep 2020',
+      mrz: 'IDBGD19922695566778899<<<<<<<<9203282',
+      payoutTitle: 'bKash Merchant Account (Arena 360 Ent.)',
+      payoutDetails: 'Wallet: 01812445566 · Merchant ID: BK-99482 · Verified Host',
+      certNo: 'CC-DNCC-W40-2025-1193',
+      certDate: '15 June 2025',
+      councilorHeader: 'Dhaka North City Corporation · Ward No. 40',
+      councilorName: 'Kazi Farhan Ahmed',
+      councilorDesignation: 'Elected Ward Councilor, Ward 40'
+    }
+  };
+
+  let activeModalOwnerId = 'card-owner-1';
+
+  function switchTab(tab) {
+    document.getElementById('tab-content-turfs').style.display = tab === 'turfs' ? 'block' : 'none';
+    document.getElementById('tab-content-owners').style.display = tab === 'owners' ? 'block' : 'none';
+    document.getElementById('tab-content-tournaments').style.display = tab === 'tournaments' ? 'block' : 'none';
+
+    document.getElementById('btn-tab-turfs').classList.toggle('active', tab === 'turfs');
+    document.getElementById('btn-tab-owners').classList.toggle('active', tab === 'owners');
+    document.getElementById('btn-tab-tournaments').classList.toggle('active', tab === 'tournaments');
+  }
+
+  function openKycModal(ownerId) {
+    const data = OWNER_KYC_DATA[ownerId] || OWNER_KYC_DATA['card-owner-1'];
+    activeModalOwnerId = ownerId;
+
+    // Populate Overview
+    document.getElementById('modal-owner-name').textContent = data.name;
+    document.getElementById('modal-owner-avatar').textContent = data.initial;
+    document.getElementById('modal-owner-meta').textContent = `${data.turfName} · Phone: ${data.phone} · Email: ${data.email}`;
+    document.getElementById('modal-nid-num').textContent = data.nid;
+
+    // Populate NID Front
+    document.getElementById('nid-photo-initial').textContent = data.initial;
+    document.getElementById('nid-front-name').textContent = data.name;
+    document.getElementById('nid-front-father').textContent = data.fatherName;
+    document.getElementById('nid-front-mother').textContent = data.motherName;
+    document.getElementById('nid-front-dob').textContent = data.dob;
+    document.getElementById('nid-front-no').textContent = data.nid;
+    document.getElementById('nid-signature').textContent = data.name;
+
+    // Populate NID Back
+    document.getElementById('nid-back-address').textContent = data.address;
+    document.getElementById('nid-back-blood').textContent = data.bloodGroup;
+    document.getElementById('nid-back-issue').textContent = data.issueDate;
+    document.getElementById('nid-back-mrz').textContent = data.mrz;
+
+    // Populate Character Certificate
+    document.getElementById('cert-councilor-header').textContent = data.councilorHeader;
+    document.getElementById('cert-no').textContent = data.certNo;
+    document.getElementById('cert-date').textContent = data.certDate;
+    document.getElementById('cert-applicant-name').textContent = data.name;
+    document.getElementById('cert-father-name').textContent = data.fatherName;
+    document.getElementById('cert-mother-name').textContent = data.motherName;
+    document.getElementById('cert-nid-num').textContent = data.nid;
+    document.getElementById('cert-residence').textContent = data.address;
+
+    // Populate Payout
+    document.getElementById('payout-acc-title').textContent = data.payoutTitle;
+    document.getElementById('payout-acc-details').textContent = data.payoutDetails;
+
+    // Reset to NID subtab
+    switchKycDocTab('nid');
+
+    // Show modal
+    document.getElementById('kyc-modal').classList.add('open');
+  }
+
+  function closeKycModal() {
+    document.getElementById('kyc-modal').classList.remove('open');
+  }
+
+  function switchKycDocTab(tabName) {
+    document.getElementById('kyc-view-nid').style.display = tabName === 'nid' ? 'block' : 'none';
+    document.getElementById('kyc-view-cert').style.display = tabName === 'cert' ? 'block' : 'none';
+    document.getElementById('kyc-view-payout').style.display = tabName === 'payout' ? 'block' : 'none';
+
+    document.getElementById('subtab-btn-nid').classList.toggle('active', tabName === 'nid');
+    document.getElementById('subtab-btn-cert').classList.toggle('active', tabName === 'cert');
+    document.getElementById('subtab-btn-payout').classList.toggle('active', tabName === 'payout');
+  }
+
+  function approveKycFromModal() {
+    const data = OWNER_KYC_DATA[activeModalOwnerId];
+    approveItem(activeModalOwnerId, data.name + ' (KYC & Merchant Verified)');
+    closeKycModal();
+  }
+
+  function requestReuploadFromModal() {
+    const card = document.getElementById(activeModalOwnerId);
+    const data = OWNER_KYC_DATA[activeModalOwnerId];
+    if (card) {
+      card.style.background = '#fefce8';
+      card.style.borderColor = '#fde68a';
+      card.innerHTML = `
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:36px;height:36px;border-radius:10px;background:#f59e0b;color:#fff;font-weight:900;display:flex;align-items:center;justify-content:center">⚠️</div>
+          <div>
+            <div style="font-weight:800;font-size:.92rem;color:#92400e">${data.name} — Re-upload Requested</div>
+            <div style="font-size:.75rem;color:#78350f">Notification sent requesting clearer NID / Certificate copy.</div>
+          </div>
+        </div>
+        <button onclick="openKycModal('${activeModalOwnerId}')" class="btn-ghost" style="font-size:.78rem;padding:6px 14px">Re-inspect</button>
+      `;
+    }
+    closeKycModal();
+  }
+
+  function rejectKycFromModal() {
+    rejectItem(activeModalOwnerId);
+    closeKycModal();
+  }
+
+  function approveItem(cardId, name) {
+    const card = document.getElementById(cardId);
+    if (card) {
+      card.style.background = '#f0fdf4';
+      card.style.borderColor = '#bbf7d0';
+      card.innerHTML = `
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:36px;height:36px;border-radius:10px;background:#16a34a;color:#fff;font-weight:900;display:flex;align-items:center;justify-content:center">✓</div>
+          <div>
+            <div style="color:#16a34a;font-weight:800;font-size:.92rem"><strong>${name}</strong> Verified &amp; Approved</div>
+            <div style="font-size:.74rem;color:#15803d">Merchant payout active &middot; Listing permissions granted</div>
+          </div>
+        </div>
+        <span style="font-size:.75rem;font-weight:700;color:#16a34a;background:#dcfce7;padding:4px 12px;border-radius:100px">✓ Verified</span>
+      `;
+    }
+  }
+
+  function rejectItem(cardId) {
+    const card = document.getElementById(cardId);
+    if (card) {
+      card.style.background = '#fef2f2';
+      card.style.borderColor = '#fecaca';
+      card.innerHTML = `
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:36px;height:36px;border-radius:10px;background:#dc2626;color:#fff;font-weight:900;display:flex;align-items:center;justify-content:center">✕</div>
+          <div>
+            <div style="color:#dc2626;font-weight:800;font-size:.92rem">Application Rejected</div>
+            <div style="font-size:.74rem;color:#991b1b">Ground owner notified of rejection reasons.</div>
+          </div>
+        </div>
+        <span style="font-size:.75rem;font-weight:700;color:#dc2626;background:#fee2e2;padding:4px 12px;border-radius:100px">Rejected</span>
+      `;
+    }
+  }
+</script>
+</body>
+</html>

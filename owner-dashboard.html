@@ -1,192 +1,250 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TurfHub — Owner Dashboard</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <style>
-      :root {
-        --color-lime: #7ED321;
-        --color-lime-dark: #6ab81c;
-        --color-forest: #0F2B1D;
-        --color-forest-mid: #1a4029;
-        --color-off-white: #F7F8F5;
-        --color-charcoal: #1E1E1E;
-        --color-gray-mid: #6B7280;
-        --color-amber: #F5A623;
-        --color-success: #4CAF50;
-        --color-danger: #E53935;
-        --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
-      }
-    </style>
-    <style>body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; background-color: #F7F8F5; color: #1E1E1E; }</style>
-  </head>
-  <body>
-    <div class="flex min-h-screen bg-off-white">
-      <!-- Sidebar -->
-      <div class="w-56 bg-forest min-h-screen flex flex-col flex-shrink-0">
-        <div class="p-5 border-b border-white/10">
-          <a href="index.html" class="flex items-center gap-2">
-            <div class="w-7 h-7 bg-lime rounded-lg flex items-center justify-center"><span class="text-forest font-black text-xs leading-none">TH</span></div>
-            <span class="font-black text-white text-lg">TurfHub</span>
-          </a>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TurfHub — Owner Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    .booking-row { display:flex; align-items:center; gap:14px; padding:13px 0; border-bottom:1px solid #f3f4f6; }
+    .booking-row:last-child { border-bottom:none; }
+    .team-avatar { width:36px; height:36px; border-radius:50%; background:#e5e7eb; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.85rem; color:#4b5563; flex-shrink:0; }
+    .booking-actions { display:flex; gap:6px; }
+    .btn-approve { width:28px; height:28px; border-radius:8px; border:none; background:rgba(126,211,33,.1); color:#5a9e12; font-size:.9rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s; }
+    .btn-approve:hover { background:rgba(126,211,33,.25); }
+    .btn-reject { width:28px; height:28px; border-radius:8px; border:none; background:rgba(229,57,53,.1); color:#e53935; font-size:.9rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s; }
+    .btn-reject:hover { background:rgba(229,57,53,.2); }
+    .activity-item { display:flex; gap:12px; padding:10px 0; border-bottom:1px solid #f3f4f6; align-items:flex-start; }
+    .activity-item:last-child { border-bottom:none; }
+    .activity-dot { width:8px; height:8px; border-radius:50%; background:#7ed321; flex-shrink:0; margin-top:5px; }
+    .activity-text { font-size:.82rem; color:#1a1a1a; line-height:1.4; }
+    .activity-time { font-size:.72rem; color:#9ca3af; margin-top:2px; }
+    .quick-action { display:flex; align-items:center; justify-content:space-between; padding:11px 0; border-bottom:1px solid #f3f4f6; text-decoration:none; }
+    .quick-action:last-child { border-bottom:none; }
+    .quick-action-left { display:flex; align-items:center; gap:10px; font-size:.85rem; font-weight:600; color:#1a1a1a; }
+  </style>
+</head>
+<body>
+  <div id="app-wrapper">
+    
+    <!-- Standalone Owner Sidebar -->
+    <aside id="sidebar" class="sidebar">
+      <a href="index.html" class="sidebar-logo">
+        <div class="sidebar-logo-icon">TH</div>
+        <span class="sidebar-logo-text">TurfHub</span>
+      </a>
+      <div class="sidebar-user">
+        <div class="sidebar-avatar">R</div>
+        <div class="sidebar-user-info">
+          <span class="sidebar-user-name">Rafiqul Islam</span>
+          <span class="sidebar-user-role">Turf Owner</span>
         </div>
-        <div class="p-4 border-b border-white/10">
-          <div class="flex items-center gap-3">
-            <div class="w-9 h-9 bg-lime rounded-full flex items-center justify-center flex-shrink-0"><span class="text-forest font-black text-sm">R</span></div>
-            <div class="overflow-hidden">
-              <div class="text-white font-semibold text-sm truncate">Rafiqul Islam</div>
-              <div class="text-white/50 text-xs">Turf Owner</div>
-            </div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="owner-dashboard.html" class="sidebar-nav-item active"><span class="sidebar-icon">📊</span><span class="sidebar-label">Dashboard</span></a>
+        <a href="manage-turf.html" class="sidebar-nav-item"><span class="sidebar-icon">🏟️</span><span class="sidebar-label">Manage Turfs</span></a>
+        <a href="slot-calendar.html" class="sidebar-nav-item"><span class="sidebar-icon">📅</span><span class="sidebar-label">Slot Calendar</span></a>
+        <a href="create-tournament.html" class="sidebar-nav-item"><span class="sidebar-icon">🏆</span><span class="sidebar-label">Tournaments</span></a>
+        <a href="score-entry.html" class="sidebar-nav-item"><span class="sidebar-icon">⚽</span><span class="sidebar-label">Score Entry</span></a>
+        <a href="chat.html" class="sidebar-nav-item"><span class="sidebar-icon">💬</span><span class="sidebar-label">Messages</span></a>
+        <a href="owner-reports.html" class="sidebar-nav-item"><span class="sidebar-icon">📈</span><span class="sidebar-label">Reports</span></a>
+      </nav>
+      <a href="login.html" class="sidebar-signout">
+        <span class="sidebar-icon">🚪</span>
+        <span class="sidebar-label">Sign Out</span>
+      </a>
+    </aside>
+
+    <div id="main-content">
+      <div id="topbar">
+        <div class="topbar-title">
+          <span class="topbar-heading">Owner Dashboard</span>
+          <span class="topbar-sub" id="topbar-date">Friday, 25 July 2025</span>
+        </div>
+        <div class="topbar-actions">
+          <a href="slot-calendar.html" class="btn-lime">+ Add Booking</a>
+          <div style="position:relative;cursor:pointer">
+            <span style="font-size:1.3rem">🔔</span>
+            <span style="position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:#e53935;border-radius:50%;font-size:.6rem;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center">3</span>
           </div>
-        </div>
-        <nav class="flex-1 p-3 space-y-0.5 overflow-y-auto">
-          <a href="owner-dashboard.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors bg-lime text-forest"><span>📊</span><span>Dashboard</span></a>
-          <a href="manage-turf.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>🏟️</span><span>Manage Turfs</span></a>
-          <a href="slot-calendar.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>📅</span><span>Slot Calendar</span></a>
-          <a href="create-tournament.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>🏆</span><span>Tournaments</span></a>
-          <a href="score-entry.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>⚽</span><span>Score Entry</span></a>
-          <a href="chat.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>💬</span><span>Messages</span></a>
-          <a href="owner-reports.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>📄</span><span>Reports</span></a>
-        </nav>
-        <div class="p-3 border-t border-white/10">
-          <a href="index.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/40 hover:text-white/70 transition-colors"><span>🚪</span><span>Sign Out</span></a>
         </div>
       </div>
 
-      <!-- Main -->
-      <div class="flex-1 overflow-y-auto">
-        <div class="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between">
-          <div>
-            <h1 class="text-xl font-black text-charcoal">Owner Dashboard</h1>
-            <p class="text-sm text-gray-mid">Friday, 25 July 2025</p>
+      <div class="page-body">
+        <!-- Stats -->
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#dbeafe">📅</div>
+            <div class="stat-body">
+              <div class="stat-value">34</div>
+              <div class="stat-label">Bookings This Month</div>
+              <div class="stat-trend up">↑ 12% vs last month</div>
+            </div>
           </div>
-          <div class="flex items-center gap-3">
-            <a href="slot-calendar.html" class="bg-lime hover:bg-lime-dark text-forest font-bold px-4 py-2 rounded-lg text-sm transition-colors">+ Add Booking</a>
-            <div class="relative">
-              <div class="w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors">🔔</div>
-              <span class="absolute -top-1 -right-1 w-4 h-4 bg-danger rounded-full text-white text-[9px] font-black flex items-center justify-center">3</span>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#dcfce7">💰</div>
+            <div class="stat-body">
+              <div class="stat-value">&#2547;68,400</div>
+              <div class="stat-label">Revenue (Jul)</div>
+              <div class="stat-trend up">↑ 8% vs Jun</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#fef3c7">⏳</div>
+            <div class="stat-body">
+              <div class="stat-value">5</div>
+              <div class="stat-label">Pending Requests</div>
+              <div class="stat-trend down">↓ 2 urgent</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#f3e8ff">🏟️</div>
+            <div class="stat-body">
+              <div class="stat-value">3</div>
+              <div class="stat-label">Active Turfs</div>
             </div>
           </div>
         </div>
 
-        <div class="p-8 space-y-8">
-          <!-- Stats -->
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 flex items-start gap-4 hover:shadow-md transition-shadow">
-              <div class="w-12 h-12 rounded-xl bg-lime/10 flex items-center justify-center text-2xl flex-shrink-0">📅</div>
-              <div><div class="text-2xl font-black text-charcoal">34</div><div class="text-sm text-gray-mid font-medium">Bookings This Month</div><div class="text-xs font-semibold mt-1 text-success">↑ 12% vs last month</div></div>
+        <div class="content-grid">
+          <!-- Booking Requests -->
+          <div class="content-panel">
+            <div class="panel-header">
+              <span class="panel-title">Booking Requests</span>
+              <a href="slot-calendar.html" class="panel-action">Manage All &rarr;</a>
             </div>
-            <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 flex items-start gap-4 hover:shadow-md transition-shadow">
-              <div class="w-12 h-12 rounded-xl bg-lime/10 flex items-center justify-center text-2xl flex-shrink-0">💰</div>
-              <div><div class="text-2xl font-black text-charcoal">৳68,400</div><div class="text-sm text-gray-mid font-medium">Revenue (Jul)</div><div class="text-xs font-semibold mt-1 text-success">↑ 8% vs Jun</div></div>
+
+            <div class="booking-row">
+              <div class="team-avatar">T</div>
+              <div style="flex:1">
+                <div style="font-weight:700;font-size:.88rem">Thunder FC</div>
+                <div style="font-size:.75rem;color:#6b7280">The Green Arena &middot; Sat, 26 Jul &middot; 6:00 PM &ndash; 8:00 PM</div>
+              </div>
+              <div style="font-weight:800;font-size:.9rem;color:#1a1a1a">&#2547;1,600</div>
+              <span class="badge badge-pending badge-dot">Pending</span>
+              <div class="booking-actions">
+                <button class="btn-approve" title="Approve">&#10003;</button>
+                <button class="btn-reject" title="Reject">&#10005;</button>
+              </div>
             </div>
-            <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 flex items-start gap-4 hover:shadow-md transition-shadow">
-              <div class="w-12 h-12 rounded-xl bg-lime/10 flex items-center justify-center text-2xl flex-shrink-0">⏳</div>
-              <div><div class="text-2xl font-black text-charcoal">5</div><div class="text-sm text-gray-mid font-medium">Pending Requests</div><div class="text-xs font-semibold mt-1 text-danger">↓ 2 urgent</div></div>
+            <div class="booking-row">
+              <div class="team-avatar">R</div>
+              <div style="flex:1">
+                <div style="font-weight:700;font-size:.88rem">Rising Stars</div>
+                <div style="font-size:.75rem;color:#6b7280">The Green Arena &middot; Sun, 27 Jul &middot; 10:00 AM &ndash; 12:00 PM</div>
+              </div>
+              <div style="font-weight:800;font-size:.9rem;color:#1a1a1a">&#2547;1,600</div>
+              <span class="badge badge-confirmed badge-dot">Confirmed</span>
+              <div class="booking-actions"></div>
             </div>
-            <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 flex items-start gap-4 hover:shadow-md transition-shadow">
-              <div class="w-12 h-12 rounded-xl bg-lime/10 flex items-center justify-center text-2xl flex-shrink-0">🏟️</div>
-              <div><div class="text-2xl font-black text-charcoal">3</div><div class="text-sm text-gray-mid font-medium">Active Turfs</div></div>
+            <div class="booking-row">
+              <div class="team-avatar">B</div>
+              <div style="flex:1">
+                <div style="font-weight:700;font-size:.88rem">Blaze United</div>
+                <div style="font-size:.75rem;color:#6b7280">Court Pro Indoor &middot; Mon, 28 Jul &middot; 4:00 PM &ndash; 6:00 PM</div>
+              </div>
+              <div style="font-weight:800;font-size:.9rem;color:#1a1a1a">&#2547;1,200</div>
+              <span class="badge badge-pending badge-dot">Pending</span>
+              <div class="booking-actions">
+                <button class="btn-approve">&#10003;</button>
+                <button class="btn-reject">&#10005;</button>
+              </div>
+            </div>
+            <div class="booking-row">
+              <div class="team-avatar">C</div>
+              <div style="flex:1">
+                <div style="font-weight:700;font-size:.88rem">City Kickers</div>
+                <div style="font-size:.75rem;color:#6b7280">Champions Field &middot; Tue, 29 Jul &middot; 7:00 AM &ndash; 9:00 AM</div>
+              </div>
+              <div style="font-weight:800;font-size:.9rem;color:#1a1a1a">&#2547;2,400</div>
+              <span class="badge badge-confirmed badge-dot">Confirmed</span>
+              <div class="booking-actions"></div>
+            </div>
+            <div class="booking-row">
+              <div class="team-avatar">F</div>
+              <div style="flex:1">
+                <div style="font-weight:700;font-size:.88rem">FC Dynamo</div>
+                <div style="font-size:.75rem;color:#6b7280">The Green Arena &middot; Wed, 30 Jul &middot; 8:00 PM &ndash; 10:00 PM</div>
+              </div>
+              <div style="font-weight:800;font-size:.9rem;color:#1a1a1a">&#2547;1,600</div>
+              <span class="badge badge-rejected badge-dot">Rejected</span>
+              <div class="booking-actions"></div>
             </div>
           </div>
 
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Booking Requests -->
-            <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100">
-              <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-                <h2 class="font-black text-charcoal text-base">Booking Requests</h2>
-                <a href="slot-calendar.html" class="text-lime text-sm font-bold hover:underline">Manage All →</a>
-              </div>
-              <div class="divide-y divide-gray-50">
-                <!-- BK001 pending -->
-                <div class="px-6 py-4 flex items-center gap-4 hover:bg-off-white/50 transition-colors">
-                  <div class="w-10 h-10 bg-lime/10 rounded-full flex items-center justify-center flex-shrink-0"><span class="text-forest font-black text-sm">T</span></div>
-                  <div class="flex-1 min-w-0"><div class="font-semibold text-charcoal text-sm">Thunder FC</div><div class="text-xs text-gray-mid">The Green Arena · Sat, 26 Jul · 6:00 PM – 8:00 PM</div></div>
-                  <div class="text-sm font-bold text-charcoal">৳1,600</div>
-                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800"><span class="w-1.5 h-1.5 rounded-full bg-amber"></span>Pending</span>
-                  <div class="flex gap-2"><span class="bg-success/10 hover:bg-success/20 text-success text-xs font-bold px-3 py-1.5 rounded-lg transition-colors cursor-pointer">✓</span><span class="bg-danger/10 hover:bg-danger/20 text-danger text-xs font-bold px-3 py-1.5 rounded-lg transition-colors cursor-pointer">✕</span></div>
-                </div>
-                <!-- BK002 confirmed -->
-                <div class="px-6 py-4 flex items-center gap-4 hover:bg-off-white/50 transition-colors">
-                  <div class="w-10 h-10 bg-lime/10 rounded-full flex items-center justify-center flex-shrink-0"><span class="text-forest font-black text-sm">R</span></div>
-                  <div class="flex-1 min-w-0"><div class="font-semibold text-charcoal text-sm">Rising Stars</div><div class="text-xs text-gray-mid">The Green Arena · Sun, 27 Jul · 10:00 AM – 12:00 PM</div></div>
-                  <div class="text-sm font-bold text-charcoal">৳1,600</div>
-                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800"><span class="w-1.5 h-1.5 rounded-full bg-success"></span>Confirmed</span>
-                </div>
-                <!-- BK003 pending -->
-                <div class="px-6 py-4 flex items-center gap-4 hover:bg-off-white/50 transition-colors">
-                  <div class="w-10 h-10 bg-lime/10 rounded-full flex items-center justify-center flex-shrink-0"><span class="text-forest font-black text-sm">B</span></div>
-                  <div class="flex-1 min-w-0"><div class="font-semibold text-charcoal text-sm">Blaze United</div><div class="text-xs text-gray-mid">Court Pro Indoor · Mon, 28 Jul · 4:00 PM – 6:00 PM</div></div>
-                  <div class="text-sm font-bold text-charcoal">৳1,200</div>
-                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800"><span class="w-1.5 h-1.5 rounded-full bg-amber"></span>Pending</span>
-                  <div class="flex gap-2"><span class="bg-success/10 hover:bg-success/20 text-success text-xs font-bold px-3 py-1.5 rounded-lg transition-colors cursor-pointer">✓</span><span class="bg-danger/10 hover:bg-danger/20 text-danger text-xs font-bold px-3 py-1.5 rounded-lg transition-colors cursor-pointer">✕</span></div>
-                </div>
-                <!-- BK004 confirmed -->
-                <div class="px-6 py-4 flex items-center gap-4 hover:bg-off-white/50 transition-colors">
-                  <div class="w-10 h-10 bg-lime/10 rounded-full flex items-center justify-center flex-shrink-0"><span class="text-forest font-black text-sm">C</span></div>
-                  <div class="flex-1 min-w-0"><div class="font-semibold text-charcoal text-sm">City Kickers</div><div class="text-xs text-gray-mid">Champions Field · Tue, 29 Jul · 7:00 AM – 9:00 AM</div></div>
-                  <div class="text-sm font-bold text-charcoal">৳2,400</div>
-                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800"><span class="w-1.5 h-1.5 rounded-full bg-success"></span>Confirmed</span>
-                </div>
-                <!-- BK005 rejected -->
-                <div class="px-6 py-4 flex items-center gap-4 hover:bg-off-white/50 transition-colors">
-                  <div class="w-10 h-10 bg-lime/10 rounded-full flex items-center justify-center flex-shrink-0"><span class="text-forest font-black text-sm">F</span></div>
-                  <div class="flex-1 min-w-0"><div class="font-semibold text-charcoal text-sm">FC Dynamo</div><div class="text-xs text-gray-mid">The Green Arena · Wed, 30 Jul · 8:00 PM – 10:00 PM</div></div>
-                  <div class="text-sm font-bold text-charcoal">৳1,600</div>
-                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800"><span class="w-1.5 h-1.5 rounded-full bg-danger"></span>Rejected</span>
-                </div>
-              </div>
+          <!-- Right column -->
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <!-- Quick Actions -->
+            <div class="content-panel">
+              <div class="panel-header"><span class="panel-title">Quick Actions</span></div>
+              <a href="manage-turf.html" class="quick-action">
+                <div class="quick-action-left"><span>🏟️</span> Manage Turfs</div>
+                <span style="color:#9ca3af">&rarr;</span>
+              </a>
+              <a href="slot-calendar.html" class="quick-action">
+                <div class="quick-action-left"><span>📅</span> View Slot Calendar</div>
+                <span style="color:#9ca3af">&rarr;</span>
+              </a>
+              <a href="score-entry.html" class="quick-action">
+                <div class="quick-action-left"><span>⚽</span> Enter Match Scores</div>
+                <span style="color:#9ca3af">&rarr;</span>
+              </a>
+              <a href="create-tournament.html" class="quick-action">
+                <div class="quick-action-left"><span>🏆</span> Create Tournament</div>
+                <span style="color:#9ca3af">&rarr;</span>
+              </a>
+              <a href="owner-reports.html" class="quick-action">
+                <div class="quick-action-left"><span>📈</span> Generate Report</div>
+                <span style="color:#9ca3af">&rarr;</span>
+              </a>
+              <a href="chat.html" class="quick-action">
+                <div class="quick-action-left"><span>💬</span> Open Messages</div>
+                <span style="color:#9ca3af">&rarr;</span>
+              </a>
             </div>
 
-            <!-- Right column -->
-            <div class="space-y-4">
-              <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-                <h3 class="font-black text-charcoal text-sm mb-4">Quick Actions</h3>
-                <div class="space-y-2">
-                  <a href="manage-turf.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-charcoal hover:bg-off-white transition-colors text-left"><span>🏟️</span><span>Manage Turfs</span><span class="ml-auto text-gray-mid">→</span></a>
-                  <a href="slot-calendar.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-charcoal hover:bg-off-white transition-colors text-left"><span>📅</span><span>View Slot Calendar</span><span class="ml-auto text-gray-mid">→</span></a>
-                  <a href="score-entry.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-charcoal hover:bg-off-white transition-colors text-left"><span>⚽</span><span>Enter Match Scores</span><span class="ml-auto text-gray-mid">→</span></a>
-                  <a href="create-tournament.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-charcoal hover:bg-off-white transition-colors text-left"><span>🏆</span><span>Create Tournament</span><span class="ml-auto text-gray-mid">→</span></a>
-                  <a href="owner-reports.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-charcoal hover:bg-off-white transition-colors text-left"><span>📄</span><span>Generate Report</span><span class="ml-auto text-gray-mid">→</span></a>
-                  <a href="chat.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-charcoal hover:bg-off-white transition-colors text-left"><span>💬</span><span>Open Messages</span><span class="ml-auto text-gray-mid">→</span></a>
+            <!-- Recent Activity -->
+            <div class="content-panel">
+              <div class="panel-header"><span class="panel-title">Recent Activity</span></div>
+              <div class="activity-item">
+                <div class="activity-dot"></div>
+                <div>
+                  <div class="activity-text">Thunder FC requested Saturday 6 PM slot</div>
+                  <div class="activity-time">12 min ago</div>
                 </div>
               </div>
-
-              <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-                <h3 class="font-black text-charcoal text-sm mb-4">Recent Activity</h3>
-                <div class="space-y-3">
-                  <div class="flex items-start gap-3"><div class="w-2 h-2 rounded-full bg-lime mt-1.5 flex-shrink-0"></div><div><p class="text-xs text-charcoal font-medium leading-snug">Thunder FC requested Saturday 6 PM slot</p><p class="text-xs text-gray-mid mt-0.5">12 min ago</p></div></div>
-                  <div class="flex items-start gap-3"><div class="w-2 h-2 rounded-full bg-lime mt-1.5 flex-shrink-0"></div><div><p class="text-xs text-charcoal font-medium leading-snug">Payment received from Rising Stars — ৳1,600</p><p class="text-xs text-gray-mid mt-0.5">1 hr ago</p></div></div>
-                  <div class="flex items-start gap-3"><div class="w-2 h-2 rounded-full bg-lime mt-1.5 flex-shrink-0"></div><div><p class="text-xs text-charcoal font-medium leading-snug">Blaze United cancelled Sunday booking</p><p class="text-xs text-gray-mid mt-0.5">3 hrs ago</p></div></div>
-                  <div class="flex items-start gap-3"><div class="w-2 h-2 rounded-full bg-lime mt-1.5 flex-shrink-0"></div><div><p class="text-xs text-charcoal font-medium leading-snug">New tournament registration: Inter-City League</p><p class="text-xs text-gray-mid mt-0.5">Yesterday</p></div></div>
+              <div class="activity-item">
+                <div class="activity-dot"></div>
+                <div>
+                  <div class="activity-text">Payment received from Rising Stars — &#2547;1,600</div>
+                  <div class="activity-time">1 hr ago</div>
                 </div>
               </div>
-            </div>
-          </div>
-
-          <!-- Revenue Mini Chart -->
-          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <div class="flex items-center justify-between mb-6">
-              <div><h2 class="font-black text-charcoal text-base">Revenue Overview</h2><p class="text-sm text-gray-mid">Last 7 months</p></div>
-              <div class="text-right"><div class="text-2xl font-black text-charcoal">৳68,400</div><div class="text-xs text-success font-semibold">↑ 8% vs last month</div></div>
-            </div>
-            <div class="flex items-end gap-3 h-28">
-              <div class="flex-1 flex flex-col items-center gap-1"><div class="w-full bg-lime/20 rounded-t-md hover:bg-lime/40 transition-colors relative group" style="height:52.5%"></div><span class="text-xs text-gray-mid font-medium">Jan</span></div>
-              <div class="flex-1 flex flex-col items-center gap-1"><div class="w-full bg-lime/20 rounded-t-md hover:bg-lime/40 transition-colors relative group" style="height:63.75%"></div><span class="text-xs text-gray-mid font-medium">Feb</span></div>
-              <div class="flex-1 flex flex-col items-center gap-1"><div class="w-full bg-lime/20 rounded-t-md hover:bg-lime/40 transition-colors relative group" style="height:60%"></div><span class="text-xs text-gray-mid font-medium">Mar</span></div>
-              <div class="flex-1 flex flex-col items-center gap-1"><div class="w-full bg-lime/20 rounded-t-md hover:bg-lime/40 transition-colors relative group" style="height:75%"></div><span class="text-xs text-gray-mid font-medium">Apr</span></div>
-              <div class="flex-1 flex flex-col items-center gap-1"><div class="w-full bg-lime/20 rounded-t-md hover:bg-lime/40 transition-colors relative group" style="height:68.75%"></div><span class="text-xs text-gray-mid font-medium">May</span></div>
-              <div class="flex-1 flex flex-col items-center gap-1"><div class="w-full bg-lime/20 rounded-t-md hover:bg-lime/40 transition-colors relative group" style="height:79%"></div><span class="text-xs text-gray-mid font-medium">Jun</span></div>
-              <div class="flex-1 flex flex-col items-center gap-1"><div class="w-full bg-lime/20 rounded-t-md hover:bg-lime/40 transition-colors relative group" style="height:85.5%"></div><span class="text-xs text-gray-mid font-medium">Jul</span></div>
+              <div class="activity-item">
+                <div class="activity-dot"></div>
+                <div>
+                  <div class="activity-text">Blaze United cancelled Sunday booking</div>
+                  <div class="activity-time">3 hrs ago</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot"></div>
+                <div>
+                  <div class="activity-text">New tournament registration: Inter-City League</div>
+                  <div class="activity-time">Yesterday</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </body>
+  </div>
+
+  <script>
+    // Set date
+    document.getElementById('topbar-date').textContent = new Date().toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+  </script>
+</body>
 </html>

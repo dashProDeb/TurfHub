@@ -1,202 +1,168 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TurfHub — Join a Team</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <style>
-      :root {
-        --color-lime: #7ED321;
-        --color-lime-dark: #6ab81c;
-        --color-forest: #0F2B1D;
-        --color-forest-mid: #1a4029;
-        --color-off-white: #F7F8F5;
-        --color-charcoal: #1E1E1E;
-        --color-gray-mid: #6B7280;
-        --color-amber: #F5A623;
-        --color-success: #4CAF50;
-        --color-danger: #E53935;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TurfHub — Join a Team</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    .team-card { background:#fff;border:1.5px solid #e8ede8;border-radius:14px;padding:20px;transition:box-shadow .2s,border-color .2s;cursor:pointer; }
+    .team-card:hover { box-shadow:0 6px 20px rgba(0,0,0,.09);border-color:#7ed321; }
+    .team-badge { width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.1rem;color:#fff;flex-shrink:0; }
+    .sport-tag { padding:3px 10px;border-radius:100px;font-size:.72rem;font-weight:700; }
+    .open-tag { background:rgba(126,211,33,.12);color:#5a9e12; }
+    .full-tag { background:rgba(229,57,53,.1);color:#e53935; }
+    .form-input { width:100%;padding:10px 14px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:.88rem;font-family:inherit;outline:none;transition:border-color .2s;background:#fff;color:#1a1a1a; }
+    .form-input:focus { border-color:#7ed321;box-shadow:0 0 0 3px rgba(126,211,33,.12); }
+    .filter-tab { padding:7px 18px;border-radius:100px;border:1.5px solid #e5e7eb;font-size:.8rem;font-weight:600;cursor:pointer;font-family:inherit;background:#fff;color:#6b7280;transition:all .15s; }
+    .filter-tab.active { background:#0d2818;border-color:#0d2818;color:#fff; }
+  </style>
+</head>
+<body>
+<div id="app-wrapper">
+  <!-- Standalone Player Sidebar -->
+  <aside id="sidebar" class="sidebar">
+    <a href="index.html" class="sidebar-logo">
+      <div class="sidebar-logo-icon">TH</div>
+      <span class="sidebar-logo-text">TurfHub</span>
+    </a>
+    <div class="sidebar-user">
+      <div class="sidebar-avatar" style="background:#7ed321;color:#0d2818">P</div>
+      <div class="sidebar-user-info">
+        <span class="sidebar-user-name">Sabbir Ahmed</span>
+        <span class="sidebar-user-role">Player</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="player-dashboard.html" class="sidebar-nav-item"><span class="sidebar-icon">📊</span><span class="sidebar-label">Dashboard</span></a>
+      <a href="turf-detail.html" class="sidebar-nav-item"><span class="sidebar-icon">🏟️</span><span class="sidebar-label">Find Turf</span></a>
+      <a href="join-team.html" class="sidebar-nav-item active"><span class="sidebar-icon">👥</span><span class="sidebar-label">Join Team</span></a>
+      <a href="fixtures.html" class="sidebar-nav-item"><span class="sidebar-icon">🏆</span><span class="sidebar-label">Fixtures</span></a>
+      <a href="booking-receipt.html" class="sidebar-nav-item"><span class="sidebar-icon">🧾</span><span class="sidebar-label">My Receipts</span></a>
+      <a href="chat.html" class="sidebar-nav-item"><span class="sidebar-icon">💬</span><span class="sidebar-label">Team Chat</span></a>
+    </nav>
+    <a href="login.html" class="sidebar-signout">
+      <span class="sidebar-icon">🚪</span>
+      <span class="sidebar-label">Sign Out</span>
+    </a>
+  </aside>
 
-      .bg-lime { background-color: var(--color-lime); }
-      .bg-lime-dark { background-color: var(--color-lime-dark); }
-      .bg-forest { background-color: var(--color-forest); }
-      .bg-off-white { background-color: var(--color-off-white); }
-      .text-lime { color: var(--color-lime); }
-      .text-forest { color: var(--color-forest); }
-      .text-charcoal { color: var(--color-charcoal); }
-      .text-gray-mid { color: var(--color-gray-mid); }
-      .text-danger { color: var(--color-danger); }
-      .border-lime { border-color: var(--color-lime); }
-      .border-gray-100 { border-color: #f3f4f6; }
-      .border-gray-200 { border-color: #e5e7eb; }
-      body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; background-color: #ffffff; color: #1E1E1E; }
-    </style>
-  </head>
-  <body class="min-h-screen bg-off-white">
-    <div class="flex min-h-screen bg-off-white">
+  <div id="main-content">
+    <div id="topbar">
+      <div class="topbar-title">
+        <span class="topbar-heading">Join a Team</span>
+        <span class="topbar-sub">Find teams looking for players in your area</span>
+      </div>
+      <div class="topbar-actions">
+        <span class="badge badge-player">Free Agent</span>
+      </div>
+    </div>
+    <div class="page-body">
+      <!-- Search + filter -->
+      <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+        <input type="text" class="form-input" style="max-width:300px" placeholder="&#128269; Search teams..." />
+        <select class="form-input" style="max-width:160px">
+          <option>All Sports</option>
+          <option>Football</option>
+          <option>Cricket</option>
+          <option>Basketball</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
+        <button class="filter-tab active" onclick="setFilter(this)">All</button>
+        <button class="filter-tab" onclick="setFilter(this)">Open</button>
+        <button class="filter-tab" onclick="setFilter(this)">My Sport</button>
+      </div>
 
-      <!-- Sidebar -->
-      <aside class="w-64 bg-white border-r border-gray-100 flex-shrink-0">
-        <div class="px-6 py-4 border-b border-gray-100">
-          <h2 class="text-xl font-black text-charcoal">TurfHub</h2>
-          <p class="text-sm text-gray-mid">Join a Team</p>
-        </div>
-        <nav class="px-6 py-3 space-y-2">
-          <a href="player-dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-gray-mid hover:text-charcoal">
-            <span class="text-xl">📊</span>
-            <span>Dashboard</span>
-          </a>
-          <a href="fixtures.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-gray-mid hover:text-charcoal">
-            <span class="text-xl">📅</span>
-            <span>Fixtures</span>
-          </a>
-          <a href="tournament-registration.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-gray-mid hover:text-charcoal">
-            <span class="text-xl">🏆</span>
-            <span>Tournaments</span>
-          </a>
-          <a href="contact.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-gray-mid hover:text-charcoal">
-            <span class="text-xl">📞</span>
-            <span>Contact</span>
-          </a>
-        </nav>
-        <div class="p-6 border-t border-gray-100">
-          <h3 class="font-bold text-charcoal text-sm mb-3">Quick Links</h3>
-          <ul class="space-y-2">
-            <li><a href="#" class="text-gray-mid text-sm hover:text-lime transition-colors">View Teams</a></li>
-            <li><a href="#" class="text-gray-mid text-sm hover:text-lime transition-colors">Log Out</a></li>
-          </ul>
-        </div>
-      </aside>
-
-      <!-- Main Content -->
-      <div class="flex-1 p-8">
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center mb-8">
-          <div class="text-5xl mb-4">🎟️</div>
-          <h2 class="text-2xl font-black text-charcoal mb-2">Enter Invitation Code</h2>
-          <p class="text-gray-mid text-sm mb-6">
-            Your team captain has shared a code with you. Enter it below to preview the team and join.
-          </p>
-          <div class="text-left mb-4">
-            <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-2">Invitation Code</label>
-            <input
-              type="text"
-              placeholder="e.g. TFC-2025"
-              class="w-full px-5 py-3.5 border-2 rounded-xl text-charcoal font-mono text-lg text-center outline-none transition-colors tracking-widest"
-            />
-          </div>
-          <button
-            class="w-full bg-lime hover:bg-lime-dark disabled:opacity-40 text-forest font-black py-3.5 rounded-xl text-sm transition-colors"
-          >
-            Look Up Team →
-          </button>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-8">
-          <div class="relative h-40 bg-gray-200">
-            <img
-              src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600&h=300&fit=crop&auto=format"
-              alt=""
-              class="w-full h-full object-cover"
-            />
-            <div class="absolute inset-0 bg-gradient-to-t from-forest/80 to-transparent" />
-            <div class="absolute bottom-4 left-5">
-              <div class="font-black text-white text-2xl">Thunder FC</div>
-              <div class="text-white/70 text-sm">Football 5-a-side</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px">
+        <div class="team-card">
+          <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:14px">
+            <div class="team-badge" style="background:#0d2818">&#9889;</div>
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">
+                <span style="font-weight:800;font-size:.95rem;color:#1a1a1a">Thunder FC</span>
+                <span class="sport-tag open-tag">Open</span>
+              </div>
+              <div style="font-size:.78rem;color:#6b7280">Football &middot; Dhaka &middot; Seeking Midfielder</div>
             </div>
           </div>
-          <div class="p-6">
-            <div class="grid grid-cols-2 gap-4 mb-5">
-              <div>
-                <div class="text-xs font-bold text-gray-mid uppercase tracking-wider mb-0.5">Captain</div>
-                <div class="font-semibold text-charcoal text-sm">Fatema Begum</div>
-              </div>
-              <div>
-                <div class="text-xs font-bold text-gray-mid uppercase tracking-wider mb-0.5">League</div>
-                <div class="font-semibold text-charcoal text-sm">Inter-City Football League 2025</div>
-              </div>
-              <div>
-                <div class="text-xs font-bold text-gray-mid uppercase tracking-wider mb-0.5">Standing</div>
-                <div class="font-semibold text-charcoal text-sm">2nd Place</div>
-              </div>
-              <div>
-                <div class="text-xs font-bold text-gray-mid uppercase tracking-wider mb-0.5">Record</div>
-                <div class="font-semibold text-charcoal text-sm">5W / 1L</div>
-              </div>
-            </div>
-            <div class="border-t border-gray-100 pt-4">
-              <div class="flex justify-between text-sm mb-2">
-                <span class="font-semibold text-charcoal">Roster</span>
-                <span class="text-gray-mid">10/14 players</span>
-              </div>
-              <div class="h-2 bg-gray-100 rounded-full overflow-hidden mb-2">
-                <div class="h-full bg-lime rounded-full" style="width: 71.4%"></div>
-              </div>
-              <p class="text-xs text-gray-mid">4 spots available</p>
-            </div>
+          <div style="display:flex;gap:16px;margin-bottom:14px">
+            <div><div style="font-size:.68rem;color:#9ca3af">Players</div><div style="font-weight:700;font-size:.85rem">11/15</div></div>
+            <div><div style="font-size:.68rem;color:#9ca3af">League</div><div style="font-weight:700;font-size:.85rem">Inter-City</div></div>
+            <div><div style="font-size:.68rem;color:#9ca3af">Practice</div><div style="font-weight:700;font-size:.85rem">Sat/Sun</div></div>
           </div>
+          <div style="font-size:.78rem;color:#6b7280;margin-bottom:14px;line-height:1.5">Competitive team in the Inter-City Football League. Looking for experienced midfielders for the upcoming season.</div>
+          <a href="#" class="btn-lime" style="display:block;text-align:center;width:100%;justify-content:center">Request to Join</a>
         </div>
 
-        <div class="flex gap-3">
-          <button
-            class="border-2 border-gray-200 hover:border-gray-300 text-charcoal font-bold px-5 py-3 rounded-xl text-sm transition-colors"
-          >
-            ← Back
-          </button>
-          <button
-            class="flex-1 bg-lime hover:bg-lime-dark text-forest font-black py-3 rounded-xl text-sm transition-colors"
-          >
-            ✓ Join Thunder FC
-          </button>
+        <div class="team-card">
+          <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:14px">
+            <div class="team-badge" style="background:#6d28d9">&#128293;</div>
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">
+                <span style="font-weight:800;font-size:.95rem;color:#1a1a1a">Blaze United</span>
+                <span class="sport-tag open-tag">Open</span>
+              </div>
+              <div style="font-size:.78rem;color:#6b7280">Football &middot; Dhaka &middot; Seeking Striker</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:16px;margin-bottom:14px">
+            <div><div style="font-size:.68rem;color:#9ca3af">Players</div><div style="font-weight:700;font-size:.85rem">10/15</div></div>
+            <div><div style="font-size:.68rem;color:#9ca3af">League</div><div style="font-weight:700;font-size:.85rem">Summer Cup</div></div>
+            <div><div style="font-size:.68rem;color:#9ca3af">Practice</div><div style="font-weight:700;font-size:.85rem">Fri/Sat</div></div>
+          </div>
+          <div style="font-size:.78rem;color:#6b7280;margin-bottom:14px;line-height:1.5">Ambitious team targeting promotion this season. Need a clinical striker with good finishing ability.</div>
+          <a href="#" class="btn-lime" style="display:block;text-align:center;width:100%;justify-content:center">Request to Join</a>
+        </div>
+
+        <div class="team-card" style="opacity:.75">
+          <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:14px">
+            <div class="team-badge" style="background:#dc2626">&#11088;</div>
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">
+                <span style="font-weight:800;font-size:.95rem;color:#1a1a1a">Rising Stars</span>
+                <span class="sport-tag full-tag">Full</span>
+              </div>
+              <div style="font-size:.78rem;color:#6b7280">Football &middot; Dhaka &middot; Squad Complete</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:16px;margin-bottom:14px">
+            <div><div style="font-size:.68rem;color:#9ca3af">Players</div><div style="font-weight:700;font-size:.85rem">15/15</div></div>
+            <div><div style="font-size:.68rem;color:#9ca3af">League</div><div style="font-weight:700;font-size:.85rem">Inter-City</div></div>
+            <div><div style="font-size:.68rem;color:#9ca3af">Practice</div><div style="font-weight:700;font-size:.85rem">Daily</div></div>
+          </div>
+          <div style="font-size:.78rem;color:#6b7280;margin-bottom:14px;line-height:1.5">Top-ranked team. Currently at full capacity but accepting waitlist applications.</div>
+          <button class="btn-outline" style="width:100%;justify-content:center" disabled>Join Waitlist</button>
+        </div>
+
+        <div class="team-card">
+          <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:14px">
+            <div class="team-badge" style="background:#0891b2">&#127944;</div>
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">
+                <span style="font-weight:800;font-size:.95rem;color:#1a1a1a">Court Kings</span>
+                <span class="sport-tag open-tag">Open</span>
+              </div>
+              <div style="font-size:.78rem;color:#6b7280">Basketball &middot; Dhaka &middot; All positions</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:16px;margin-bottom:14px">
+            <div><div style="font-size:.68rem;color:#9ca3af">Players</div><div style="font-weight:700;font-size:.85rem">8/12</div></div>
+            <div><div style="font-size:.68rem;color:#9ca3af">League</div><div style="font-weight:700;font-size:.85rem">Summer Smash</div></div>
+            <div><div style="font-size:.68rem;color:#9ca3af">Practice</div><div style="font-weight:700;font-size:.85rem">Tue/Thu</div></div>
+          </div>
+          <div style="font-size:.78rem;color:#6b7280;margin-bottom:14px;line-height:1.5">Friendly basketball team competing in the Summer Smash Cup. Open to all skill levels.</div>
+          <a href="#" class="btn-lime" style="display:block;text-align:center;width:100%;justify-content:center">Request to Join</a>
         </div>
       </div>
     </div>
-
-    <footer class="bg-forest text-white mt-auto">
-      <div class="max-w-7xl mx-auto px-6 py-12">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
-          <div class="col-span-2 md:col-span-1">
-            <div class="flex items-center gap-2 mb-4">
-              <div class="w-8 h-8 bg-lime rounded-lg flex items-center justify-center"><span class="text-forest font-black text-sm">TH</span></div>
-              <span class="font-black text-xl">TurfHub</span>
-            </div>
-            <p class="text-white/50 text-sm leading-relaxed">India's premier sports turf booking and tournament management platform.</p>
-            <div class="flex gap-3 mt-4">
-              <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">⚽</span>
-              <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🏀</span>
-              <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🏏</span>
-              <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🎾</span>
-              <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🏸</span>
-            </div>
-          </div>
-          <div>
-            <h4 class="font-bold mb-4 text-white/80 text-sm uppercase tracking-wider">Platform</h4>
-            <ul class="space-y-2.5">
-              <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Find Turfs</a></li>
-              <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Tournaments</a></li>
-              <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Fixtures</a></li>
-              <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Leaderboard</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4 class="font-bold mb-4 text-white/80 text-sm uppercase tracking-wider">Support</h4>
-            <ul class="space-y-2.5">
-              <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Help Center</a></li>
-              <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Privacy Policy</a></li>
-              <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Terms of Service</a></li>
-              <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Contact Us</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-3">
-          <p class="text-white/30 text-sm">© 2025 TurfHub Technologies Pvt. Ltd. All rights reserved.</p>
-          <p class="text-white/30 text-sm">Made with ❤️ for sport</p>
-        </div>
-      </div>
-    </footer>
-  </body>
+  </div>
+<script>
+  function setFilter(btn) {
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+</script>
+</body>
 </html>

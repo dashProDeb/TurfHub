@@ -1,143 +1,158 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TurfHub — Tournament Registration</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <style>
-      :root {
-        --color-lime: #7ED321;
-        --color-lime-dark: #6ab81c;
-        --color-forest: #0F2B1D;
-        --color-forest-mid: #1a4029;
-        --color-off-white: #F7F8F5;
-        --color-charcoal: #1E1E1E;
-        --color-gray-mid: #6B7280;
-        --color-amber: #F5A623;
-        --color-success: #4CAF50;
-        --color-danger: #E53935;
-        --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
-      }
-    </style>
-    <style>body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; background-color: #F7F8F5; color: #1E1E1E; }</style>
-  </head>
-  <body>
-    <div class="flex min-h-screen bg-off-white">
-      <div class="w-56 bg-forest min-h-screen flex flex-col flex-shrink-0">
-        <div class="p-5 border-b border-white/10">
-          <a href="index.html" class="flex items-center gap-2">
-            <div class="w-7 h-7 bg-lime rounded-lg flex items-center justify-center"><span class="text-forest font-black text-xs leading-none">TH</span></div>
-            <span class="font-black text-white text-lg">TurfHub</span>
-          </a>
-        </div>
-        <div class="p-4 border-b border-white/10">
-          <div class="flex items-center gap-3">
-            <div class="w-9 h-9 bg-lime rounded-full flex items-center justify-center flex-shrink-0"><span class="text-forest font-black text-sm">F</span></div>
-            <div class="overflow-hidden"><div class="text-white font-semibold text-sm truncate">Fatema Begum</div><div class="text-white/50 text-xs">Team Captain</div></div>
-          </div>
-        </div>
-        <nav class="flex-1 p-3 space-y-0.5 overflow-y-auto">
-          <a href="captain-dashboard.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>📊</span><span>Dashboard</span></a>
-          <a href="book-turf.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>📅</span><span>Book Turf</span></a>
-          <a href="tournament-registration.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors bg-lime text-forest"><span>🏆</span><span>Tournaments</span></a>
-          <a href="fixtures.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>📈</span><span>Fixtures</span></a>
-          <a href="booking-receipt.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>🧾</span><span>Receipts</span></a>
-          <a href="chat.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>💬</span><span>Messages</span></a>
-        </nav>
-        <div class="p-3 border-t border-white/10">
-          <a href="index.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/40 hover:text-white/70 transition-colors"><span>🚪</span><span>Sign Out</span></a>
-        </div>
-      </div>
-
-      <div class="flex-1 overflow-y-auto">
-        <div class="bg-white border-b border-gray-100 px-8 py-4">
-          <h1 class="text-xl font-black text-charcoal">Tournament Registration</h1>
-          <p class="text-sm text-gray-mid">Browse open tournaments and register your team</p>
-        </div>
-
-        <div class="p-8">
-          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            <!-- T001 -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
-              <div class="bg-forest p-5">
-                <div class="flex items-start justify-between mb-3">
-                  <span class="text-2xl">⚽</span>
-                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800"><span class="w-1.5 h-1.5 rounded-full bg-amber animate-pulse"></span>Live</span>
-                </div>
-                <h3 class="font-black text-white text-base leading-tight">Inter-City Football League 2025</h3>
-                <div class="text-white/50 text-xs mt-1">Football · Round Robin + Knockout</div>
-              </div>
-              <div class="p-5 space-y-3">
-                <div class="grid grid-cols-2 gap-3">
-                  <div class="bg-off-white rounded-lg p-3 text-center"><div class="font-black text-charcoal text-lg">৳2,000</div><div class="text-xs text-gray-mid">Entry Fee</div></div>
-                  <div class="bg-off-white rounded-lg p-3 text-center"><div class="font-black text-charcoal text-lg">৳50,000</div><div class="text-xs text-gray-mid">Prize Pool</div></div>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <div class="flex justify-between"><span class="text-gray-mid">Teams</span><span class="font-semibold text-charcoal">12/16</span></div>
-                  <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden"><div class="h-full rounded-full bg-lime" style="width:75%"></div></div>
-                  <div class="flex justify-between"><span class="text-gray-mid">Dates</span><span class="font-semibold text-charcoal text-xs">1 Aug 2025 → 30 Aug 2025</span></div>
-                  <div class="flex justify-between"><span class="text-gray-mid">Venue</span><span class="font-semibold text-charcoal text-xs">The Green Arena, Dhaka</span></div>
-                </div>
-                <a href="#" class="block text-center w-full bg-lime hover:bg-lime-dark text-forest font-black py-2.5 rounded-xl text-sm transition-colors">Register Team →</a>
-              </div>
-            </div>
-
-            <!-- T002 -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
-              <div class="bg-forest p-5">
-                <div class="flex items-start justify-between mb-3">
-                  <span class="text-2xl">🏀</span>
-                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800"><span class="w-1.5 h-1.5 rounded-full bg-amber"></span>Pending</span>
-                </div>
-                <h3 class="font-black text-white text-base leading-tight">Summer Smash Basketball Cup</h3>
-                <div class="text-white/50 text-xs mt-1">Basketball · Knockout</div>
-              </div>
-              <div class="p-5 space-y-3">
-                <div class="grid grid-cols-2 gap-3">
-                  <div class="bg-off-white rounded-lg p-3 text-center"><div class="font-black text-charcoal text-lg">৳1,500</div><div class="text-xs text-gray-mid">Entry Fee</div></div>
-                  <div class="bg-off-white rounded-lg p-3 text-center"><div class="font-black text-charcoal text-lg">৳30,000</div><div class="text-xs text-gray-mid">Prize Pool</div></div>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <div class="flex justify-between"><span class="text-gray-mid">Teams</span><span class="font-semibold text-charcoal">6/8</span></div>
-                  <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden"><div class="h-full rounded-full bg-lime" style="width:75%"></div></div>
-                  <div class="flex justify-between"><span class="text-gray-mid">Dates</span><span class="font-semibold text-charcoal text-xs">15 Aug 2025 → 20 Aug 2025</span></div>
-                  <div class="flex justify-between"><span class="text-gray-mid">Venue</span><span class="font-semibold text-charcoal text-xs">Court Pro Indoor, Dhaka</span></div>
-                </div>
-                <a href="#" class="block text-center w-full bg-lime hover:bg-lime-dark text-forest font-black py-2.5 rounded-xl text-sm transition-colors">Register Team →</a>
-              </div>
-            </div>
-
-            <!-- T003 (registered) -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
-              <div class="bg-forest p-5">
-                <div class="flex items-start justify-between mb-3">
-                  <span class="text-2xl">🏏</span>
-                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800"><span class="w-1.5 h-1.5 rounded-full bg-success"></span>Registered ✓</span>
-                </div>
-                <h3 class="font-black text-white text-base leading-tight">Monsoon Cricket Carnival</h3>
-                <div class="text-white/50 text-xs mt-1">Cricket · League</div>
-              </div>
-              <div class="p-5 space-y-3">
-                <div class="grid grid-cols-2 gap-3">
-                  <div class="bg-off-white rounded-lg p-3 text-center"><div class="font-black text-charcoal text-lg">৳3,000</div><div class="text-xs text-gray-mid">Entry Fee</div></div>
-                  <div class="bg-off-white rounded-lg p-3 text-center"><div class="font-black text-charcoal text-lg">৳80,000</div><div class="text-xs text-gray-mid">Prize Pool</div></div>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <div class="flex justify-between"><span class="text-gray-mid">Teams</span><span class="font-semibold text-charcoal">8/16</span></div>
-                  <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden"><div class="h-full rounded-full bg-lime" style="width:50%"></div></div>
-                  <div class="flex justify-between"><span class="text-gray-mid">Dates</span><span class="font-semibold text-charcoal text-xs">10 Sep 2025 → 28 Sep 2025</span></div>
-                  <div class="flex justify-between"><span class="text-gray-mid">Venue</span><span class="font-semibold text-charcoal text-xs">Champions Field, Dhaka</span></div>
-                </div>
-                <div class="bg-success/10 border border-success/30 rounded-xl py-2.5 text-center"><span class="text-success font-bold text-sm">✓ Thunder FC Registered</span></div>
-              </div>
-            </div>
-          </div>
-        </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TurfHub — Tournament Registration</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    .t-card { background:#fff;border:1.5px solid #e8ede8;border-radius:14px;overflow:hidden;transition:box-shadow .2s; }
+    .t-card:hover { box-shadow:0 6px 20px rgba(0,0,0,.09); }
+    .t-card-head { background:#0d2818;padding:20px; }
+    .t-card-body { padding:18px; }
+    .stat-row { display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:8px; }
+    .stat-row span:first-child { color:#6b7280; }
+    .stat-row span:last-child { font-weight:600;color:#1a1a1a; }
+    .progress-bar { height:6px;background:#e5e7eb;border-radius:100px;overflow:hidden;margin-bottom:4px; }
+    .progress-fill { height:100%;border-radius:100px;background:#7ed321; }
+    .prize-box { background:#f5f5f0;border-radius:10px;padding:12px;text-align:center; }
+    .prize-val { font-weight:900;font-size:1.1rem;color:#1a1a1a; }
+    .prize-lbl { font-size:.7rem;color:#9ca3af;margin-top:2px; }
+    .filter-tab { padding:7px 18px;border-radius:100px;border:1.5px solid #e5e7eb;font-size:.8rem;font-weight:600;cursor:pointer;font-family:inherit;background:#fff;color:#6b7280;transition:all .15s; }
+    .filter-tab.active { background:#0d2818;border-color:#0d2818;color:#fff; }
+  </style>
+</head>
+<body>
+<div id="app-wrapper">
+  <!-- Standalone Sidebar -->
+  <aside id="sidebar" class="sidebar">
+    <a href="index.html" class="sidebar-logo">
+      <div class="sidebar-logo-icon">TH</div>
+      <span class="sidebar-logo-text">TurfHub</span>
+    </a>
+    <div class="sidebar-user">
+      <div class="sidebar-avatar" style="background:#7ed321;color:#0d2818">T</div>
+      <div class="sidebar-user-info">
+        <span class="sidebar-user-name">Tanvir Ahmed</span>
+        <span class="sidebar-user-role">Team Captain</span>
       </div>
     </div>
-  </body>
+    <nav class="sidebar-nav">
+      <a href="captain-dashboard.html" class="sidebar-nav-item"><span class="sidebar-icon">📊</span><span class="sidebar-label">Dashboard</span></a>
+      <a href="book-turf.html" class="sidebar-nav-item"><span class="sidebar-icon">⚽</span><span class="sidebar-label">Book a Turf</span></a>
+      <a href="fixtures.html" class="sidebar-nav-item active"><span class="sidebar-icon">🏆</span><span class="sidebar-label">Tournaments</span></a>
+      <a href="create-tournament.html" class="sidebar-nav-item"><span class="sidebar-icon">➕</span><span class="sidebar-label">Host Tournament</span></a>
+      <a href="booking-receipt.html" class="sidebar-nav-item"><span class="sidebar-icon">🧾</span><span class="sidebar-label">My Receipts</span></a>
+      <a href="chat.html" class="sidebar-nav-item"><span class="sidebar-icon">💬</span><span class="sidebar-label">Messages</span></a>
+    </nav>
+    <a href="login.html" class="sidebar-signout">
+      <span class="sidebar-icon">🚪</span>
+      <span class="sidebar-label">Sign Out</span>
+    </a>
+  </aside>
+
+  <div id="main-content">
+    <div id="topbar">
+      <div class="topbar-title">
+        <span class="topbar-heading">Tournament Registration</span>
+        <span class="topbar-sub">Browse open tournaments and register your team</span>
+      </div>
+      <div class="topbar-actions">
+        <span class="badge badge-captain">Open Registrations</span>
+      </div>
+    </div>
+    <div class="page-body">
+      <!-- Filters -->
+      <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
+        <button class="filter-tab active" onclick="setFilter(this)">All</button>
+        <button class="filter-tab" onclick="setFilter(this)">Football</button>
+        <button class="filter-tab" onclick="setFilter(this)">Cricket</button>
+        <button class="filter-tab" onclick="setFilter(this)">Basketball</button>
+        <button class="filter-tab" onclick="setFilter(this)">Open Only</button>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px">
+
+        <!-- T1 - Live -->
+        <div class="t-card">
+          <div class="t-card-head">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+              <span style="font-size:1.6rem">&#9917;</span>
+              <span class="badge badge-live badge-dot">Live</span>
+            </div>
+            <h3 style="font-weight:800;font-size:.95rem;color:#fff;line-height:1.3;margin-bottom:4px">Inter-City Football League 2025</h3>
+            <div style="font-size:.75rem;color:rgba(255,255,255,.5)">Football &middot; Round Robin + Knockout</div>
+          </div>
+          <div class="t-card-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+              <div class="prize-box"><div class="prize-val">&#2547;2,000</div><div class="prize-lbl">Entry Fee</div></div>
+              <div class="prize-box"><div class="prize-val">&#2547;50,000</div><div class="prize-lbl">Prize Pool</div></div>
+            </div>
+            <div class="stat-row"><span>Teams</span><span>12/16</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:75%"></div></div>
+            <div class="stat-row" style="margin-top:8px"><span>Dates</span><span>1 Aug &rarr; 30 Aug 2025</span></div>
+            <div class="stat-row"><span>Venue</span><span>The Green Arena</span></div>
+            <a href="#" class="btn-lime" style="display:block;text-align:center;width:100%;justify-content:center;margin-top:12px">Register Team &rarr;</a>
+          </div>
+        </div>
+
+        <!-- T2 - Open -->
+        <div class="t-card">
+          <div class="t-card-head">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+              <span style="font-size:1.6rem">&#127944;</span>
+              <span class="badge badge-pending badge-dot">Open</span>
+            </div>
+            <h3 style="font-weight:800;font-size:.95rem;color:#fff;line-height:1.3;margin-bottom:4px">Summer Smash Basketball Cup</h3>
+            <div style="font-size:.75rem;color:rgba(255,255,255,.5)">Basketball &middot; Knockout</div>
+          </div>
+          <div class="t-card-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+              <div class="prize-box"><div class="prize-val">&#2547;1,500</div><div class="prize-lbl">Entry Fee</div></div>
+              <div class="prize-box"><div class="prize-val">&#2547;30,000</div><div class="prize-lbl">Prize Pool</div></div>
+            </div>
+            <div class="stat-row"><span>Teams</span><span>6/8</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:75%"></div></div>
+            <div class="stat-row" style="margin-top:8px"><span>Dates</span><span>15 Aug &rarr; 20 Aug 2025</span></div>
+            <div class="stat-row"><span>Venue</span><span>Court Pro Indoor</span></div>
+            <a href="#" class="btn-lime" style="display:block;text-align:center;width:100%;justify-content:center;margin-top:12px">Register Team &rarr;</a>
+          </div>
+        </div>
+
+        <!-- T3 - Registered -->
+        <div class="t-card">
+          <div class="t-card-head">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+              <span style="font-size:1.6rem">&#127992;</span>
+              <span class="badge badge-confirmed badge-dot">Registered &#10003;</span>
+            </div>
+            <h3 style="font-weight:800;font-size:.95rem;color:#fff;line-height:1.3;margin-bottom:4px">Monsoon Cricket Carnival</h3>
+            <div style="font-size:.75rem;color:rgba(255,255,255,.5)">Cricket &middot; League</div>
+          </div>
+          <div class="t-card-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+              <div class="prize-box"><div class="prize-val">&#2547;3,000</div><div class="prize-lbl">Entry Fee</div></div>
+              <div class="prize-box"><div class="prize-val">&#2547;80,000</div><div class="prize-lbl">Prize Pool</div></div>
+            </div>
+            <div class="stat-row"><span>Teams</span><span>8/16</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:50%"></div></div>
+            <div class="stat-row" style="margin-top:8px"><span>Dates</span><span>10 Sep &rarr; 28 Sep 2025</span></div>
+            <div class="stat-row"><span>Venue</span><span>Champions Field</span></div>
+            <div style="background:rgba(126,211,33,.1);border:1px solid rgba(126,211,33,.3);border-radius:10px;padding:10px;text-align:center;margin-top:12px">
+              <span style="font-weight:700;font-size:.85rem;color:#5a9e12">&#10003; Thunder FC Registered</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+<script>
+  function setFilter(btn) {
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+</script>
+</body>
 </html>

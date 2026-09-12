@@ -1,173 +1,233 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TurfHub — Captain Dashboard</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <style>
-      :root {
-        --color-lime: #7ED321;
-        --color-lime-dark: #6ab81c;
-        --color-forest: #0F2B1D;
-        --color-forest-mid: #1a4029;
-        --color-off-white: #F7F8F5;
-        --color-charcoal: #1E1E1E;
-        --color-gray-mid: #6B7280;
-        --color-amber: #F5A623;
-        --color-success: #4CAF50;
-        --color-danger: #E53935;
-        --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
-      }
-    </style>
-    <style>body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; background-color: #F7F8F5; color: #1E1E1E; }</style>
-  </head>
-  <body>
-    <div class="flex min-h-screen bg-off-white">
-      <div class="w-56 bg-forest min-h-screen flex flex-col flex-shrink-0">
-        <div class="p-5 border-b border-white/10">
-          <a href="index.html" class="flex items-center gap-2">
-            <div class="w-7 h-7 bg-lime rounded-lg flex items-center justify-center"><span class="text-forest font-black text-xs leading-none">TH</span></div>
-            <span class="font-black text-white text-lg">TurfHub</span>
-          </a>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TurfHub — Captain Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    .roster-row { display:flex; align-items:center; padding:13px 0; border-bottom:1px solid #f3f4f6; gap:14px; }
+    .roster-row:last-child { border-bottom:none; }
+    .player-num { width:34px; height:34px; border-radius:50%; background:#0d2818; color:#7ed321; font-weight:900; font-size:.8rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .player-stat { text-align:right; min-width:44px; }
+    .player-stat-val { font-weight:700; font-size:.88rem; color:#1a1a1a; }
+    .player-stat-lbl { font-size:.68rem; color:#9ca3af; }
+    .match-item { padding:14px 0; border-bottom:1px solid #f3f4f6; }
+    .match-item:last-child { border-bottom:none; }
+    .match-league { font-size:.68rem; font-weight:700; color:#7ed321; text-transform:uppercase; letter-spacing:.07em; }
+    .match-teams { font-weight:700; font-size:.92rem; color:#1a1a1a; margin:3px 0; }
+    .match-teams span { font-weight:400; color:#9ca3af; font-size:.82rem; margin:0 6px; }
+    .match-meta { font-size:.75rem; color:#6b7280; }
+    .quick-action { display:flex; align-items:center; justify-content:space-between; padding:11px 0; border-bottom:1px solid #f3f4f6; text-decoration:none; }
+    .quick-action:last-child { border-bottom:none; }
+    .quick-action-left { display:flex; align-items:center; gap:10px; font-size:.85rem; font-weight:600; color:#1a1a1a; }
+    .quick-action-arrow { color:#9ca3af; font-size:.9rem; }
+  </style>
+</head>
+<body>
+  <div id="app-wrapper">
+    <!-- Standalone Captain Sidebar -->
+    <aside id="sidebar" class="sidebar">
+      <a href="index.html" class="sidebar-logo">
+        <div class="sidebar-logo-icon">TH</div>
+        <span class="sidebar-logo-text">TurfHub</span>
+      </a>
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" style="background:#7ed321;color:#0d2818">T</div>
+        <div class="sidebar-user-info">
+          <span class="sidebar-user-name">Tanvir Ahmed</span>
+          <span class="sidebar-user-role">Team Captain</span>
         </div>
-        <div class="p-4 border-b border-white/10">
-          <div class="flex items-center gap-3">
-            <div class="w-9 h-9 bg-lime rounded-full flex items-center justify-center flex-shrink-0"><span class="text-forest font-black text-sm">F</span></div>
-            <div class="overflow-hidden"><div class="text-white font-semibold text-sm truncate">Fatema Begum</div><div class="text-white/50 text-xs">Team Captain</div></div>
-          </div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="captain-dashboard.html" class="sidebar-nav-item active"><span class="sidebar-icon">📊</span><span class="sidebar-label">Dashboard</span></a>
+        <a href="book-turf.html" class="sidebar-nav-item"><span class="sidebar-icon">⚽</span><span class="sidebar-label">Book a Turf</span></a>
+        <a href="fixtures.html" class="sidebar-nav-item"><span class="sidebar-icon">🏆</span><span class="sidebar-label">Tournaments</span></a>
+        <a href="create-tournament.html" class="sidebar-nav-item"><span class="sidebar-icon">➕</span><span class="sidebar-label">Host Tournament</span></a>
+        <a href="booking-receipt.html" class="sidebar-nav-item"><span class="sidebar-icon">🧾</span><span class="sidebar-label">My Receipts</span></a>
+        <a href="chat.html" class="sidebar-nav-item"><span class="sidebar-icon">💬</span><span class="sidebar-label">Messages</span></a>
+      </nav>
+      <a href="login.html" class="sidebar-signout">
+        <span class="sidebar-icon">🚪</span>
+        <span class="sidebar-label">Sign Out</span>
+      </a>
+    </aside>
+
+    <div id="main-content">
+      <!-- Topbar -->
+      <div id="topbar">
+        <div class="topbar-title">
+          <span class="topbar-heading">Captain Dashboard</span>
+          <span class="topbar-sub">Thunder FC &middot; Inter-City Football League 2025</span>
         </div>
-        <nav class="flex-1 p-3 space-y-0.5 overflow-y-auto">
-          <a href="captain-dashboard.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors bg-lime text-forest"><span>📊</span><span>Dashboard</span></a>
-          <a href="book-turf.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>📅</span><span>Book Turf</span></a>
-          <a href="tournament-registration.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>🏆</span><span>Tournaments</span></a>
-          <a href="fixtures.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>📈</span><span>Fixtures</span></a>
-          <a href="booking-receipt.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>🧾</span><span>Receipts</span></a>
-          <a href="chat.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>💬</span><span>Messages</span></a>
-        </nav>
-        <div class="p-3 border-t border-white/10">
-          <a href="index.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/40 hover:text-white/70 transition-colors"><span>🚪</span><span>Sign Out</span></a>
+        <div class="topbar-actions">
+          <a href="book-turf.html" class="btn-lime">+ Book Turf</a>
         </div>
       </div>
 
-      <div class="flex-1 overflow-y-auto">
-        <div class="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between">
-          <div>
-            <h1 class="text-xl font-black text-charcoal">Captain Dashboard</h1>
-            <p class="text-sm text-gray-mid">Thunder FC · Inter-City Football League 2025</p>
+      <!-- Page Body -->
+      <div class="page-body">
+
+        <!-- Stat Cards -->
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#ede9fe">👥</div>
+            <div class="stat-body">
+              <div class="stat-value">11</div>
+              <div class="stat-label">Squad Size</div>
+            </div>
           </div>
-          <div class="flex gap-3">
-            <a href="book-turf.html" class="bg-lime hover:bg-lime-dark text-forest font-bold px-4 py-2 rounded-lg text-sm transition-colors">+ Book Turf</a>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#dbeafe">📅</div>
+            <div class="stat-body">
+              <div class="stat-value">3</div>
+              <div class="stat-label">Upcoming Matches</div>
+              <div class="stat-trend up">↑ Next: Sat 8 PM</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#fef3c7">🏆</div>
+            <div class="stat-body">
+              <div class="stat-value">2nd</div>
+              <div class="stat-label">League Standing</div>
+              <div class="stat-trend down">↓ 8 pts behind leader</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#dcfce7">⚽</div>
+            <div class="stat-body">
+              <div class="stat-value">18</div>
+              <div class="stat-label">Goals Scored</div>
+              <div class="stat-trend up">↑ 7 conceded</div>
+            </div>
           </div>
         </div>
 
-        <div class="p-8 space-y-8">
-          <!-- Stats -->
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 flex items-start gap-4 hover:shadow-md transition-shadow"><div class="w-12 h-12 rounded-xl bg-lime/10 flex items-center justify-center text-2xl flex-shrink-0">👥</div><div><div class="text-2xl font-black text-charcoal">11</div><div class="text-sm text-gray-mid font-medium">Squad Size</div></div></div>
-            <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 flex items-start gap-4 hover:shadow-md transition-shadow"><div class="w-12 h-12 rounded-xl bg-lime/10 flex items-center justify-center text-2xl flex-shrink-0">📅</div><div><div class="text-2xl font-black text-charcoal">3</div><div class="text-sm text-gray-mid font-medium">Upcoming Matches</div><div class="text-xs font-semibold mt-1 text-success">↑ Next: Sat 6 PM</div></div></div>
-            <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 flex items-start gap-4 hover:shadow-md transition-shadow"><div class="w-12 h-12 rounded-xl bg-lime/10 flex items-center justify-center text-2xl flex-shrink-0">🏆</div><div><div class="text-2xl font-black text-charcoal">2nd</div><div class="text-sm text-gray-mid font-medium">League Standing</div><div class="text-xs font-semibold mt-1 text-danger">↓ 6 pts behind leader</div></div></div>
-            <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 flex items-start gap-4 hover:shadow-md transition-shadow"><div class="w-12 h-12 rounded-xl bg-lime/10 flex items-center justify-center text-2xl flex-shrink-0">⚽</div><div><div class="text-2xl font-black text-charcoal">18</div><div class="text-sm text-gray-mid font-medium">Goals Scored</div><div class="text-xs font-semibold mt-1 text-success">↑ 7 conceded</div></div></div>
+        <!-- Main content grid -->
+        <div class="content-grid">
+
+          <!-- Team Roster -->
+          <div class="content-panel">
+            <div class="panel-header">
+              <span class="panel-title">Team Roster</span>
+              <a href="join-team.html" class="btn-lime" style="font-size:.78rem;padding:7px 14px">+ Add Player</a>
+            </div>
+            <!-- Roster table header -->
+            <div style="display:flex;align-items:center;gap:14px;padding:0 0 8px;border-bottom:2px solid #f3f4f6">
+              <div style="flex:1;font-size:.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em">Player</div>
+              <div class="player-stat"><span style="font-size:.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em">Goals</span></div>
+              <div class="player-stat"><span style="font-size:.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em">Attend.</span></div>
+              <div style="width:90px;text-align:center;font-size:.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em">Status</div>
+            </div>
+
+            <div class="roster-row">
+              <div class="player-num">#9</div>
+              <div style="flex:1"><div style="font-weight:700;font-size:.88rem">Arif Hossain</div><div style="font-size:.75rem;color:#9ca3af">Striker</div></div>
+              <div class="player-stat"><div class="player-stat-val">7</div><div class="player-stat-lbl">Goals</div></div>
+              <div class="player-stat"><div class="player-stat-val">92%</div><div class="player-stat-lbl">Attend.</div></div>
+              <div style="width:90px;text-align:center"><span class="badge badge-available badge-dot">Available</span></div>
+            </div>
+            <div class="roster-row">
+              <div class="player-num">#8</div>
+              <div style="flex:1"><div style="font-weight:700;font-size:.88rem">Delwar Khan</div><div style="font-size:.75rem;color:#9ca3af">Midfielder</div></div>
+              <div class="player-stat"><div class="player-stat-val">3</div><div class="player-stat-lbl">Goals</div></div>
+              <div class="player-stat"><div class="player-stat-val">88%</div><div class="player-stat-lbl">Attend.</div></div>
+              <div style="width:90px;text-align:center"><span class="badge badge-available badge-dot">Available</span></div>
+            </div>
+            <div class="roster-row">
+              <div class="player-num">#5</div>
+              <div style="flex:1"><div style="font-weight:700;font-size:.88rem">Rahim Uddin</div><div style="font-size:.75rem;color:#9ca3af">Defender</div></div>
+              <div class="player-stat"><div class="player-stat-val">0</div><div class="player-stat-lbl">Goals</div></div>
+              <div class="player-stat"><div class="player-stat-val">96%</div><div class="player-stat-lbl">Attend.</div></div>
+              <div style="width:90px;text-align:center"><span class="badge badge-uncertain badge-dot">Uncertain</span></div>
+            </div>
+            <div class="roster-row">
+              <div class="player-num">#1</div>
+              <div style="flex:1"><div style="font-weight:700;font-size:.88rem">Kamal Miah</div><div style="font-size:.75rem;color:#9ca3af">Goalkeeper</div></div>
+              <div class="player-stat"><div class="player-stat-val">0</div><div class="player-stat-lbl">Goals</div></div>
+              <div class="player-stat"><div class="player-stat-val">100%</div><div class="player-stat-lbl">Attend.</div></div>
+              <div style="width:90px;text-align:center"><span class="badge badge-available badge-dot">Available</span></div>
+            </div>
+            <div class="roster-row">
+              <div class="player-num">#4</div>
+              <div style="flex:1"><div style="font-weight:700;font-size:.88rem">Abul Bashar</div><div style="font-size:.75rem;color:#9ca3af">Defender</div></div>
+              <div class="player-stat"><div class="player-stat-val">1</div><div class="player-stat-lbl">Goals</div></div>
+              <div class="player-stat"><div class="player-stat-val">74%</div><div class="player-stat-lbl">Attend.</div></div>
+              <div style="width:90px;text-align:center"><span class="badge badge-unavailable badge-dot">Unavailable</span></div>
+            </div>
+            <div class="roster-row">
+              <div class="player-num">#6</div>
+              <div style="flex:1"><div style="font-weight:700;font-size:.88rem">Sabbir Ahmed</div><div style="font-size:.75rem;color:#9ca3af">Midfielder</div></div>
+              <div class="player-stat"><div class="player-stat-val">5</div><div class="player-stat-lbl">Goals</div></div>
+              <div class="player-stat"><div class="player-stat-val">90%</div><div class="player-stat-lbl">Attend.</div></div>
+              <div style="width:90px;text-align:center"><span class="badge badge-available badge-dot">Available</span></div>
+            </div>
           </div>
 
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Roster -->
-            <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100">
-              <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-                <h2 class="font-black text-charcoal text-base">Team Roster</h2>
-                <a href="#" class="bg-off-white hover:bg-gray-100 text-charcoal font-semibold px-3 py-1.5 rounded-lg text-xs transition-colors">+ Add Player</a>
-              </div>
-              <div class="divide-y divide-gray-50">
-                <div class="px-6 py-3.5 flex items-center gap-4 hover:bg-off-white/50 transition-colors">
-                  <div class="w-9 h-9 bg-forest rounded-full flex items-center justify-center flex-shrink-0"><span class="text-lime font-black text-sm">#9</span></div>
-                  <div class="flex-1 min-w-0"><div class="font-semibold text-charcoal text-sm">Arif Hossain</div><div class="text-xs text-gray-mid">Striker</div></div>
-                  <div class="text-center hidden md:block"><div class="text-sm font-bold text-charcoal">7</div><div class="text-xs text-gray-mid">Goals</div></div>
-                  <div class="text-center hidden md:block"><div class="text-sm font-bold text-charcoal">92%</div><div class="text-xs text-gray-mid">Attend.</div></div>
-                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800"><span class="w-1.5 h-1.5 rounded-full bg-success"></span>Available</span>
-                </div>
-                <div class="px-6 py-3.5 flex items-center gap-4 hover:bg-off-white/50 transition-colors">
-                  <div class="w-9 h-9 bg-forest rounded-full flex items-center justify-center flex-shrink-0"><span class="text-lime font-black text-sm">#8</span></div>
-                  <div class="flex-1 min-w-0"><div class="font-semibold text-charcoal text-sm">Delwar Khan</div><div class="text-xs text-gray-mid">Midfielder</div></div>
-                  <div class="text-center hidden md:block"><div class="text-sm font-bold text-charcoal">3</div><div class="text-xs text-gray-mid">Goals</div></div>
-                  <div class="text-center hidden md:block"><div class="text-sm font-bold text-charcoal">88%</div><div class="text-xs text-gray-mid">Attend.</div></div>
-                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800"><span class="w-1.5 h-1.5 rounded-full bg-success"></span>Available</span>
-                </div>
-                <div class="px-6 py-3.5 flex items-center gap-4 hover:bg-off-white/50 transition-colors">
-                  <div class="w-9 h-9 bg-forest rounded-full flex items-center justify-center flex-shrink-0"><span class="text-lime font-black text-sm">#5</span></div>
-                  <div class="flex-1 min-w-0"><div class="font-semibold text-charcoal text-sm">Rahim Uddin</div><div class="text-xs text-gray-mid">Defender</div></div>
-                  <div class="text-center hidden md:block"><div class="text-sm font-bold text-charcoal">0</div><div class="text-xs text-gray-mid">Goals</div></div>
-                  <div class="text-center hidden md:block"><div class="text-sm font-bold text-charcoal">96%</div><div class="text-xs text-gray-mid">Attend.</div></div>
-                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800"><span class="w-1.5 h-1.5 rounded-full bg-amber"></span>Uncertain</span>
-                </div>
-                <div class="px-6 py-3.5 flex items-center gap-4 hover:bg-off-white/50 transition-colors">
-                  <div class="w-9 h-9 bg-forest rounded-full flex items-center justify-center flex-shrink-0"><span class="text-lime font-black text-sm">#1</span></div>
-                  <div class="flex-1 min-w-0"><div class="font-semibold text-charcoal text-sm">Kamal Miah</div><div class="text-xs text-gray-mid">Goalkeeper</div></div>
-                  <div class="text-center hidden md:block"><div class="text-sm font-bold text-charcoal">0</div><div class="text-xs text-gray-mid">Goals</div></div>
-                  <div class="text-center hidden md:block"><div class="text-sm font-bold text-charcoal">100%</div><div class="text-xs text-gray-mid">Attend.</div></div>
-                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800"><span class="w-1.5 h-1.5 rounded-full bg-success"></span>Available</span>
-                </div>
-                <div class="px-6 py-3.5 flex items-center gap-4 hover:bg-off-white/50 transition-colors">
-                  <div class="w-9 h-9 bg-forest rounded-full flex items-center justify-center flex-shrink-0"><span class="text-lime font-black text-sm">#4</span></div>
-                  <div class="flex-1 min-w-0"><div class="font-semibold text-charcoal text-sm">Abul Bashar</div><div class="text-xs text-gray-mid">Defender</div></div>
-                  <div class="text-center hidden md:block"><div class="text-sm font-bold text-charcoal">1</div><div class="text-xs text-gray-mid">Goals</div></div>
-                  <div class="text-center hidden md:block"><div class="text-sm font-bold text-charcoal">74%</div><div class="text-xs text-gray-mid">Attend.</div></div>
-                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800"><span class="w-1.5 h-1.5 rounded-full bg-danger"></span>Unavailable</span>
-                </div>
-                <div class="px-6 py-3.5 flex items-center gap-4 hover:bg-off-white/50 transition-colors">
-                  <div class="w-9 h-9 bg-forest rounded-full flex items-center justify-center flex-shrink-0"><span class="text-lime font-black text-sm">#6</span></div>
-                  <div class="flex-1 min-w-0"><div class="font-semibold text-charcoal text-sm">Sabbir Ahmed</div><div class="text-xs text-gray-mid">Midfielder</div></div>
-                  <div class="text-center hidden md:block"><div class="text-sm font-bold text-charcoal">5</div><div class="text-xs text-gray-mid">Goals</div></div>
-                  <div class="text-center hidden md:block"><div class="text-sm font-bold text-charcoal">90%</div><div class="text-xs text-gray-mid">Attend.</div></div>
-                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800"><span class="w-1.5 h-1.5 rounded-full bg-success"></span>Available</span>
-                </div>
-              </div>
-            </div>
+          <!-- Right column -->
+          <div style="display:flex;flex-direction:column;gap:16px">
 
             <!-- Upcoming Matches -->
-            <div class="space-y-4">
-              <div class="bg-white rounded-xl shadow-sm border border-gray-100">
-                <div class="px-5 py-4 border-b border-gray-100"><h3 class="font-black text-charcoal text-sm">Upcoming Matches</h3></div>
-                <div class="divide-y divide-gray-50">
-                  <div class="p-4">
-                    <div class="flex items-center justify-between mb-2"><span class="text-xs font-bold text-lime uppercase tracking-wider">Inter-City League</span><span class="text-xs bg-off-white text-gray-mid px-2 py-0.5 rounded-full font-semibold">QF</span></div>
-                    <div class="font-black text-charcoal text-sm mb-1">Thunder FC <span class="text-gray-mid font-medium">vs</span> Rising Stars</div>
-                    <div class="text-xs text-gray-mid">Sat, 26 Jul · 6:00 PM</div>
-                    <div class="text-xs text-gray-mid">The Green Arena</div>
-                  </div>
-                  <div class="p-4">
-                    <div class="flex items-center justify-between mb-2"><span class="text-xs font-bold text-lime uppercase tracking-wider">Summer Cup</span><span class="text-xs bg-off-white text-gray-mid px-2 py-0.5 rounded-full font-semibold">R16</span></div>
-                    <div class="font-black text-charcoal text-sm mb-1">Thunder FC <span class="text-gray-mid font-medium">vs</span> City Kickers</div>
-                    <div class="text-xs text-gray-mid">Wed, 30 Jul · 7:00 PM</div>
-                    <div class="text-xs text-gray-mid">Champions Field</div>
-                  </div>
-                  <div class="p-4">
-                    <div class="flex items-center justify-between mb-2"><span class="text-xs font-bold text-lime uppercase tracking-wider">Inter-City League</span><span class="text-xs bg-off-white text-gray-mid px-2 py-0.5 rounded-full font-semibold">SF</span></div>
-                    <div class="font-black text-charcoal text-sm mb-1">Thunder FC <span class="text-gray-mid font-medium">vs</span> FC Dynamo</div>
-                    <div class="text-xs text-gray-mid">Sat, 2 Aug · 5:00 PM</div>
-                    <div class="text-xs text-gray-mid">Court Pro Indoor</div>
-                  </div>
-                </div>
-                <div class="px-5 py-3 border-t border-gray-50">
-                  <a href="fixtures.html" class="text-lime text-sm font-bold hover:underline">View All Fixtures →</a>
-                </div>
+            <div class="content-panel">
+              <div class="panel-header">
+                <span class="panel-title">Upcoming Matches</span>
               </div>
-
-              <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-                <h3 class="font-black text-charcoal text-sm mb-3">Quick Actions</h3>
-                <div class="space-y-2">
-                  <a href="book-turf.html" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-charcoal hover:bg-off-white transition-colors text-left"><span>📅</span><span>Book Turf Slot</span><span class="ml-auto text-gray-mid">→</span></a>
-                  <a href="fixtures.html" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-charcoal hover:bg-off-white transition-colors text-left"><span>🏆</span><span>Register for Tournament</span><span class="ml-auto text-gray-mid">→</span></a>
-                  <a href="fixtures.html" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-charcoal hover:bg-off-white transition-colors text-left"><span>📈</span><span>View Leaderboard</span><span class="ml-auto text-gray-mid">→</span></a>
-                  <a href="chat.html" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-charcoal hover:bg-off-white transition-colors text-left"><span>💬</span><span>Message Owner</span><span class="ml-auto text-gray-mid">→</span></a>
+              <div class="match-item">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                  <div class="match-league">Inter-City League</div>
+                  <span style="font-size:.7rem;color:#9ca3af">QF</span>
                 </div>
+                <div class="match-teams">Thunder FC <span>vs</span> Rising Stars</div>
+                <div class="match-meta">Sat, 26 Jul · 6:00 PM &nbsp;&bull;&nbsp; The Green Arena</div>
               </div>
+              <div class="match-item">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                  <div class="match-league">Summer Cup</div>
+                  <span style="font-size:.7rem;color:#9ca3af">R16</span>
+                </div>
+                <div class="match-teams">Thunder FC <span>vs</span> City Kickers</div>
+                <div class="match-meta">Wed, 30 Jul · 7:00 PM &nbsp;&bull;&nbsp; Champions Field</div>
+              </div>
+              <div class="match-item">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                  <div class="match-league">Inter-City League</div>
+                  <span style="font-size:.7rem;color:#9ca3af">SF</span>
+                </div>
+                <div class="match-teams">Thunder FC <span>vs</span> FC Dynamo</div>
+                <div class="match-meta">Sat, 2 Aug · 5:00 PM &nbsp;&bull;&nbsp; Court Pro Indoor</div>
+              </div>
+              <a href="fixtures.html" style="display:block;margin-top:12px;font-size:.82rem;font-weight:700;color:#7ed321;text-decoration:none">View All Fixtures &rarr;</a>
             </div>
+
+            <!-- Quick Actions -->
+            <div class="content-panel">
+              <div class="panel-header"><span class="panel-title">Quick Actions</span></div>
+              <a href="book-turf.html" class="quick-action">
+                <div class="quick-action-left"><span>📅</span> Book Turf Slot</div>
+                <span class="quick-action-arrow">&rarr;</span>
+              </a>
+              <a href="tournament-registration.html" class="quick-action">
+                <div class="quick-action-left"><span>🏆</span> Register for Tournament</div>
+                <span class="quick-action-arrow">&rarr;</span>
+              </a>
+              <a href="fixtures.html" class="quick-action">
+                <div class="quick-action-left"><span>📋</span> View Leaderboard</div>
+                <span class="quick-action-arrow">&rarr;</span>
+              </a>
+              <a href="chat.html" class="quick-action">
+                <div class="quick-action-left"><span>💬</span> Message Owner</div>
+                <span class="quick-action-arrow">&rarr;</span>
+              </a>
+            </div>
+
           </div>
         </div>
+
       </div>
     </div>
-  </body>
+  </div>
+
+
+</body>
 </html>

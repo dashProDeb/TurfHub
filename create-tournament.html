@@ -1,194 +1,268 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TurfHub — Tournaments</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <style>
-      :root {
-        --color-lime: #7ED321;
-        --color-lime-dark: #6ab81c;
-        --color-forest: #0F2B1D;
-        --color-forest-mid: #1a4029;
-        --color-off-white: #F7F8F5;
-        --color-charcoal: #1E1E1E;
-        --color-gray-mid: #6B7280;
-        --color-amber: #F5A623;
-        --color-success: #4CAF50;
-        --color-danger: #E53935;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TurfHub — Tournaments</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    .form-label { display:block; font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:#6b7280; margin-bottom:6px; }
+    .form-input { width:100%; padding:11px 14px; border:1.5px solid #e5e7eb; border-radius:10px; font-size:.88rem; font-family:inherit; outline:none; transition:border-color .2s,box-shadow .2s; background:#fff; color:#1a1a1a; }
+    .form-input:focus { border-color:#7ed321; box-shadow:0 0 0 3px rgba(126,211,33,.12); }
+    .form-input::placeholder { color:#9ca3af; }
+    select.form-input { cursor:pointer; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .tournament-card { background:#fff; border:1px solid #e8ede8; border-radius:14px; padding:18px; margin-bottom:12px; transition:box-shadow .2s; }
+    .tournament-card:hover { box-shadow:0 4px 16px rgba(0,0,0,.08); }
+    .t-card-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px; }
+    .t-card-title { font-weight:800; font-size:.95rem; color:#1a1a1a; }
+    .t-card-meta { font-size:.75rem; color:#6b7280; margin-bottom:10px; }
+    .t-card-dates { font-size:.78rem; color:#6b7280; margin-bottom:12px; }
+    .progress-bar { height:6px; background:#e5e7eb; border-radius:100px; overflow:hidden; }
+    .progress-fill { height:100%; border-radius:100px; background:#7ed321; }
+    .t-card-footer { display:flex; justify-content:space-between; align-items:center; margin-top:10px; }
+    .t-card-teams { font-size:.75rem; color:#9ca3af; }
+    .btn-view-fix { font-size:.78rem; font-weight:700; color:#7ed321; text-decoration:none; }
+    .btn-view-fix:hover { color:#6ab81c; }
+    @media(max-width:900px) { .tournaments-grid { grid-template-columns:1fr !important; } .form-row { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <div id="app-wrapper">
+    <!-- Standalone Sidebar -->
+    <aside id="sidebar" class="sidebar">
+      <a href="index.html" class="sidebar-logo">
+        <div class="sidebar-logo-icon">TH</div>
+        <span class="sidebar-logo-text">TurfHub</span>
+      </a>
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" style="background:#7ed321;color:#0d2818">T</div>
+        <div class="sidebar-user-info">
+          <span class="sidebar-user-name">Tanvir Ahmed</span>
+          <span class="sidebar-user-role">Team Captain</span>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="captain-dashboard.html" class="sidebar-nav-item"><span class="sidebar-icon">📊</span><span class="sidebar-label">Dashboard</span></a>
+        <a href="book-turf.html" class="sidebar-nav-item"><span class="sidebar-icon">⚽</span><span class="sidebar-label">Book a Turf</span></a>
+        <a href="fixtures.html" class="sidebar-nav-item"><span class="sidebar-icon">🏆</span><span class="sidebar-label">Tournaments</span></a>
+        <a href="create-tournament.html" class="sidebar-nav-item active"><span class="sidebar-icon">➕</span><span class="sidebar-label">Host Tournament</span></a>
+        <a href="booking-receipt.html" class="sidebar-nav-item"><span class="sidebar-icon">🧾</span><span class="sidebar-label">My Receipts</span></a>
+        <a href="chat.html" class="sidebar-nav-item"><span class="sidebar-icon">💬</span><span class="sidebar-label">Messages</span></a>
+      </nav>
+      <a href="login.html" class="sidebar-signout">
+        <span class="sidebar-icon">🚪</span>
+        <span class="sidebar-label">Sign Out</span>
+      </a>
+    </aside>
 
-      .bg-lime { background-color: var(--color-lime); }
-      .bg-lime-dark { background-color: var(--color-lime-dark); }
-      .bg-forest { background-color: var(--color-forest); }
-      .bg-forest-mid { background-color: var(--color-forest-mid); }
-      .bg-off-white { background-color: var(--color-off-white); }
-      .bg-charcoal { background-color: var(--color-charcoal); }
-      .bg-amber { background-color: var(--color-amber); }
-      .text-forest { color: var(--color-forest); }
-      .text-charcoal { color: var(--color-charcoal); }
-      .text-gray-mid { color: var(--color-gray-mid); }
-      .text-lime { color: var(--color-lime); }
-      .border-lime { border-color: var(--color-lime); }
-      .focus\:border-lime:focus { border-color: var(--color-lime); }
-      body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; background-color: #F7F8F5; color: #1E1E1E; }
-    </style>
-  </head>
-  <body>
-    <div class="flex min-h-screen bg-off-white">
-      <div class="w-56 bg-forest min-h-screen flex flex-col flex-shrink-0">
-        <div class="p-5 border-b border-white/10">
-          <a href="index.html" class="flex items-center gap-2">
-            <div class="w-7 h-7 bg-lime rounded-lg flex items-center justify-center"><span class="text-forest font-black text-xs leading-none">TH</span></div>
-            <span class="font-black text-white text-lg">TurfHub</span>
-          </a>
+    <div id="main-content">
+      <div id="topbar">
+        <div class="topbar-title">
+          <span class="topbar-heading">Host Tournament</span>
+          <span class="topbar-sub">Create, organize, and manage sports tournaments</span>
         </div>
-        <div class="p-4 border-b border-white/10">
-          <div class="flex items-center gap-3">
-            <div class="w-9 h-9 bg-lime rounded-full flex items-center justify-center flex-shrink-0"><span class="text-forest font-black text-sm">R</span></div>
-            <div class="overflow-hidden"><div class="text-white font-semibold text-sm truncate">Rafiqul Islam</div><div class="text-white/50 text-xs">Turf Owner</div></div>
-          </div>
-        </div>
-        <nav class="flex-1 p-3 space-y-0.5 overflow-y-auto">
-          <a href="owner-dashboard.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>📊</span><span>Dashboard</span></a>
-          <a href="manage-turf.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>🏟️</span><span>Manage Turfs</span></a>
-          <a href="slot-calendar.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>📅</span><span>Slot Calendar</span></a>
-          <a href="create-tournament.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors bg-lime text-forest"><span>🏆</span><span>Tournaments</span></a>
-          <a href="score-entry.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>⚽</span><span>Score Entry</span></a>
-          <a href="chat.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>💬</span><span>Messages</span></a>
-          <a href="owner-reports.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white/60 hover:text-white hover:bg-white/10"><span>📄</span><span>Reports</span></a>
-        </nav>
-        <div class="p-3 border-t border-white/10">
-          <a href="index.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/40 hover:text-white/70 transition-colors"><span>🚪</span><span>Sign Out</span></a>
+        <div class="topbar-actions">
+          <a href="fixtures.html" class="btn-outline">View Fixtures</a>
         </div>
       </div>
 
-      <div class="flex-1 overflow-y-auto">
-        <div class="bg-white border-b border-gray-100 px-8 py-4">
-          <h1 class="text-xl font-black text-charcoal">Tournaments</h1>
-          <p class="text-sm text-gray-mid">Create and manage sports tournaments</p>
-        </div>
+      <div class="page-body">
+        <div class="tournaments-grid" style="display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start">
 
-        <div class="p-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <!-- Create Form -->
-          <div>
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-              <h2 class="font-black text-charcoal text-lg mb-5">Create New Tournament</h2>
-              <form class="space-y-4">
-                <div>
-                  <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-1.5">Tournament Name</label>
-                  <input placeholder="Inter-City Football League 2025" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-charcoal text-sm outline-none focus:border-lime transition-colors placeholder-gray-300" />
+          <!-- Create / Browse panel — changes based on role -->
+          <div id="create-panel" class="content-panel">
+            <!-- Owner sees create form -->
+            <div id="owner-view">
+              <div class="panel-header" style="margin-bottom:20px">
+                <span class="panel-title">Create New Tournament</span>
+              </div>
+              <form onsubmit="handleCreate(event)">
+                <div style="margin-bottom:16px">
+                  <label class="form-label">Tournament Name</label>
+                  <input type="text" class="form-input" placeholder="Inter-City Football League 2025" />
                 </div>
-                <div class="grid grid-cols-2 gap-3">
+                <div class="form-row" style="margin-bottom:16px">
                   <div>
-                    <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-1.5">Sport</label>
-                    <select class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-charcoal text-sm outline-none focus:border-lime transition-colors bg-white">
+                    <label class="form-label">Sport</label>
+                    <select class="form-input">
                       <option value="">Select Sport</option>
-                      <option>Football</option><option>Cricket</option><option>Basketball</option><option>Badminton</option><option>Tennis</option><option>Volleyball</option>
+                      <option>Football</option>
+                      <option>Cricket</option>
+                      <option>Basketball</option>
+                      <option>Badminton</option>
                     </select>
                   </div>
                   <div>
-                    <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-1.5">Format</label>
-                    <select class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-charcoal text-sm outline-none focus:border-lime transition-colors bg-white">
-                      <option value="knockout">Knockout</option><option value="round-robin">Round Robin</option><option value="league">League</option><option value="double-elim">Double Elimination</option>
+                    <label class="form-label">Format</label>
+                    <select class="form-input">
+                      <option>Knockout</option>
+                      <option>Round Robin</option>
+                      <option>League + Knockout</option>
                     </select>
                   </div>
                 </div>
-                <div class="grid grid-cols-2 gap-3">
+                <div class="form-row" style="margin-bottom:16px">
                   <div>
-                    <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-1.5">Entry Fee (৳)</label>
-                    <input placeholder="2000" type="number" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-charcoal text-sm outline-none focus:border-lime transition-colors placeholder-gray-300" />
+                    <label class="form-label">Entry Fee (&#2547;)</label>
+                    <input type="number" class="form-input" placeholder="2000" />
                   </div>
                   <div>
-                    <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-1.5">Max Teams</label>
-                    <select class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-charcoal text-sm outline-none focus:border-lime transition-colors bg-white">
-                      <option>4 teams</option><option>8 teams</option><option>12 teams</option><option>16 teams</option><option>24 teams</option><option>32 teams</option>
+                    <label class="form-label">Max Teams</label>
+                    <select class="form-input">
+                      <option>8 teams</option>
+                      <option>12 teams</option>
+                      <option>16 teams</option>
+                      <option>32 teams</option>
                     </select>
                   </div>
                 </div>
-                <div class="grid grid-cols-2 gap-3">
+                <div class="form-row" style="margin-bottom:16px">
                   <div>
-                    <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-1.5">Start Date</label>
-                    <input type="date" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-charcoal text-sm outline-none focus:border-lime transition-colors" />
+                    <label class="form-label">Start Date</label>
+                    <input type="date" class="form-input" />
                   </div>
                   <div>
-                    <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-1.5">End Date</label>
-                    <input type="date" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-charcoal text-sm outline-none focus:border-lime transition-colors" />
+                    <label class="form-label">End Date</label>
+                    <input type="date" class="form-input" />
                   </div>
                 </div>
-                <div>
-                  <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-1.5">Venue</label>
-                  <input placeholder="The Green Arena, Dhaka" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-charcoal text-sm outline-none focus:border-lime transition-colors placeholder-gray-300" />
+                <div style="margin-bottom:16px">
+                  <label class="form-label">Venue</label>
+                  <input type="text" class="form-input" placeholder="The Green Arena, Dhaka" />
                 </div>
-                <div>
-                  <label class="block text-xs font-bold text-charcoal uppercase tracking-wider mb-1.5">Description</label>
-                  <textarea placeholder="Brief description of the tournament..." rows="3" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-charcoal text-sm outline-none focus:border-lime transition-colors placeholder-gray-300 resize-none"></textarea>
+                <div style="margin-bottom:24px">
+                  <label class="form-label">Description</label>
+                  <textarea class="form-input" rows="3" placeholder="Brief description of the tournament..." style="resize:vertical"></textarea>
                 </div>
-                <div class="flex gap-3 pt-2">
-                  <button type="button" class="flex-1 border-2 border-gray-200 hover:border-gray-300 text-charcoal font-bold py-3 rounded-xl text-sm transition-colors">Save as Draft</button>
-                  <button type="submit" class="flex-1 bg-lime hover:bg-lime-dark text-forest font-black py-3 rounded-xl text-sm transition-colors">Publish Tournament</button>
+                <div style="display:flex;gap:12px">
+                  <button type="button" class="btn-outline" style="flex:1;justify-content:center">Save as Draft</button>
+                  <button type="submit" class="btn-lime" style="flex:2;justify-content:center">Publish Tournament</button>
                 </div>
               </form>
             </div>
+
+            <!-- Captain / Player sees browse & register -->
+            <div id="player-captain-view" style="display:none">
+              <div class="panel-header" style="margin-bottom:20px">
+                <span class="panel-title">Browse Tournaments</span>
+              </div>
+              <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap">
+                <select class="form-input" style="max-width:160px">
+                  <option>All Sports</option>
+                  <option>Football</option>
+                  <option>Cricket</option>
+                  <option>Basketball</option>
+                </select>
+                <select class="form-input" style="max-width:160px">
+                  <option>All Status</option>
+                  <option>Open</option>
+                  <option>Live</option>
+                  <option>Completed</option>
+                </select>
+              </div>
+
+              <div class="tournament-card">
+                <div class="t-card-header">
+                  <div>
+                    <div class="t-card-title">Inter-City Football League 2025</div>
+                    <div class="t-card-meta">Football &middot; 12 teams &middot; &#2547;2,000/team</div>
+                  </div>
+                  <span class="badge badge-live badge-dot">Live</span>
+                </div>
+                <div class="t-card-dates">1 Aug 2025 &rarr; 30 Aug 2025</div>
+                <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+                <div class="t-card-footer">
+                  <span class="t-card-teams">Teams registered 12/12 &mdash; Full</span>
+                  <a href="fixtures.html" class="btn-view-fix">View Fixtures &rarr;</a>
+                </div>
+              </div>
+
+              <div class="tournament-card">
+                <div class="t-card-header">
+                  <div>
+                    <div class="t-card-title">Summer Smash Basketball Cup</div>
+                    <div class="t-card-meta">Basketball &middot; 8 teams &middot; &#2547;1,500/team</div>
+                  </div>
+                  <span class="badge badge-draft badge-dot">Open</span>
+                </div>
+                <div class="t-card-dates">15 Aug 2025 &rarr; 20 Aug 2025</div>
+                <div class="progress-bar"><div class="progress-fill" style="width:50%"></div></div>
+                <div class="t-card-footer">
+                  <span class="t-card-teams">Teams registered 4/8</span>
+                  <a href="tournament-registration.html" class="btn-lime" style="font-size:.78rem;padding:6px 14px">Register &rarr;</a>
+                </div>
+              </div>
+
+              <div class="tournament-card">
+                <div class="t-card-header">
+                  <div>
+                    <div class="t-card-title">Monsoon Cricket Carnival</div>
+                    <div class="t-card-meta">Cricket &middot; 16 teams &middot; &#2547;3,000/team</div>
+                  </div>
+                  <span class="badge badge-draft badge-dot">Open</span>
+                </div>
+                <div class="t-card-dates">10 Sep 2025 &rarr; 28 Sep 2025</div>
+                <div class="progress-bar"><div class="progress-fill" style="width:56%"></div></div>
+                <div class="t-card-footer">
+                  <span class="t-card-teams">Teams registered 9/16</span>
+                  <a href="tournament-registration.html" class="btn-lime" style="font-size:.78rem;padding:6px 14px">Register &rarr;</a>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <!-- Existing Tournaments -->
+          <!-- Active Tournaments sidebar -->
           <div>
-            <h2 class="font-black text-charcoal text-lg mb-4">Active Tournaments</h2>
-            <div class="space-y-4">
-              <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-                <div class="flex items-start justify-between mb-3">
+            <div class="content-panel">
+              <div class="panel-header"><span class="panel-title">Active Tournaments</span></div>
+
+              <div class="tournament-card" style="border:none;padding:0 0 16px;margin:0;border-bottom:1px solid #f3f4f6;border-radius:0">
+                <div class="t-card-header">
                   <div>
-                    <h3 class="font-bold text-charcoal text-sm leading-tight">Inter-City Football League 2025</h3>
-                    <div class="text-xs text-gray-mid mt-0.5">Football · 12 teams · ৳2,000/team</div>
+                    <div class="t-card-title">Inter-City Football League 2025</div>
+                    <div class="t-card-meta">Football &middot; 12 teams &middot; &#2547;2,000/team</div>
                   </div>
-                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800"><span class="w-1.5 h-1.5 rounded-full bg-amber animate-pulse"></span>Live</span>
+                  <span class="badge badge-live badge-dot">Live</span>
                 </div>
-                <div class="flex items-center justify-between">
-                  <div class="text-xs text-gray-mid">1 Aug 2025 → 30 Aug 2025</div>
-                  <a href="fixtures.html" class="text-xs font-bold text-lime hover:underline">View Fixtures →</a>
-                </div>
-                <div class="mt-3">
-                  <div class="flex justify-between text-xs text-gray-mid mb-1"><span>Teams registered</span><span>12/12</span></div>
-                  <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden"><div class="h-full bg-lime rounded-full" style="width:100%"></div></div>
+                <div class="t-card-dates">1 Aug 2025 &rarr; 30 Aug 2025</div>
+                <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+                <div class="t-card-footer">
+                  <span class="t-card-teams">Teams registered 12/12</span>
+                  <a href="fixtures.html" class="btn-view-fix">View Fixtures &rarr;</a>
                 </div>
               </div>
-              <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-                <div class="flex items-start justify-between mb-3">
+
+              <div class="tournament-card" style="border:none;padding:16px 0;margin:0;border-bottom:1px solid #f3f4f6;border-radius:0">
+                <div class="t-card-header">
                   <div>
-                    <h3 class="font-bold text-charcoal text-sm leading-tight">Summer Smash Basketball Cup</h3>
-                    <div class="text-xs text-gray-mid mt-0.5">Basketball · 8 teams · ৳1,500/team</div>
+                    <div class="t-card-title">Summer Smash Basketball Cup</div>
+                    <div class="t-card-meta">Basketball &middot; 8 teams &middot; &#2547;1,500/team</div>
                   </div>
-                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600"><span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span>Draft</span>
+                  <span class="badge badge-draft badge-dot">Draft</span>
                 </div>
-                <div class="flex items-center justify-between">
-                  <div class="text-xs text-gray-mid">15 Aug 2025 → 20 Aug 2025</div>
-                  <a href="fixtures.html" class="text-xs font-bold text-lime hover:underline">View Fixtures →</a>
-                </div>
-                <div class="mt-3">
-                  <div class="flex justify-between text-xs text-gray-mid mb-1"><span>Teams registered</span><span>8/4</span></div>
-                  <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden"><div class="h-full bg-lime rounded-full" style="width:60%"></div></div>
+                <div class="t-card-dates">15 Aug 2025 &rarr; 20 Aug 2025</div>
+                <div class="progress-bar"><div class="progress-fill" style="width:50%"></div></div>
+                <div class="t-card-footer">
+                  <span class="t-card-teams">Teams registered 8/4</span>
+                  <a href="fixtures.html" class="btn-view-fix">View Fixtures &rarr;</a>
                 </div>
               </div>
-              <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-                <div class="flex items-start justify-between mb-3">
+
+              <div class="tournament-card" style="border:none;padding:16px 0 0;margin:0;border-radius:0">
+                <div class="t-card-header">
                   <div>
-                    <h3 class="font-bold text-charcoal text-sm leading-tight">Monsoon Cricket Carnival</h3>
-                    <div class="text-xs text-gray-mid mt-0.5">Cricket · 16 teams · ৳3,000/team</div>
+                    <div class="t-card-title">Monsoon Cricket Carnival</div>
+                    <div class="t-card-meta">Cricket &middot; 16 teams &middot; &#2547;3,000/team</div>
                   </div>
-                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600"><span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span>Draft</span>
+                  <span class="badge badge-draft badge-dot">Draft</span>
                 </div>
-                <div class="flex items-center justify-between">
-                  <div class="text-xs text-gray-mid">10 Sep 2025 → 28 Sep 2025</div>
-                  <a href="fixtures.html" class="text-xs font-bold text-lime hover:underline">View Fixtures →</a>
-                </div>
-                <div class="mt-3">
-                  <div class="flex justify-between text-xs text-gray-mid mb-1"><span>Teams registered</span><span>16/9</span></div>
-                  <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden"><div class="h-full bg-lime rounded-full" style="width:60%"></div></div>
+                <div class="t-card-dates">10 Sep 2025 &rarr; 28 Sep 2025</div>
+                <div class="progress-bar"><div class="progress-fill" style="width:56%"></div></div>
+                <div class="t-card-footer">
+                  <span class="t-card-teams">Teams registered 16/9</span>
+                  <a href="fixtures.html" class="btn-view-fix">View Fixtures &rarr;</a>
                 </div>
               </div>
             </div>
@@ -196,5 +270,13 @@
         </div>
       </div>
     </div>
-  </body>
+  </div>
+
+  <script>
+    function handleCreate(e) {
+      e.preventDefault();
+      alert('Tournament published successfully!');
+    }
+  </script>
+</body>
 </html>

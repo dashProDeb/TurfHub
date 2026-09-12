@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TurfHub — Admin Announcements</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    .form-input-admin {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: .85rem;
+      outline: none;
+      background: #fff;
+    }
+    .form-input-admin:focus {
+      border-color: #7ed321;
+    }
+    .announcement-card {
+      background: #fff;
+      border: 1.5px solid #e8ede8;
+      border-radius: 12px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+  </style>
+</head>
+<body>
+<div id="app-wrapper">
+  
+  <!-- Standalone Admin Sidebar -->
+  <aside id="sidebar" class="sidebar">
+    <a href="index.html" class="sidebar-logo">
+      <div class="sidebar-logo-icon">TH</div>
+      <span class="sidebar-logo-text">TurfHub</span>
+    </a>
+    <div class="sidebar-user">
+      <div class="sidebar-avatar">A</div>
+      <div class="sidebar-user-info">
+        <span class="sidebar-user-name">Admin User</span>
+        <span class="sidebar-user-role">Platform Admin</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="admin-dashboard.html" class="sidebar-nav-item"><span class="sidebar-icon">📊</span><span class="sidebar-label">Overview</span></a>
+      <a href="admin-approvals.html" class="sidebar-nav-item"><span class="sidebar-icon">✅</span><span class="sidebar-label">Approvals</span></a>
+      <a href="admin-analytics.html" class="sidebar-nav-item"><span class="sidebar-icon">📈</span><span class="sidebar-label">Analytics</span></a>
+      <a href="admin-categories.html" class="sidebar-nav-item"><span class="sidebar-icon">🏷️</span><span class="sidebar-label">Categories</span></a>
+      <a href="admin-reports.html" class="sidebar-nav-item"><span class="sidebar-icon">📄</span><span class="sidebar-label">Reports</span></a>
+      <a href="admin-announcements.html" class="sidebar-nav-item active"><span class="sidebar-icon">📢</span><span class="sidebar-label">Announce</span></a>
+    </nav>
+    <a href="login.html" class="sidebar-signout">
+      <span class="sidebar-icon">🚪</span>
+      <span class="sidebar-label">Sign Out</span>
+    </a>
+  </aside>
+
+  <div id="main-content">
+    
+    <!-- Topbar -->
+    <div id="topbar">
+      <div class="topbar-title">
+        <span class="topbar-heading">Broadcast Announcements</span>
+        <span class="topbar-sub">Send platform-wide alerts, tournament kickoff announcements, and maintenance notices</span>
+      </div>
+    </div>
+
+    <!-- Page Body -->
+    <div class="page-body">
+      
+      <div style="display:grid;grid-template-columns:3fr 2fr;gap:20px;align-items:start">
+        
+        <!-- Left: Compose Broadcast -->
+        <div class="content-panel" style="padding:22px">
+          <div class="panel-header" style="margin-bottom:16px">
+            <div>
+              <span class="panel-title">Compose New Broadcast</span>
+              <span class="panel-sub" style="display:block;font-size:.78rem;color:#6b7280;margin-top:2px">Dispatches instantaneously across web push &amp; in-app notifications</span>
+            </div>
+          </div>
+
+          <form onsubmit="handleSendBroadcast(event)" style="display:flex;flex-direction:column;gap:14px">
+            <div>
+              <label style="display:block;font-size:.75rem;font-weight:700;color:#374151;margin-bottom:4px">Target Audience Segment</label>
+              <select id="target-audience" class="form-input-admin" style="font-weight:600">
+                <option value="all">📢 All Registered Users (12,480 Athletes &amp; Hosts)</option>
+                <option value="owners">🏟️ Turf Owners Only (53 Verified Hosts)</option>
+                <option value="captains">🏆 Team Captains Only (180 Teams)</option>
+                <option value="players">⚽ Players &amp; Squad Members</option>
+              </select>
+            </div>
+
+            <div>
+              <label style="display:block;font-size:.75rem;font-weight:700;color:#374151;margin-bottom:4px">Announcement Title</label>
+              <input type="text" id="announcement-title" placeholder="e.g. Monsoon Tournament Season Registration Open!" required class="form-input-admin" style="font-weight:700" />
+            </div>
+
+            <div>
+              <label style="display:block;font-size:.75rem;font-weight:700;color:#374151;margin-bottom:4px">Message Content</label>
+              <textarea id="announcement-body" rows="4" placeholder="Enter full announcement details, tournament deadlines, or platform policy updates..." required class="form-input-admin" style="resize:vertical"></textarea>
+            </div>
+
+            <div style="display:flex;gap:14px;align-items:center;padding:10px 14px;background:#f9fafb;border-radius:8px">
+              <label style="display:flex;align-items:center;gap:6px;font-size:.78rem;font-weight:600;color:#374151;cursor:pointer">
+                <input type="checkbox" checked /> In-App Notification
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:.78rem;font-weight:600;color:#374151;cursor:pointer">
+                <input type="checkbox" checked /> SMS Blast
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:.78rem;font-weight:600;color:#374151;cursor:pointer">
+                <input type="checkbox" /> Email Digest
+              </label>
+            </div>
+
+            <div style="display:flex;justify-content:flex-end">
+              <button type="submit" class="btn-lime" style="padding:10px 24px;font-size:.85rem;cursor:pointer">
+                🚀 Send Broadcast Now
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Right: Past Broadcasts Feed -->
+        <div class="content-panel" style="padding:22px">
+          <div class="panel-header" style="margin-bottom:16px">
+            <span class="panel-title">Broadcast History</span>
+            <span style="font-size:.78rem;color:#6b7280">Last 30 days</span>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:12px" id="broadcasts-feed">
+            
+            <div class="announcement-card">
+              <div>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <span style="font-size:.7rem;font-weight:700;background:#dcfce7;color:#16a34a;padding:2px 8px;border-radius:100px">All Users</span>
+                  <span style="font-size:.72rem;color:#9ca3af">2 days ago</span>
+                </div>
+                <h4 style="font-weight:800;font-size:.9rem;color:#1a1a1a;margin-top:4px">Inter-City Summer Cup 2025 Fixtures Released</h4>
+                <p style="font-size:.78rem;color:#6b7280;margin-top:2px">Quarter-final match fixtures and referee allocations have been scheduled across venues.</p>
+                <div style="font-size:.72rem;color:#16a34a;font-weight:700;margin-top:4px">✓ 12,240 Delivered (98%)</div>
+              </div>
+            </div>
+
+            <div class="announcement-card">
+              <div>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <span style="font-size:.7rem;font-weight:700;background:#fef3c7;color:#92400e;padding:2px 8px;border-radius:100px">Turf Owners</span>
+                  <span style="font-size:.72rem;color:#9ca3af">5 days ago</span>
+                </div>
+                <h4 style="font-weight:800;font-size:.9rem;color:#1a1a1a;margin-top:4px">Scheduled Gateway Maintenance</h4>
+                <p style="font-size:.78rem;color:#6b7280;margin-top:2px">bKash merchant auto-settlement routine will run Saturday 2:00 AM – 3:30 AM.</p>
+                <div style="font-size:.72rem;color:#16a34a;font-weight:700;margin-top:4px">✓ 53 Delivered (100%)</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  function handleSendBroadcast(e) {
+    e.preventDefault();
+    const title = document.getElementById('announcement-title').value.trim();
+    const body = document.getElementById('announcement-body').value.trim();
+    const audSelect = document.getElementById('target-audience');
+    const audText = audSelect.options[audSelect.selectedIndex].text.split('(')[0].trim();
+
+    const feed = document.getElementById('broadcasts-feed');
+    const card = document.createElement('div');
+    card.className = 'announcement-card';
+    card.style.background = '#f0fdf4';
+    card.innerHTML = `
+      <div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span style="font-size:.7rem;font-weight:700;background:#dcfce7;color:#16a34a;padding:2px 8px;border-radius:100px">${audText}</span>
+          <span style="font-size:.72rem;color:#16a34a;font-weight:700">Just Now</span>
+        </div>
+        <h4 style="font-weight:800;font-size:.9rem;color:#1a1a1a;margin-top:4px">${title}</h4>
+        <p style="font-size:.78rem;color:#6b7280;margin-top:2px">${body}</p>
+        <div style="font-size:.72rem;color:#16a34a;font-weight:700;margin-top:4px">✓ Sent to platform network</div>
+      </div>
+    `;
+    feed.prepend(card);
+    alert('Announcement broadcasted successfully!');
+    document.getElementById('announcement-title').value = '';
+    document.getElementById('announcement-body').value = '';
+  }
+</script>
+</body>
+</html>
