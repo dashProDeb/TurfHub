@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TurfHub — Booking Confirmation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+      :root {
+        --color-lime: #7ED321;
+        --color-lime-dark: #6ab81c;
+        --color-forest: #0F2B1D;
+        --color-forest-mid: #1a4029;
+        --color-off-white: #F7F8F5;
+        --color-charcoal: #1E1E1E;
+        --color-gray-mid: #6B7280;
+        --color-amber: #F5A623;
+        --color-success: #4CAF50;
+        --color-danger: #E53935;
+      }
+
+      .bg-lime { background-color: var(--color-lime); }
+      .bg-lime-dark { background-color: var(--color-lime-dark); }
+      .bg-forest { background-color: var(--color-forest); }
+      .bg-off-white { background-color: var(--color-off-white); }
+      .text-lime { color: var(--color-lime); }
+      .text-forest { color: var(--color-forest); }
+      .text-charcoal { color: var(--color-charcoal); }
+      .text-gray-mid { color: var(--color-gray-mid); }
+      .text-success { color: var(--color-success); }
+      .text-danger { color: var(--color-danger); }
+      .border-lime { border-color: var(--color-lime); }
+      body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; background-color: #ffffff; color: #1E1E1E; }
+    </style>
+  </head>
+  <body>
+    <div class="min-h-screen bg-white">
+      <!-- Navbar -->
+      <nav class="px-6 py-4 flex items-center justify-between bg-forest">
+        <a href="index.html" class="flex items-center gap-2">
+          <div class="w-8 h-8 bg-lime rounded-lg flex items-center justify-center"><span class="text-forest font-black text-sm leading-none">TH</span></div>
+          <span class="font-black text-xl text-white">TurfHub</span>
+        </a>
+        <div class="hidden md:flex items-center gap-6 text-sm">
+          <a href="index.html" class="font-semibold text-white">Home</a>
+          <a href="turf-detail.html" class="transition-colors text-white/70 hover:text-white">Turfs</a>
+          <a href="fixtures.html" class="transition-colors text-white/70 hover:text-white">Fixtures</a>
+          <a href="contact.html" class="transition-colors text-white/70 hover:text-white">Contact</a>
+        </div>
+        <div class="flex items-center gap-3">
+          <a href="login.html" class="bg-lime hover:bg-lime-dark text-forest font-bold px-5 py-2 rounded-full text-sm transition-colors">Get Started</a>
+        </div>
+      </nav>
+
+      <!-- Booking Receipt -->
+      <main class="max-w-4xl mx-auto px-6 py-12">
+        <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 bg-lime/10 rounded-xl flex items-center justify-center flex-shrink-0"><span class="text-lime font-black text-lg">#</span></div>
+            <div>
+              <h1 class="text-3xl font-black text-charcoal">Booking Confirmed</h1>
+              <p class="text-gray-mid">Your turf is booked and ready to go!</p>
+            </div>
+          </div>
+
+          <!-- Booking Details -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div>
+              <h2 class="font-bold text-charcoal text-sm uppercase tracking-wider mb-4">Booking Details</h2>
+              <div class="space-y-3">
+                <div>
+                  <span class="text-sm text-gray-mid uppercase tracking-wider">Booking Reference</span>
+                  <span class="font-semibold text-charcoal">BR-20250725-001</span>
+                </div>
+                <div>
+                  <span class="text-sm text-gray-mid uppercase tracking-wider">Turf</span>
+                  <span class="font-semibold text-charcoal">The Green Arena</span>
+                </div>
+                <div>
+                  <span class="text-sm text-gray-mid uppercase tracking-wider">Sport</span>
+                  <span class="font-semibold text-charcoal">Football</span>
+                </div>
+                <div>
+                  <span class="text-sm text-gray-mid uppercase tracking-wider">Date</span>
+                  <span class="font-semibold text-charcoal">Saturday, 26 July 2025</span>
+                </div>
+                <div>
+                  <span class="text-sm text-gray-mid uppercase tracking-wider">Time</span>
+                  <span class="font-semibold text-charcoal">6:00 PM - 8:00 PM</span>
+                </div>
+                <div>
+                  <span class="text-sm text-gray-mid uppercase tracking-wider">Slot Duration</span>
+                  <span class="font-semibold text-charcoal">2 hours</span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h2 class="font-bold text-charcoal text-sm uppercase tracking-wider mb-4">Payment Summary</h2>
+              <div class="space-y-3">
+                <div>
+                  <span class="text-sm text-gray-mid uppercase tracking-wider">Rate</span>
+                  <span class="font-semibold text-charcoal">৳800/hr</span>
+                </div>
+                <div>
+                  <span class="text-sm text-gray-mid uppercase tracking-wider">Duration</span>
+                  <span class="font-semibold text-charcoal">2 hr</span>
+                </div>
+                <div>
+                  <span class="text-sm text-gray-mid uppercase tracking-wider">Subtotal</span>
+                  <span class="font-black text-lime">৳1,600</span>
+                </div>
+                <div class="flex items-baseline gap-1">
+                  <span class="text-sm text-gray-mid">Tax</span>
+                  <span class="font-black text-lime">৳200</span>
+                </div>
+                <div class="border-t border-gray-100 pt-4 mt-4 flex items-baseline gap-1">
+                  <span class="text-sm text-gray-mid">Total</span>
+                  <span class="font-black text-lime text-2xl">৳1,800</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Status Badge -->
+          <div class="mt-8 p-6 bg-lime/10 rounded-2xl border border-lime/30">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-lime rounded-full flex items-center justify-center flex-shrink-0"><span class="text-forest font-black text-sm">✓</span></div>
+              <div>
+                <h3 class="font-bold text-lime">Booking Confirmed</h3>
+                <p class="text-gray-mid text-sm">Your slot is reserved and payment has been processed.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="pt-8 border-t border-gray-100">
+          <div class="flex gap-4">
+            <a href="index.html" class="flex-1 bg-lime hover:bg-lime-dark text-forest font-bold px-6 py-3 rounded-xl transition-colors">My Bookings</a>
+            <a href="login.html" class="flex-1 bg-white hover:bg-gray-50 text-charcoal font-bold px-6 py-3 rounded-xl transition-colors border border-gray-200">Print Receipt</a>
+          </div>
+        </div>
+      </main>
+
+      <!-- Footer -->
+      <footer class="bg-forest text-white">
+        <div class="max-w-7xl mx-auto px-6 py-12">
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+            <div class="col-span-2 md:col-span-1">
+              <div class="flex items-center gap-2 mb-4">
+                <div class="w-8 h-8 bg-lime rounded-lg flex items-center justify-center"><span class="text-forest font-black text-sm">TH</span></div>
+                <span class="font-black text-xl">TurfHub</span>
+              </div>
+              <p class="text-white/50 text-sm leading-relaxed">India's premier sports turf booking and tournament management platform.</p>
+              <div class="flex gap-3 mt-4">
+                <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">⚽</span>
+                <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🏀</span>
+                <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🏏</span>
+                <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🎾</span>
+                <span class="text-lg opacity-70 hover:opacity-100 cursor-pointer transition-opacity">🏸</span>
+              </div>
+            </div>
+            <div>
+              <h4 class="font-bold mb-4 text-white/80 text-sm uppercase tracking-wider">Platform</h4>
+              <ul class="space-y-2.5">
+                <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Find Turfs</a></li>
+                <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Tournaments</a></li>
+                <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Fixtures</a></li>
+                <li><a href="index.html" class="text-white/50 text-sm hover:text-lime transition-colors">Leaderboard</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-bold mb-4 text-white/80 text-sm uppercase tracking-wider">For Owners</h4>
+              <ul class="space-y-2.5">
+                <li><a href="login.html" class="text-white/50 text-sm hover:text-lime transition-colors">List Your Turf</a></li>
+                <li><a href="login.html" class="text-white/50 text-sm hover:text-lime transition-colors">Manage Bookings</a></li>
+                <li><a href="login.html" class="text-white/50 text-sm hover:text-lime transition-colors">Run Tournaments</a></li>
+                <li><a href="login.html" class="text-white/50 text-sm hover:text-lime transition-colors">Analytics</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-bold mb-4 text-white/80 text-sm uppercase tracking-wider">Support</h4>
+              <ul class="space-y-2.5">
+                <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Help Center</a></li>
+                <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Privacy Policy</a></li>
+                <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Terms of Service</a></li>
+                <li><a href="#" class="text-white/50 text-sm hover:text-lime transition-colors">Contact Us</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-3">
+            <p class="text-white/30 text-sm">© 2025 TurfHub Technologies Pvt. Ltd. All rights reserved.</p>
+            <p class="text-white/30 text-sm">Made with ❤️ for sport</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
