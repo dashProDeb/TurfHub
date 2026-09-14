@@ -13,7 +13,6 @@ function renderSidebar(activeId) {
     const isActive = item.id === activeId;
     return `
       <a href="${item.href}" class="sidebar-nav-item ${isActive ? 'active' : ''}" title="${item.label}">
-        <span class="sidebar-icon">${item.icon}</span>
         <span class="sidebar-label">${item.label}</span>
       </a>`;
   }).join('');
@@ -40,7 +39,6 @@ function renderSidebar(activeId) {
 
       <!-- Sign Out -->
       <button class="sidebar-signout" onclick="signOut()">
-        <span class="sidebar-icon">🚪</span>
         <span class="sidebar-label">Sign Out</span>
       </button>
     </aside>
@@ -196,9 +194,7 @@ function closeSidebar() {
     }
     .sidebar-nav-item:hover { background: rgba(255,255,255,0.07); color: #fff; }
     .sidebar-nav-item.active { background: #7ed321; color: #0d2818; font-weight: 700; }
-    .sidebar-nav-item.active .sidebar-icon { filter: none; }
 
-    .sidebar-icon { font-size: 1rem; width: 20px; text-align: center; flex-shrink: 0; }
     .sidebar-label { overflow: hidden; text-overflow: ellipsis; }
 
     .sidebar-signout {

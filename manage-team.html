@@ -1,0 +1,740 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TurfHub — Manage Team</title>
+  <meta name="description" content="Manage your Thunder FC squad, view detailed player stats, availability, and performance data." />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    /* ── Filters & Search ── */
+    .form-input { padding:9px 14px; border:1.5px solid #e5e7eb; border-radius:10px; font-size:.85rem; font-family:inherit; outline:none; transition:border-color .2s; background:#fff; color:#1a1a1a; }
+    .form-input:focus { border-color:#7ed321; box-shadow:0 0 0 3px rgba(126,211,33,.1); }
+    .pos-tab { padding:6px 16px; border-radius:100px; border:1.5px solid #e5e7eb; background:#fff; font-size:.78rem; font-weight:700; cursor:pointer; font-family:inherit; color:#6b7280; transition:all .15s; }
+    .pos-tab.active { background:#0d2818; border-color:#0d2818; color:#fff; }
+
+    /* ── Team summary strip ── */
+    .team-strip { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:12px; margin-bottom:22px; }
+    .strip-card { background:#fff; border:1px solid #e8ede8; border-radius:12px; padding:14px 16px; }
+    .strip-val { font-size:1.5rem; font-weight:900; color:#0d2818; line-height:1; }
+    .strip-lbl { font-size:.7rem; color:#6b7280; font-weight:500; margin-top:4px; }
+
+    /* ── Formation visual ── */
+    .formation-badge { display:inline-flex; align-items:center; gap:6px; background:#0d2818; color:#7ed321; font-weight:800; font-size:.8rem; padding:5px 14px; border-radius:100px; }
+
+    /* ── Player card grid ── */
+    .player-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(310px,1fr)); gap:16px; }
+    .player-card { background:#fff; border:1.5px solid #e8ede8; border-radius:14px; padding:20px; transition:box-shadow .2s,border-color .2s; position:relative; overflow:hidden; }
+    .player-card:hover { box-shadow:0 6px 24px rgba(0,0,0,.1); border-color:#7ed321; }
+    .player-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--pos-color,#7ed321); }
+
+    .player-avatar { width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.1rem; color:#fff; flex-shrink:0; }
+    .player-num-badge { position:absolute; top:16px; right:16px; background:#0d2818; color:#7ed321; font-weight:900; font-size:.72rem; padding:3px 9px; border-radius:100px; }
+
+    .mini-stat { text-align:center; flex:1; }
+    .mini-stat-val { font-size:1rem; font-weight:900; color:#0d2818; }
+    .mini-stat-lbl { font-size:.62rem; color:#9ca3af; font-weight:600; text-transform:uppercase; margin-top:2px; }
+
+    /* Progress bar */
+    .progress-bar { height:5px; background:#f3f4f6; border-radius:10px; overflow:hidden; margin-top:6px; }
+    .progress-fill { height:100%; border-radius:10px; transition:width .4s ease; }
+
+    /* Form badges */
+    .form-badge { display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:6px; font-size:.68rem; font-weight:800; }
+    .form-w { background:#7ed321; color:#fff; }
+    .form-l { background:#e53935; color:#fff; }
+    .form-d { background:#9ca3af; color:#fff; }
+
+    /* ── Player Detail Drawer ── */
+    #drawer-overlay { position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:200; display:none; opacity:0; transition:opacity .25s; }
+    #drawer-overlay.open { display:block; opacity:1; }
+    #player-drawer { position:fixed; top:0; right:-520px; width:500px; max-width:95vw; height:100vh; background:#fff; box-shadow:-8px 0 40px rgba(0,0,0,.15); z-index:201; display:flex; flex-direction:column; transition:right .3s cubic-bezier(.4,0,.2,1); overflow:hidden; }
+    #player-drawer.open { right:0; }
+    .drawer-header { background:linear-gradient(135deg,#0d2818 0%,#1a4029 100%); padding:24px 24px 20px; flex-shrink:0; }
+    .drawer-body { flex:1; overflow-y:auto; padding:24px; }
+    .drawer-section { margin-bottom:22px; }
+    .drawer-section-title { font-size:.72rem; font-weight:800; color:#9ca3af; text-transform:uppercase; letter-spacing:.08em; margin-bottom:12px; }
+    .stat-row { display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid #f3f4f6; }
+    .stat-row:last-child { border-bottom:none; }
+    .drawer-stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .drawer-mini-card { background:#f5f5f0; border-radius:10px; padding:12px 14px; }
+    .drawer-mini-val { font-size:1.3rem; font-weight:900; color:#0d2818; }
+    .drawer-mini-lbl { font-size:.68rem; color:#6b7280; font-weight:600; margin-top:2px; }
+    .match-history-row { display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid #f3f4f6; }
+    .match-history-row:last-child { border-bottom:none; }
+
+    /* Badges */
+    .badge-available { background:rgba(126,211,33,.12); color:#16a34a; }
+    .badge-uncertain { background:#fef3c7; color:#92400e; }
+    .badge-unavailable { background:#fee2e2; color:#dc2626; }
+    .badge-captain-tag { background:rgba(245,166,35,.15); color:#b45309; border-radius:100px; padding:2px 8px; font-size:.65rem; font-weight:700; }
+
+    /* ── Waitlist Section ── */
+    .waitlist-panel { background:#fff; border:1.5px solid #e8ede8; border-radius:16px; padding:20px; margin-bottom:24px; box-shadow:0 1px 4px rgba(0,0,0,.04); }
+    .waitlist-panel.has-glow { border-color:#fde68a; box-shadow:0 0 0 3px rgba(245,166,35,.08); }
+    .waitlist-count { display:inline-flex; align-items:center; justify-content:center; background:#f59e0b; color:#fff; font-weight:900; font-size:.7rem; min-width:22px; height:22px; border-radius:100px; padding:0 6px; }
+    .waitlist-card { display:flex; align-items:center; gap:14px; padding:14px 0; border-bottom:1px solid #f3f4f6; }
+    .waitlist-card:last-child { border-bottom:none; }
+    .waitlist-avatar { width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.9rem; color:#fff; flex-shrink:0; }
+    .waitlist-info { flex:1; min-width:0; }
+    .waitlist-name { font-weight:800; font-size:.88rem; color:#1a1a1a; }
+    .waitlist-detail { font-size:.75rem; color:#6b7280; margin-top:2px; }
+    .waitlist-time { font-size:.68rem; color:#9ca3af; }
+    .waitlist-actions { display:flex; gap:6px; flex-shrink:0; }
+    .wl-btn { padding:6px 14px; border-radius:8px; border:1.5px solid transparent; font-size:.75rem; font-weight:700; cursor:pointer; font-family:inherit; transition:all .15s; }
+    .wl-approve { background:rgba(126,211,33,.12); color:#16a34a; border-color:rgba(126,211,33,.3); }
+    .wl-approve:hover { background:#7ed321; color:#0d2818; border-color:#7ed321; }
+    .wl-reject { background:rgba(229,57,53,.08); color:#e53935; border-color:rgba(229,57,53,.2); }
+    .wl-reject:hover { background:#e53935; color:#fff; border-color:#e53935; }
+    .wl-approved { background:rgba(126,211,33,.12); color:#16a34a; font-size:.75rem; font-weight:700; padding:6px 14px; border-radius:8px; }
+    .wl-rejected { background:#f3f4f6; color:#9ca3af; font-size:.75rem; font-weight:700; padding:6px 14px; border-radius:8px; text-decoration:line-through; }
+
+    /* ── Role dropdown in drawer ── */
+    .role-select-wrap { position:relative; flex:1; }
+    .role-select { width:100%; padding:8px 14px; border-radius:10px; border:1.5px solid #e5e7eb; background:#fff; font-family:inherit; font-size:.82rem; font-weight:600; color:#1a1a1a; cursor:pointer; appearance:none; -webkit-appearance:none; outline:none; transition:border-color .2s; }
+    .role-select:focus { border-color:#7ed321; box-shadow:0 0 0 3px rgba(126,211,33,.1); }
+    .role-select-icon { position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:.8rem; pointer-events:none; color:#9ca3af; }
+    .role-saved { font-size:.72rem; color:#7ed321; font-weight:700; opacity:0; transition:opacity .3s; }
+    .role-saved.show { opacity:1; }
+  </style>
+</head>
+<body>
+<div id="app-wrapper">
+  <!-- Captain Sidebar -->
+  <aside id="sidebar" class="sidebar">
+    <a href="index.html" class="sidebar-logo">
+      <div class="sidebar-logo-icon">TH</div>
+      <span class="sidebar-logo-text">TurfHub</span>
+    </a>
+    <div class="sidebar-user">
+      <div class="sidebar-avatar" style="background:#7ed321;color:#0d2818">T</div>
+      <div class="sidebar-user-info">
+        <span class="sidebar-user-name">Tanvir Ahmed</span>
+        <span class="sidebar-user-role">Team Captain</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="captain-dashboard.html" class="sidebar-nav-item"><span class="sidebar-label">Dashboard</span></a>
+      <a href="book-turf.html" class="sidebar-nav-item"><span class="sidebar-label">Book a Turf</span></a>
+      <a href="manage-team.html" class="sidebar-nav-item active"><span class="sidebar-label">Manage Team</span></a>
+      <a href="fixtures.html" class="sidebar-nav-item"><span class="sidebar-label">Tournaments</span></a>
+      <a href="create-tournament.html" class="sidebar-nav-item"><span class="sidebar-label">Host Tournament</span></a>
+      <a href="booking-receipt.html" class="sidebar-nav-item"><span class="sidebar-label">My Receipts</span></a>
+      <a href="chat.html" class="sidebar-nav-item"><span class="sidebar-label">Messages</span></a>
+    </nav>
+    <a href="login.html" class="sidebar-signout">
+      <span class="sidebar-label">Sign Out</span>
+    </a>
+  </aside>
+
+  <div id="main-content">
+    <!-- Topbar -->
+    <div id="topbar">
+      <div class="topbar-title">
+        <span class="topbar-heading">Manage Team</span>
+        <span class="topbar-sub">Thunder FC &middot; Inter-City Football League 2025</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn-lime" onclick="openInviteModal()">+ Invite Player</button>
+      </div>
+    </div>
+
+    <div class="page-body">
+
+      <!-- Team summary strip -->
+      <div class="team-strip">
+        <div class="strip-card">
+          <div class="strip-val">11</div>
+          <div class="strip-lbl">Squad Size</div>
+        </div>
+        <div class="strip-card">
+          <div class="strip-val" style="color:#7ed321">9</div>
+          <div class="strip-lbl">Available</div>
+        </div>
+        <div class="strip-card">
+          <div class="strip-val" style="color:#f59e0b">1</div>
+          <div class="strip-lbl">Uncertain</div>
+        </div>
+        <div class="strip-card">
+          <div class="strip-val" style="color:#e53935">1</div>
+          <div class="strip-lbl">Unavailable</div>
+        </div>
+        <div class="strip-card">
+          <div class="strip-val">18</div>
+          <div class="strip-lbl">Team Goals</div>
+        </div>
+        <div class="strip-card">
+          <div class="strip-val">91%</div>
+          <div class="strip-lbl">Avg. Attendance</div>
+        </div>
+        <div class="strip-card" style="background:linear-gradient(135deg,#0d2818,#1a4029)">
+          <div class="strip-val" style="color:#7ed321">1st</div>
+          <div class="strip-lbl" style="color:rgba(255,255,255,.6)">League Rank</div>
+        </div>
+      </div>
+
+      <!-- Formation + search/filter bar -->
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px">
+        <span class="formation-badge">⚽ 4-3-3</span>
+        <input id="search-input" type="text" class="form-input" placeholder="🔍 Search players..." style="max-width:220px" oninput="filterPlayers()" />
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="pos-tab active" onclick="setPosFilter('all',this)">All</button>
+          <button class="pos-tab" onclick="setPosFilter('goalkeeper',this)">GK</button>
+          <button class="pos-tab" onclick="setPosFilter('defender',this)">DEF</button>
+          <button class="pos-tab" onclick="setPosFilter('midfielder',this)">MID</button>
+          <button class="pos-tab" onclick="setPosFilter('striker',this)">FWD</button>
+        </div>
+        <div style="margin-left:auto;display:flex;gap:8px">
+          <select class="form-input" onchange="sortPlayers(this.value)" style="font-size:.8rem">
+            <option value="number">Sort: Jersey #</option>
+            <option value="goals">Sort: Goals</option>
+            <option value="attendance">Sort: Attendance</option>
+            <option value="name">Sort: Name</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Waitlist Section -->
+      <div class="waitlist-panel has-glow" id="waitlist-panel">
+        <div class="panel-header" style="margin-bottom:14px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="panel-title">⏳ Join Requests</span>
+            <span class="waitlist-count" id="waitlist-count">3</span>
+          </div>
+          <span style="font-size:.75rem;color:#9ca3af;font-weight:500">Players waiting for your approval</span>
+        </div>
+        <div id="waitlist-list"></div>
+      </div>
+
+      <!-- Player grid -->
+      <div class="player-grid" id="player-grid"></div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── Overlay ── -->
+<div id="drawer-overlay" onclick="closeDrawer()"></div>
+
+<!-- ── Player Detail Drawer ── -->
+<div id="player-drawer">
+  <div class="drawer-header">
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
+      <div id="d-avatar" style="width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.4rem;color:#fff;flex-shrink:0;background:#7ed321"></div>
+      <div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span id="d-name" style="font-weight:900;font-size:1.15rem;color:#fff"></span>
+          <span id="d-captain-tag" style="display:none" class="badge-captain-tag">Captain</span>
+        </div>
+        <div id="d-position" style="font-size:.8rem;color:rgba(255,255,255,.6);margin-top:3px"></div>
+      </div>
+      <button onclick="closeDrawer()" style="margin-left:auto;background:rgba(255,255,255,.1);border:none;color:#fff;width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center">✕</button>
+    </div>
+    <!-- Quick stats row -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+      <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:10px;text-align:center">
+        <div id="d-goals" style="font-size:1.2rem;font-weight:900;color:#7ed321">—</div>
+        <div style="font-size:.6rem;color:rgba(255,255,255,.5);font-weight:600;text-transform:uppercase;margin-top:2px">Goals</div>
+      </div>
+      <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:10px;text-align:center">
+        <div id="d-assists" style="font-size:1.2rem;font-weight:900;color:#7ed321">—</div>
+        <div style="font-size:.6rem;color:rgba(255,255,255,.5);font-weight:600;text-transform:uppercase;margin-top:2px">Assists</div>
+      </div>
+      <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:10px;text-align:center">
+        <div id="d-matches" style="font-size:1.2rem;font-weight:900;color:#7ed321">—</div>
+        <div style="font-size:.6rem;color:rgba(255,255,255,.5);font-weight:600;text-transform:uppercase;margin-top:2px">Matches</div>
+      </div>
+      <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:10px;text-align:center">
+        <div id="d-attend" style="font-size:1.2rem;font-weight:900;color:#7ed321">—</div>
+        <div style="font-size:.6rem;color:rgba(255,255,255,.5);font-weight:600;text-transform:uppercase;margin-top:2px">Attend.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drawer-body">
+    <!-- Performance stats -->
+    <div class="drawer-section">
+      <div class="drawer-section-title">Performance Details</div>
+      <div class="drawer-stat-grid">
+        <div class="drawer-mini-card">
+          <div id="d-shots" class="drawer-mini-val">—</div>
+          <div class="drawer-mini-lbl">🎯 Shots on Target</div>
+        </div>
+        <div class="drawer-mini-card">
+          <div id="d-yellow" class="drawer-mini-val">—</div>
+          <div class="drawer-mini-lbl">🟡 Yellow Cards</div>
+        </div>
+        <div class="drawer-mini-card">
+          <div id="d-red" class="drawer-mini-val">—</div>
+          <div class="drawer-mini-lbl">🔴 Red Cards</div>
+        </div>
+        <div class="drawer-mini-card">
+          <div id="d-rating" class="drawer-mini-val">—</div>
+          <div class="drawer-mini-lbl">⭐ Avg Rating</div>
+        </div>
+        <div class="drawer-mini-card">
+          <div id="d-mins" class="drawer-mini-val">—</div>
+          <div class="drawer-mini-lbl">⏱️ Mins Played</div>
+        </div>
+        <div class="drawer-mini-card">
+          <div id="d-saves" class="drawer-mini-val">—</div>
+          <div class="drawer-mini-lbl">🧤 Saves / Tackles</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Attendance bar -->
+    <div class="drawer-section">
+      <div class="drawer-section-title">Attendance Track</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <span style="font-size:.82rem;color:#6b7280">Season Attendance</span>
+        <span id="d-attend-pct" style="font-weight:800;color:#0d2818;font-size:.88rem">—</span>
+      </div>
+      <div class="progress-bar"><div id="d-attend-bar" class="progress-fill" style="background:#7ed321;width:0%"></div></div>
+    </div>
+
+    <!-- Form -->
+    <div class="drawer-section">
+      <div class="drawer-section-title">Recent Form (Last 5)</div>
+      <div id="d-form" style="display:flex;gap:6px"></div>
+    </div>
+
+    <!-- Match history -->
+    <div class="drawer-section">
+      <div class="drawer-section-title">Recent Matches</div>
+      <div id="d-history"></div>
+    </div>
+
+    <!-- Badges -->
+    <div class="drawer-section">
+      <div class="drawer-section-title">Achievements</div>
+      <div id="d-badges" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+    </div>
+
+    <!-- Captain actions -->
+    <div class="drawer-section" style="background:#fafafa;border-radius:12px;padding:16px;border:1px solid #f3f4f6">
+      <div class="drawer-section-title" style="margin-bottom:10px">Captain Actions</div>
+      <!-- Change Role dropdown -->
+      <div style="margin-bottom:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <span style="font-size:.78rem;font-weight:700;color:#6b7280">🔄 Change Role</span>
+          <span class="role-saved" id="role-saved-msg">✓ Saved</span>
+        </div>
+        <div class="role-select-wrap">
+          <select class="role-select" id="d-role-select" onchange="changeRole(this.value)">
+            <option value="Goalkeeper">Goalkeeper (GK)</option>
+            <option value="Defender">Defender (DEF)</option>
+            <option value="Midfielder">Midfielder (MID)</option>
+            <option value="Striker">Striker (FWD)</option>
+          </select>
+          <span class="role-select-icon">▾</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn-lime" style="flex:1;justify-content:center" onclick="alert('Message sent!')">💬 Message</button>
+        <button style="flex:1;justify-content:center;padding:8px 14px;border-radius:10px;border:1.5px solid #fee2e2;background:#fff;color:#e53935;font-weight:700;font-size:.82rem;font-family:inherit;cursor:pointer" onclick="alert('Player removed!')">🚫 Remove</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── Player Data ──
+  const PLAYERS = [
+    {
+      id:1, num:'#1', name:'Kamal Miah', position:'Goalkeeper', posKey:'goalkeeper', initials:'KM',
+      color:'#0891b2', posColor:'#0891b2', isCaptain:false, status:'available',
+      goals:0, assists:0, matches:6, attendance:100, shots:0, yellow:0, red:0, rating:7.8, mins:540, saves:22,
+      form:['W','W','W','D','W'], joinDate:'Jan 2025',
+      history:[
+        {opp:'vs Rising Stars',result:'W',score:'2-0',goals:0,date:'26 Jul'},
+        {opp:'vs City Kickers',result:'W',score:'3-1',goals:0,date:'23 Jul'},
+        {opp:'vs FC Dynamo',result:'D',score:'1-1',goals:0,date:'19 Jul'},
+      ],
+      badges:['🧤 Clean Sheet King','📅 100% Attend.','🏆 MVP Round 3']
+    },
+    {
+      id:2, num:'#5', name:'Rahim Uddin', position:'Defender', posKey:'defender', initials:'RU',
+      color:'#6d28d9', posColor:'#6d28d9', isCaptain:false, status:'uncertain',
+      goals:0, assists:2, matches:5, attendance:83, shots:3, yellow:2, red:0, rating:6.9, mins:450, saves:14,
+      form:['W','W','L','D','W'], joinDate:'Feb 2025',
+      history:[
+        {opp:'vs Rising Stars',result:'W',score:'2-0',goals:0,date:'26 Jul'},
+        {opp:'vs City Kickers',result:'W',score:'3-1',goals:0,date:'23 Jul'},
+        {opp:'vs Green Eagles',result:'L',score:'0-1',goals:0,date:'15 Jul'},
+      ],
+      badges:['🛡️ Wall Defender','🤝 Team Player']
+    },
+    {
+      id:3, num:'#4', name:'Abul Bashar', position:'Defender', posKey:'defender', initials:'AB',
+      color:'#dc2626', posColor:'#dc2626', isCaptain:false, status:'unavailable',
+      goals:1, assists:1, matches:6, attendance:74, shots:6, yellow:1, red:1, rating:6.2, mins:480, saves:8,
+      form:['W','L','W','W','D'], joinDate:'Mar 2025',
+      history:[
+        {opp:'vs City Kickers',result:'W',score:'3-1',goals:1,date:'23 Jul'},
+        {opp:'vs FC Dynamo',result:'D',score:'1-1',goals:0,date:'19 Jul'},
+        {opp:'vs Green Eagles',result:'W',score:'2-0',goals:0,date:'10 Jul'},
+      ],
+      badges:['⚡ Long Shot']
+    },
+    {
+      id:4, num:'#3', name:'Morshed Ali', position:'Defender', posKey:'defender', initials:'MA',
+      color:'#0d2818', posColor:'#0d2818', isCaptain:false, status:'available',
+      goals:0, assists:3, matches:6, attendance:96, shots:2, yellow:0, red:0, rating:7.4, mins:540, saves:18,
+      form:['W','W','W','D','W'], joinDate:'Jan 2025',
+      history:[
+        {opp:'vs Rising Stars',result:'W',score:'2-0',goals:0,date:'26 Jul'},
+        {opp:'vs City Kickers',result:'W',score:'3-1',goals:0,date:'23 Jul'},
+        {opp:'vs FC Dynamo',result:'D',score:'1-1',goals:0,date:'19 Jul'},
+      ],
+      badges:['📅 Iron Man','🛡️ Solid Rock']
+    },
+    {
+      id:5, num:'#2', name:'Nasir Haque', position:'Defender', posKey:'defender', initials:'NH',
+      color:'#0891b2', posColor:'#0891b2', isCaptain:false, status:'available',
+      goals:0, assists:1, matches:6, attendance:92, shots:4, yellow:1, red:0, rating:7.0, mins:520, saves:11,
+      form:['W','W','D','W','W'], joinDate:'Jan 2025',
+      history:[
+        {opp:'vs Rising Stars',result:'W',score:'2-0',goals:0,date:'26 Jul'},
+        {opp:'vs Green Eagles',result:'W',score:'4-0',goals:0,date:'12 Jul'},
+        {opp:'vs FC Dynamo',result:'D',score:'1-1',goals:0,date:'19 Jul'},
+      ],
+      badges:['🤝 Assist Master']
+    },
+    {
+      id:6, num:'#8', name:'Delwar Khan', position:'Midfielder', posKey:'midfielder', initials:'DK',
+      color:'#f5a623', posColor:'#f59e0b', isCaptain:false, status:'available',
+      goals:3, assists:5, matches:6, attendance:88, shots:18, yellow:1, red:0, rating:7.6, mins:520, saves:0,
+      form:['W','L','W','W','D'], joinDate:'Feb 2025',
+      history:[
+        {opp:'vs Rising Stars',result:'W',score:'2-0',goals:1,date:'26 Jul'},
+        {opp:'vs City Kickers',result:'W',score:'3-1',goals:1,date:'23 Jul'},
+        {opp:'vs Green Eagles',result:'L',score:'0-2',goals:0,date:'15 Jul'},
+      ],
+      badges:['🎯 Assist King','⚡ Engine Room']
+    },
+    {
+      id:7, num:'#6', name:'Sabbir Ahmed', position:'Midfielder', posKey:'midfielder', initials:'SA',
+      color:'#059669', posColor:'#059669', isCaptain:false, status:'available',
+      goals:5, assists:4, matches:6, attendance:90, shots:22, yellow:1, red:0, rating:7.9, mins:530, saves:0,
+      form:['W','W','W','D','W'], joinDate:'Jan 2025',
+      history:[
+        {opp:'vs Rising Stars',result:'W',score:'2-0',goals:1,date:'26 Jul'},
+        {opp:'vs City Kickers',result:'W',score:'3-1',goals:2,date:'23 Jul'},
+        {opp:'vs FC Dynamo',result:'D',score:'1-1',goals:0,date:'19 Jul'},
+      ],
+      badges:['🏆 Top Midfielder','⚡ Box-to-Box','🤝 Team Player']
+    },
+    {
+      id:8, num:'#7', name:'Tanvir Ahmed', position:'Midfielder', posKey:'midfielder', initials:'TA',
+      color:'#7ed321', posColor:'#7ed321', isCaptain:true, status:'available',
+      goals:2, assists:7, matches:6, attendance:100, shots:14, yellow:0, red:0, rating:8.4, mins:540, saves:0,
+      form:['W','W','W','D','W'], joinDate:'Jan 2025',
+      history:[
+        {opp:'vs Rising Stars',result:'W',score:'2-0',goals:0,date:'26 Jul'},
+        {opp:'vs City Kickers',result:'W',score:'3-1',goals:1,date:'23 Jul'},
+        {opp:'vs FC Dynamo',result:'D',score:'1-1',goals:0,date:'19 Jul'},
+      ],
+      badges:['👑 Captain','🎯 Playmaker','📅 100% Attend.','⭐ Season MVP']
+    },
+    {
+      id:9, num:'#11', name:'Arif Hossain', position:'Striker', posKey:'striker', initials:'AH',
+      color:'#e53935', posColor:'#e53935', isCaptain:false, status:'available',
+      goals:7, assists:2, matches:6, attendance:92, shots:28, yellow:0, red:0, rating:8.1, mins:510, saves:0,
+      form:['W','W','W','D','W'], joinDate:'Jan 2025',
+      history:[
+        {opp:'vs Rising Stars',result:'W',score:'2-0',goals:2,date:'26 Jul'},
+        {opp:'vs City Kickers',result:'W',score:'3-1',goals:2,date:'23 Jul'},
+        {opp:'vs FC Dynamo',result:'D',score:'1-1',goals:1,date:'19 Jul'},
+      ],
+      badges:['🏆 Top Scorer','⚡ Hat-trick Hero','🎯 Clinical Finisher']
+    },
+    {
+      id:10, num:'#10', name:'Rafiqul Islam', position:'Striker', posKey:'striker', initials:'RI',
+      color:'#7c3aed', posColor:'#7c3aed', isCaptain:false, status:'available',
+      goals:3, assists:1, matches:5, attendance:86, shots:16, yellow:2, red:0, rating:7.2, mins:420, saves:0,
+      form:['W','W','L','W','D'], joinDate:'Mar 2025',
+      history:[
+        {opp:'vs City Kickers',result:'W',score:'3-1',goals:1,date:'23 Jul'},
+        {opp:'vs Green Eagles',result:'W',score:'4-0',goals:2,date:'12 Jul'},
+        {opp:'vs Blaze United',result:'L',score:'1-2',goals:0,date:'8 Jul'},
+      ],
+      badges:['⚡ Super Sub','🎯 Clutch Scorer']
+    },
+    {
+      id:11, num:'#9', name:'Jahangir Alam', position:'Striker', posKey:'striker', initials:'JA',
+      color:'#0d2818', posColor:'#0d2818', isCaptain:false, status:'available',
+      goals:2, assists:0, matches:4, attendance:80, shots:12, yellow:1, red:0, rating:6.8, mins:310, saves:0,
+      form:['W','D','W','L'], joinDate:'Apr 2025',
+      history:[
+        {opp:'vs Rising Stars',result:'W',score:'2-0',goals:1,date:'26 Jul'},
+        {opp:'vs FC Dynamo',result:'D',score:'1-1',goals:1,date:'19 Jul'},
+        {opp:'vs Green Eagles',result:'W',score:'4-0',goals:0,date:'12 Jul'},
+      ],
+      badges:['⚡ Impact Sub']
+    },
+  ];
+
+  let currentFilter = 'all';
+  let currentSearch = '';
+  let currentSort = 'number';
+
+  function renderGrid() {
+    const grid = document.getElementById('player-grid');
+    let players = [...PLAYERS];
+
+    // Filter
+    if (currentFilter !== 'all') players = players.filter(p => p.posKey === currentFilter);
+    // Search
+    if (currentSearch) players = players.filter(p => p.name.toLowerCase().includes(currentSearch));
+    // Sort
+    if (currentSort === 'goals') players.sort((a,b) => b.goals - a.goals);
+    else if (currentSort === 'attendance') players.sort((a,b) => b.attendance - a.attendance);
+    else if (currentSort === 'name') players.sort((a,b) => a.name.localeCompare(b.name));
+    else players.sort((a,b) => parseInt(a.num.slice(1)) - parseInt(b.num.slice(1)));
+
+    grid.innerHTML = players.map(p => {
+      const statusCls = p.status === 'available' ? 'badge-available' : p.status === 'uncertain' ? 'badge-uncertain' : 'badge-unavailable';
+      const statusTxt = p.status === 'available' ? 'Available' : p.status === 'uncertain' ? 'Uncertain' : 'Unavailable';
+      const attendColor = p.attendance >= 90 ? '#7ed321' : p.attendance >= 75 ? '#f59e0b' : '#e53935';
+      const formBadges = p.form.map(f =>
+        `<span class="form-badge form-${f.toLowerCase()}">${f}</span>`
+      ).join('');
+      return `
+      <div class="player-card" style="--pos-color:${p.posColor}" data-pos="${p.posKey}" data-name="${p.name.toLowerCase()}">
+        <div class="player-num-badge">${p.num}</div>
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
+          <div class="player-avatar" style="background:${p.color}">${p.initials}</div>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:6px">
+              <span style="font-weight:800;font-size:.95rem;color:#1a1a1a">${p.name}</span>
+              ${p.isCaptain ? '<span class="badge-captain-tag">Captain</span>' : ''}
+            </div>
+            <div style="font-size:.75rem;color:#6b7280;margin-top:2px">${p.position}</div>
+            <div style="margin-top:5px"><span class="badge ${statusCls} badge-dot" style="font-size:.65rem">${statusTxt}</span></div>
+          </div>
+        </div>
+
+        <!-- Mini stats row -->
+        <div style="display:flex;gap:0;border:1px solid #f3f4f6;border-radius:10px;overflow:hidden;margin-bottom:14px">
+          <div class="mini-stat" style="padding:10px 0;border-right:1px solid #f3f4f6">
+            <div class="mini-stat-val">${p.goals}</div>
+            <div class="mini-stat-lbl">Goals</div>
+          </div>
+          <div class="mini-stat" style="padding:10px 0;border-right:1px solid #f3f4f6">
+            <div class="mini-stat-val">${p.assists}</div>
+            <div class="mini-stat-lbl">Assists</div>
+          </div>
+          <div class="mini-stat" style="padding:10px 0;border-right:1px solid #f3f4f6">
+            <div class="mini-stat-val">${p.matches}</div>
+            <div class="mini-stat-lbl">Matches</div>
+          </div>
+          <div class="mini-stat" style="padding:10px 0">
+            <div class="mini-stat-val" style="color:${attendColor}">${p.attendance}%</div>
+            <div class="mini-stat-lbl">Attend.</div>
+          </div>
+        </div>
+
+        <!-- Attendance bar -->
+        <div style="margin-bottom:12px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+            <span style="font-size:.68rem;color:#9ca3af;font-weight:600">ATTENDANCE</span>
+            <span style="font-size:.68rem;font-weight:700;color:${attendColor}">${p.attendance}%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:${p.attendance}%;background:${attendColor}"></div></div>
+        </div>
+
+        <!-- Form -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <span style="font-size:.68rem;color:#9ca3af;font-weight:600">FORM</span>
+          <div style="display:flex;gap:3px">${formBadges}</div>
+        </div>
+
+        <!-- Avg rating -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <span style="font-size:.68rem;color:#9ca3af;font-weight:600">AVG RATING</span>
+          <div style="display:flex;align-items:center;gap:5px">
+            <div style="width:50px;height:5px;border-radius:10px;background:#f3f4f6;overflow:hidden">
+              <div style="width:${p.rating/10*100}%;height:100%;background:#f59e0b;border-radius:10px"></div>
+            </div>
+            <span style="font-weight:800;font-size:.85rem;color:#f59e0b">${p.rating}</span>
+          </div>
+        </div>
+
+        <button class="btn-lime" onclick="openDrawer(${p.id})" style="width:100%;justify-content:center">View More &rarr;</button>
+      </div>`;
+    }).join('');
+  }
+
+  function setPosFilter(pos, btn) {
+    document.querySelectorAll('.pos-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = pos;
+    renderGrid();
+  }
+
+  function filterPlayers() {
+    currentSearch = document.getElementById('search-input').value.toLowerCase();
+    renderGrid();
+  }
+
+  function sortPlayers(val) {
+    currentSort = val;
+    renderGrid();
+  }
+
+  // ── Drawer ──
+  function openDrawer(id) {
+    const p = PLAYERS.find(x => x.id === id);
+    if (!p) return;
+    currentDrawerPlayerId = id;
+
+    document.getElementById('d-avatar').textContent = p.initials;
+    document.getElementById('d-avatar').style.background = p.color;
+    document.getElementById('d-name').textContent = p.name;
+    document.getElementById('d-position').textContent = `${p.position} · Jersey ${p.num}`;
+    document.getElementById('d-captain-tag').style.display = p.isCaptain ? 'inline-flex' : 'none';
+
+    // Set role dropdown
+    document.getElementById('d-role-select').value = p.position;
+    document.getElementById('role-saved-msg').classList.remove('show');
+
+    document.getElementById('d-goals').textContent = p.goals;
+    document.getElementById('d-assists').textContent = p.assists;
+    document.getElementById('d-matches').textContent = p.matches;
+    document.getElementById('d-attend').textContent = p.attendance + '%';
+
+    document.getElementById('d-shots').textContent = p.shots;
+    document.getElementById('d-yellow').textContent = p.yellow;
+    document.getElementById('d-red').textContent = p.red;
+    document.getElementById('d-rating').textContent = p.rating + ' / 10';
+    document.getElementById('d-mins').textContent = p.mins + "'";
+    document.getElementById('d-saves').textContent = p.saves;
+
+    document.getElementById('d-attend-pct').textContent = p.attendance + '%';
+    document.getElementById('d-attend-bar').style.width = p.attendance + '%';
+    const ac = p.attendance >= 90 ? '#7ed321' : p.attendance >= 75 ? '#f59e0b' : '#e53935';
+    document.getElementById('d-attend-bar').style.background = ac;
+
+    // Form
+    document.getElementById('d-form').innerHTML = p.form.map(f =>
+      `<span class="form-badge form-${f.toLowerCase()}">${f}</span>`
+    ).join('');
+
+    // History
+    document.getElementById('d-history').innerHTML = p.history.map(h => `
+      <div class="match-history-row">
+        <span class="form-badge form-${h.result.toLowerCase()}">${h.result}</span>
+        <div style="flex:1">
+          <div style="font-size:.85rem;font-weight:700;color:#1a1a1a">${h.opp}</div>
+          <div style="font-size:.72rem;color:#9ca3af">${h.date}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-weight:800;font-size:.88rem;color:#1a1a1a">${h.score}</div>
+          ${h.goals > 0 ? `<div style="font-size:.7rem;color:#7ed321;font-weight:700">⚽ ${h.goals} goal${h.goals>1?'s':''}</div>` : ''}
+        </div>
+      </div>`).join('');
+
+    // Badges
+    document.getElementById('d-badges').innerHTML = p.badges.map(b =>
+      `<span style="background:#f3f4f6;color:#1a1a1a;border-radius:100px;padding:5px 12px;font-size:.72rem;font-weight:700">${b}</span>`
+    ).join('');
+
+    document.getElementById('drawer-overlay').classList.add('open');
+    document.getElementById('player-drawer').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeDrawer() {
+    document.getElementById('drawer-overlay').classList.remove('open');
+    document.getElementById('player-drawer').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // ── Waitlist ──
+  const WAITLIST = [
+    { id:'w1', name:'Fahim Chowdhury', initials:'FC', color:'#7c3aed', position:'Midfielder', sport:'Football', location:'Dhaka', applied:'2 hours ago', experience:'3 years', team:'Blaze United (prev)' },
+    { id:'w2', name:'Nayeem Hasan', initials:'NH', color:'#0891b2', position:'Striker', sport:'Football', location:'Dhaka', applied:'5 hours ago', experience:'1 year', team:'Rising Stars (prev)' },
+    { id:'w3', name:'Shakib Rahman', initials:'SR', color:'#dc2626', position:'Defender', sport:'Football', location:'Chittagong', applied:'1 day ago', experience:'5 years', team:'FC Dynamo (prev)' },
+  ];
+
+  function renderWaitlist() {
+    const list = document.getElementById('waitlist-list');
+    const panel = document.getElementById('waitlist-panel');
+    const pending = WAITLIST.filter(w => !w.resolved);
+    document.getElementById('waitlist-count').textContent = pending.length;
+    if (WAITLIST.length === 0) { panel.style.display = 'none'; return; }
+    panel.style.display = 'block';
+    panel.classList.toggle('has-glow', pending.length > 0);
+
+    list.innerHTML = WAITLIST.map(w => {
+      if (w.resolved === 'approved') {
+        return `<div class="waitlist-card" style="opacity:.6">
+          <div class="waitlist-avatar" style="background:${w.color}">${w.initials}</div>
+          <div class="waitlist-info">
+            <div class="waitlist-name">${w.name}</div>
+            <div class="waitlist-detail">${w.position} · ${w.experience} exp · ${w.team}</div>
+          </div>
+          <span class="wl-approved">✓ Approved</span>
+        </div>`;
+      }
+      if (w.resolved === 'rejected') {
+        return `<div class="waitlist-card" style="opacity:.45">
+          <div class="waitlist-avatar" style="background:${w.color}">${w.initials}</div>
+          <div class="waitlist-info">
+            <div class="waitlist-name">${w.name}</div>
+            <div class="waitlist-detail">${w.position} · ${w.experience} exp · ${w.team}</div>
+          </div>
+          <span class="wl-rejected">Rejected</span>
+        </div>`;
+      }
+      return `<div class="waitlist-card">
+        <div class="waitlist-avatar" style="background:${w.color}">${w.initials}</div>
+        <div class="waitlist-info">
+          <div class="waitlist-name">${w.name}</div>
+          <div class="waitlist-detail">${w.position} · ${w.experience} exp · ${w.team}</div>
+          <div class="waitlist-time">Applied ${w.applied} · 📍 ${w.location}</div>
+        </div>
+        <div class="waitlist-actions">
+          <button class="wl-btn wl-approve" onclick="resolveWaitlist('${w.id}','approved')">✓ Approve</button>
+          <button class="wl-btn wl-reject" onclick="resolveWaitlist('${w.id}','rejected')">✗ Reject</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function resolveWaitlist(id, action) {
+    const w = WAITLIST.find(x => x.id === id);
+    if (w) w.resolved = action;
+    renderWaitlist();
+  }
+
+  // ── Change Role ──
+  let currentDrawerPlayerId = null;
+
+  function changeRole(newRole) {
+    if (!currentDrawerPlayerId) return;
+    const p = PLAYERS.find(x => x.id === currentDrawerPlayerId);
+    if (!p) return;
+    const posMap = { 'Goalkeeper':'goalkeeper', 'Defender':'defender', 'Midfielder':'midfielder', 'Striker':'striker' };
+    p.position = newRole;
+    p.posKey = posMap[newRole] || p.posKey;
+    document.getElementById('d-position').textContent = `${newRole} · Jersey ${p.num}`;
+    // Show saved confirmation
+    const msg = document.getElementById('role-saved-msg');
+    msg.classList.add('show');
+    setTimeout(() => msg.classList.remove('show'), 1500);
+    renderGrid();
+  }
+
+  function openInviteModal() {
+    alert('Invite Player feature coming soon! Share your team code: THFC-2025');
+  }
+
+  // Init
+  renderGrid();
+  renderWaitlist();
+</script>
+</body>
+</html>
