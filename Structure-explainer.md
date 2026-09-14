@@ -364,18 +364,55 @@ Simulates multi-role client-side authentication and controls role-driven UI visi
 
 ---
 
-### 2. 🖥️ `layout.js` — Dynamic Layout Engine & Sidebar Injector
+### 2. 🖥️ `layout.js` — Deep Architecture & Codebase Role Analysis
 
-#### 🎯 Primary Purpose
-Provides a unified **Shell Architecture** (`#app-wrapper`, `#sidebar`, `#topbar`, `#sidebar-overlay`). It dynamically generates and injects the role-specific sidebar DOM into any page at runtime without duplicating sidebar HTML markup.
+#### 🎯 Primary Purpose & Operational Role
+`layout.js` is TurfHub’s **centralized client-side shell engine and layout generator**. It was engineered to solve two fundamental problems in zero-build static web applications:
+1. **DRY (Don't Repeat Yourself) Navigation**: Eliminates the need to duplicate complex sidebar markup, logo headers, user profile cards, and navigation links across dozens of HTML pages.
+2. **Self-Contained Style Delivery**: Ensures that all shell styling, typography tokens, button variants, stat cards, and mobile responsive rules are bundled and injected automatically at runtime.
 
-#### 🧩 Code Sections & Direct UI Impact
+---
 
-| Code Section / Function | What It Does in Code | Direct UI Impact |
-| :--- | :--- | :--- |
-| `(function injectLayoutCSS() { ... })()` | Self-executing function that creates a `<style id="layout-css">` tag and appends it to document `<head>`. | **Injects the entire global responsive UI design system** directly into the DOM: layout wrapper dimensions, sidebar styling, sticky topbar styling, button utilities (`.btn-lime`, `.btn-outline`), stat cards (`.stat-card`, `.stat-grid`), status badges (`.badge-live`, `.badge-confirmed`, `.badge-rejected`), and mobile drawer rules (`@media (max-width: 900px)`). |
-| `renderSidebar(activeId)` | Generates HTML string for `<aside id="sidebar">` by querying `getRoleConfig(role)` from `auth.js` and matching `activeId`. | **Builds the complete visual sidebar**: <br>1. **TH Brand Logo** at the top.<br>2. **User Profile Card** with avatar badge, full name, and role text.<br>3. **Nav Links List** with active tab highlighted in lime green (`.active`).<br>4. **Sign Out Button**.<br>5. Injects the **Mobile Overlay** (`#sidebar-overlay`) and **Hamburger Toggle** (`#sidebar-toggle`) into `#topbar`. |
-| `toggleSidebar()` / `closeSidebar()` | Adds or removes `.open` on `#sidebar` and `.show` on `#sidebar-overlay`. | Controls **Mobile Off-Canvas Drawer**: sliding the sidebar in/out on phone/tablet viewports when the hamburger menu or backdrop is tapped. |
+#### 🧩 Comprehensive Code Structure & Functionality Breakdown
+
+| Component / Function | Code Location in `layout.js` | Detailed Operational Mechanism | UI & Browser Impact |
+| :--- | :--- | :--- | :--- |
+| **`injectLayoutCSS()`** (IIFE) | Lines 79–404 | Immediately-Invoked Function Expression that creates a `<style id="layout-css">` element and injects 325+ lines of raw design-system CSS directly into `document.head`. | Injects the complete global styling rules: `#app-wrapper` flex container, fixed sticky sidebar (`width: 220px`), `#topbar` header bar, `.stat-grid` & `.stat-card` widgets, button variants (`.btn-lime`, `.btn-outline`), status badges (`.badge-live`, `.badge-confirmed`), and mobile off-canvas drawer media queries (`@media (max-width: 900px)`). |
+| **`renderSidebar(activeId)`** | Lines 7–66 | Queries `getRole()` and `getRoleConfig(role)` from `auth.js`. Maps through the role’s `nav` array, comparing `item.id === activeId` to assign the `.active` CSS class. Assembles the HTML markup for `<aside id="sidebar">` and prepends it to `#app-wrapper`. Also creates `#sidebar-toggle` (hamburger icon) and prepends it to `#topbar`. | **Dynamically generates the complete visual sidebar**: <br>• **Brand Logo**: Displays `TH` icon and "TurfHub" title linking to `index.html`.<br>• **User Card**: Shows role avatar initial (`T`, `R`, `P`, `A`), name, and role subtitle.<br>• **Navigation Links**: Renders role-specific routes with active green pill highlight.<br>• **Sign Out Button**: Binds to `signOut()` in `auth.js`.<br>• **Mobile Drawer Controls**: Injects `#sidebar-overlay` backdrop and `#sidebar-toggle` hamburger button. |
+| **`toggleSidebar()`** | Lines 68–71 | Toggles the `.open` class on `#sidebar` and `.show` class on `#sidebar-overlay`. | Toggles the sliding off-canvas drawer on mobile viewports (< 900px) when the hamburger button is clicked. |
+| **`closeSidebar()`** | Lines 73–76 | Removes `.open` from `#sidebar` and `.show` from `#sidebar-overlay`. | Closes the mobile navigation drawer when the user taps outside the sidebar on the backdrop overlay. |
+
+---
+
+#### ⚖️ The Relationship Between `layout.js` and `style.css` (Dual-Mode Architecture)
+
+Across the TurfHub repository, you will observe two complementary layout strategies:
+
+1. **The Static Detached Strategy (`style.css` + Inlined HTML Sidebars)**:
+   - To provide **instant rendering without Cumulative Layout Shift (CLS)** and allow previewing individual `.html` files without running scripts, all 27+ HTML pages include statically inlined `<aside class="sidebar">` markup.
+   - The CSS rules defined in `style.css` are the **static extraction** of the styles originally generated by `injectLayoutCSS()` inside `layout.js`.
+
+2. **The Dynamic Programmatic Strategy (`layout.js` + `auth.js`)**:
+   - `layout.js` serves as the **canonical architectural blueprint and runtime engine**.
+   - If a new page is created with only `<div id="app-wrapper"><div id="main-content">...</div></div>`, simply including `<script src="auth.js"></script><script src="layout.js"></script><script>renderSidebar('pageId');</script>` will **automatically build, style, and bind the entire sidebar, topbar, mobile drawer, and authorization check** with zero boilerplate HTML.
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                        LAYOUT.JS SYSTEM DIAGRAM                        │
+├────────────────────────────────────────────────────────────────────────┤
+│                                                                        │
+│   auth.js (Role Manifest)                                              │
+│       │                                                                │
+│       ▼                                                                │
+│   layout.js ──► 1. injectLayoutCSS() ──► Injects CSS into <head>       │
+│       │                                                                │
+│       ├──► 2. renderSidebar()   ──► Injects <aside id="sidebar"> into  │
+│       │                             #app-wrapper & toggle in #topbar   │
+│       │                                                                │
+│       └──► 3. toggleSidebar()   ──► Controls Mobile Drawer (<900px)    │
+│                                                                        │
+└────────────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
