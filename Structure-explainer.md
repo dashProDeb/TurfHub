@@ -3,7 +3,7 @@
 ## 📌 Executive Summary
 TurfHub uses a **hybrid architecture** combining a **Global Custom CSS Design System (`style.css` + page-level scoped `<style>`)** and **Tailwind CSS Utility Classes**. 
 
-This document explains the division of responsibilities across the entire static codebase, outlining **where raw CSS is used**, **where Tailwind is used**, and the **architectural rationale (why)** for each page.
+This document explains the division of responsibilities across the entire static codebase, outlining **where raw CSS is used**, **where Tailwind is used**, the **architectural rationale (why)** for each page, and the **state management / payment workflow integration** powering the platform.
 
 ---
 
@@ -11,8 +11,8 @@ This document explains the division of responsibilities across the entire static
 
 | Layer | Technology | Primary Purpose | Why This Choice? |
 | :--- | :--- | :--- | :--- |
-| **Global Design System & Shell** | **Raw CSS (`style.css`)** | Layout shell (`#app-wrapper`, `#main-content`, `#topbar`, `.sidebar`), typography tokens, button variants, badges, and stat cards. | Provides guaranteed pixel-perfect layout stability, fixed sticky desktop sidebars, and reusable role-based color variables (`--color-forest`, `--color-lime`) without framework lock-in or build-step dependencies. |
-| **Bespoke Domain Components** | **Raw Scoped CSS (`<style>`)** | 7-day hourly booking matrices, Smart NID cards, Ward Councilor certificates, interactive chat bubbles, match scoreboards, and league standings tables. | Complex custom styling (guilloché security patterns, certificate borders, dynamic slot matrix states, pulsing animations) requires precise multi-selector rules and custom pseudo-elements difficult to express with pure utility classes. |
+| **Global Design System & Shell** | **Raw CSS (`style.css`)** | Layout shell (`#app-wrapper`, `#main-content`, `#topbar`, `.sidebar`, `.page-body`), typography tokens, button variants, badges, and stat cards. | Provides guaranteed pixel-perfect layout stability, fixed sticky desktop sidebars, center-aligned body containers (`max-width: 1240px; margin: 0 auto`), and reusable role-based color variables (`--color-forest`, `--color-lime`) without framework lock-in or build-step dependencies. |
+| **Bespoke Domain Components** | **Raw Scoped CSS (`<style>`)** | 7-day hourly booking matrices, SSLCOMMERZ dummy gateway modals, Smart NID cards, Ward Councilor certificates, interactive chat bubbles, match scoreboards, and league standings tables. | Complex custom styling (guilloché security patterns, certificate borders, SSLCOMMERZ checkout windows, dynamic slot matrix states, pulsing animations) requires precise multi-selector rules and custom animations difficult to express with pure utility classes. |
 | **Layout & Micro-Utilities** | **Tailwind CSS (CDN)** | Flexbox alignment, spacing (`gap-*`, `p-*`, `m-*`), responsive grids (`grid-cols-*`), text sizing/weights, and rapid UI positioning. | Accelerates UI development, ensures fluid responsive behavior across viewports, and avoids boilerplate CSS for mundane spacing and typography rules. |
 
 ---
@@ -141,6 +141,13 @@ This document explains the division of responsibilities across the entire static
   - Summary KPI stat cards and top customer breakdown lists.
 - **Why in short:** Pure CSS bar visualizations for instant load without heavy third-party chart libraries.
 
+#### 💬 `owner-chat.html` (Owner Messages & Customer Inquiries)
+- **Raw CSS Used:**
+  - Split conversation layout with unread indicators and tailored message bubble geometry.
+- **Tailwind CSS Used:**
+  - Search customer bar, message compose input, and timestamp alignment.
+- **Why in short:** Dedicated messaging viewport for ground owners responding to slot and tournament queries.
+
 ---
 
 ### 4. Team Captain Pages
@@ -153,13 +160,23 @@ This document explains the division of responsibilities across the entire static
   - Roster table, stat cards, and upcoming league match cards.
 - **Why in short:** Compact roster layout with custom numbered squad circles.
 
-#### ⚽ `book-turf.html` (Quick Turf Booking Stepper)
+#### 👥 `manage-team.html` (Captain Squad & Team Management)
 - **Raw CSS Used:**
-  - Multi-step progress stepper (`.step.active`, `.step.done`, `.step-line`).
-  - Interactive turf selection cards with green border highlight (`.turf-card.selected`).
+  - Squad player roster cards with jersey number badges, position pills, and status tags (`Active`, `Bench`, `Injured`).
+  - Invite player modal overlay and role delegation toggles.
 - **Tailwind CSS Used:**
-  - Sport filter dropdown, price tags, and continue CTA button.
-- **Why in short:** Stepper progression and turf card selection states require custom CSS styling.
+  - Search players input, squad stat cards, and action buttons.
+- **Why in short:** Specialized squad roster management interface with custom player cards and jersey badges.
+
+#### ⚽ `book-turf.html` (Interactive 4-Step Turf Booking Hub)
+- **Raw CSS Used:**
+  - **4-Step Stepper Component (`.stepper-wrap`, `.step.active`, `.step.done`, `.step.todo`, `.step-line.done`):** Horizontally centered step progress tracker.
+  - **Centered Grid Layout (`.turf-booking-container`, `.turf-grid`):** Evenly spaced responsive turf cards (`repeat(auto-fit, minmax(310px, 1fr))`) with hover elevation and flex-aligned footers.
+  - **Interactive Slot Matrix (`.slot-pill.available`, `.slot-pill.selected`, `.slot-pill.booked`):** Live calendar slot selection with dynamic price calculation.
+  - **SSLCOMMERZ Checkout Modal (`.ssl-modal-overlay`, `.ssl-window`, `.ssl-btn-pay`):** Mobile banking (bKash/Nagad/Rocket/Upay), card checkout, spinner animation, and receipt auto-forwarding.
+- **Tailwind CSS Used:**
+  - Sport filter pills, amenity chips, and specification grid wrappers.
+- **Why in short:** Provides an end-to-end booking flow from venue discovery to SSLCOMMERZ dummy payment execution for team captains.
 
 #### ➕ `create-tournament.html` (Host Tournament Wizard)
 - **Raw CSS Used:**
@@ -178,13 +195,16 @@ This document explains the division of responsibilities across the entire static
   - View switcher pills (Fixtures vs. Standings) and tournament tabs.
 - **Why in short:** The sports standings table and match center require strict table typography and colored form pill badges.
 
-#### 🧾 `booking-receipt.html` (Booking Receipts & Invoices)
+#### 🧾 `booking-receipt.html` (Captain Booking Receipts & Invoices)
 - **Raw CSS Used:**
+  - Center-aligned layout container (`max-width: 980px; margin: 0 auto`).
   - Transaction receipt cards with PDF download action bar (`.receipt-card`, `.receipt-foot`).
+  - Dynamic payment confirmation banner (`#payment-success-banner`) rendered from `localStorage`.
   - Status filter pills (`.filter-tab.active`).
 - **Tailwind CSS Used:**
   - Price typography, date badge alignment, and filter bar flexbox.
-- **Why in short:** Clean receipt invoice cards matching print/download design tokens.
+  - Real-time client-side receipt injection engine (`loadRecentBookings()`).
+- **Why in short:** Clean receipt invoice cards matching print/download design tokens with dynamic SSLCOMMERZ confirmation rendering.
 
 #### 💬 `chat.html` (Messaging & Team Chat)
 - **Raw CSS Used:**
@@ -219,9 +239,27 @@ This document explains the division of responsibilities across the entire static
   - **Master-Detail Navigation (`.turf-nav-card.active`):** Left-hand turf cards with live selection indicators.
   - **Hero Gallery:** Thumbnail preview bar with active green border (`.gallery-thumb.active`).
   - **Interactive Slot Selector (`.slot-pill.available`, `.slot-pill.selected`, `.slot-pill.booked`):** Clickable time pills.
+  - **SSLCOMMERZ Dummy Payment Gateway (`#ssl-modal`):** Full gateway modal with MFS (bKash/Nagad/Rocket/Upay with demo autofill), Cards, and Net Banking simulation.
 - **Tailwind CSS Used:**
   - Top search bar, location dropdown, amenity chips, and customer review cards.
-- **Why in short:** Complex split-view master-detail ground explorer with interactive slot booking and photo switching.
+- **Why in short:** Complex split-view master-detail ground explorer with interactive slot booking, gallery switching, and integrated SSLCOMMERZ checkout flow.
+
+#### 📅 `player-fixtures.html` (Player Match Schedule & Tournament Fixtures)
+- **Raw CSS Used:**
+  - Match cards with live stadium badges, VS score display, and attendance status.
+  - Standings table summary with form pills (`W`, `D`, `L`).
+- **Tailwind CSS Used:**
+  - Filter pills by league/tournament, date headers, and match detail grids.
+- **Why in short:** Dedicated fixture schedule tailored for individual players tracking upcoming games.
+
+#### 🧾 `player-receipts.html` (Player Receipts & Payment History)
+- **Raw CSS Used:**
+  - Center-aligned layout container (`max-width: 980px; margin: 0 auto`).
+  - Summary KPI strip (`.summary-strip`, `.summary-card`) displaying total bookings and total spent.
+  - Dynamic receipt injection engine reading confirmed transactions from `localStorage`.
+- **Tailwind CSS Used:**
+  - Status filter tabs (`All`, `Confirmed`, `Pending`, `Cancelled`) and receipt cards.
+- **Why in short:** Gives players complete visibility over their booking receipts and invoices.
 
 #### 👥 `join-team.html` (Free Agent & Team Recruitment)
 - **Raw CSS Used:**
@@ -229,6 +267,46 @@ This document explains the division of responsibilities across the entire static
 - **Tailwind CSS Used:**
   - Filter tabs, search bar, and join request button.
 - **Why in short:** Standardized team cards with custom capacity tags.
+
+#### 💬 `player-chat.html` (Player Direct & Team Messaging)
+- **Raw CSS Used:**
+  - Full-height messaging shell with distinct green/white chat bubble hierarchy.
+- **Tailwind CSS Used:**
+  - Message input form and participant list alignment.
+- **Why in short:** Standalone chat interface for players communicating with team captains and ground hosts.
+
+---
+
+## 💳 Payment Gateway Architecture (SSLCOMMERZ Integration)
+
+TurfHub incorporates a client-side **SSLCOMMERZ EasyCheckout Dummy Gateway** integrated across both **Player** (`turf-detail.html`) and **Captain** (`book-turf.html`) workflows.
+
+### Gateway Components:
+1. **Security & Header Strip**:
+   - 256-Bit SSL Encryption badge and dynamic merchant identification (`Merchant: TurfHub Bangladesh Ltd.`).
+2. **Multi-Channel Payment Tabs**:
+   - **📱 Mobile Financial Services (MFS)**: bKash (`#d12053`), Nagad (`#f7941d`), Rocket (`#8c3494`), Upay (`#00a2e8`) with one-click **Demo Autofill**.
+   - **💳 Credit / Debit Cards**: Visa, Mastercard, AMEX with card number, MM/YY expiry, and CVV validation formatting.
+   - **🏦 Net Banking**: City Touch, BRAC Bank Astha, Islami Bank CellFin, DBBL NexusPay.
+3. **Handshake & Verification Simulation**:
+   - Multi-phase animation: `Connecting to Gateway...` &rarr; `Authenticating OTP & Wallet PIN...` &rarr; `Payment Authorized & Confirmed!` with animated green checkmark.
+4. **Transaction Persistence & Redirection**:
+   - Automatically writes transaction metadata to `localStorage.setItem('turfhub_recent_booking', ...)`:
+     ```json
+     {
+       "turfName": "The Green Arena",
+       "turfLocation": "Gulshan, Dhaka",
+       "sport": "Football",
+       "date": "Sat, 26 Jul 2025",
+       "time": "6:00 PM – 7:00 PM",
+       "price": 800,
+       "paymentMethod": "bKash (SSLCOMMERZ)",
+       "trxId": "SSL-TH-984210",
+       "refId": "TH-2025-0726-881",
+       "status": "confirmed"
+     }
+     ```
+   - Redirects to `booking-receipt.html` (Captain) or `player-receipts.html` (Player) where dynamic confirmed cards are prepended to the invoice list.
 
 ---
 
@@ -239,16 +317,18 @@ This document explains the division of responsibilities across the entire static
 │                             TURFHUB FRONTEND                             │
 ├──────────────────────────────────────────────────────────────────────────┤
 │ 1. Core Shell & Design System: style.css (Raw CSS)                       │
-│    ├── #app-wrapper, #main-content, #topbar, .page-body                  │
+│    ├── #app-wrapper, #main-content, #topbar, .page-body (Centered)       │
 │    ├── .sidebar, .sidebar-nav-item, .sidebar-user, .sidebar-logo         │
 │    └── Color Tokens: --color-forest (#0d2818), --color-lime (#7ed321)    │
 ├──────────────────────────────────────────────────────────────────────────┤
 │ 2. Scoped Custom Components: <style> per Page (Raw CSS)                  │
+│    ├── SSLCOMMERZ EasyCheckout Window (turf-detail.html, book-turf.html) │
 │    ├── Slot Matrix Grid & Dynamic States (slot-calendar.html)            │
+│    ├── 4-Step Stepper & Centered Grid (book-turf.html)                   │
 │    ├── NID Cards (Part 1/2) & Ward Certificates (admin-approvals.html)   │
-│    ├── Standings Table & Form Badges (fixtures.html)                     │
-│    ├── Interactive Master-Detail & Slot Pills (turf-detail.html)         │
-│    └── Chat Shell & Message Bubbles (chat.html)                          │
+│    ├── Standings Table & Form Badges (fixtures.html, player-fixtures)    │
+│    ├── Dynamic Receipt Invoices (booking-receipt.html, player-receipts)  │
+│    └── Chat Shell & Message Bubbles (chat.html, player/owner-chat)       │
 ├──────────────────────────────────────────────────────────────────────────┤
 │ 3. Atomic Utilities: Tailwind CSS (Browser Runtime)                      │
 │    ├── Responsive Grids (grid-cols-1, md:grid-cols-3, gap-6)             │
@@ -274,13 +354,13 @@ Simulates multi-role client-side authentication and controls role-driven UI visi
 
 | Code Section / Function | What It Does in Code | Direct UI Impact |
 | :--- | :--- | :--- |
-| `ROLE_CONFIG` (Object, Lines 10–76) | Manifest defining UI metadata for each role: `owner`, `captain`, `player`, `admin`. | Controls the **Avatar Initial** (e.g. `'R'`, `'F'`, `'A'`), **User Full Name** (e.g. `Rafiqul Islam`, `Fatema Begum`), **Role Subtitle** (`Turf Owner`, `Team Captain`), **Theme Color**, **Default Dashboard URL**, and the exact list of **Sidebar Navigation Items** (icons + labels + target `.html` files) rendered for each user role. |
-| `setRole(role)` (Lines 78–80) | Saves the active role string into `localStorage.setItem('turfhub_role', role)`. | Triggered when a user clicks a role card on the login screen, determining which identity is active across all subsequent screens. |
-| `getRole()` (Lines 82–84) | Reads `localStorage.getItem('turfhub_role')`. | Used on page load by all dashboards and layouts to know whether to render Captain, Owner, Player, or Admin interfaces. |
-| `clearRole()` / `signOut()` (Lines 86–89, 110–113) | Clears `localStorage` keys and redirects to `login.html`. | Provides working **Sign Out** functionality from the sidebar and returns user to the login screen. |
-| `getRoleConfig(role)` (Lines 91–93) | Returns the configuration slice matching the active role (defaults to `player`). | Feeds the dynamic sidebar generator in `layout.js` with correct labels and icons. |
-| `redirectByRole()` (Lines 95–99) | Reads current role and executes `window.location.href = cfg.dashboard`. | Auto-redirects users to their designated dashboard (`owner-dashboard.html`, `captain-dashboard.html`, `player-dashboard.html`, or `admin-dashboard.html`). |
-| `requireRole(...allowedRoles)` (Lines 101–108) | Role authorization gatekeeper. | If the active role does not match the page's permitted roles (or no user is logged in), it immediately kicks the user back to `login.html`, preventing unauthorized UI viewing. |
+| `ROLE_CONFIG` (Object, Lines 10–76) | Manifest defining UI metadata for each role: `owner`, `captain`, `player`, `admin`. | Controls the **Avatar Initial** (e.g. `'R'`, `'T'`, `'P'`, `'A'`), **User Full Name** (e.g. `Rafiqul Islam`, `Tanvir Ahmed`, `Sabbir Ahmed`), **Role Subtitle** (`Turf Owner`, `Team Captain`, `Player`), **Theme Color**, **Default Dashboard URL**, and the exact list of **Sidebar Navigation Items** rendered for each user role. |
+| `setRole(role)` | Saves the active role string into `localStorage.setItem('turfhub_role', role)`. | Triggered when a user clicks a role card on the login screen, determining which identity is active across all subsequent screens. |
+| `getRole()` | Reads `localStorage.getItem('turfhub_role')`. | Used on page load by all dashboards and layouts to know whether to render Captain, Owner, Player, or Admin interfaces. |
+| `clearRole()` / `signOut()` | Clears `localStorage` keys and redirects to `login.html`. | Provides working **Sign Out** functionality from the sidebar and returns user to the login screen. |
+| `getRoleConfig(role)` | Returns the configuration slice matching the active role (defaults to `player`). | Feeds the dynamic sidebar generator in `layout.js` with correct labels and links. |
+| `redirectByRole()` | Reads current role and executes `window.location.href = cfg.dashboard`. | Auto-redirects users to their designated dashboard (`owner-dashboard.html`, `captain-dashboard.html`, `player-dashboard.html`, or `admin-dashboard.html`). |
+| `requireRole(...allowedRoles)` | Role authorization gatekeeper. | If the active role does not match the page's permitted roles (or no user is logged in), it immediately kicks the user back to `login.html`, preventing unauthorized UI viewing. |
 
 ---
 
@@ -293,24 +373,24 @@ Provides a unified **Shell Architecture** (`#app-wrapper`, `#sidebar`, `#topbar`
 
 | Code Section / Function | What It Does in Code | Direct UI Impact |
 | :--- | :--- | :--- |
-| `(function injectLayoutCSS() { ... })()` (Lines 81–408) | Self-executing function that creates a `<style id="layout-css">` tag and appends it to document `<head>`. | **Injects the entire global responsive UI design system** directly into the DOM: layout wrapper dimensions, sidebar styling, sticky topbar styling, button utilities (`.btn-lime`, `.btn-outline`), stat cards (`.stat-card`, `.stat-grid`), status badges (`.badge-live`, `.badge-confirmed`, `.badge-rejected`), and mobile drawer rules (`@media (max-width: 900px)`). |
-| `renderSidebar(activeId)` (Lines 7–68) | Generates HTML string for `<aside id="sidebar">` by querying `getRoleConfig(role)` from `auth.js` and matching `activeId`. | **Builds the complete visual sidebar**: <br>1. **TH Brand Logo** at the top.<br>2. **User Profile Card** with avatar badge, full name, and role text.<br>3. **Nav Links List** with active tab highlighted in lime green (`.active`).<br>4. **Sign Out Button** with door icon.<br>5. Injects the **Mobile Overlay** (`#sidebar-overlay`) and **Hamburger Toggle** (`#sidebar-toggle`) into `#topbar`. |
-| `toggleSidebar()` / `closeSidebar()` (Lines 70–78) | Adds or removes `.open` on `#sidebar` and `.show` on `#sidebar-overlay`. | Controls **Mobile Off-Canvas Drawer**: sliding the sidebar in/out on phone/tablet viewports when the hamburger menu or backdrop is tapped. |
+| `(function injectLayoutCSS() { ... })()` | Self-executing function that creates a `<style id="layout-css">` tag and appends it to document `<head>`. | **Injects the entire global responsive UI design system** directly into the DOM: layout wrapper dimensions, sidebar styling, sticky topbar styling, button utilities (`.btn-lime`, `.btn-outline`), stat cards (`.stat-card`, `.stat-grid`), status badges (`.badge-live`, `.badge-confirmed`, `.badge-rejected`), and mobile drawer rules (`@media (max-width: 900px)`). |
+| `renderSidebar(activeId)` | Generates HTML string for `<aside id="sidebar">` by querying `getRoleConfig(role)` from `auth.js` and matching `activeId`. | **Builds the complete visual sidebar**: <br>1. **TH Brand Logo** at the top.<br>2. **User Profile Card** with avatar badge, full name, and role text.<br>3. **Nav Links List** with active tab highlighted in lime green (`.active`).<br>4. **Sign Out Button**.<br>5. Injects the **Mobile Overlay** (`#sidebar-overlay`) and **Hamburger Toggle** (`#sidebar-toggle`) into `#topbar`. |
+| `toggleSidebar()` / `closeSidebar()` | Adds or removes `.open` on `#sidebar` and `.show` on `#sidebar-overlay`. | Controls **Mobile Off-Canvas Drawer**: sliding the sidebar in/out on phone/tablet viewports when the hamburger menu or backdrop is tapped. |
 
 ---
 
 ### 3. 🖱️ Page-Level Frontend JavaScript (`<script>` in HTML)
-
-In addition to `auth.js` and `layout.js`, several HTML pages include scoped frontend JavaScript powering interactive UI components:
 
 | Page (`.html`) | Script Code Part | Direct UI Impact |
 | :--- | :--- | :--- |
 | **`login.html`** | Role Card Click Listeners & Tab Switcher (`tab-btn`) | Highlights selected role card (`.role-card.selected`) with green border glow, switches between Login and Register form tabs, and updates `turfhub_role` in `localStorage`. |
 | **`index.html`** | Mobile Menu Toggle & Scroll Listener | Expands/collapses mobile navigation dropdown and applies drop shadow to sticky navbar on scroll (`window.scrollY > 20`). |
 | **`slot-calendar.html`** | Slot Matrix Selector & Owner Reserve Modal Engine | Allows clicking available slots to toggle `.slot-selected`, opens the **Owner Slot Reservation Modal**, handles date navigation, and dynamically updates slot states (`Available` &rarr; `Reserved by Owner` / `Booked`). |
-| **`turf-detail.html`** | Master-Detail Explorer & Photo Gallery Switcher | Clicking a turf card on the left updates the right-hand details pane, switches hero gallery images upon thumbnail click (`.gallery-thumb.active`), and toggles clickable time slot pills (`.slot-pill.selected`). |
+| **`turf-detail.html`** | Master-Detail Explorer, Photo Gallery & SSLCOMMERZ Engine | Handles turf switching, photo gallery thumbnail updates, interactive slot matrix selection, opens the **SSLCOMMERZ EasyCheckout Modal**, simulates payment processing, writes confirmed booking to `localStorage`, and auto-redirects to `booking-receipt.html`. |
+| **`book-turf.html`** | 4-Step Booking Stepper, Slot Generator & SSLCOMMERZ Modal | Controls 4-step wizard progression (`Choose Turf` &rarr; `Pick Slot` &rarr; `Payment` &rarr; `Confirmed`), sports category filtering, time slot selection, executes dummy payment with animated spinner/checkmark, and transfers transaction details to receipt page. |
+| **`booking-receipt.html` & `player-receipts.html`** | Dynamic Receipt Engine (`loadRecentBookings`) | Reads `turfhub_recent_booking` from `localStorage`, displays celebration alert banner with Transaction ID, and dynamically prepends verified confirmed invoice cards to the receipt list. |
 | **`admin-approvals.html`** | KYC Modal Controller & Document Tab Switcher | Clicking "Review KYC" opens the glassmorphic modal, allows switching between **Smart NID Card (Front/Back)** and **Ward Certificate**, and dynamically updates verification checklist items and status badges. |
-| **`fixtures.html`** | Tournament & View Switcher Tabs | Toggles between Match Fixtures list and League Standings table view, updating active tab styling (`.tournament-tab.active` and `.view-tab.active`). |
+| **`fixtures.html` & `player-fixtures.html`** | Tournament & View Switcher Tabs | Toggles between Match Fixtures list and League Standings table view, updating active tab styling (`.tournament-tab.active` and `.view-tab.active`). |
 | **`score-entry.html`** | Live Scoreboard Increment/Decrement Counters | Goal buttons (`+` / `-`) update the large digital match score numbers in real time and switch match status between Upcoming, Live, and Full Time. |
 | **`player-dashboard.html`** | Match RSVP Buttons | Toggles player attendance status pills (`Yes` / `No` / `Tentative`) for upcoming league fixtures with instant color feedback. |
 | **`chat.html` / `player-chat.html` / `owner-chat.html`** | Chat Input & Conversation Switcher | Appends new message bubbles (`.msg-bubble.mine`) to the scrollable message window upon pressing Enter or clicking Send, and switches active chat threads. |
@@ -339,6 +419,10 @@ In addition to `auth.js` and `layout.js`, several HTML pages include scoped fron
              ▼
 ┌─────────────────────────┐
 │ Page Interactive Script │ ──► Handles dynamic clicks (modals, tabs, slot selection, score counters)
+└────────────┬────────────┘
+             │ 4. Executes Checkout & Stores State
+             ▼
+┌─────────────────────────┐
+│  SSLCOMMERZ Gateway     │ ──► Simulates Handshake/OTP ──► Writes to localStorage ──► booking-receipt.html
 └─────────────────────────┘
 ```
-
