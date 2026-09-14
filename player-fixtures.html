@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TurfHub — My Fixtures</title>
+  <meta name="description" content="View your upcoming match fixtures, live scores, and standings as a TurfHub player." />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    .tournament-tab { padding:9px 20px; border-radius:100px; border:1.5px solid #e5e7eb; background:#fff; font-size:.85rem; font-weight:600; cursor:pointer; color:#6b7280; font-family:inherit; transition:all .15s; }
+    .tournament-tab.active { background:#0d2818; border-color:#0d2818; color:#fff; }
+    .tournament-tab:hover:not(.active) { border-color:#9ca3af; color:#1a1a1a; }
+    .live-banner { background:#fefce8; border:1px solid #fde68a; border-radius:12px; padding:14px 20px; display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+    .live-dot { width:8px; height:8px; border-radius:50%; background:#f59e0b; flex-shrink:0; animation:pulse-dot 1.5s infinite; }
+    @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.7;transform:scale(1.3)} }
+    .view-tabs { display:flex; gap:4px; background:#f3f4f6; border-radius:10px; padding:3px; margin-bottom:18px; width:fit-content; }
+    .view-tab { padding:8px 18px; border-radius:8px; border:none; font-family:inherit; font-size:.85rem; font-weight:600; cursor:pointer; transition:all .15s; background:transparent; color:#6b7280; display:flex; align-items:center; gap:6px; }
+    .view-tab.active { background:#0d2818; color:#fff; }
+    .filter-pill { padding:5px 16px; border-radius:100px; border:1.5px solid #e5e7eb; background:#fff; font-size:.8rem; font-weight:600; cursor:pointer; color:#6b7280; font-family:inherit; transition:all .15s; }
+    .filter-pill.active { background:#1a1a1a; border-color:#1a1a1a; color:#fff; }
+    .fixture-card { background:#fff; border:1px solid #e8ede8; border-radius:12px; padding:0; margin-bottom:10px; overflow:hidden; transition:box-shadow .2s; }
+    .fixture-card:hover { box-shadow:0 4px 16px rgba(0,0,0,.08); }
+    .fix-meta-bar { padding:8px 18px; border-bottom:1px solid #f3f4f6; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+    .fix-league { font-size:.68rem; font-weight:700; color:#7ed321; text-transform:uppercase; letter-spacing:.07em; }
+    .fix-round { font-size:.68rem; color:#9ca3af; font-weight:600; }
+    .fix-body { padding:16px 18px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+    .fix-team-name { font-weight:800; font-size:1rem; color:#1a1a1a; }
+    .fix-center { text-align:center; }
+    .fix-vs { font-size:.85rem; font-weight:700; color:#9ca3af; }
+    .fix-score { font-size:1.5rem; font-weight:900; color:#f59e0b; }
+    .fix-datetime { font-size:.75rem; color:#6b7280; margin-top:2px; }
+    .fix-venue { font-size:.72rem; color:#9ca3af; }
+    .avail-row { padding:10px 18px; background:#fafafa; border-top:1px solid #f3f4f6; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+    .avail-label { font-size:.75rem; color:#6b7280; font-weight:600; flex:1; min-width:120px; }
+    .avail-btn { padding:6px 14px; border-radius:8px; border:1.5px solid transparent; font-size:.75rem; font-weight:700; cursor:pointer; font-family:inherit; transition:all .15s; }
+    .avail-btn.yes { background:rgba(126,211,33,.12); color:#5a9e12; border-color:rgba(126,211,33,.3); }
+    .avail-btn.yes:hover,.avail-btn.yes.selected { background:#7ed321; color:#0d2818; border-color:#7ed321; }
+    .avail-btn.no { background:rgba(229,57,53,.08); color:#e53935; border-color:rgba(229,57,53,.2); }
+    .avail-btn.no:hover,.avail-btn.no.selected { background:#e53935; color:#fff; border-color:#e53935; }
+    .avail-btn.maybe { background:#fef3c7; color:#92400e; border-color:#fde68a; }
+    .avail-btn.maybe:hover,.avail-btn.maybe.selected { background:#f59e0b; color:#fff; border-color:#f59e0b; }
+    .my-team-tag { font-size:.65rem; font-weight:700; background:rgba(126,211,33,.15); color:#5a9e12; padding:2px 7px; border-radius:100px; margin-left:6px; }
+    .standings-table { width:100%; border-collapse:collapse; }
+    .standings-table th { background:#0d2818; color:#fff; font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; padding:11px 14px; text-align:center; }
+    .standings-table th:first-child { text-align:left; width:50px; }
+    .standings-table th:nth-child(2) { text-align:left; }
+    .standings-table td { padding:11px 14px; text-align:center; font-size:.85rem; border-bottom:1px solid #f3f4f6; }
+    .standings-table td:nth-child(2) { text-align:left; font-weight:700; color:#1a1a1a; }
+    .standings-table td.win { color:#7ed321; font-weight:700; }
+    .standings-table td.loss { color:#e53935; font-weight:700; }
+    .standings-table td.pts { font-weight:900; color:#1a1a1a; font-size:1rem; }
+    .standings-table tr.my-team { background:rgba(126,211,33,.05); }
+    .rank-badge { width:26px; height:26px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:.78rem; }
+    .rank-1 { background:#fde68a; color:#92400e; }
+    .rank-2 { background:#e5e7eb; color:#374151; }
+    .rank-3 { background:#fed7aa; color:#9a3412; }
+    .form-badge { display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:5px; font-size:.65rem; font-weight:800; margin:0 1px; }
+    .form-w { background:#7ed321; color:#fff; }
+    .form-l { background:#e53935; color:#fff; }
+    .form-d { background:#9ca3af; color:#fff; }
+    .content-grid { display:grid; grid-template-columns:1fr 300px; gap:20px; }
+    @media (max-width:900px) { .content-grid { grid-template-columns:1fr; } }
+    .player-stat-row { display:flex; align-items:center; justify-content:space-between; padding:9px 0; border-bottom:1px solid #f3f4f6; }
+    .player-stat-row:last-child { border-bottom:none; }
+    .badge-player { background:rgba(126,211,33,.12); color:#5a9e12; border-radius:100px; padding:4px 12px; font-size:.72rem; font-weight:700; }
+  </style>
+</head>
+<body>
+  <div id="app-wrapper">
+    <aside id="sidebar" class="sidebar">
+      <a href="index.html" class="sidebar-logo">
+        <div class="sidebar-logo-icon">TH</div>
+        <span class="sidebar-logo-text">TurfHub</span>
+      </a>
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" style="background:#7ed321;color:#0d2818">P</div>
+        <div class="sidebar-user-info">
+          <span class="sidebar-user-name">Sabbir Ahmed</span>
+          <span class="sidebar-user-role">Player (Striker)</span>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="player-dashboard.html" class="sidebar-nav-item"><span class="sidebar-label">Dashboard</span></a>
+        <a href="turf-detail.html" class="sidebar-nav-item"><span class="sidebar-label">Find Turf</span></a>
+        <a href="join-team.html" class="sidebar-nav-item"><span class="sidebar-label">Join Team</span></a>
+        <a href="player-fixtures.html" class="sidebar-nav-item active"><span class="sidebar-label">Fixtures</span></a>
+        <a href="player-receipts.html" class="sidebar-nav-item"><span class="sidebar-label">My Receipts</span></a>
+        <a href="player-chat.html" class="sidebar-nav-item"><span class="sidebar-label">Team Chat</span></a>
+      </nav>
+      <a href="login.html" class="sidebar-signout">
+        <span class="sidebar-label">Sign Out</span>
+      </a>
+    </aside>
+
+    <div id="main-content">
+      <div id="topbar">
+        <div class="topbar-title">
+          <span class="topbar-heading">My Fixtures</span>
+          <span class="topbar-sub">Thunder FC &middot; Inter-City Football League 2025</span>
+        </div>
+        <div class="topbar-actions">
+          <span class="badge-player">Player View</span>
+        </div>
+      </div>
+
+      <div class="page-body">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px">
+          <button class="tournament-tab active" onclick="switchTournament('icl',this)">Inter-City League</button>
+          <button class="tournament-tab" onclick="switchTournament('ssc',this)">Summer Smash Cup</button>
+          <button class="tournament-tab" onclick="switchTournament('mc',this)">Monsoon Carnival</button>
+        </div>
+
+        <div class="content-grid">
+          <div>
+            <div class="live-banner">
+              <div class="live-dot"></div>
+              <span style="font-weight:700;font-size:.82rem;color:#92400e">LIVE:</span>
+              <span style="font-size:.85rem;color:#78350f;flex:1">Blaze United vs City Kickers &mdash; 47&prime; min &middot; The Green Arena</span>
+              <span style="font-weight:900;font-size:1.1rem;color:#92400e">1&ndash;1</span>
+            </div>
+
+            <div class="view-tabs">
+              <button class="view-tab active" id="tab-fixtures-btn" onclick="showView('fixtures')">&#128203; Fixtures</button>
+              <button class="view-tab" id="tab-standings-btn" onclick="showView('standings')">&#128202; Standings</button>
+            </div>
+
+            <div id="status-filters" style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap">
+              <button class="filter-pill active" onclick="filterStatus('all',this)">All</button>
+              <button class="filter-pill" onclick="filterStatus('upcoming',this)">Upcoming</button>
+              <button class="filter-pill" onclick="filterStatus('live',this)">Live</button>
+              <button class="filter-pill" onclick="filterStatus('completed',this)">Completed</button>
+            </div>
+
+            <div id="fixtures-view">
+              <div class="fixture-card" data-status="upcoming">
+                <div class="fix-meta-bar">
+                  <span class="fix-league">Inter-City League</span><span class="fix-round">QF</span>
+                  <span class="badge badge-pending badge-dot" style="margin-left:auto">Pending</span>
+                </div>
+                <div class="fix-body">
+                  <div><span class="fix-team-name">Thunder FC</span><span class="my-team-tag">My Team</span></div>
+                  <div class="fix-center">
+                    <div class="fix-vs">vs</div>
+                    <div class="fix-datetime">Sat, 26 Jul &middot; 6:00 PM</div>
+                    <div class="fix-venue">&#128205; The Green Arena</div>
+                  </div>
+                  <div class="fix-team-name" style="text-align:right">Rising Stars</div>
+                </div>
+                <div class="avail-row">
+                  <span class="avail-label">&#128204; Are you available?</span>
+                  <button class="avail-btn yes" onclick="setAvail(this)">✓ Yes</button>
+                  <button class="avail-btn maybe" onclick="setAvail(this)">? Maybe</button>
+                  <button class="avail-btn no" onclick="setAvail(this)">✗ No</button>
+                </div>
+              </div>
+
+              <div class="fixture-card" data-status="live">
+                <div class="fix-meta-bar">
+                  <span class="fix-league">Inter-City League</span><span class="fix-round">QF</span>
+                  <span class="badge badge-live badge-dot" style="margin-left:auto">Live</span>
+                </div>
+                <div class="fix-body">
+                  <div class="fix-team-name">Blaze United</div>
+                  <div class="fix-center">
+                    <div class="fix-score">1&ndash;1</div>
+                    <div class="fix-datetime" style="color:#f59e0b;font-weight:700">LIVE &middot; 47&prime;</div>
+                    <div class="fix-venue">&#128205; The Green Arena</div>
+                  </div>
+                  <div class="fix-team-name" style="text-align:right">City Kickers</div>
+                </div>
+              </div>
+
+              <div class="fixture-card" data-status="upcoming">
+                <div class="fix-meta-bar">
+                  <span class="fix-league">Inter-City League</span><span class="fix-round">QF</span>
+                  <span class="badge badge-pending badge-dot" style="margin-left:auto">Pending</span>
+                </div>
+                <div class="fix-body">
+                  <div class="fix-team-name">FC Dynamo</div>
+                  <div class="fix-center">
+                    <div class="fix-vs">vs</div>
+                    <div class="fix-datetime">Sun, 27 Jul &middot; 5:00 PM</div>
+                    <div class="fix-venue">&#128205; Champions Field</div>
+                  </div>
+                  <div class="fix-team-name" style="text-align:right">Green Eagles</div>
+                </div>
+              </div>
+
+              <div class="fixture-card" data-status="upcoming">
+                <div class="fix-meta-bar">
+                  <span class="fix-league">Summer Smash Cup</span><span class="fix-round">R16</span>
+                  <span class="badge badge-pending badge-dot" style="margin-left:auto">Pending</span>
+                </div>
+                <div class="fix-body">
+                  <div><span class="fix-team-name">Thunder FC</span><span class="my-team-tag">My Team</span></div>
+                  <div class="fix-center">
+                    <div class="fix-vs">vs</div>
+                    <div class="fix-datetime">Wed, 30 Jul &middot; 7:00 PM</div>
+                    <div class="fix-venue">&#128205; Champions Field</div>
+                  </div>
+                  <div class="fix-team-name" style="text-align:right">City Kickers</div>
+                </div>
+                <div class="avail-row">
+                  <span class="avail-label">&#128204; Are you available?</span>
+                  <button class="avail-btn yes selected" onclick="setAvail(this)">✓ Yes</button>
+                  <button class="avail-btn maybe" onclick="setAvail(this)">? Maybe</button>
+                  <button class="avail-btn no" onclick="setAvail(this)">✗ No</button>
+                </div>
+              </div>
+
+              <div class="fixture-card" data-status="completed">
+                <div class="fix-meta-bar">
+                  <span class="fix-league">Summer Smash Cup</span><span class="fix-round">R16</span>
+                  <span class="badge badge-confirmed badge-dot" style="margin-left:auto">Completed</span>
+                </div>
+                <div class="fix-body">
+                  <div>
+                    <div class="fix-team-name">Thunder FC</div>
+                    <div style="font-size:.72rem;color:#7ed321;font-weight:700;margin-top:2px">Winner</div>
+                  </div>
+                  <div class="fix-center">
+                    <div class="fix-score" style="color:#1a1a1a">3&ndash;1</div>
+                    <div class="fix-datetime">Wed, 23 Jul &middot; 7:00 PM</div>
+                    <div class="fix-venue">&#128205; Champions Field</div>
+                  </div>
+                  <div class="fix-team-name" style="text-align:right">City Kickers</div>
+                </div>
+              </div>
+            </div>
+
+            <div id="standings-view" style="display:none">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+                <h3 style="font-weight:800;font-size:1rem;color:#1a1a1a">Points Table &mdash; Inter-City League</h3>
+                <div style="display:flex;align-items:center;gap:6px;font-size:.75rem;color:#6b7280">
+                  <span style="width:10px;height:10px;border-radius:50%;background:#7ed321;display:inline-block"></span> My team
+                </div>
+              </div>
+              <div style="background:#fff;border:1px solid #e8ede8;border-radius:12px;overflow:hidden">
+                <table class="standings-table">
+                  <thead><tr><th>Rank</th><th>Team</th><th>P</th><th>W</th><th>L</th><th>D</th><th>GF</th><th>GA</th><th>Form</th><th>Pts</th></tr></thead>
+                  <tbody>
+                    <tr class="my-team">
+                      <td><span class="rank-badge rank-1">1</span></td>
+                      <td>Thunder FC <span style="font-size:.6rem;background:rgba(126,211,33,.15);color:#5a9e12;padding:1px 6px;border-radius:100px;font-weight:700">You</span></td>
+                      <td>6</td><td class="win">5</td><td class="loss">0</td><td>1</td><td>18</td><td>5</td>
+                      <td><span class="form-badge form-w">W</span><span class="form-badge form-w">W</span><span class="form-badge form-w">W</span><span class="form-badge form-d">D</span><span class="form-badge form-w">W</span></td>
+                      <td class="pts">16</td>
+                    </tr>
+                    <tr>
+                      <td><span class="rank-badge rank-2">2</span></td><td>Blaze United</td>
+                      <td>6</td><td class="win">4</td><td class="loss">1</td><td>1</td><td>14</td><td>8</td>
+                      <td><span class="form-badge form-w">W</span><span class="form-badge form-l">L</span><span class="form-badge form-w">W</span><span class="form-badge form-w">W</span><span class="form-badge form-d">D</span></td>
+                      <td class="pts">13</td>
+                    </tr>
+                    <tr>
+                      <td><span class="rank-badge rank-3">3</span></td><td>Rising Stars</td>
+                      <td>6</td><td class="win">3</td><td class="loss">1</td><td>2</td><td>11</td><td>9</td>
+                      <td><span class="form-badge form-d">D</span><span class="form-badge form-w">W</span><span class="form-badge form-d">D</span><span class="form-badge form-w">W</span><span class="form-badge form-w">W</span></td>
+                      <td class="pts">11</td>
+                    </tr>
+                    <tr>
+                      <td><span class="rank-badge">4</span></td><td>City Kickers</td>
+                      <td>6</td><td class="win">3</td><td class="loss">2</td><td>1</td><td>10</td><td>10</td>
+                      <td><span class="form-badge form-w">W</span><span class="form-badge form-d">D</span><span class="form-badge form-l">L</span><span class="form-badge form-w">W</span><span class="form-badge form-l">L</span></td>
+                      <td class="pts">10</td>
+                    </tr>
+                    <tr>
+                      <td><span class="rank-badge">5</span></td><td>FC Dynamo</td>
+                      <td>6</td><td class="win">2</td><td class="loss">3</td><td>1</td><td>8</td><td>13</td>
+                      <td><span class="form-badge form-l">L</span><span class="form-badge form-l">L</span><span class="form-badge form-w">W</span><span class="form-badge form-d">D</span><span class="form-badge form-l">L</span></td>
+                      <td class="pts">7</td>
+                    </tr>
+                    <tr>
+                      <td><span class="rank-badge">6</span></td><td>Green Eagles</td>
+                      <td>6</td><td class="win">1</td><td class="loss">4</td><td>1</td><td>6</td><td>14</td>
+                      <td><span class="form-badge form-l">L</span><span class="form-badge form-w">W</span><span class="form-badge form-l">L</span><span class="form-badge form-l">L</span><span class="form-badge form-d">D</span></td>
+                      <td class="pts">4</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right sidebar -->
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <!-- Next Match -->
+            <div class="content-panel" style="background:linear-gradient(135deg,#0d2818 0%,#1a4029 100%);border-color:#0d2818">
+              <div class="panel-header">
+                <span class="panel-title" style="color:#fff">Next Match</span>
+                <span class="badge" style="background:rgba(126,211,33,.2);color:#7ed321">In 2 days</span>
+              </div>
+              <div style="font-weight:800;font-size:.95rem;color:#fff;margin-bottom:4px">Thunder FC vs Rising Stars</div>
+              <div style="font-size:.78rem;color:rgba(255,255,255,.6);margin-bottom:14px">Sat, 26 Jul &middot; 6:00 PM &middot; The Green Arena</div>
+              <div style="display:flex;gap:8px">
+                <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:10px;text-align:center;flex:1">
+                  <div style="font-size:1.3rem;font-weight:900;color:#7ed321">02</div>
+                  <div style="font-size:.6rem;color:rgba(255,255,255,.5);font-weight:600;text-transform:uppercase">Days</div>
+                </div>
+                <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:10px;text-align:center;flex:1">
+                  <div style="font-size:1.3rem;font-weight:900;color:#7ed321">14</div>
+                  <div style="font-size:.6rem;color:rgba(255,255,255,.5);font-weight:600;text-transform:uppercase">Hours</div>
+                </div>
+                <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:10px;text-align:center;flex:1">
+                  <div style="font-size:1.3rem;font-weight:900;color:#7ed321">30</div>
+                  <div style="font-size:.6rem;color:rgba(255,255,255,.5);font-weight:600;text-transform:uppercase">Mins</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Season Stats -->
+            <div class="content-panel">
+              <div class="panel-header"><span class="panel-title">My Season Stats</span></div>
+              <div class="player-stat-row"><span style="font-size:.82rem;color:#6b7280">⚽ Goals</span><span style="font-weight:800;color:#0d2818">7</span></div>
+              <div class="player-stat-row"><span style="font-size:.82rem;color:#6b7280">🎯 Assists</span><span style="font-weight:800;color:#0d2818">4</span></div>
+              <div class="player-stat-row"><span style="font-size:.82rem;color:#6b7280">🏟️ Matches Played</span><span style="font-weight:800;color:#0d2818">6</span></div>
+              <div class="player-stat-row"><span style="font-size:.82rem;color:#6b7280">✅ Attendance</span><span style="font-weight:800;color:#16a34a">100%</span></div>
+              <div class="player-stat-row"><span style="font-size:.82rem;color:#6b7280">🟡 Yellow Cards</span><span style="font-weight:800;color:#f59e0b">1</span></div>
+              <div class="player-stat-row"><span style="font-size:.82rem;color:#6b7280">🔴 Red Cards</span><span style="font-weight:800;color:#e53935">0</span></div>
+            </div>
+
+            <!-- Badges -->
+            <div class="content-panel">
+              <div class="panel-header"><span class="panel-title">My Badges</span></div>
+              <div style="display:flex;flex-wrap:wrap;gap:10px;padding:4px 0">
+                <div style="text-align:center;width:68px"><div style="font-size:1.8rem">🏆</div><div style="font-size:.62rem;font-weight:600;color:#1a1a1a;margin-top:4px">Top Scorer</div></div>
+                <div style="text-align:center;width:68px"><div style="font-size:1.8rem">⚡</div><div style="font-size:.62rem;font-weight:600;color:#1a1a1a;margin-top:4px">Hat-trick</div></div>
+                <div style="text-align:center;width:68px"><div style="font-size:1.8rem">🤝</div><div style="font-size:.62rem;font-weight:600;color:#1a1a1a;margin-top:4px">Team Player</div></div>
+                <div style="text-align:center;width:68px"><div style="font-size:1.8rem">📅</div><div style="font-size:.62rem;font-weight:600;color:#1a1a1a;margin-top:4px">100% Attend.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showView(view) {
+      const isF = view === 'fixtures';
+      document.getElementById('fixtures-view').style.display = isF ? 'block' : 'none';
+      document.getElementById('standings-view').style.display = isF ? 'none' : 'block';
+      document.getElementById('status-filters').style.display = isF ? 'flex' : 'none';
+      document.getElementById('tab-fixtures-btn').classList.toggle('active', isF);
+      document.getElementById('tab-standings-btn').classList.toggle('active', !isF);
+    }
+    function switchTournament(id, btn) {
+      document.querySelectorAll('.tournament-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+    function filterStatus(status, btn) {
+      document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.fixture-card').forEach(card => {
+        card.style.display = (status === 'all' || card.dataset.status === status) ? 'block' : 'none';
+      });
+    }
+    function setAvail(btn) {
+      const row = btn.closest('.avail-row');
+      row.querySelectorAll('.avail-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+    }
+  </script>
+</body>
+</html>

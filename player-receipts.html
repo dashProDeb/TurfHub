@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TurfHub — Booking Receipts</title>
+  <title>TurfHub — My Receipts</title>
+  <meta name="description" content="View your turf booking receipts and payment history as a TurfHub player." />
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <style>
@@ -14,31 +15,35 @@
     .receipt-foot { background:#fafafa;border-top:1px solid #f3f4f6;padding:10px 20px;display:flex;align-items:center;justify-content:space-between; }
     .filter-tab { padding:7px 18px;border-radius:100px;border:1.5px solid #e5e7eb;font-size:.8rem;font-weight:600;cursor:pointer;font-family:inherit;background:#fff;color:#6b7280;transition:all .15s; }
     .filter-tab.active { background:#0d2818;border-color:#0d2818;color:#fff; }
+    .summary-strip { display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:22px; }
+    .summary-card { background:#fff;border:1px solid #e8ede8;border-radius:12px;padding:14px 18px;display:flex;flex-direction:column;gap:4px; }
+    .summary-val { font-size:1.35rem;font-weight:900;color:#0d2818; }
+    .summary-lbl { font-size:.72rem;color:#6b7280;font-weight:500; }
+    .badge-player { background:rgba(126,211,33,.12);color:#5a9e12;border-radius:100px;padding:4px 12px;font-size:.72rem;font-weight:700; }
   </style>
 </head>
 <body>
 <div id="app-wrapper">
-  <!-- Standalone Sidebar -->
+  <!-- Player Sidebar -->
   <aside id="sidebar" class="sidebar">
     <a href="index.html" class="sidebar-logo">
       <div class="sidebar-logo-icon">TH</div>
       <span class="sidebar-logo-text">TurfHub</span>
     </a>
     <div class="sidebar-user">
-      <div class="sidebar-avatar" style="background:#7ed321;color:#0d2818">T</div>
+      <div class="sidebar-avatar" style="background:#7ed321;color:#0d2818">P</div>
       <div class="sidebar-user-info">
-        <span class="sidebar-user-name">Tanvir Ahmed</span>
-        <span class="sidebar-user-role">Team Captain</span>
+        <span class="sidebar-user-name">Sabbir Ahmed</span>
+        <span class="sidebar-user-role">Player (Striker)</span>
       </div>
     </div>
     <nav class="sidebar-nav">
-      <a href="captain-dashboard.html" class="sidebar-nav-item"><span class="sidebar-label">Dashboard</span></a>
-      <a href="book-turf.html" class="sidebar-nav-item"><span class="sidebar-label">Book a Turf</span></a>
-      <a href="manage-team.html" class="sidebar-nav-item"><span class="sidebar-label">Manage Team</span></a>
-      <a href="fixtures.html" class="sidebar-nav-item"><span class="sidebar-label">Tournaments</span></a>
-      <a href="create-tournament.html" class="sidebar-nav-item"><span class="sidebar-label">Host Tournament</span></a>
-      <a href="booking-receipt.html" class="sidebar-nav-item active"><span class="sidebar-label">My Receipts</span></a>
-      <a href="chat.html" class="sidebar-nav-item"><span class="sidebar-label">Messages</span></a>
+      <a href="player-dashboard.html" class="sidebar-nav-item"><span class="sidebar-label">Dashboard</span></a>
+      <a href="turf-detail.html" class="sidebar-nav-item"><span class="sidebar-label">Find Turf</span></a>
+      <a href="join-team.html" class="sidebar-nav-item"><span class="sidebar-label">Join Team</span></a>
+      <a href="player-fixtures.html" class="sidebar-nav-item"><span class="sidebar-label">Fixtures</span></a>
+      <a href="player-receipts.html" class="sidebar-nav-item active"><span class="sidebar-label">My Receipts</span></a>
+      <a href="player-chat.html" class="sidebar-nav-item"><span class="sidebar-label">Team Chat</span></a>
     </nav>
     <a href="login.html" class="sidebar-signout">
       <span class="sidebar-label">Sign Out</span>
@@ -48,25 +53,32 @@
   <div id="main-content">
     <div id="topbar">
       <div class="topbar-title">
-        <span class="topbar-heading">Booking Receipts</span>
-        <span class="topbar-sub">History of your turf bookings and payments</span>
+        <span class="topbar-heading">My Receipts</span>
+        <span class="topbar-sub">Your turf bookings and payment history</span>
       </div>
       <div class="topbar-actions">
-        <span class="badge badge-captain">Captain Portal</span>
+        <a href="turf-detail.html" class="btn-lime">+ Book a Turf</a>
       </div>
-    </div>
-    <div class="page-body">
+    </div>    <div class="page-body">
       <div style="max-width: 980px; margin: 0 auto; width: 100%;">
-        <!-- Dynamic Payment Alert Banner -->
-        <div id="payment-success-banner" style="display:none;background:#ecfdf5;border:1.5px solid #a7f3d0;border-radius:14px;padding:16px 20px;margin-bottom:20px;align-items:center;justify-content:space-between;gap:12px">
-          <div style="display:flex;align-items:center;gap:12px">
-            <div style="width:38px;height:38px;border-radius:50%;background:#10b981;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.1rem;flex-shrink:0">✓</div>
-            <div>
-              <div style="font-weight:800;font-size:.92rem;color:#065f46" id="banner-title">Payment Successful via SSLCOMMERZ!</div>
-              <div style="font-size:.78rem;color:#047857;margin-top:2px" id="banner-desc">Your ground reservation has been processed and confirmed.</div>
-            </div>
+        <!-- Summary strip -->
+        <div class="summary-strip">
+          <div class="summary-card">
+            <div class="summary-val">4</div>
+            <div class="summary-lbl">Total Bookings</div>
           </div>
-          <button onclick="document.getElementById('payment-success-banner').style.display='none'" style="background:none;border:none;color:#059669;font-size:1.2rem;cursor:pointer;padding:4px 8px;line-height:1">&times;</button>
+          <div class="summary-card">
+            <div class="summary-val" style="color:#16a34a">&#2547;3,200</div>
+            <div class="summary-lbl">Total Spent</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-val">3</div>
+            <div class="summary-lbl">Confirmed</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-val" style="color:#e53935">&#2547;1,200</div>
+            <div class="summary-lbl">Pending Payment</div>
+          </div>
         </div>
 
         <!-- Filters -->
@@ -77,16 +89,15 @@
           <button class="filter-tab" onclick="setFilter('cancelled',this)">Cancelled</button>
         </div>
 
-        <!-- Receipts list -->
+        <!-- Receipt list -->
         <div id="receipts-list">
-          <!-- Dynamically injected new receipts will appear here -->
-          
           <div class="receipt-card" data-status="confirmed">
             <div class="receipt-body">
               <div class="receipt-icon" style="background:#dcfce7">&#128197;</div>
               <div style="flex:1;min-width:0">
                 <div style="font-weight:800;font-size:.92rem;color:#1a1a1a">The Green Arena</div>
                 <div style="font-size:.78rem;color:#6b7280;margin-top:2px">Sat, 26 Jul 2025 &middot; 6:00 PM &ndash; 8:00 PM &middot; Football 5-a-side</div>
+                <div style="font-size:.72rem;color:#9ca3af;margin-top:3px">Booked for: Thunder FC practice</div>
               </div>
               <div style="text-align:right;flex-shrink:0">
                 <div style="font-weight:900;font-size:1rem;color:#1a1a1a">&#2547;1,600</div>
@@ -94,8 +105,27 @@
               </div>
             </div>
             <div class="receipt-foot">
-              <span style="font-size:.72rem;color:#9ca3af">Booking ID: TH-2025-0726-001 &middot; Paid via SSLCOMMERZ</span>
-              <a href="#" onclick="alert('Downloading invoice PDF for TH-2025-0726-001...');return false;" style="font-size:.78rem;font-weight:700;color:#7ed321;text-decoration:none">Download PDF &darr;</a>
+              <span style="font-size:.72rem;color:#9ca3af">Booking ID: TH-2025-0726-001</span>
+              <a href="#" style="font-size:.78rem;font-weight:700;color:#7ed321;text-decoration:none">Download PDF &darr;</a>
+            </div>
+          </div>
+
+          <div class="receipt-card" data-status="confirmed">
+            <div class="receipt-body">
+              <div class="receipt-icon" style="background:#dbeafe">&#128197;</div>
+              <div style="flex:1;min-width:0">
+                <div style="font-weight:800;font-size:.92rem;color:#1a1a1a">Champions Field</div>
+                <div style="font-size:.78rem;color:#6b7280;margin-top:2px">Sun, 20 Jul 2025 &middot; 5:00 PM &ndash; 7:00 PM &middot; Football 7-a-side</div>
+                <div style="font-size:.72rem;color:#9ca3af;margin-top:3px">Booked for: Friendly match</div>
+              </div>
+              <div style="text-align:right;flex-shrink:0">
+                <div style="font-weight:900;font-size:1rem;color:#1a1a1a">&#2547;2,400</div>
+                <div style="margin-top:4px"><span class="badge badge-confirmed badge-dot">Confirmed</span></div>
+              </div>
+            </div>
+            <div class="receipt-foot">
+              <span style="font-size:.72rem;color:#9ca3af">Booking ID: TH-2025-0720-002</span>
+              <a href="#" style="font-size:.78rem;font-weight:700;color:#7ed321;text-decoration:none">Download PDF &darr;</a>
             </div>
           </div>
 
@@ -105,6 +135,7 @@
               <div style="flex:1;min-width:0">
                 <div style="font-weight:800;font-size:.92rem;color:#1a1a1a">Court Pro Indoor</div>
                 <div style="font-size:.78rem;color:#6b7280;margin-top:2px">Wed, 30 Jul 2025 &middot; 7:00 PM &ndash; 9:00 PM &middot; Basketball</div>
+                <div style="font-size:.72rem;color:#9ca3af;margin-top:3px">Awaiting payment confirmation</div>
               </div>
               <div style="text-align:right;flex-shrink:0">
                 <div style="font-weight:900;font-size:1rem;color:#1a1a1a">&#2547;1,200</div>
@@ -112,8 +143,10 @@
               </div>
             </div>
             <div class="receipt-foot">
-              <span style="font-size:.72rem;color:#9ca3af">Booking ID: TH-2025-0730-002</span>
-              <a href="#" onclick="alert('Downloading invoice PDF for TH-2025-0730-002...');return false;" style="font-size:.78rem;font-weight:700;color:#7ed321;text-decoration:none">Download PDF &darr;</a>
+              <span style="font-size:.72rem;color:#9ca3af">Booking ID: TH-2025-0730-003</span>
+              <div style="display:flex;gap:10px;align-items:center">
+                <button onclick="this.textContent='Paid ✓';this.style.color='#16a34a';this.style.cursor='default'" style="font-size:.78rem;font-weight:700;color:#7ed321;background:none;border:none;cursor:pointer;font-family:inherit;padding:0">Pay Now &rarr;</button>
+              </div>
             </div>
           </div>
 
@@ -121,41 +154,25 @@
             <div class="receipt-body">
               <div class="receipt-icon" style="background:#fee2e2">&#128197;</div>
               <div style="flex:1;min-width:0">
-                <div style="font-weight:800;font-size:.92rem;color:#1a1a1a">Champions Field</div>
-                <div style="font-size:.78rem;color:#6b7280;margin-top:2px">Sun, 20 Jul 2025 &middot; 10:00 AM &ndash; 12:00 PM &middot; Cricket</div>
+                <div style="font-weight:800;font-size:.92rem;color:#1a1a1a">The Green Arena</div>
+                <div style="font-size:.78rem;color:#6b7280;margin-top:2px">Sat, 12 Jul 2025 &middot; 4:00 PM &ndash; 6:00 PM &middot; Football 5-a-side</div>
+                <div style="font-size:.72rem;color:#9ca3af;margin-top:3px">Booking cancelled &mdash; Refund processed</div>
               </div>
               <div style="text-align:right;flex-shrink:0">
-                <div style="font-weight:900;font-size:1rem;color:#1a1a1a">&#2547;2,400</div>
+                <div style="font-weight:900;font-size:1rem;color:#9ca3af;text-decoration:line-through">&#2547;1,600</div>
                 <div style="margin-top:4px"><span class="badge badge-rejected badge-dot">Cancelled</span></div>
               </div>
             </div>
             <div class="receipt-foot">
-              <span style="font-size:.72rem;color:#9ca3af">Booking ID: TH-2025-0720-003 &middot; Refunded</span>
-              <a href="#" onclick="alert('Downloading credit memo PDF...');return false;" style="font-size:.78rem;font-weight:700;color:#7ed321;text-decoration:none">Download PDF &darr;</a>
-            </div>
-          </div>
-
-          <div class="receipt-card" data-status="confirmed">
-            <div class="receipt-body">
-              <div class="receipt-icon" style="background:#dcfce7">&#128197;</div>
-              <div style="flex:1;min-width:0">
-                <div style="font-weight:800;font-size:.92rem;color:#1a1a1a">The Green Arena</div>
-                <div style="font-size:.78rem;color:#6b7280;margin-top:2px">Sat, 12 Jul 2025 &middot; 4:00 PM &ndash; 6:00 PM &middot; Football 5-a-side</div>
-              </div>
-              <div style="text-align:right;flex-shrink:0">
-                <div style="font-weight:900;font-size:1rem;color:#1a1a1a">&#2547;1,600</div>
-                <div style="margin-top:4px"><span class="badge badge-confirmed badge-dot">Confirmed</span></div>
-              </div>
-            </div>
-            <div class="receipt-foot">
-              <span style="font-size:.72rem;color:#9ca3af">Booking ID: TH-2025-0712-004</span>
-              <a href="#" onclick="alert('Downloading invoice PDF for TH-2025-0712-004...');return false;" style="font-size:.78rem;font-weight:700;color:#7ed321;text-decoration:none">Download PDF &darr;</a>
+              <span style="font-size:.72rem;color:#9ca3af">Booking ID: TH-2025-0712-004 &middot; Refunded</span>
+              <a href="#" style="font-size:.78rem;font-weight:700;color:#9ca3af;text-decoration:none">Download PDF &darr;</a>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 <script>
   function loadRecentBookings() {
     let recent = null;
@@ -164,15 +181,6 @@
     } catch(e) {}
 
     if (recent) {
-      // Show celebration banner
-      const banner = document.getElementById('payment-success-banner');
-      if (banner) {
-        banner.style.display = 'flex';
-        document.getElementById('banner-title').textContent = `Payment Confirmed: ৳${recent.price}.00 via ${recent.paymentMethod || 'SSLCOMMERZ'}`;
-        document.getElementById('banner-desc').textContent = `Slot at ${recent.turfName} on ${recent.date} (${recent.time}) is confirmed with TrxID: ${recent.trxId || 'SSL-CONFIRMED'}.`;
-      }
-
-      // Prepend dynamic card if not already rendered
       const list = document.getElementById('receipts-list');
       if (list && !document.getElementById('dynamic-recent-card')) {
         const card = document.createElement('div');

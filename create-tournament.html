@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,27 +8,134 @@
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <style>
-    .form-label { display:block; font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:#6b7280; margin-bottom:6px; }
-    .form-input { width:100%; padding:11px 14px; border:1.5px solid #e5e7eb; border-radius:10px; font-size:.88rem; font-family:inherit; outline:none; transition:border-color .2s,box-shadow .2s; background:#fff; color:#1a1a1a; }
-    .form-input:focus { border-color:#7ed321; box-shadow:0 0 0 3px rgba(126,211,33,.12); }
-    .form-input::placeholder { color:#9ca3af; }
-    select.form-input { cursor:pointer; }
-    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-    .tournament-card { background:#fff; border:1px solid #e8ede8; border-radius:14px; padding:18px; margin-bottom:12px; transition:box-shadow .2s; }
-    .tournament-card:hover { box-shadow:0 4px 16px rgba(0,0,0,.08); }
-    .t-card-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px; }
-    .t-card-title { font-weight:800; font-size:.95rem; color:#1a1a1a; }
-    .t-card-meta { font-size:.75rem; color:#6b7280; margin-bottom:10px; }
-    .t-card-dates { font-size:.78rem; color:#6b7280; margin-bottom:12px; }
-    .progress-bar { height:6px; background:#e5e7eb; border-radius:100px; overflow:hidden; }
-    .progress-fill { height:100%; border-radius:100px; background:#7ed321; }
-    .t-card-footer { display:flex; justify-content:space-between; align-items:center; margin-top:10px; }
-    .t-card-teams { font-size:.75rem; color:#9ca3af; }
-    .btn-view-fix { font-size:.78rem; font-weight:700; color:#7ed321; text-decoration:none; }
-    .btn-view-fix:hover { color:#6ab81c; }
-    @media(max-width:900px) { .tournaments-grid { grid-template-columns:1fr !important; } .form-row { grid-template-columns:1fr; } }
+    .form-label {
+      display: block;
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: #6b7280;
+      margin-bottom: 6px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: .88rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      background: #fff;
+      color: #1a1a1a;
+    }
+
+    .form-input:focus {
+      border-color: #7ed321;
+      box-shadow: 0 0 0 3px rgba(126, 211, 33, .12);
+    }
+
+    .form-input::placeholder {
+      color: #9ca3af;
+    }
+
+    select.form-input {
+      cursor: pointer;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .tournament-card {
+      background: #fff;
+      border: 1px solid #e8ede8;
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 12px;
+      transition: box-shadow .2s;
+    }
+
+    .tournament-card:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, .08);
+    }
+
+    .t-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 6px;
+    }
+
+    .t-card-title {
+      font-weight: 800;
+      font-size: .95rem;
+      color: #1a1a1a;
+    }
+
+    .t-card-meta {
+      font-size: .75rem;
+      color: #6b7280;
+      margin-bottom: 10px;
+    }
+
+    .t-card-dates {
+      font-size: .78rem;
+      color: #6b7280;
+      margin-bottom: 12px;
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: #e5e7eb;
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 100px;
+      background: #7ed321;
+    }
+
+    .t-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .t-card-teams {
+      font-size: .75rem;
+      color: #9ca3af;
+    }
+
+    .btn-view-fix {
+      font-size: .78rem;
+      font-weight: 700;
+      color: #7ed321;
+      text-decoration: none;
+    }
+
+    .btn-view-fix:hover {
+      color: #6ab81c;
+    }
+
+    @media(max-width:900px) {
+      .tournaments-grid {
+        grid-template-columns: 1fr !important;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
+
 <body>
   <div id="app-wrapper">
     <!-- Standalone Sidebar -->
@@ -44,15 +152,16 @@
         </div>
       </div>
       <nav class="sidebar-nav">
-        <a href="captain-dashboard.html" class="sidebar-nav-item"><span class="sidebar-icon">📊</span><span class="sidebar-label">Dashboard</span></a>
-        <a href="book-turf.html" class="sidebar-nav-item"><span class="sidebar-icon">⚽</span><span class="sidebar-label">Book a Turf</span></a>
-        <a href="fixtures.html" class="sidebar-nav-item"><span class="sidebar-icon">🏆</span><span class="sidebar-label">Tournaments</span></a>
-        <a href="create-tournament.html" class="sidebar-nav-item active"><span class="sidebar-icon">➕</span><span class="sidebar-label">Host Tournament</span></a>
-        <a href="booking-receipt.html" class="sidebar-nav-item"><span class="sidebar-icon">🧾</span><span class="sidebar-label">My Receipts</span></a>
-        <a href="chat.html" class="sidebar-nav-item"><span class="sidebar-icon">💬</span><span class="sidebar-label">Messages</span></a>
+        <a href="captain-dashboard.html" class="sidebar-nav-item"><span class="sidebar-label">Dashboard</span></a>
+        <a href="book-turf.html" class="sidebar-nav-item"><span class="sidebar-label">Book a Turf</span></a>
+        <a href="manage-team.html" class="sidebar-nav-item"><span class="sidebar-label">Manage Team</span></a>
+        <a href="fixtures.html" class="sidebar-nav-item"><span class="sidebar-label">Tournaments</span></a>
+        <a href="create-tournament.html" class="sidebar-nav-item active"><span class="sidebar-label">Host
+            Tournament</span></a>
+        <a href="booking-receipt.html" class="sidebar-nav-item"><span class="sidebar-label">My Receipts</span></a>
+        <a href="chat.html" class="sidebar-nav-item"><span class="sidebar-label">Messages</span></a>
       </nav>
       <a href="login.html" class="sidebar-signout">
-        <span class="sidebar-icon">🚪</span>
         <span class="sidebar-label">Sign Out</span>
       </a>
     </aside>
@@ -134,11 +243,13 @@
                 </div>
                 <div style="margin-bottom:24px">
                   <label class="form-label">Description</label>
-                  <textarea class="form-input" rows="3" placeholder="Brief description of the tournament..." style="resize:vertical"></textarea>
+                  <textarea class="form-input" rows="3" placeholder="Brief description of the tournament..."
+                    style="resize:vertical"></textarea>
                 </div>
                 <div style="display:flex;gap:12px">
                   <button type="button" class="btn-outline" style="flex:1;justify-content:center">Save as Draft</button>
-                  <button type="submit" class="btn-lime" style="flex:2;justify-content:center">Publish Tournament</button>
+                  <button type="submit" class="btn-lime" style="flex:2;justify-content:center">Publish
+                    Tournament</button>
                 </div>
               </form>
             </div>
@@ -172,7 +283,9 @@
                   <span class="badge badge-live badge-dot">Live</span>
                 </div>
                 <div class="t-card-dates">1 Aug 2025 &rarr; 30 Aug 2025</div>
-                <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width:100%"></div>
+                </div>
                 <div class="t-card-footer">
                   <span class="t-card-teams">Teams registered 12/12 &mdash; Full</span>
                   <a href="fixtures.html" class="btn-view-fix">View Fixtures &rarr;</a>
@@ -188,10 +301,13 @@
                   <span class="badge badge-draft badge-dot">Open</span>
                 </div>
                 <div class="t-card-dates">15 Aug 2025 &rarr; 20 Aug 2025</div>
-                <div class="progress-bar"><div class="progress-fill" style="width:50%"></div></div>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width:50%"></div>
+                </div>
                 <div class="t-card-footer">
                   <span class="t-card-teams">Teams registered 4/8</span>
-                  <a href="tournament-registration.html" class="btn-lime" style="font-size:.78rem;padding:6px 14px">Register &rarr;</a>
+                  <a href="tournament-registration.html" class="btn-lime"
+                    style="font-size:.78rem;padding:6px 14px">Register &rarr;</a>
                 </div>
               </div>
 
@@ -204,10 +320,13 @@
                   <span class="badge badge-draft badge-dot">Open</span>
                 </div>
                 <div class="t-card-dates">10 Sep 2025 &rarr; 28 Sep 2025</div>
-                <div class="progress-bar"><div class="progress-fill" style="width:56%"></div></div>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width:56%"></div>
+                </div>
                 <div class="t-card-footer">
                   <span class="t-card-teams">Teams registered 9/16</span>
-                  <a href="tournament-registration.html" class="btn-lime" style="font-size:.78rem;padding:6px 14px">Register &rarr;</a>
+                  <a href="tournament-registration.html" class="btn-lime"
+                    style="font-size:.78rem;padding:6px 14px">Register &rarr;</a>
                 </div>
               </div>
             </div>
@@ -218,7 +337,8 @@
             <div class="content-panel">
               <div class="panel-header"><span class="panel-title">Active Tournaments</span></div>
 
-              <div class="tournament-card" style="border:none;padding:0 0 16px;margin:0;border-bottom:1px solid #f3f4f6;border-radius:0">
+              <div class="tournament-card"
+                style="border:none;padding:0 0 16px;margin:0;border-bottom:1px solid #f3f4f6;border-radius:0">
                 <div class="t-card-header">
                   <div>
                     <div class="t-card-title">Inter-City Football League 2025</div>
@@ -227,14 +347,17 @@
                   <span class="badge badge-live badge-dot">Live</span>
                 </div>
                 <div class="t-card-dates">1 Aug 2025 &rarr; 30 Aug 2025</div>
-                <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width:100%"></div>
+                </div>
                 <div class="t-card-footer">
                   <span class="t-card-teams">Teams registered 12/12</span>
                   <a href="fixtures.html" class="btn-view-fix">View Fixtures &rarr;</a>
                 </div>
               </div>
 
-              <div class="tournament-card" style="border:none;padding:16px 0;margin:0;border-bottom:1px solid #f3f4f6;border-radius:0">
+              <div class="tournament-card"
+                style="border:none;padding:16px 0;margin:0;border-bottom:1px solid #f3f4f6;border-radius:0">
                 <div class="t-card-header">
                   <div>
                     <div class="t-card-title">Summer Smash Basketball Cup</div>
@@ -243,7 +366,9 @@
                   <span class="badge badge-draft badge-dot">Draft</span>
                 </div>
                 <div class="t-card-dates">15 Aug 2025 &rarr; 20 Aug 2025</div>
-                <div class="progress-bar"><div class="progress-fill" style="width:50%"></div></div>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width:50%"></div>
+                </div>
                 <div class="t-card-footer">
                   <span class="t-card-teams">Teams registered 8/4</span>
                   <a href="fixtures.html" class="btn-view-fix">View Fixtures &rarr;</a>
@@ -259,7 +384,9 @@
                   <span class="badge badge-draft badge-dot">Draft</span>
                 </div>
                 <div class="t-card-dates">10 Sep 2025 &rarr; 28 Sep 2025</div>
-                <div class="progress-bar"><div class="progress-fill" style="width:56%"></div></div>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width:56%"></div>
+                </div>
                 <div class="t-card-footer">
                   <span class="t-card-teams">Teams registered 16/9</span>
                   <a href="fixtures.html" class="btn-view-fix">View Fixtures &rarr;</a>
@@ -279,4 +406,5 @@
     }
   </script>
 </body>
+
 </html>
