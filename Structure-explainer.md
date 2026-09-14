@@ -256,3 +256,89 @@ This document explains the division of responsibilities across the entire static
 │    └── Fluid Spacing & Typography (text-sm, font-black, p-4, m-2)        │
 └──────────────────────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## ⚡ JavaScript Architecture & UI Impact Explainer
+
+TurfHub is designed as a **lightweight, zero-build-step client-side web application**. The JavaScript files (`.js`) and embedded page scripts do **not** run backend database operations; instead, they serve as the **dynamic UI presentation layer, DOM engine, and client-side state manager**.
+
+---
+
+### 1. 🔑 `auth.js` — Role-Based Session & UI Manifest Manager
+
+#### 🎯 Primary Purpose
+Simulates multi-role client-side authentication and controls role-driven UI visibility across the platform using the browser's `localStorage` (`"turfhub_role"`).
+
+#### 🧩 Code Sections & Direct UI Impact
+
+| Code Section / Function | What It Does in Code | Direct UI Impact |
+| :--- | :--- | :--- |
+| `ROLE_CONFIG` (Object, Lines 10–76) | Manifest defining UI metadata for each role: `owner`, `captain`, `player`, `admin`. | Controls the **Avatar Initial** (e.g. `'R'`, `'F'`, `'A'`), **User Full Name** (e.g. `Rafiqul Islam`, `Fatema Begum`), **Role Subtitle** (`Turf Owner`, `Team Captain`), **Theme Color**, **Default Dashboard URL**, and the exact list of **Sidebar Navigation Items** (icons + labels + target `.html` files) rendered for each user role. |
+| `setRole(role)` (Lines 78–80) | Saves the active role string into `localStorage.setItem('turfhub_role', role)`. | Triggered when a user clicks a role card on the login screen, determining which identity is active across all subsequent screens. |
+| `getRole()` (Lines 82–84) | Reads `localStorage.getItem('turfhub_role')`. | Used on page load by all dashboards and layouts to know whether to render Captain, Owner, Player, or Admin interfaces. |
+| `clearRole()` / `signOut()` (Lines 86–89, 110–113) | Clears `localStorage` keys and redirects to `login.html`. | Provides working **Sign Out** functionality from the sidebar and returns user to the login screen. |
+| `getRoleConfig(role)` (Lines 91–93) | Returns the configuration slice matching the active role (defaults to `player`). | Feeds the dynamic sidebar generator in `layout.js` with correct labels and icons. |
+| `redirectByRole()` (Lines 95–99) | Reads current role and executes `window.location.href = cfg.dashboard`. | Auto-redirects users to their designated dashboard (`owner-dashboard.html`, `captain-dashboard.html`, `player-dashboard.html`, or `admin-dashboard.html`). |
+| `requireRole(...allowedRoles)` (Lines 101–108) | Role authorization gatekeeper. | If the active role does not match the page's permitted roles (or no user is logged in), it immediately kicks the user back to `login.html`, preventing unauthorized UI viewing. |
+
+---
+
+### 2. 🖥️ `layout.js` — Dynamic Layout Engine & Sidebar Injector
+
+#### 🎯 Primary Purpose
+Provides a unified **Shell Architecture** (`#app-wrapper`, `#sidebar`, `#topbar`, `#sidebar-overlay`). It dynamically generates and injects the role-specific sidebar DOM into any page at runtime without duplicating sidebar HTML markup.
+
+#### 🧩 Code Sections & Direct UI Impact
+
+| Code Section / Function | What It Does in Code | Direct UI Impact |
+| :--- | :--- | :--- |
+| `(function injectLayoutCSS() { ... })()` (Lines 81–408) | Self-executing function that creates a `<style id="layout-css">` tag and appends it to document `<head>`. | **Injects the entire global responsive UI design system** directly into the DOM: layout wrapper dimensions, sidebar styling, sticky topbar styling, button utilities (`.btn-lime`, `.btn-outline`), stat cards (`.stat-card`, `.stat-grid`), status badges (`.badge-live`, `.badge-confirmed`, `.badge-rejected`), and mobile drawer rules (`@media (max-width: 900px)`). |
+| `renderSidebar(activeId)` (Lines 7–68) | Generates HTML string for `<aside id="sidebar">` by querying `getRoleConfig(role)` from `auth.js` and matching `activeId`. | **Builds the complete visual sidebar**: <br>1. **TH Brand Logo** at the top.<br>2. **User Profile Card** with avatar badge, full name, and role text.<br>3. **Nav Links List** with active tab highlighted in lime green (`.active`).<br>4. **Sign Out Button** with door icon.<br>5. Injects the **Mobile Overlay** (`#sidebar-overlay`) and **Hamburger Toggle** (`#sidebar-toggle`) into `#topbar`. |
+| `toggleSidebar()` / `closeSidebar()` (Lines 70–78) | Adds or removes `.open` on `#sidebar` and `.show` on `#sidebar-overlay`. | Controls **Mobile Off-Canvas Drawer**: sliding the sidebar in/out on phone/tablet viewports when the hamburger menu or backdrop is tapped. |
+
+---
+
+### 3. 🖱️ Page-Level Frontend JavaScript (`<script>` in HTML)
+
+In addition to `auth.js` and `layout.js`, several HTML pages include scoped frontend JavaScript powering interactive UI components:
+
+| Page (`.html`) | Script Code Part | Direct UI Impact |
+| :--- | :--- | :--- |
+| **`login.html`** | Role Card Click Listeners & Tab Switcher (`tab-btn`) | Highlights selected role card (`.role-card.selected`) with green border glow, switches between Login and Register form tabs, and updates `turfhub_role` in `localStorage`. |
+| **`index.html`** | Mobile Menu Toggle & Scroll Listener | Expands/collapses mobile navigation dropdown and applies drop shadow to sticky navbar on scroll (`window.scrollY > 20`). |
+| **`slot-calendar.html`** | Slot Matrix Selector & Owner Reserve Modal Engine | Allows clicking available slots to toggle `.slot-selected`, opens the **Owner Slot Reservation Modal**, handles date navigation, and dynamically updates slot states (`Available` &rarr; `Reserved by Owner` / `Booked`). |
+| **`turf-detail.html`** | Master-Detail Explorer & Photo Gallery Switcher | Clicking a turf card on the left updates the right-hand details pane, switches hero gallery images upon thumbnail click (`.gallery-thumb.active`), and toggles clickable time slot pills (`.slot-pill.selected`). |
+| **`admin-approvals.html`** | KYC Modal Controller & Document Tab Switcher | Clicking "Review KYC" opens the glassmorphic modal, allows switching between **Smart NID Card (Front/Back)** and **Ward Certificate**, and dynamically updates verification checklist items and status badges. |
+| **`fixtures.html`** | Tournament & View Switcher Tabs | Toggles between Match Fixtures list and League Standings table view, updating active tab styling (`.tournament-tab.active` and `.view-tab.active`). |
+| **`score-entry.html`** | Live Scoreboard Increment/Decrement Counters | Goal buttons (`+` / `-`) update the large digital match score numbers in real time and switch match status between Upcoming, Live, and Full Time. |
+| **`player-dashboard.html`** | Match RSVP Buttons | Toggles player attendance status pills (`Yes` / `No` / `Tentative`) for upcoming league fixtures with instant color feedback. |
+| **`chat.html` / `player-chat.html` / `owner-chat.html`** | Chat Input & Conversation Switcher | Appends new message bubbles (`.msg-bubble.mine`) to the scrollable message window upon pressing Enter or clicking Send, and switches active chat threads. |
+| **`admin-categories.html`** | Category Modal & Tag Creator | Opens the "Add Sport Category" modal dialog and dynamically toggles equipment and format tags. |
+| **`admin-announcements.html`** | Broadcast Composer & Priority Selector | Updates priority pill tags (`Critical`, `Update`, `Maintenance`) and appends published announcements to the live broadcast feed. |
+
+---
+
+### 🔄 Summary Interaction Flow
+
+```
+┌─────────────────────────┐
+│     User on Page        │
+└────────────┬────────────┘
+             │ 1. Checks Active Role
+             ▼
+┌─────────────────────────┐
+│        auth.js          │ ──► Reads 'turfhub_role' from localStorage
+└────────────┬────────────┘
+             │ 2. Provides Role Manifest (Avatar, Name, Links)
+             ▼
+┌─────────────────────────┐
+│        layout.js        │ ──► Dynamically injects #sidebar, #topbar, #sidebar-overlay
+└────────────┬────────────┘
+             │ 3. Injects Base Layout CSS (head style tag)
+             ▼
+┌─────────────────────────┐
+│ Page Interactive Script │ ──► Handles dynamic clicks (modals, tabs, slot selection, score counters)
+└─────────────────────────┘
+```
+
