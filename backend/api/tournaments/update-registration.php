@@ -19,14 +19,14 @@ if (!$registrationId || !in_array($status, ['approved', 'rejected'])) {
 
 $db = Database::connect();
 
-// Verify owner has access to this tournament (through venue turf)
+// Verify owner has access to this tournament (through venue turf or creator)
 $stmt = $db->prepare(
     'SELECT tt.id FROM tournament_teams tt
      JOIN tournaments t ON t.id = tt.tournament_id
-     JOIN turf_grounds tg ON tg.id = t.turf_id
-     WHERE tt.id = ? AND tg.owner_id = ?'
+     LEFT JOIN turf_grounds tg ON tg.id = t.turf_id
+     WHERE tt.id = ? AND (tg.owner_id = ? OR t.created_by = ?)'
 );
-$stmt->execute([$registrationId, $user['id']]);
+$stmt->execute([$registrationId, $user['id'], $user['id']]);
 if (!$stmt->fetch()) {
     jsonError('Registration not found or no access', 403);
 }

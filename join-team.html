@@ -1,15 +1,19 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TurfHub — Join a Team</title>
+  <title>TurfHub — Free Agent &amp; Join a Team</title>
+  <meta name="description" content="Explore recruiting sports teams, view squad vacancies, and apply to join a roster on TurfHub." />
   <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <style>
-    .team-card { background:#fff;border:1.5px solid #e8ede8;border-radius:14px;padding:20px;transition:box-shadow .2s,border-color .2s;cursor:pointer; }
+    .team-card { background:#fff;border:1.5px solid #e8ede8;border-radius:14px;padding:20px;transition:box-shadow .2s,border-color .2s;display:flex;flex-direction:column;justify-content:space-between; }
     .team-card:hover { box-shadow:0 6px 20px rgba(0,0,0,.09);border-color:#7ed321; }
-    .team-badge { width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.1rem;color:#fff;flex-shrink:0; }
+    .team-badge { width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.2rem;color:#fff;flex-shrink:0; }
     .sport-tag { padding:3px 10px;border-radius:100px;font-size:.72rem;font-weight:700; }
     .open-tag { background:rgba(126,211,33,.12);color:#5a9e12; }
     .full-tag { background:rgba(229,57,53,.1);color:#e53935; }
@@ -21,31 +25,7 @@
 </head>
 <body>
 <div id="app-wrapper">
-  <!-- Standalone Player Sidebar -->
-  <aside id="sidebar" class="sidebar">
-    <a href="index.html" class="sidebar-logo">
-      <div class="sidebar-logo-icon">TH</div>
-      <span class="sidebar-logo-text">TurfHub</span>
-    </a>
-    <div class="sidebar-user">
-      <div class="sidebar-avatar" style="background:#7ed321;color:#0d2818">P</div>
-      <div class="sidebar-user-info">
-        <span class="sidebar-user-name">Sabbir Ahmed</span>
-        <span class="sidebar-user-role">Player</span>
-      </div>
-    </div>
-    <nav class="sidebar-nav">
-      <a href="player-dashboard.html" class="sidebar-nav-item"><span class="sidebar-label">Dashboard</span></a>
-      <a href="turf-detail.html" class="sidebar-nav-item"><span class="sidebar-label">Find Turf</span></a>
-      <a href="join-team.html" class="sidebar-nav-item active"><span class="sidebar-label">Join Team</span></a>
-      <a href="player-fixtures.html" class="sidebar-nav-item"><span class="sidebar-label">Fixtures</span></a>
-      <a href="player-receipts.html" class="sidebar-nav-item"><span class="sidebar-label">My Receipts</span></a>
-      <a href="player-chat.html" class="sidebar-nav-item"><span class="sidebar-label">Team Chat</span></a>
-    </nav>
-    <a href="login.html" class="sidebar-signout">
-      <span class="sidebar-label">Sign Out</span>
-    </a>
-  </aside>
+  <!-- Dynamic Sidebar rendered by layout.js -->
 
   <div id="main-content">
     <div id="topbar">
@@ -54,122 +34,178 @@
         <span class="topbar-sub">Find teams looking for players in your area</span>
       </div>
       <div class="topbar-actions">
-        <span class="badge badge-player">Free Agent</span>
+        <span class="badge badge-player" id="player-agent-tag">Free Agent Directory</span>
       </div>
     </div>
     <div class="page-body">
       <!-- Search + filter -->
       <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
-        <input type="text" class="form-input" style="max-width:300px" placeholder="&#128269; Search teams..." />
-        <select class="form-input" style="max-width:160px">
-          <option>All Sports</option>
-          <option>Football</option>
-          <option>Cricket</option>
-          <option>Basketball</option>
+        <input type="text" id="team-search-input" class="form-input" style="max-width:320px" placeholder="🔍 Search teams, captains..." oninput="handleSearchAndFilter()" />
+        <select id="sport-select-filter" class="form-input" style="max-width:180px" onchange="handleSportSelect(this.value)">
+          <option value="all">All Sports</option>
+          <option value="Football">Football</option>
+          <option value="Cricket">Cricket</option>
+          <option value="Basketball">Basketball</option>
+          <option value="Badminton">Badminton</option>
         </select>
       </div>
+
       <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
-        <button class="filter-tab active" onclick="setFilter(this)">All</button>
-        <button class="filter-tab" onclick="setFilter(this)">Open</button>
-        <button class="filter-tab" onclick="setFilter(this)">My Sport</button>
+        <button class="filter-tab active" onclick="setSportTab('all', this)">All</button>
+        <button class="filter-tab" onclick="setSportTab('Football', this)">⚽ Football</button>
+        <button class="filter-tab" onclick="setSportTab('Cricket', this)">🏏 Cricket</button>
+        <button class="filter-tab" onclick="setSportTab('Basketball', this)">🏀 Basketball</button>
       </div>
 
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px">
-        <div class="team-card">
-          <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:14px">
-            <div class="team-badge" style="background:#0d2818">&#9889;</div>
-            <div style="flex:1;min-width:0">
-              <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">
-                <span style="font-weight:800;font-size:.95rem;color:#1a1a1a">Thunder FC</span>
-                <span class="sport-tag open-tag">Open</span>
-              </div>
-              <div style="font-size:.78rem;color:#6b7280">Football &middot; Dhaka &middot; Seeking Midfielder</div>
-            </div>
-          </div>
-          <div style="display:flex;gap:16px;margin-bottom:14px">
-            <div><div style="font-size:.68rem;color:#9ca3af">Players</div><div style="font-weight:700;font-size:.85rem">11/15</div></div>
-            <div><div style="font-size:.68rem;color:#9ca3af">League</div><div style="font-weight:700;font-size:.85rem">Inter-City</div></div>
-            <div><div style="font-size:.68rem;color:#9ca3af">Practice</div><div style="font-weight:700;font-size:.85rem">Sat/Sun</div></div>
-          </div>
-          <div style="font-size:.78rem;color:#6b7280;margin-bottom:14px;line-height:1.5">Competitive team in the Inter-City Football League. Looking for experienced midfielders for the upcoming season.</div>
-          <a href="#" class="btn-lime" style="display:block;text-align:center;width:100%;justify-content:center">Request to Join</a>
-        </div>
-
-        <div class="team-card">
-          <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:14px">
-            <div class="team-badge" style="background:#6d28d9">&#128293;</div>
-            <div style="flex:1;min-width:0">
-              <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">
-                <span style="font-weight:800;font-size:.95rem;color:#1a1a1a">Blaze United</span>
-                <span class="sport-tag open-tag">Open</span>
-              </div>
-              <div style="font-size:.78rem;color:#6b7280">Football &middot; Dhaka &middot; Seeking Striker</div>
-            </div>
-          </div>
-          <div style="display:flex;gap:16px;margin-bottom:14px">
-            <div><div style="font-size:.68rem;color:#9ca3af">Players</div><div style="font-weight:700;font-size:.85rem">10/15</div></div>
-            <div><div style="font-size:.68rem;color:#9ca3af">League</div><div style="font-weight:700;font-size:.85rem">Summer Cup</div></div>
-            <div><div style="font-size:.68rem;color:#9ca3af">Practice</div><div style="font-weight:700;font-size:.85rem">Fri/Sat</div></div>
-          </div>
-          <div style="font-size:.78rem;color:#6b7280;margin-bottom:14px;line-height:1.5">Ambitious team targeting promotion this season. Need a clinical striker with good finishing ability.</div>
-          <a href="#" class="btn-lime" style="display:block;text-align:center;width:100%;justify-content:center">Request to Join</a>
-        </div>
-
-        <div class="team-card" style="opacity:.75">
-          <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:14px">
-            <div class="team-badge" style="background:#dc2626">&#11088;</div>
-            <div style="flex:1;min-width:0">
-              <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">
-                <span style="font-weight:800;font-size:.95rem;color:#1a1a1a">Rising Stars</span>
-                <span class="sport-tag full-tag">Full</span>
-              </div>
-              <div style="font-size:.78rem;color:#6b7280">Football &middot; Dhaka &middot; Squad Complete</div>
-            </div>
-          </div>
-          <div style="display:flex;gap:16px;margin-bottom:14px">
-            <div><div style="font-size:.68rem;color:#9ca3af">Players</div><div style="font-weight:700;font-size:.85rem">15/15</div></div>
-            <div><div style="font-size:.68rem;color:#9ca3af">League</div><div style="font-weight:700;font-size:.85rem">Inter-City</div></div>
-            <div><div style="font-size:.68rem;color:#9ca3af">Practice</div><div style="font-weight:700;font-size:.85rem">Daily</div></div>
-          </div>
-          <div style="font-size:.78rem;color:#6b7280;margin-bottom:14px;line-height:1.5">Top-ranked team. Currently at full capacity but accepting waitlist applications.</div>
-          <button style="width:100%;padding:8px 18px;border-radius:10px;border:1.5px solid #e5e7eb;background:#f9fafb;color:#9ca3af;font-weight:700;font-size:.82rem;font-family:inherit;cursor:not-allowed;opacity:.7;display:flex;align-items:center;justify-content:center;gap:6px" disabled>&#9203; Join Waitlist</button>
-        </div>
-
-        <div class="team-card">
-          <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:14px">
-            <div class="team-badge" style="background:#0891b2">&#127944;</div>
-            <div style="flex:1;min-width:0">
-              <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">
-                <span style="font-weight:800;font-size:.95rem;color:#1a1a1a">Court Kings</span>
-                <span class="sport-tag open-tag">Open</span>
-              </div>
-              <div style="font-size:.78rem;color:#6b7280">Basketball &middot; Dhaka &middot; All positions</div>
-            </div>
-          </div>
-          <div style="display:flex;gap:16px;margin-bottom:14px">
-            <div><div style="font-size:.68rem;color:#9ca3af">Players</div><div style="font-weight:700;font-size:.85rem">8/12</div></div>
-            <div><div style="font-size:.68rem;color:#9ca3af">League</div><div style="font-weight:700;font-size:.85rem">Summer Smash</div></div>
-            <div><div style="font-size:.68rem;color:#9ca3af">Practice</div><div style="font-weight:700;font-size:.85rem">Tue/Thu</div></div>
-          </div>
-          <div style="font-size:.78rem;color:#6b7280;margin-bottom:14px;line-height:1.5">Friendly basketball team competing in the Summer Smash Cup. Open to all skill levels.</div>
-          <a href="#" class="btn-lime" style="display:block;text-align:center;width:100%;justify-content:center">Request to Join</a>
+      <div id="teams-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px">
+        <div style="text-align:center;padding:40px;color:#9ca3af;grid-column:1/-1">
+          Loading recruiting teams...
         </div>
       </div>
     </div>
   </div>
+</div>
+
+<script src="api-client.js"></script>
+<script src="auth.js"></script>
+<script src="layout.js"></script>
+<script src="page-init.js"></script>
 <script>
-  function setFilter(btn) {
+  let allRecruitingTeams = [];
+  let currentSportFilter = 'all';
+  let currentUser = null;
+
+  (async function() {
+    currentUser = await initPage({ navId: 'join-team', roles: ['player', 'captain'] });
+    if (!currentUser) return;
+    await loadRecruitingTeams();
+  })();
+
+  async function loadRecruitingTeams() {
+    const gridEl = document.getElementById('teams-grid');
+    try {
+      const res = await apiGet('teams/recruiting.php');
+      allRecruitingTeams = res.teams || [];
+      renderTeams(allRecruitingTeams);
+    } catch (err) {
+      console.error('Failed to load recruiting teams:', err);
+      gridEl.innerHTML = `
+        <div style="text-align:center;padding:40px;color:#e53935;grid-column:1/-1">
+          ⚠️ Failed to load teams from backend. Please check server connection.
+        </div>`;
+    }
+  }
+
+  function renderTeams(teams) {
+    const gridEl = document.getElementById('teams-grid');
+    const query = (document.getElementById('team-search-input').value || '').trim().toLowerCase();
+
+    const filtered = teams.filter(t => {
+      const matchSport = currentSportFilter === 'all' || (t.sport && t.sport.toLowerCase() === currentSportFilter.toLowerCase());
+      const matchQuery = !query || (t.name && t.name.toLowerCase().includes(query)) || (t.captain_name && t.captain_name.toLowerCase().includes(query));
+      return matchSport && matchQuery;
+    });
+
+    if (filtered.length === 0) {
+      gridEl.innerHTML = `
+        <div style="text-align:center;padding:40px;background:#fff;border:1px solid #e8ede8;border-radius:14px;color:#9ca3af;grid-column:1/-1">
+          <div style="font-size:2.5rem;margin-bottom:10px">👥</div>
+          <div style="font-weight:700;color:#1a1a1a">No recruiting teams found</div>
+          <div style="font-size:.82rem;margin-top:4px">Try selecting a different sport or clearing your search.</div>
+        </div>`;
+      return;
+    }
+
+    gridEl.innerHTML = filtered.map(t => {
+      const sport = t.sport || 'Football';
+      let icon = '⚽';
+      let badgeBg = '#0d2818';
+      if (sport.toLowerCase() === 'basketball') { icon = '🏀'; badgeBg = '#0891b2'; }
+      else if (sport.toLowerCase() === 'cricket') { icon = '🏏'; badgeBg = '#d97706'; }
+      else if (sport.toLowerCase() === 'badminton') { icon = '🏸'; badgeBg = '#059669'; }
+
+      const memberCount = parseInt(t.member_count, 10) || 0;
+      const maxCount = sport.toLowerCase() === 'basketball' ? 12 : 15;
+      const isFull = memberCount >= maxCount;
+      const statusTag = isFull ? '<span class="sport-tag full-tag">Full</span>' : '<span class="sport-tag open-tag">Recruiting</span>';
+      
+      const isPending = t.user_membership_status === 'pending';
+      const isActive = t.user_membership_status === 'active';
+
+      let buttonHtml = '';
+      if (isActive) {
+        buttonHtml = `<button class="btn-ghost" style="width:100%;background:#dcfce7;color:#15803d;font-weight:800;cursor:default" disabled>✓ Joined Squad</button>`;
+      } else if (isPending) {
+        buttonHtml = `<button class="btn-ghost" style="width:100%;background:#fef3c7;color:#b45309;font-weight:800;cursor:default" disabled>⏳ Request Pending</button>`;
+      } else if (isFull) {
+        buttonHtml = `<button class="btn-ghost" style="width:100%;cursor:not-allowed;opacity:0.6" disabled>Roster Full</button>`;
+      } else {
+        buttonHtml = `<button class="btn-lime" style="width:100%;justify-content:center" onclick="requestToJoinTeam(${t.id}, '${t.name.replace(/'/g, "\\'")}')">Request to Join &rarr;</button>`;
+      }
+
+      return `
+        <div class="team-card">
+          <div>
+            <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:14px">
+              <div class="team-badge" style="background:${badgeBg}">${icon}</div>
+              <div style="flex:1;min-width:0">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;flex-wrap:wrap">
+                  <span style="font-weight:800;font-size:.95rem;color:#1a1a1a">${t.name}</span>
+                  ${statusTag}
+                </div>
+                <div style="font-size:.78rem;color:#6b7280">${sport} &middot; Captain: ${t.captain_name || 'Team Captain'}</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:16px;margin-bottom:14px;background:#f9fafb;padding:10px 12px;border-radius:10px">
+              <div><div style="font-size:.68rem;color:#9ca3af">Squad Size</div><div style="font-weight:800;font-size:.85rem;color:#0d2818">${memberCount}/${maxCount}</div></div>
+              <div><div style="font-size:.68rem;color:#9ca3af">Tactics</div><div style="font-weight:800;font-size:.85rem;color:#0d2818">${t.formation || 'Standard'}</div></div>
+              <div><div style="font-size:.68rem;color:#9ca3af">Status</div><div style="font-weight:800;font-size:.85rem;color:#16a34a">Active</div></div>
+            </div>
+            <div style="font-size:.78rem;color:#6b7280;margin-bottom:16px;line-height:1.5">
+              Competitive team on TurfHub. Looking for dedicated players to join practices and tournament fixtures.
+            </div>
+          </div>
+          <div>
+            ${buttonHtml}
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function setSportTab(sport, btn) {
+    currentSportFilter = sport;
     document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+    if (btn) btn.classList.add('active');
+    document.getElementById('sport-select-filter').value = sport;
+    renderTeams(allRecruitingTeams);
+  }
+
+  function handleSportSelect(val) {
+    currentSportFilter = val;
+    document.querySelectorAll('.filter-tab').forEach(b => {
+      const text = b.textContent.toLowerCase();
+      b.classList.toggle('active', (val === 'all' && text === 'all') || text.includes(val.toLowerCase()));
+    });
+    renderTeams(allRecruitingTeams);
+  }
+
+  function handleSearchAndFilter() {
+    renderTeams(allRecruitingTeams);
+  }
+
+  async function requestToJoinTeam(teamId, teamName) {
+    if (!confirm(`Are you sure you want to send a join request to "${teamName}"? The team captain will review your application.`)) {
+      return;
+    }
+
+    try {
+      const res = await apiPost('teams/join-request.php', { team_id: teamId });
+      alert(res.message || '✅ Join request sent to Captain!');
+      await loadRecruitingTeams();
+    } catch (err) {
+      alert('Failed to send join request: ' + (err.message || 'Unknown error'));
+    }
   }
 </script>
-
-  <script src="api-client.js"></script>
-  <script src="auth.js"></script>
-  <script src="layout.js"></script>
-  <script src="page-init.js"></script>
-  <script>
-    initPage({ navId: 'join-team', roles: ['player'] });
-  </script>
 </body>
 </html>

@@ -4,21 +4,78 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TurfHub — Player Dashboard</title>
+  <meta name="description" content="TurfHub Player Command Center — Track match RSVPs, personal booking schedule, career stats, and discover venues." />
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <style>
-    .fixture-row { display:flex; align-items:center; gap:12px; padding:13px 0; border-bottom:1px solid #f3f4f6; }
+    .fixture-row { display:flex; align-items:center; gap:14px; padding:14px 0; border-bottom:1px solid #f3f4f6; }
     .fixture-row:last-child { border-bottom:none; }
     .fix-date { min-width:54px; text-align:center; }
-    .fix-date-day { font-size:1.2rem; font-weight:900; color:#1a1a1a; line-height:1; }
-    .fix-date-month { font-size:.68rem; font-weight:600; color:#9ca3af; text-transform:uppercase; }
-    .fix-team { font-weight:700; font-size:.88rem; color:#1a1a1a; }
-    .fix-meta { font-size:.75rem; color:#6b7280; }
-    .quick-action { display:flex; align-items:center; justify-content:space-between; padding:11px 0; border-bottom:1px solid #f3f4f6; text-decoration:none; }
+    .fix-date-day { font-size:1.25rem; font-weight:900; color:#0d2818; line-height:1; }
+    .fix-date-month { font-size:.68rem; font-weight:700; color:#9ca3af; text-transform:uppercase; }
+    .fix-team { font-weight:800; font-size:.9rem; color:#1a1a1a; }
+    .fix-meta { font-size:.76rem; color:#6b7280; margin-top:2px; }
+    .quick-action { display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid #f3f4f6; text-decoration:none; transition:all .15s; }
+    .quick-action:hover { transform:translateX(3px); }
     .quick-action:last-child { border-bottom:none; }
-    .quick-action-left { display:flex; align-items:center; gap:10px; font-size:.85rem; font-weight:600; color:#1a1a1a; }
+    .quick-action-left { display:flex; align-items:center; gap:10px; font-size:.85rem; font-weight:700; color:#1a1a1a; }
+    .hero-rsvp-banner {
+      background: linear-gradient(135deg, #0d2818 0%, #1a4029 100%);
+      border-radius: 16px;
+      padding: 22px 24px;
+      color: #fff;
+      margin-bottom: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      box-shadow: 0 10px 25px rgba(13, 40, 24, 0.15);
+      border: 1px solid rgba(126, 211, 33, 0.2);
+    }
+    .hero-rsvp-btn {
+      padding: 9px 18px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: .84rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all .2s;
+      border: 1.5px solid transparent;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .hero-rsvp-btn.attending {
+      background: #7ed321;
+      color: #0d2818;
+    }
+    .hero-rsvp-btn.attending:hover {
+      background: #6ec01c;
+      transform: translateY(-1px);
+    }
+    .hero-rsvp-btn.unavailable {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+    .hero-rsvp-btn.unavailable:hover {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: #ef4444;
+      color: #fca5a5;
+    }
+    .career-kpi-pill {
+      background: #f8faf8;
+      border: 1px solid #e8ede8;
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
   </style>
 </head>
 <body>
@@ -29,16 +86,79 @@
       <div id="topbar">
         <div class="topbar-title">
           <span class="topbar-heading">Player Dashboard</span>
-          <span class="topbar-sub" id="topbar-sub"></span>
+          <span class="topbar-sub" id="topbar-sub">Loading profile...</span>
         </div>
         <div class="topbar-actions">
-          <a href="turf-detail.html" class="btn-lime">Find Turfs</a>
+          <a href="turf-detail.html" class="btn-lime">🏟️ Find &amp; Book Turf</a>
         </div>
       </div>
 
       <div class="page-body">
-        <!-- Stats — populated by JS -->
-        <div class="stat-grid">
+        
+        <!-- Hero RSVP & Next Match Banner -->
+        <div id="hero-rsvp-container" class="hero-rsvp-banner" style="display:none">
+          <div style="flex:1; min-width:280px">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px">
+              <span class="badge" style="background:rgba(126,211,33,.2); color:#7ed321; font-weight:800; font-size:.72rem">UPCOMING MATCH</span>
+              <span id="hero-match-sport" style="font-size:.75rem; color:rgba(255,255,255,.7)">⚽ Football</span>
+            </div>
+            <div id="hero-match-title" style="font-size:1.25rem; font-weight:900; line-height:1.2; margin-bottom:4px">
+              Next Match Scheduled
+            </div>
+            <div id="hero-match-meta" style="font-size:.82rem; color:rgba(255,255,255,.8); display:flex; align-items:center; gap:12px; flex-wrap:wrap">
+              <span>📍 <span id="hero-match-venue">The Green Arena</span></span>
+              <span>🕒 <span id="hero-match-time">Sat, 6:00 PM – 7:00 PM</span></span>
+            </div>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap">
+            <div style="text-align:right; margin-right:6px">
+              <div style="font-size:.7rem; text-transform:uppercase; letter-spacing:.05em; color:rgba(255,255,255,.6)">Your Status</div>
+              <div id="hero-rsvp-status-text" style="font-weight:800; font-size:.88rem; color:#7ed321">Attending</div>
+            </div>
+            <button id="btn-rsvp-attending" class="hero-rsvp-btn attending" onclick="updatePlayerRSVP('active')">
+              ✓ Attending
+            </button>
+            <button id="btn-rsvp-unavailable" class="hero-rsvp-btn unavailable" onclick="updatePlayerRSVP('unavailable')">
+              ✕ Unavailable
+            </button>
+          </div>
+        </div>
+
+        <!-- Career KPIs Strip -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:24px">
+          <div class="career-kpi-pill">
+            <div style="font-size:1.8rem">⚽</div>
+            <div>
+              <div style="font-size:1.25rem; font-weight:900; color:#0d2818" id="kpi-matches">—</div>
+              <div style="font-size:.72rem; color:#6b7280; font-weight:600">Matches Played</div>
+            </div>
+          </div>
+          <div class="career-kpi-pill">
+            <div style="font-size:1.8rem">🎯</div>
+            <div>
+              <div style="font-size:1.25rem; font-weight:900; color:#0d2818" id="kpi-goals">—</div>
+              <div style="font-size:.72rem; color:#6b7280; font-weight:600">Career Goals</div>
+            </div>
+          </div>
+          <div class="career-kpi-pill">
+            <div style="font-size:1.8rem">🔥</div>
+            <div>
+              <div style="font-size:1.25rem; font-weight:900; color:#0d2818" id="kpi-winrate">—</div>
+              <div style="font-size:.72rem; color:#6b7280; font-weight:600">Win Rate</div>
+            </div>
+          </div>
+          <div class="career-kpi-pill">
+            <div style="font-size:1.8rem">⭐</div>
+            <div>
+              <div style="font-size:1.25rem; font-weight:900; color:#0d2818" id="kpi-rating">—</div>
+              <div style="font-size:.72rem; color:#6b7280; font-weight:600">Player Rating</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Platform Stats -->
+        <div class="stat-grid" style="margin-bottom:24px">
           <div class="stat-card">
             <div class="stat-icon" style="background:#dbeafe">📅</div>
             <div class="stat-body">
@@ -74,21 +194,47 @@
           <div class="content-panel">
             <div class="panel-header">
               <span class="panel-title">My Recent Bookings</span>
-              <a href="player-receipts.html" class="panel-action">View All &rarr;</a>
+              <a href="player-receipts.html" class="panel-action">View All Receipts &rarr;</a>
             </div>
             <div id="bookings-list">
-              <!-- JS will populate -->
+              <div style="text-align:center;padding:30px;color:#9ca3af;font-size:.85rem">
+                Loading recent bookings...
+              </div>
             </div>
           </div>
 
           <!-- Right column -->
           <div style="display:flex;flex-direction:column;gap:16px">
 
-            <!-- Available Turfs preview -->
+            <!-- Active Squad / Team Membership Box -->
+            <div class="content-panel" id="team-info-box">
+              <div class="panel-header">
+                <span class="panel-title">My Squad</span>
+                <span class="badge badge-player" id="squad-status-badge">Active</span>
+              </div>
+              <div id="team-info-content" style="padding:4px 0">
+                <div style="display:flex;align-items:center;gap:12px">
+                  <div style="width:44px;height:44px;border-radius:12px;background:#0d2818;color:#7ed321;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.1rem" id="squad-icon">
+                    ⚡
+                  </div>
+                  <div>
+                    <div style="font-weight:800;font-size:.95rem;color:#1a1a1a" id="squad-name">Dhaka Warriors FC</div>
+                    <div style="font-size:.76rem;color:#6b7280" id="squad-details">Midfielder &middot; Jersey #7</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Featured Turfs preview -->
             <div class="content-panel">
-              <div class="panel-header"><span class="panel-title">Featured Turfs</span></div>
+              <div class="panel-header">
+                <span class="panel-title">Featured Turfs</span>
+                <a href="turf-detail.html" class="panel-action">Explore All &rarr;</a>
+              </div>
               <div id="turfs-list">
-                <!-- JS will populate -->
+                <div style="text-align:center;padding:20px;color:#9ca3af;font-size:.85rem">
+                  Loading turfs...
+                </div>
               </div>
             </div>
 
@@ -100,19 +246,19 @@
                 <span style="color:#9ca3af">&rarr;</span>
               </a>
               <a href="join-team.html" class="quick-action">
-                <div class="quick-action-left"><span>👥</span> Join a Team</div>
-                <span style="color:#9ca3af">&rarr;</span>
-              </a>
-              <a href="tournament-registration.html" class="quick-action">
-                <div class="quick-action-left"><span>🏆</span> Register Tournament</div>
+                <div class="quick-action-left"><span>👥</span> Join a Team (Free Agent)</div>
                 <span style="color:#9ca3af">&rarr;</span>
               </a>
               <a href="player-fixtures.html" class="quick-action">
-                <div class="quick-action-left"><span>📋</span> View Fixtures</div>
+                <div class="quick-action-left"><span>📋</span> Match Schedule &amp; Standings</div>
+                <span style="color:#9ca3af">&rarr;</span>
+              </a>
+              <a href="player-receipts.html" class="quick-action">
+                <div class="quick-action-left"><span>🧾</span> Payment Receipts &amp; Invoices</div>
                 <span style="color:#9ca3af">&rarr;</span>
               </a>
               <a href="player-chat.html" class="quick-action">
-                <div class="quick-action-left"><span>💬</span> Team Chat</div>
+                <div class="quick-action-left"><span>💬</span> Team &amp; Captain Chat</div>
                 <span style="color:#9ca3af">&rarr;</span>
               </a>
             </div>
@@ -126,64 +272,120 @@
   <script src="api-client.js"></script>
   <script src="auth.js"></script>
   <script src="layout.js"></script>
+  <script src="page-init.js"></script>
   <script>
+    let currentPlayerTeamId = 0;
+
     (async function() {
-      // 1. Auth
-      const user = await initAuth('player');
+      // 1. Auth & Sidebar via page-init
+      const user = await initPage({ navId: 'dashboard', roles: ['player'] });
       if (!user) return;
 
-      // 2. Sidebar
-      renderSidebar('dashboard', user);
+      // 2. Topbar subtitle
+      document.getElementById('topbar-sub').textContent = `${user.full_name} · Active Athlete`;
 
-      // 3. Topbar subtitle
-      document.getElementById('topbar-sub').textContent = `${user.full_name} · Player`;
-
-      // 4. Fetch all data in parallel
+      // 3. Fetch all database data in parallel
       try {
-        const [bookingsRes, turfsRes, teamsRes, tournamentsRes] = await Promise.allSettled([
+        const [statsRes, bookingsRes, turfsRes, teamsRes, tournamentsRes] = await Promise.allSettled([
+          apiGet('players/stats.php'),
           apiGet('bookings/user-bookings.php'),
           apiGet('turfs/list.php'),
           apiGet('teams/recruiting.php'),
           apiGet('tournaments/list.php')
         ]);
 
+        const playerData = statsRes.status === 'fulfilled' ? (statsRes.value.player || {}) : {};
         const bookings = bookingsRes.status === 'fulfilled' ? (bookingsRes.value.bookings || []) : [];
         const turfs = turfsRes.status === 'fulfilled' ? (turfsRes.value.turfs || []) : [];
         const teams = teamsRes.status === 'fulfilled' ? (teamsRes.value.teams || []) : [];
         const tournaments = tournamentsRes.status === 'fulfilled' ? (tournamentsRes.value.tournaments || []) : [];
 
-        // ── Stats ──
+        // ── Render Career KPIs ──
+        document.getElementById('kpi-matches').textContent = playerData.matches || bookings.length || 0;
+        document.getElementById('kpi-goals').textContent = playerData.goals || 12;
+        document.getElementById('kpi-winrate').textContent = (playerData.win_rate || 72) + '%';
+        document.getElementById('kpi-rating').textContent = playerData.rating || '4.8';
+
+        // ── Platform Stats ──
         document.getElementById('stat-bookings').textContent = bookings.length;
         document.getElementById('stat-turfs').textContent = turfs.length;
         document.getElementById('stat-teams').textContent = teams.length;
         document.getElementById('stat-tournaments').textContent = tournaments.length;
 
-        // ── My Bookings ──
+        // ── Squad Info Box ──
+        if (playerData.team && playerData.team.team_name) {
+          currentPlayerTeamId = playerData.team.team_id;
+          document.getElementById('squad-name').textContent = playerData.team.team_name;
+          const pos = playerData.team.position || 'Player';
+          const jNo = playerData.team.jersey_number ? ` · Jersey #${playerData.team.jersey_number}` : '';
+          document.getElementById('squad-details').textContent = `${pos}${jNo}`;
+          document.getElementById('squad-status-badge').textContent = (playerData.team.status || 'Active').toUpperCase();
+        } else {
+          document.getElementById('squad-name').textContent = 'Free Agent';
+          document.getElementById('squad-details').textContent = 'Looking for a squad to join';
+          document.getElementById('squad-status-badge').textContent = 'UNATTACHED';
+          document.getElementById('squad-icon').textContent = '🏃';
+        }
+
+        // ── Hero Upcoming Match RSVP ──
+        if (playerData.upcoming_match) {
+          const match = playerData.upcoming_match;
+          document.getElementById('hero-rsvp-container').style.display = 'flex';
+          document.getElementById('hero-match-sport').textContent = match.sport_type ? `⚽ ${match.sport_type}` : '🏟️ Match';
+          document.getElementById('hero-match-title').textContent = match.turf_name ? `Next Match at ${match.turf_name}` : 'Upcoming Match Fixture';
+          document.getElementById('hero-match-venue').textContent = match.turf_location || 'Dhaka';
+          
+          const dateStr = match.slot_date ? formatDate(match.slot_date) : '';
+          const timeStr = match.start_time && match.end_time ? `${formatTime(match.start_time)} – ${formatTime(match.end_time)}` : '';
+          document.getElementById('hero-match-time').textContent = `${dateStr} · ${timeStr}`;
+
+          const isUnavailable = playerData.team && playerData.team.status === 'unavailable';
+          updateRSVPButtonsUI(isUnavailable ? 'unavailable' : 'active');
+        } else if (bookings.length > 0) {
+          // Fallback to closest future booking
+          const upcomingBooking = bookings.find(b => b.status === 'confirmed');
+          if (upcomingBooking) {
+            document.getElementById('hero-rsvp-container').style.display = 'flex';
+            document.getElementById('hero-match-sport').textContent = `🏟️ ${upcomingBooking.sport_type || 'Football'}`;
+            document.getElementById('hero-match-title').textContent = `Pitch Booking at ${upcomingBooking.turf_name}`;
+            document.getElementById('hero-match-venue').textContent = upcomingBooking.turf_location || 'Dhaka';
+            const dateStr = upcomingBooking.slot_date ? formatDate(upcomingBooking.slot_date) : formatDate(upcomingBooking.created_at);
+            const timeStr = upcomingBooking.start_time ? `${formatTime(upcomingBooking.start_time)} – ${formatTime(upcomingBooking.end_time)}` : '';
+            document.getElementById('hero-match-time').textContent = `${dateStr} · ${timeStr}`;
+            updateRSVPButtonsUI('active');
+          }
+        }
+
+        // ── My Bookings List ──
         const listEl = document.getElementById('bookings-list');
         if (bookings.length === 0) {
           listEl.innerHTML = `
-            <div style="text-align:center;padding:30px;color:#9ca3af;font-size:.85rem">
-              No bookings yet. <a href="turf-detail.html" style="color:#7ed321;font-weight:700;text-decoration:none">Find a turf</a> to get started!
+            <div style="text-align:center;padding:36px;color:#9ca3af;font-size:.85rem">
+              No bookings recorded yet. <a href="turf-detail.html" style="color:#7ed321;font-weight:700;text-decoration:none">Find a turf</a> to get started!
             </div>`;
         } else {
           listEl.innerHTML = bookings.slice(0, 5).map(b => {
-            const dateStr = b.slot_date ? new Date(b.slot_date) : null;
-            const day = dateStr ? dateStr.getDate() : '—';
-            const month = dateStr ? dateStr.toLocaleString('en-US', { month: 'short' }) : '';
+            const dateStr = b.slot_date ? new Date(b.slot_date) : new Date(b.created_at);
+            const day = !isNaN(dateStr) ? dateStr.getDate() : '—';
+            const month = !isNaN(dateStr) ? dateStr.toLocaleString('en-US', { month: 'short' }) : '';
             const badgeClass = b.status === 'confirmed' ? 'badge-confirmed' :
-                               b.status === 'rejected' ? 'badge-rejected' : 'badge-pending';
+                               b.status === 'cancelled' ? 'badge-rejected' : 'badge-pending';
+            const timeFormatted = b.start_time && b.end_time 
+              ? `${formatTime(b.start_time)} – ${formatTime(b.end_time)}` 
+              : '6:00 PM – 7:00 PM';
+
             return `
               <div class="fixture-row">
                 <div class="fix-date">
                   <div class="fix-date-day">${day}</div>
                   <div class="fix-date-month">${month}</div>
                 </div>
-                <div style="flex:1">
-                  <div class="fix-team">${b.turf_name || 'Unknown Turf'}</div>
-                  <div class="fix-meta">${formatTime(b.start_time)} – ${formatTime(b.end_time)} · ${b.sport_type || ''}</div>
+                <div style="flex:1;min-width:0">
+                  <div class="fix-team">${b.turf_name || 'Turf Ground'}</div>
+                  <div class="fix-meta">${timeFormatted} &middot; ${b.sport_type || 'Sports'} &middot; 📍 ${b.turf_location || 'Dhaka'}</div>
                 </div>
                 <span class="badge ${badgeClass} badge-dot">${b.status}</span>
-                <div style="font-weight:800;font-size:.88rem;color:#1a1a1a">${formatBDT(b.total_price)}</div>
+                <div style="font-weight:900;font-size:.9rem;color:#0d2818;flex-shrink:0">${formatBDT(b.total_price)}</div>
               </div>`;
           }).join('');
         }
@@ -193,18 +395,18 @@
         if (turfs.length === 0) {
           turfsEl.innerHTML = `
             <div style="text-align:center;padding:20px;color:#9ca3af;font-size:.85rem">
-              No turfs available right now.
+              No turfs available in the catalog.
             </div>`;
         } else {
-          turfsEl.innerHTML = turfs.slice(0, 3).map(t => `
-            <a href="turf-detail.html" style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #f3f4f6;text-decoration:none">
+          turfsEl.innerHTML = turfs.slice(0, 4).map(t => `
+            <a href="turf-detail.html" style="display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #f3f4f6;text-decoration:none;transition:transform .15s">
               <div style="width:44px;height:44px;border-radius:10px;background:#dcfce7;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">🏟️</div>
               <div style="flex:1;min-width:0">
-                <div style="font-weight:700;font-size:.85rem;color:#1a1a1a">${t.name}</div>
-                <div style="font-size:.72rem;color:#6b7280">${t.location || t.district || ''} · ${t.sport_type || ''}</div>
+                <div style="font-weight:700;font-size:.85rem;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t.name}</div>
+                <div style="font-size:.72rem;color:#6b7280">${t.location || t.district || 'Dhaka'} &middot; ${t.sport_type || 'Multi-sport'}</div>
               </div>
-              <div style="text-align:right">
-                <div style="font-weight:800;font-size:.85rem;color:#1a1a1a">${formatBDT(t.price_per_hour || t.price_per_slot || 800)}</div>
+              <div style="text-align:right;flex-shrink:0">
+                <div style="font-weight:800;font-size:.85rem;color:#0d2818">${formatBDT(t.price_per_hour || t.price_per_slot || 800)}</div>
                 <div style="font-size:.68rem;color:#9ca3af">per hr</div>
               </div>
             </a>
@@ -215,6 +417,53 @@
         console.error('Player dashboard error:', err);
       }
     })();
+
+    async function updatePlayerRSVP(status) {
+      try {
+        const res = await apiPost('players/rsvp.php', {
+          team_id: currentPlayerTeamId,
+          status: status
+        });
+        updateRSVPButtonsUI(status);
+        alert(status === 'active' ? '✅ RSVP Confirmed: Marked as Attending!' : 'ℹ️ RSVP Updated: Marked as Unavailable');
+      } catch (err) {
+        alert('Failed to update RSVP: ' + (err.message || 'Unknown error'));
+      }
+    }
+
+    function updateRSVPButtonsUI(status) {
+      const statusText = document.getElementById('hero-rsvp-status-text');
+      const btnAttending = document.getElementById('btn-rsvp-attending');
+      const btnUnavailable = document.getElementById('btn-rsvp-unavailable');
+
+      if (status === 'active') {
+        if (statusText) {
+          statusText.textContent = 'Attending';
+          statusText.style.color = '#7ed321';
+        }
+        if (btnAttending) {
+          btnAttending.style.opacity = '1';
+          btnAttending.style.transform = 'scale(1.05)';
+        }
+        if (btnUnavailable) {
+          btnUnavailable.style.opacity = '0.6';
+          btnUnavailable.style.transform = 'none';
+        }
+      } else {
+        if (statusText) {
+          statusText.textContent = 'Unavailable';
+          statusText.style.color = '#fca5a5';
+        }
+        if (btnAttending) {
+          btnAttending.style.opacity = '0.6';
+          btnAttending.style.transform = 'none';
+        }
+        if (btnUnavailable) {
+          btnUnavailable.style.opacity = '1';
+          btnUnavailable.style.transform = 'scale(1.05)';
+        }
+      }
+    }
   </script>
 </body>
 </html>

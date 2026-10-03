@@ -4,10 +4,10 @@ require_once __DIR__ . '/../config/helpers.php';
 require_once __DIR__ . '/../auth/guard.php';
 
 $user    = guardRole('player', 'captain', 'owner', 'admin');
-$otherId = (int) ($_GET['other_user_id'] ?? 0);
+$otherId = (int) ($_GET['other_user_id'] ?? $_GET['user_id'] ?? 0);
 
 if (!$otherId) {
-    jsonError('other_user_id is required');
+    jsonError('other_user_id or user_id is required');
 }
 
 $db = Database::connect();

@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../config/helpers.php';
 require_once __DIR__ . '/../auth/guard.php';
 
-$user = guardRole('player');
+$user = guardRole('player', 'captain');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     jsonError('Method not allowed', 405);

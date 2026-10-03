@@ -71,7 +71,10 @@
           <span class="topbar-heading">Tournaments</span>
           <span class="topbar-sub">Create, manage, and track tournaments hosted at your turfs</span>
         </div>
-        <div class="topbar-actions">
+        <div class="topbar-actions" style="display:flex;gap:10px">
+          <a href="owner-fixtures.html" class="btn-ghost" style="font-size:.8rem;padding:7px 14px;background:#fff;border:1.5px solid #0d2818;color:#0d2818;text-decoration:none;display:inline-flex;align-items:center;gap:5px">
+            <span>📅 Match Fixtures</span>
+          </a>
           <button class="btn-lime" onclick="showCreateForm()">+ Create Tournament</button>
         </div>
       </div>
@@ -117,8 +120,13 @@
 
           <!-- My Tournaments List -->
           <div class="content-panel">
-            <div class="panel-header" style="margin-bottom:16px">
-              <span class="panel-title">My Tournaments</span>
+            <div class="panel-header" style="margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+              <div style="display:flex;align-items:center;gap:10px">
+                <span class="panel-title" style="margin:0">My Tournaments</span>
+                <a href="owner-fixtures.html" class="btn-lime" style="font-size:.78rem;padding:5px 14px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;font-weight:800;border-radius:8px">
+                  <span>📅 Match Fixtures</span>
+                </a>
+              </div>
               <div style="display:flex;gap:6px">
                 <select id="status-filter" class="form-input" style="max-width:140px;padding:6px 10px;font-size:.78rem" onchange="filterTournaments()">
                   <option value="all">All Status</option>
@@ -297,6 +305,26 @@
           <button type="submit" class="btn-lime" style="padding:9px 24px">Save Changes</button>
         </div>
       </form>
+  </div>
+
+  <!-- Manage Registered Teams Modal -->
+  <div id="teams-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(4px)">
+    <div style="background:#fff;border-radius:18px;width:92%;max-width:580px;box-shadow:0 24px 48px rgba(0,0,0,.2);overflow:hidden;animation:modalFadeIn .25s ease-out">
+      <div style="background:linear-gradient(135deg,#0d2818,#1a4029);padding:20px 24px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <h3 style="font-weight:900;font-size:1.05rem;color:#fff;margin:0" id="teams-modal-title">👥 Registered Teams</h3>
+          <p style="font-size:.78rem;color:rgba(255,255,255,.75);margin:4px 0 0 0">Review captain squad entries and approve or reject entries</p>
+        </div>
+        <button onclick="closeTeamsModal()" style="border:none;background:rgba(255,255,255,.2);width:32px;height:32px;border-radius:8px;font-size:1.1rem;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center">&times;</button>
+      </div>
+      <div style="padding:24px;max-height:75vh;overflow-y:auto">
+        <div id="teams-list-body">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+      <div style="padding:14px 24px;background:#f9fafb;border-top:1px solid #e8ede8;display:flex;justify-content:flex-end">
+        <button onclick="closeTeamsModal()" class="btn-ghost" style="padding:8px 18px">Close</button>
+      </div>
     </div>
   </div>
 
@@ -406,8 +434,8 @@
         } else {
           actionButtons = `
             <button onclick="openEditModal(${t.id})" style="font-size:.78rem;font-weight:700;color:#f5a623;background:none;border:none;cursor:pointer;font-family:inherit">✏️ Edit</button>
-            <a href="score-entry.html?tournament_id=${t.id}" class="btn-view-fix">Score Entry →</a>
-            <a href="fixtures.html?tournament_id=${t.id}" class="btn-view-fix">Fixtures →</a>
+            <a href="owner-fixtures.html?tournament_id=${t.id}" class="btn-view-fix" style="color:#0d2818;font-weight:800">📅 Fixtures &rarr;</a>
+            <a href="score-entry.html?tournament_id=${t.id}" class="btn-view-fix">⚽ Scores &rarr;</a>
           `;
         }
 
@@ -426,7 +454,11 @@
             </div>
             <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
             <div class="t-card-footer">
-              <span class="t-card-teams">${registered}/${max} teams ${registered >= max ? '— Registration Full' : 'registered'}</span>
+              <span class="t-card-teams">
+                <button type="button" onclick="viewTournamentTeams(${t.id}, '${escapeQuotes(t.name)}')" style="background:none;border:none;color:#0d2818;font-weight:700;font-size:.78rem;cursor:pointer;display:inline-flex;align-items:center;gap:5px;padding:0">
+                  👥 ${registered}/${max} teams ${registered >= max ? '— Full' : 'registered'} <span style="color:#7ed321;font-weight:800;text-decoration:underline">Manage Teams &rarr;</span>
+                </button>
+              </span>
               <div style="display:flex;gap:10px;align-items:center">
                 ${actionButtons}
               </div>
@@ -449,6 +481,7 @@
         const initial = (r.team_name || 'T').charAt(0).toUpperCase();
         const isLast = idx === registrations.length - 1;
         const borderStyle = isLast ? '' : 'border-bottom:1px solid #f3f4f6';
+        const isPending = r.status === 'pending';
         const statusBadge = r.status === 'approved'
           ? '<span class="badge badge-confirmed" style="font-size:.65rem">Approved</span>'
           : (r.status === 'rejected' ? '<span class="badge badge-rejected" style="font-size:.65rem">Rejected</span>' : '<span class="badge badge-pending" style="font-size:.65rem">Pending</span>');
@@ -464,9 +497,98 @@
               <div style="font-weight:700;font-size:.82rem;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.team_name}</div>
               <div style="font-size:.72rem;color:#9ca3af">${r.tournament_name} &middot; ${dateStr}</div>
             </div>
-            ${statusBadge}
+            <div style="display:flex;align-items:center;gap:4px">
+              ${statusBadge}
+              ${isPending ? `
+                <button onclick="updateRegistrationStatus(${r.id}, 'approved', '${escapeQuotes(r.team_name)}')" title="Approve Entry" class="btn-lime" style="padding:2px 7px;font-size:.68rem;border-radius:6px;line-height:1">✓</button>
+                <button onclick="updateRegistrationStatus(${r.id}, 'rejected', '${escapeQuotes(r.team_name)}')" title="Reject Entry" style="padding:2px 7px;font-size:.68rem;background:#fee2e2;color:#dc2626;border:none;border-radius:6px;cursor:pointer;font-weight:700;line-height:1">✕</button>
+              ` : ''}
+            </div>
           </div>`;
       }).join('');
+    }
+
+    let currentTeamsTournamentId = null;
+    let currentTeamsTournamentName = '';
+
+    async function viewTournamentTeams(tournamentId, tournamentName) {
+      currentTeamsTournamentId = tournamentId;
+      currentTeamsTournamentName = tournamentName;
+      document.getElementById('teams-modal-title').textContent = `👥 Registered Teams — ${tournamentName}`;
+      document.getElementById('teams-list-body').innerHTML = `
+        <div style="text-align:center;padding:30px;color:#9ca3af;font-size:.85rem">Loading registered teams...</div>
+      `;
+      document.getElementById('teams-modal').style.display = 'flex';
+
+      try {
+        const res = await apiGet(`tournaments/registrations.php?tournament_id=${tournamentId}`);
+        const teams = res.registrations || [];
+        if (teams.length === 0) {
+          document.getElementById('teams-list-body').innerHTML = `
+            <div style="text-align:center;padding:30px;color:#6b7280;font-size:.85rem">
+              No teams have registered for this tournament yet.
+            </div>`;
+          return;
+        }
+
+        document.getElementById('teams-list-body').innerHTML = teams.map((tm) => {
+          const badgeClass = tm.status === 'approved' ? 'badge-confirmed' :
+                             tm.status === 'rejected' ? 'badge-rejected' : 'badge-pending';
+          const badgeText = tm.status ? tm.status.charAt(0).toUpperCase() + tm.status.slice(1) : 'Pending';
+          const isPending = tm.status === 'pending';
+
+          return `
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:#f9fafb;border-radius:12px;margin-bottom:8px;border:1px solid #e8ede8">
+              <div style="display:flex;align-items:center;gap:12px">
+                <div style="width:38px;height:38px;border-radius:10px;background:#0d2818;color:#7ed321;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:.9rem">
+                  ${(tm.team_name || 'T').charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <div style="font-weight:800;font-size:.9rem;color:#1a1a1a">${tm.team_name}</div>
+                  <div style="font-size:.74rem;color:#6b7280">Captain: <strong>${tm.captain_name || 'N/A'}</strong> ${tm.captain_phone ? `&middot; ${tm.captain_phone}` : ''}</div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <span class="badge ${badgeClass}" style="font-size:.7rem">${badgeText}</span>
+                ${isPending ? `
+                  <button onclick="updateRegistrationStatus(${tm.id}, 'approved', '${escapeQuotes(tm.team_name)}')" class="btn-lime" style="padding:4px 10px;font-size:.72rem">Approve</button>
+                  <button onclick="updateRegistrationStatus(${tm.id}, 'rejected', '${escapeQuotes(tm.team_name)}')" style="padding:4px 10px;font-size:.72rem;background:#fee2e2;color:#dc2626;border:none;border-radius:6px;cursor:pointer;font-weight:700">Reject</button>
+                ` : ''}
+              </div>
+            </div>`;
+        }).join('');
+      } catch (err) {
+        document.getElementById('teams-list-body').innerHTML = `
+          <div style="text-align:center;padding:20px;color:#dc2626;font-size:.85rem">
+            Failed to load teams: ${err.message}
+          </div>`;
+      }
+    }
+
+    function closeTeamsModal() {
+      document.getElementById('teams-modal').style.display = 'none';
+      currentTeamsTournamentId = null;
+    }
+
+    async function updateRegistrationStatus(regId, status, teamName) {
+      if (!confirm(`Are you sure you want to mark ${teamName ? `team "${teamName}"` : 'this registration'} as ${status}?`)) return;
+      try {
+        const res = await apiPost('tournaments/update-registration.php', {
+          registration_id: Number(regId),
+          status: status
+        });
+        if (res.success) {
+          alert(`✅ Team entry ${status} successfully!`);
+          await loadData();
+          if (currentTeamsTournamentId) {
+            await viewTournamentTeams(currentTeamsTournamentId, currentTeamsTournamentName);
+          }
+        } else {
+          alert('Error: ' + (res.error || 'Failed to update registration'));
+        }
+      } catch (err) {
+        alert('Failed to update registration: ' + err.message);
+      }
     }
 
     function filterTournaments() {
