@@ -7,7 +7,7 @@ class Database {
     private const HOST = 'localhost';
     private const DB   = 'turfhub';
     private const USER = 'root';
-    private const PASS = 'debugdynasty';            // Set your MySQL password
+    private const PASS = '';                         // XAMPP default: no password
     private const PORT = 3306;
 
     public static function connect(): PDO {
