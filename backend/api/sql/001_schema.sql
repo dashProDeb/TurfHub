@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS users (
   nid_url       VARCHAR(500) DEFAULT NULL,
   cert_url      VARCHAR(500) DEFAULT NULL,
   kyc_status    ENUM('pending', 'verified', 'rejected') DEFAULT 'pending',
+  kyc_data      JSON DEFAULT NULL,
   created_at    DATETIME DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
