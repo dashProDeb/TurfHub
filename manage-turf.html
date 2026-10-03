@@ -5,50 +5,103 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TurfHub — Manage Turfs</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <style>
-    .turf-row { background:#fff;border:1px solid #e8ede8;border-radius:14px;overflow:hidden;margin-bottom:12px;transition:box-shadow .2s; }
-    .turf-row:hover { box-shadow:0 4px 16px rgba(0,0,0,.08); }
+    .turf-row { background:#fff;border:1px solid #e8ede8;border-radius:14px;overflow:hidden;margin-bottom:14px;transition:box-shadow .2s; }
+    .turf-row:hover { box-shadow:0 6px 20px rgba(0,0,0,.07); }
     .turf-row-body { display:flex;align-items:flex-start;gap:18px;padding:18px; }
-    .turf-thumb { width:110px;height:76px;border-radius:10px;overflow:hidden;flex-shrink:0;background:#e5e7eb; }
+    .turf-thumb { width:110px;height:76px;border-radius:10px;overflow:hidden;flex-shrink:0;background:#e5e7eb;display:flex;align-items:center;justify-content:center;font-size:2rem; }
     .turf-thumb img { width:100%;height:100%;object-fit:cover; }
-    .turf-row-foot { border-top:1px solid #f3f4f6;background:#fafafa;padding:10px 18px;display:flex;gap:24px; }
+    .turf-row-foot { border-top:1px solid #f3f4f6;background:#fafafa;padding:10px 18px;display:flex;gap:24px;flex-wrap:wrap; }
     .turf-stat { display:flex;flex-direction:column; }
     .turf-stat-lbl { font-size:.68rem;color:#9ca3af; }
     .turf-stat-val { font-weight:800;font-size:.88rem;color:#1a1a1a; }
     .status-active { background:#dcfce7;color:#166534;padding:3px 10px;border-radius:100px;font-size:.72rem;font-weight:700;display:inline-flex;align-items:center;gap:4px; }
-    .status-maintenance { background:#f3f4f6;color:#6b7280;padding:3px 10px;border-radius:100px;font-size:.72rem;font-weight:700;display:inline-flex;align-items:center;gap:4px; }
+    .status-inactive { background:#f3f4f6;color:#6b7280;padding:3px 10px;border-radius:100px;font-size:.72rem;font-weight:700;display:inline-flex;align-items:center;gap:4px; }
+    .status-pending { background:#fef3c7;color:#d97706;padding:3px 10px;border-radius:100px;font-size:.72rem;font-weight:700;display:inline-flex;align-items:center;gap:4px; }
+
+    /* Modal Styles */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(13, 40, 24, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-overlay.open {
+      display: flex;
+    }
+    .modal-box {
+      background: #ffffff;
+      border-radius: 18px;
+      width: 100%;
+      max-width: 620px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      animation: modalIn .2s ease-out;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(.96) translateY(8px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .form-label {
+      display: block;
+      font-size: .75rem;
+      font-weight: 700;
+      color: #374151;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .form-control {
+      width: 100%;
+      padding: 9px 13px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: .88rem;
+      outline: none;
+      transition: border-color .15s;
+      background: #fff;
+    }
+    .form-control:focus {
+      border-color: #7ed321;
+      box-shadow: 0 0 0 3px rgba(126,211,33,.12);
+    }
+    .amenity-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: .78rem;
+      font-weight: 600;
+      color: #4b5563;
+      cursor: pointer;
+      user-select: none;
+      transition: all .15s;
+    }
+    .amenity-chip input {
+      accent-color: #7ed321;
+    }
+    .amenity-chip:hover {
+      border-color: #7ed321;
+      background: rgba(126,211,33,.05);
+    }
   </style>
 </head>
 <body>
 <div id="app-wrapper">
-  
-  <!-- Standalone Owner Sidebar -->
-  <aside id="sidebar" class="sidebar">
-    <a href="index.html" class="sidebar-logo">
-      <div class="sidebar-logo-icon">TH</div>
-      <span class="sidebar-logo-text">TurfHub</span>
-    </a>
-    <div class="sidebar-user">
-      <div class="sidebar-avatar">R</div>
-      <div class="sidebar-user-info">
-        <span class="sidebar-user-name">Rafiqul Islam</span>
-        <span class="sidebar-user-role">Turf Owner</span>
-      </div>
-    </div>
-    <nav class="sidebar-nav">
-      <a href="owner-dashboard.html" class="sidebar-nav-item"><span class="sidebar-label">Dashboard</span></a>
-      <a href="manage-turf.html" class="sidebar-nav-item active"><span class="sidebar-label">Manage Turfs</span></a>
-      <a href="slot-calendar.html" class="sidebar-nav-item"><span class="sidebar-label">Slot Calendar</span></a>
-      <a href="owner-tournament.html" class="sidebar-nav-item"><span class="sidebar-label">Tournaments</span></a>
-      <a href="score-entry.html" class="sidebar-nav-item"><span class="sidebar-label">Score Entry</span></a>
-      <a href="owner-chat.html" class="sidebar-nav-item"><span class="sidebar-label">Messages</span></a>
-      <a href="owner-reports.html" class="sidebar-nav-item"><span class="sidebar-label">Reports</span></a>
-    </nav>
-    <a href="login.html" class="sidebar-signout">
-      <span class="sidebar-label">Sign Out</span>
-    </a>
-  </aside>
+  <!-- Sidebar injected by layout.js -->
 
   <div id="main-content">
     <div id="topbar">
@@ -57,87 +110,357 @@
         <span class="topbar-sub">Add, edit, and manage your sports grounds</span>
       </div>
       <div class="topbar-actions">
-        <a href="#" class="btn-lime">+ Add New Turf</a>
+        <button onclick="openTurfModal()" class="btn-lime" style="cursor:pointer">+ Add New Turf</button>
       </div>
     </div>
+    
     <div class="page-body">
       <div class="panel-header" style="margin-bottom:16px">
-        <span class="panel-title">Your Turfs (3)</span>
+        <span class="panel-title" id="turfs-title">Your Turfs (—)</span>
       </div>
 
-      <div class="turf-row">
-        <div class="turf-row-body">
-          <div class="turf-thumb"><img src="turf_football.jpg" alt="The Green Arena" /></div>
-          <div style="flex:1;min-width:0">
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-              <span style="font-weight:800;font-size:.95rem;color:#1a1a1a">The Green Arena</span>
-              <span class="status-active"><span style="width:6px;height:6px;border-radius:50%;background:#16a34a;display:inline-block"></span>Active</span>
-            </div>
-            <div style="font-size:.82rem;color:#6b7280;margin-bottom:6px">Football &middot; 5-a-side &middot; Outdoor &middot; &#2547;800/hr</div>
-            <div style="font-size:.75rem;color:#9ca3af">&#128197; 34 bookings this month &nbsp;&middot;&nbsp; Floodlights &middot; Parking &middot; Changing Room</div>
-          </div>
-          <div style="display:flex;gap:8px;flex-shrink:0">
-            <button class="btn-ghost" style="font-size:.78rem;padding:7px 14px">&#9998; Edit</button>
-            <a href="slot-calendar.html" class="btn-lime" style="font-size:.78rem;padding:7px 14px">&#128197; Calendar</a>
-            <button style="width:34px;height:34px;border-radius:8px;border:1.5px solid rgba(229,57,53,.3);background:transparent;cursor:pointer;color:#e53935;font-size:.9rem" title="Delete">&#128465;</button>
-          </div>
-        </div>
-        <div class="turf-row-foot">
-          <div class="turf-stat"><span class="turf-stat-lbl">This Month</span><span class="turf-stat-val">&#2547;27,200</span></div>
-          <div class="turf-stat"><span class="turf-stat-lbl">Utilization</span><span class="turf-stat-val">68%</span></div>
-          <div class="turf-stat"><span class="turf-stat-lbl">Avg Rating</span><span class="turf-stat-val">4.8 &#9733;</span></div>
-        </div>
-      </div>
-
-      <div class="turf-row">
-        <div class="turf-row-body">
-          <div class="turf-thumb"><img src="turf_basketball.jpg" alt="Court Pro Indoor" /></div>
-          <div style="flex:1;min-width:0">
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-              <span style="font-weight:800;font-size:.95rem;color:#1a1a1a">Court Pro Indoor</span>
-              <span class="status-active"><span style="width:6px;height:6px;border-radius:50%;background:#16a34a;display:inline-block"></span>Active</span>
-            </div>
-            <div style="font-size:.82rem;color:#6b7280;margin-bottom:6px">Basketball &middot; Indoor &middot; &#2547;600/hr</div>
-            <div style="font-size:.75rem;color:#9ca3af">&#128197; 28 bookings this month &nbsp;&middot;&nbsp; AC &middot; Changing Room &middot; Equipment Rental</div>
-          </div>
-          <div style="display:flex;gap:8px;flex-shrink:0">
-            <button class="btn-ghost" style="font-size:.78rem;padding:7px 14px">&#9998; Edit</button>
-            <a href="slot-calendar.html" class="btn-lime" style="font-size:.78rem;padding:7px 14px">&#128197; Calendar</a>
-            <button style="width:34px;height:34px;border-radius:8px;border:1.5px solid rgba(229,57,53,.3);background:transparent;cursor:pointer;color:#e53935;font-size:.9rem" title="Delete">&#128465;</button>
-          </div>
-        </div>
-        <div class="turf-row-foot">
-          <div class="turf-stat"><span class="turf-stat-lbl">This Month</span><span class="turf-stat-val">&#2547;16,800</span></div>
-          <div class="turf-stat"><span class="turf-stat-lbl">Utilization</span><span class="turf-stat-val">52%</span></div>
-          <div class="turf-stat"><span class="turf-stat-lbl">Avg Rating</span><span class="turf-stat-val">4.9 &#9733;</span></div>
-        </div>
-      </div>
-
-      <div class="turf-row">
-        <div class="turf-row-body">
-          <div class="turf-thumb"><img src="turf_champions.jpg" alt="Champions Field" /></div>
-          <div style="flex:1;min-width:0">
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-              <span style="font-weight:800;font-size:.95rem;color:#1a1a1a">Champions Field</span>
-              <span class="status-maintenance"><span style="width:6px;height:6px;border-radius:50%;background:#9ca3af;display:inline-block"></span>Maintenance</span>
-            </div>
-            <div style="font-size:.82rem;color:#6b7280;margin-bottom:6px">Cricket &middot; Outdoor &middot; &#2547;1,200/hr</div>
-            <div style="font-size:.75rem;color:#9ca3af">&#128197; 14 bookings this month &nbsp;&middot;&nbsp; Pitch Resurfacing in Progress</div>
-          </div>
-          <div style="display:flex;gap:8px;flex-shrink:0">
-            <button class="btn-ghost" style="font-size:.78rem;padding:7px 14px">&#9998; Edit</button>
-            <a href="slot-calendar.html" class="btn-lime" style="font-size:.78rem;padding:7px 14px">&#128197; Calendar</a>
-            <button style="width:34px;height:34px;border-radius:8px;border:1.5px solid rgba(229,57,53,.3);background:transparent;cursor:pointer;color:#e53935;font-size:.9rem" title="Delete">&#128465;</button>
-          </div>
-        </div>
-        <div class="turf-row-foot">
-          <div class="turf-stat"><span class="turf-stat-lbl">This Month</span><span class="turf-stat-val">&#2547;16,800</span></div>
-          <div class="turf-stat"><span class="turf-stat-lbl">Utilization</span><span class="turf-stat-val">29%</span></div>
-          <div class="turf-stat"><span class="turf-stat-lbl">Avg Rating</span><span class="turf-stat-val">4.7 &#9733;</span></div>
-        </div>
+      <div id="turfs-list">
+        <!-- Populated by JS from turfs/my-turfs.php -->
       </div>
     </div>
   </div>
 </div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- EDIT / CREATE TURF MODAL DIALOG                                     -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div id="turf-modal" class="modal-overlay">
+  <div class="modal-box">
+    
+    <!-- Header -->
+    <div style="background:linear-gradient(135deg,#0d2818,#1a4029);padding:18px 24px;display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:34px;height:34px;border-radius:8px;background:#7ed321;color:#0d2818;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:1.1rem">🏟️</div>
+        <div>
+          <h3 style="color:#ffffff;font-weight:800;font-size:1.05rem;margin:0" id="modal-heading">Edit Turf Details</h3>
+          <span style="color:rgba(255,255,255,0.7);font-size:.74rem">Configure ground specs, surface type, and pricing</span>
+        </div>
+      </div>
+      <button onclick="closeTurfModal()" style="background:rgba(255,255,255,0.15);border:none;color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:background .2s">&times;</button>
+    </div>
+
+    <!-- Form Body -->
+    <form id="turf-form" onsubmit="handleTurfSubmit(event)" style="padding:22px 24px">
+      <input type="hidden" id="form-turf-id" value="" />
+
+      <!-- Row 1: Name & Sport Type -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+        <div>
+          <label class="form-label">Turf Ground Name *</label>
+          <input type="text" id="form-turf-name" class="form-control" placeholder="e.g. The Green Arena" required />
+        </div>
+        <div>
+          <label class="form-label">Sport Category *</label>
+          <select id="form-turf-sport" class="form-control" required>
+            <option value="Football">⚽ Football</option>
+            <option value="Cricket">🏏 Cricket</option>
+            <option value="Basketball">🏀 Basketball</option>
+            <option value="Badminton">🏸 Badminton</option>
+            <option value="Tennis">🎾 Tennis</option>
+            <option value="Padel">🏓 Padel</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Row 2: Location & District -->
+      <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:14px;margin-bottom:14px">
+        <div>
+          <label class="form-label">Location / Address *</label>
+          <input type="text" id="form-turf-location" class="form-control" placeholder="e.g. Road 11, Banani" required />
+        </div>
+        <div>
+          <label class="form-label">District *</label>
+          <select id="form-turf-district" class="form-control" required>
+            <option value="Dhaka">Dhaka</option>
+            <option value="Chattogram">Chattogram</option>
+            <option value="Sylhet">Sylhet</option>
+            <option value="Rajshahi">Rajshahi</option>
+            <option value="Khulna">Khulna</option>
+            <option value="Barishal">Barishal</option>
+            <option value="Rangpur">Rangpur</option>
+            <option value="Mymensingh">Mymensingh</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Row 3: Price, Surface & Field Size -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:16px">
+        <div>
+          <label class="form-label">Price / Hour (৳) *</label>
+          <input type="number" id="form-turf-price" class="form-control" placeholder="e.g. 800" min="100" step="50" required />
+        </div>
+        <div>
+          <label class="form-label">Surface Type</label>
+          <input type="text" id="form-turf-surface" class="form-control" placeholder="e.g. Artificial Grass" />
+        </div>
+        <div>
+          <label class="form-label">Field Size</label>
+          <input type="text" id="form-turf-size" class="form-control" placeholder="e.g. 5-a-side (40x25m)" />
+        </div>
+      </div>
+
+      <!-- Row 4: Amenities -->
+      <div style="margin-bottom:20px">
+        <label class="form-label">Available Amenities</label>
+        <div style="display:flex;flex-wrap:wrap;gap:8px" id="amenities-container">
+          <label class="amenity-chip"><input type="checkbox" value="Floodlights" /> 💡 Floodlights</label>
+          <label class="amenity-chip"><input type="checkbox" value="AC Lounge" /> ❄️ AC Lounge</label>
+          <label class="amenity-chip"><input type="checkbox" value="Parking" /> 🚗 Parking</label>
+          <label class="amenity-chip"><input type="checkbox" value="Washroom" /> 🚻 Washroom</label>
+          <label class="amenity-chip"><input type="checkbox" value="Changing Room" /> 👕 Changing Room</label>
+          <label class="amenity-chip"><input type="checkbox" value="CCTV" /> 📹 CCTV</label>
+          <label class="amenity-chip"><input type="checkbox" value="First Aid" /> 🩹 First Aid</label>
+          <label class="amenity-chip"><input type="checkbox" value="Showers" /> 🚿 Showers</label>
+          <label class="amenity-chip"><input type="checkbox" value="Equipment Rental" /> ⚽ Equipment Rental</label>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding-top:16px;border-top:1px solid #f3f4f6">
+        <div>
+          <button type="button" id="btn-delete-turf" onclick="handleDeleteTurf()" style="display:none;background:#fee2e2;color:#dc2626;border:1.5px solid #fecaca;padding:8px 14px;border-radius:10px;font-size:.82rem;font-weight:700;cursor:pointer;transition:background .15s">
+            🗑️ Remove Turf
+          </button>
+        </div>
+        
+        <div style="display:flex;align-items:center;gap:8px">
+          <button type="button" onclick="closeTurfModal()" class="btn-ghost" style="font-size:.82rem;padding:9px 16px">Cancel</button>
+          <button type="submit" id="btn-save-turf" class="btn-lime" style="font-size:.84rem;padding:9px 20px;font-weight:800">
+            💾 Save Details
+          </button>
+        </div>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+<script src="api-client.js"></script>
+<script src="auth.js"></script>
+<script src="layout.js"></script>
+<script>
+  let ownerTurfs = [];
+
+  (async function init() {
+    const user = await initAuth('owner');
+    if (!user) return;
+    renderSidebar('manage', user);
+
+    await loadTurfs();
+  })();
+
+  async function loadTurfs() {
+    const listEl = document.getElementById('turfs-list');
+    try {
+      const data = await apiGet('turfs/my-turfs.php');
+      ownerTurfs = data.turfs || [];
+      document.getElementById('turfs-title').textContent = `Your Turfs (${ownerTurfs.length})`;
+
+      if (ownerTurfs.length === 0) {
+        listEl.innerHTML = `
+          <div style="text-align:center;padding:60px;color:#9ca3af;font-size:.9rem;background:#fff;border-radius:14px;border:1.5px dashed #e5e7eb">
+            <div style="font-size:3rem;margin-bottom:12px">🏟️</div>
+            <div style="font-weight:700;font-size:1rem;color:#1a1a1a">No turfs added yet</div>
+            <div style="margin-top:6px;font-size:.85rem">Click the button below to register your first sports turf ground.</div>
+            <button onclick="openTurfModal()" class="btn-lime" style="margin-top:16px;display:inline-block">+ Add First Turf</button>
+          </div>`;
+        return;
+      }
+
+      listEl.innerHTML = ownerTurfs.map(t => {
+        const statusClass = t.status === 'active' ? 'status-active' :
+                            t.status === 'inactive' ? 'status-inactive' : 'status-pending';
+        const statusDot = t.status === 'active' ? '#16a34a' :
+                          t.status === 'inactive' ? '#9ca3af' : '#d97706';
+        const statusLabel = t.status ? t.status.charAt(0).toUpperCase() + t.status.slice(1) : 'Active';
+        const photos = t.photos || [];
+        const thumbSrc = photos.length > 0 ? photos[0] : '';
+        const amenities = t.amenities || [];
+        const verifiedBadge = t.is_verified
+          ? '<span style="font-size:.65rem;font-weight:800;background:#7ed321;color:#0d2818;padding:2px 6px;border-radius:4px">✓ VERIFIED</span>'
+          : '<span style="font-size:.65rem;font-weight:800;background:#fef3c7;color:#d97706;padding:2px 6px;border-radius:4px">PENDING</span>';
+
+        return `
+          <div class="turf-row" id="turf-card-${t.id}">
+            <div class="turf-row-body">
+              <div class="turf-thumb">
+                ${thumbSrc ? `<img src="${thumbSrc}" alt="${t.name}" />` : '🏟️'}
+              </div>
+              <div style="flex:1;min-width:0">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
+                  <span style="font-weight:800;font-size:.95rem;color:#1a1a1a">${t.name}</span>
+                  <span class="${statusClass}">
+                    <span style="width:6px;height:6px;border-radius:50%;background:${statusDot};display:inline-block"></span>${statusLabel}
+                  </span>
+                  ${verifiedBadge}
+                </div>
+                <div style="font-size:.82rem;color:#6b7280;margin-bottom:6px">
+                  ${t.sport_type || 'Sports'} &middot; ${t.location || t.district || ''} &middot; ${formatBDT(t.price_per_hour || 800)}/hr
+                </div>
+                <div style="font-size:.75rem;color:#9ca3af">
+                  ${amenities.length > 0 ? amenities.join(' · ') : 'No amenities listed'}
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+                <button onclick="openTurfModal(${t.id})" style="font-size:.78rem;padding:7px 14px;border:1.5px solid #e5e7eb;border-radius:8px;background:#fff;cursor:pointer;font-weight:700;display:flex;align-items:center;gap:4px">
+                  ✏️ Edit
+                </button>
+                <a href="slot-calendar.html" class="btn-lime" style="font-size:.78rem;padding:7px 14px;text-decoration:none">📅 Calendar</a>
+              </div>
+            </div>
+            <div class="turf-row-foot">
+              <div class="turf-stat"><span class="turf-stat-lbl">Price/Hr</span><span class="turf-stat-val">${formatBDT(t.price_per_hour || 800)}</span></div>
+              <div class="turf-stat"><span class="turf-stat-lbl">Surface</span><span class="turf-stat-val">${t.surface_type || 'Standard'}</span></div>
+              <div class="turf-stat"><span class="turf-stat-lbl">Field Size</span><span class="turf-stat-val">${t.field_size || 'Standard'}</span></div>
+              <div class="turf-stat"><span class="turf-stat-lbl">District</span><span class="turf-stat-val">${t.district || 'Dhaka'}</span></div>
+            </div>
+          </div>`;
+      }).join('');
+
+    } catch (err) {
+      console.error('Manage turf error:', err);
+      listEl.innerHTML = `
+        <div style="text-align:center;padding:40px;color:#e53935;font-size:.85rem">
+          ⚠️ Failed to load turfs: ${err.message}
+        </div>`;
+    }
+  }
+
+  // ─── Modal Dialog Management ───
+  function openTurfModal(turfId = null) {
+    const modal = document.getElementById('turf-modal');
+    const deleteBtn = document.getElementById('btn-delete-turf');
+    const heading = document.getElementById('modal-heading');
+    const saveBtn = document.getElementById('btn-save-turf');
+
+    // Reset amenities checkboxes
+    document.querySelectorAll('#amenities-container input[type="checkbox"]').forEach(cb => cb.checked = false);
+
+    if (turfId) {
+      // Edit mode
+      const turf = ownerTurfs.find(t => t.id == turfId);
+      if (!turf) return;
+
+      heading.textContent = `Edit Turf: ${turf.name}`;
+      saveBtn.textContent = '💾 Update Turf';
+      deleteBtn.style.display = 'inline-block';
+      document.getElementById('form-turf-id').value = turf.id;
+      document.getElementById('form-turf-name').value = turf.name || '';
+      document.getElementById('form-turf-sport').value = turf.sport_type || 'Football';
+      document.getElementById('form-turf-location').value = turf.location || '';
+      document.getElementById('form-turf-district').value = turf.district || 'Dhaka';
+      document.getElementById('form-turf-price').value = turf.price_per_hour || 800;
+      document.getElementById('form-turf-surface').value = turf.surface_type || '';
+      document.getElementById('form-turf-size').value = turf.field_size || '';
+
+      const amenities = Array.isArray(turf.amenities) ? turf.amenities : [];
+      document.querySelectorAll('#amenities-container input[type="checkbox"]').forEach(cb => {
+        cb.checked = amenities.includes(cb.value);
+      });
+    } else {
+      // Create mode
+      heading.textContent = 'Add New Turf Ground';
+      saveBtn.textContent = '✨ Create Turf';
+      deleteBtn.style.display = 'none';
+      document.getElementById('form-turf-id').value = '';
+      document.getElementById('form-turf-name').value = '';
+      document.getElementById('form-turf-sport').value = 'Football';
+      document.getElementById('form-turf-location').value = '';
+      document.getElementById('form-turf-district').value = 'Dhaka';
+      document.getElementById('form-turf-price').value = 800;
+      document.getElementById('form-turf-surface').value = '';
+      document.getElementById('form-turf-size').value = '';
+    }
+
+    modal.classList.add('open');
+  }
+
+  function closeTurfModal() {
+    document.getElementById('turf-modal').classList.remove('open');
+  }
+
+  async function handleTurfSubmit(e) {
+    e.preventDefault();
+    const turfId = document.getElementById('form-turf-id').value;
+    const saveBtn = document.getElementById('btn-save-turf');
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Saving...';
+
+    // Collect checked amenities
+    const selectedAmenities = [];
+    document.querySelectorAll('#amenities-container input[type="checkbox"]:checked').forEach(cb => {
+      selectedAmenities.push(cb.value);
+    });
+
+    const payload = {
+      name: document.getElementById('form-turf-name').value.trim(),
+      sport_type: document.getElementById('form-turf-sport').value,
+      location: document.getElementById('form-turf-location').value.trim(),
+      district: document.getElementById('form-turf-district').value,
+      price_per_hour: parseInt(document.getElementById('form-turf-price').value, 10),
+      surface_type: document.getElementById('form-turf-surface').value.trim(),
+      field_size: document.getElementById('form-turf-size').value.trim(),
+      amenities: selectedAmenities
+    };
+
+    try {
+      if (turfId) {
+        payload.turf_id = parseInt(turfId, 10);
+        const res = await apiPost('turfs/update.php', payload);
+        if (res.success) {
+          closeTurfModal();
+          await loadTurfs();
+        } else {
+          alert(res.error || 'Failed to update turf');
+        }
+      } else {
+        const res = await apiPost('turfs/create.php', payload);
+        if (res.success) {
+          closeTurfModal();
+          await loadTurfs();
+        } else {
+          alert(res.error || 'Failed to create turf');
+        }
+      }
+    } catch (err) {
+      alert('Error: ' + err.message);
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.textContent = turfId ? '💾 Update Turf' : '✨ Create Turf';
+    }
+  }
+
+  async function handleDeleteTurf() {
+    const turfId = document.getElementById('form-turf-id').value;
+    const turfName = document.getElementById('form-turf-name').value;
+    if (!turfId) return;
+
+    if (!confirm(`Are you sure you want to completely remove "${turfName}"?\n\nThis will remove the ground and its slot schedules from the platform.`)) {
+      return;
+    }
+
+    try {
+      const res = await apiPost('turfs/delete.php', { turf_id: parseInt(turfId, 10) });
+      if (res.success) {
+        closeTurfModal();
+        await loadTurfs();
+      } else {
+        alert(res.error || 'Failed to delete turf');
+      }
+    } catch (err) {
+      alert('Error deleting turf: ' + err.message);
+    }
+  }
+
+  // Close modal when clicking outside box
+  document.getElementById('turf-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeTurfModal();
+  });
+</script>
 </body>
 </html>

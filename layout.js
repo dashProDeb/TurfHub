@@ -1,13 +1,26 @@
 /**
  * TurfHub Layout Utility
  * Renders the shared sidebar for all authenticated pages.
- * Usage: call renderSidebar('dashboard') at page load.
+ * 
+ * Usage: 
+ *   const user = await initAuth('owner', 'captain');
+ *   renderSidebar('dashboard', user);
  */
 
-function renderSidebar(activeId) {
-  const role = getRole();
+/**
+ * Render the sidebar using session user data.
+ * @param {string} activeId - The nav item id to highlight
+ * @param {Object} user - The user object from initAuth() / checkSession()
+ */
+function renderSidebar(activeId, user) {
+  const role = user ? user.role : getRole();
   if (!role) { window.location.href = 'login.html'; return; }
   const cfg = getRoleConfig(role);
+
+  // Derive avatar letter and display name from user data
+  const displayName = user ? user.full_name : cfg.label;
+  const avatarLetter = displayName ? displayName.charAt(0).toUpperCase() : role.charAt(0).toUpperCase();
+  const roleLabel = cfg.subtitle || cfg.label;
 
   const navHTML = cfg.nav.map(item => {
     const isActive = item.id === activeId;
@@ -27,10 +40,10 @@ function renderSidebar(activeId) {
 
       <!-- User -->
       <div class="sidebar-user">
-        <div class="sidebar-avatar">${cfg.avatar}</div>
+        <div class="sidebar-avatar">${avatarLetter}</div>
         <div class="sidebar-user-info">
-          <span class="sidebar-user-name">${cfg.name}</span>
-          <span class="sidebar-user-role">${cfg.subtitle}</span>
+          <span class="sidebar-user-name">${displayName}</span>
+          <span class="sidebar-user-role">${roleLabel}</span>
         </div>
       </div>
 
@@ -50,12 +63,18 @@ function renderSidebar(activeId) {
   // Inject sidebar before main content
   const wrapper = document.getElementById('app-wrapper');
   if (wrapper) {
+    // Remove any existing hardcoded sidebar first
+    const existingSidebar = wrapper.querySelector('#sidebar');
+    if (existingSidebar) existingSidebar.remove();
+    const existingOverlay = wrapper.querySelector('#sidebar-overlay');
+    if (existingOverlay) existingOverlay.remove();
+
     wrapper.insertAdjacentHTML('afterbegin', sidebarHTML);
   }
 
   // Mobile toggle button (injected into topbar)
   const topbar = document.getElementById('topbar');
-  if (topbar) {
+  if (topbar && !document.getElementById('sidebar-toggle')) {
     const btn = document.createElement('button');
     btn.id = 'sidebar-toggle';
     btn.className = 'sidebar-toggle';
@@ -75,12 +94,61 @@ function closeSidebar() {
   document.getElementById('sidebar-overlay')?.classList.remove('show');
 }
 
+/* ── Helper: format BDT currency ── */
+function formatBDT(amount) {
+  return '৳' + Number(amount).toLocaleString('en-IN');
+}
+
+/* ── Helper: format date nicely ── */
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+/* ── Helper: format time from HH:MM:SS ── */
+function formatTime(timeStr) {
+  if (!timeStr) return '';
+  const [h, m] = timeStr.split(':');
+  const hour = parseInt(h);
+  const ampm = hour >= 12 ? 'PM' : 'AM';
+  const displayHour = hour % 12 || 12;
+  return `${displayHour}:${m} ${ampm}`;
+}
+
+/* ── Helper: show loading spinner in a container ── */
+function showLoading(containerId) {
+  const el = document.getElementById(containerId);
+  if (el) {
+    el.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:center;padding:40px;color:#9ca3af;gap:8px">
+        <div style="width:20px;height:20px;border:2.5px solid #e5e7eb;border-top-color:#7ed321;border-radius:50%;animation:spin 0.8s linear infinite"></div>
+        <span style="font-size:.85rem;font-weight:500">Loading...</span>
+      </div>`;
+  }
+}
+
+/* ── Helper: show error in a container ── */
+function showError(containerId, msg) {
+  const el = document.getElementById(containerId);
+  if (el) {
+    el.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:center;padding:30px;color:#e53935;gap:8px">
+        <span style="font-size:1.2rem">⚠️</span>
+        <span style="font-size:.85rem;font-weight:600">${msg}</span>
+      </div>`;
+  }
+}
+
 // Shared CSS injected once
 (function injectLayoutCSS() {
   if (document.getElementById('layout-css')) return;
   const style = document.createElement('style');
   style.id = 'layout-css';
   style.textContent = `
+    /* ─── Spinner Animation ─── */
+    @keyframes spin { to { transform: rotate(360deg); } }
+
     /* ─── Layout Shell ─── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; font-family: "Inter", ui-sans-serif, system-ui, sans-serif; }
@@ -361,6 +429,7 @@ function closeSidebar() {
     .badge-available { background: rgba(126,211,33,0.15); color: #5a9e12; }
     .badge-uncertain { background: rgba(245,166,35,0.15); color: #d97706; }
     .badge-unavailable { background: rgba(229,57,53,0.12); color: #e53935; }
+    .badge-success { background: rgba(126,211,33,0.15); color: #5a9e12; }
     .badge-dot::before { content: "•"; margin-right: 2px; }
 
     /* ─── Mobile ─── */

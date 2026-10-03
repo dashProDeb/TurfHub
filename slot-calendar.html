@@ -107,38 +107,17 @@
     .req-card:hover {
       box-shadow: 0 4px 14px rgba(0,0,0,.06);
     }
+
+    @keyframes reserveModalIn {
+      from { opacity: 0; transform: scale(.95) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
   </style>
 </head>
 <body>
 <div id="app-wrapper">
   
-  <!-- Standalone Owner Sidebar -->
-  <aside id="sidebar" class="sidebar">
-    <a href="index.html" class="sidebar-logo">
-      <div class="sidebar-logo-icon">TH</div>
-      <span class="sidebar-logo-text">TurfHub</span>
-    </a>
-    <div class="sidebar-user">
-      <div class="sidebar-avatar">R</div>
-      <div class="sidebar-user-info">
-        <span class="sidebar-user-name">Rafiqul Islam</span>
-        <span class="sidebar-user-role">Turf Owner</span>
-      </div>
-    </div>
-    <nav class="sidebar-nav">
-      <a href="owner-dashboard.html" class="sidebar-nav-item"><span class="sidebar-label">Dashboard</span></a>
-      <a href="manage-turf.html" class="sidebar-nav-item"><span class="sidebar-label">Manage Turfs</span></a>
-      <a href="slot-calendar.html" class="sidebar-nav-item active"><span class="sidebar-label">Slot Calendar</span></a>
-      <a href="owner-tournament.html" class="sidebar-nav-item"><span class="sidebar-label">Tournaments</span></a>
-      <a href="score-entry.html" class="sidebar-nav-item"><span class="sidebar-label">Score Entry</span></a>
-      <a href="owner-chat.html" class="sidebar-nav-item"><span class="sidebar-label">Messages</span></a>
-      <a href="owner-reports.html" class="sidebar-nav-item"><span class="sidebar-label">Reports</span></a>
-    </nav>
-    <a href="login.html" class="sidebar-signout">
-      <span class="sidebar-label">Sign Out</span>
-    </a>
-  </aside>
-
+  <!-- Main Content (Sidebar will be rendered dynamically by layout.js) -->
   <div id="main-content">
     
     <!-- Topbar -->
@@ -149,7 +128,7 @@
       </div>
       <div class="topbar-actions">
         <span id="topbar-pending-badge" style="display:flex;align-items:center;gap:6px;font-size:.78rem;font-weight:700;background:rgba(245,158,11,.12);color:#92400e;padding:6px 14px;border-radius:100px">
-          <span style="width:7px;height:7px;border-radius:50%;background:#f59e0b"></span> 3 pending requests
+          <span style="width:7px;height:7px;border-radius:50%;background:#f59e0b"></span> 0 pending requests
         </span>
       </div>
     </div>
@@ -164,7 +143,7 @@
             <span>📅</span> Calendar View
           </button>
           <button class="tab-btn" id="tab-req-btn" onclick="switchView('requests')">
-            <span>✅</span> Booking Requests <span id="req-count-badge" style="background:#f59e0b;color:#fff;padding:1px 7px;border-radius:100px;font-size:.7rem;margin-left:4px">3</span>
+            <span>✅</span> Booking Requests <span id="req-count-badge" style="background:#f59e0b;color:#fff;padding:1px 7px;border-radius:100px;font-size:.7rem;margin-left:4px">0</span>
           </button>
         </div>
 
@@ -172,9 +151,7 @@
         <div style="display:flex;align-items:center;gap:8px">
           <span style="font-size:.8rem;font-weight:700;color:#6b7280;text-transform:uppercase">Turf:</span>
           <select id="turf-select" onchange="onTurfChange()" style="padding:8px 14px;border:1.5px solid #e5e7eb;border-radius:10px;font-family:inherit;font-size:.84rem;font-weight:700;background:#fff;color:#1a1a1a;outline:none;cursor:pointer">
-            <option value="green-arena">The Green Arena (Outdoor 5-a-side)</option>
-            <option value="court-pro">Court Pro Indoor Arena</option>
-            <option value="champions-field">Champions Cricket Ground</option>
+            <option value="">Loading your turfs...</option>
           </select>
         </div>
       </div>
@@ -184,32 +161,32 @@
         <div class="stat-card">
           <div class="stat-icon" style="background:#dcfce7">📅</div>
           <div class="stat-body">
-            <div class="stat-value" id="kpi-total-booked">28</div>
+            <div class="stat-value" id="kpi-total-booked">0</div>
             <div class="stat-label">Booked Slots (This Week)</div>
-            <div class="stat-trend up">↑ 82% Utilization</div>
+            <div class="stat-trend up" id="kpi-utilization">Active bookings</div>
           </div>
         </div>
         <div class="stat-card">
           <div class="stat-icon" style="background:#fef3c7">⏳</div>
           <div class="stat-body">
-            <div class="stat-value" id="kpi-pending-req">3</div>
+            <div class="stat-value" id="kpi-pending-req">0</div>
             <div class="stat-label">Pending Approvals</div>
-            <div class="stat-trend" style="color:#f59e0b">Action required</div>
+            <div class="stat-trend" style="color:#f59e0b" id="kpi-pending-sub">Awaiting your review</div>
           </div>
         </div>
         <div class="stat-card">
           <div class="stat-icon" style="background:#dbeafe">💵</div>
           <div class="stat-body">
-            <div class="stat-value" id="kpi-projected-rev">&#2547;22,400</div>
-            <div class="stat-label">Weekly Est. Revenue</div>
-            <div class="stat-trend up">↑ +14% vs last week</div>
+            <div class="stat-value" id="kpi-projected-rev">৳0</div>
+            <div class="stat-label">Weekly Confirmed Revenue</div>
+            <div class="stat-trend up" id="kpi-rev-sub">Direct earnings</div>
           </div>
         </div>
         <div class="stat-card">
           <div class="stat-icon" style="background:#f3f4f6">🔧</div>
           <div class="stat-body">
-            <div class="stat-value" id="kpi-maint-slots">4</div>
-            <div class="stat-label">Maintenance Hours</div>
+            <div class="stat-value" id="kpi-maint-slots">0</div>
+            <div class="stat-label">Blocked / Maintenance Slots</div>
             <div class="stat-trend" style="color:#6b7280">Scheduled upkeep</div>
           </div>
         </div>
@@ -221,12 +198,12 @@
         <!-- Calendar Header Controls -->
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px">
           <div>
-            <h2 class="font-black text-charcoal text-lg" id="calendar-week-heading">The Green Arena — Week of Jul 21–27</h2>
-            <p class="text-xs text-gray-500 mt-0.5">Click any available slot to select and toggle maintenance. Click booked slots to view team details.</p>
+            <h2 class="font-black text-charcoal text-lg" id="calendar-week-heading">Loading calendar schedule...</h2>
+            <p class="text-xs text-gray-500 mt-0.5">Click available slots to block maintenance or reserve. Click booked slots to view team booking details.</p>
           </div>
           <div style="display:flex;align-items:center;gap:8px">
             <button onclick="changeWeek(-1)" class="btn-ghost" style="padding:7px 14px;font-size:.8rem">← Prev Week</button>
-            <button onclick="changeWeek(0)" class="btn-ghost" style="padding:7px 14px;font-size:.8rem">Today</button>
+            <button onclick="changeWeek(0)" class="btn-ghost" style="padding:7px 14px;font-size:.8rem">This Week</button>
             <button onclick="changeWeek(1)" class="btn-ghost" style="padding:7px 14px;font-size:.8rem">Next Week →</button>
           </div>
         </div>
@@ -262,10 +239,10 @@
             <button onclick="openReserveModal()" style="font-size:.75rem;padding:5px 14px;background:#0d2818;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-family:inherit;transition:all .15s;box-shadow:0 2px 8px rgba(13,40,24,.3)">
               🔒 Reserve for Own Use
             </button>
-            <button onclick="toggleMaintenanceForSelected()" class="btn-ghost" style="font-size:.75rem;padding:5px 12px;background:#f3f4f6">
+            <button onclick="applyBatchStatus('maintenance')" class="btn-ghost" style="font-size:.75rem;padding:5px 12px;background:#f3f4f6">
               🔧 Mark as Maintenance
             </button>
-            <button onclick="makeAvailableForSelected()" class="btn-ghost" style="font-size:.75rem;padding:5px 12px;background:#dcfce7;color:#15803d">
+            <button onclick="applyBatchStatus('available')" class="btn-ghost" style="font-size:.75rem;padding:5px 12px;background:#dcfce7;color:#15803d">
               ✓ Make Available
             </button>
             <button onclick="clearSlotSelection()" class="btn-ghost" style="font-size:.75rem;padding:5px 10px;color:#9ca3af">
@@ -278,20 +255,13 @@
         <div style="overflow-x:auto">
           <div style="min-width:720px">
             <!-- Day Headers -->
-            <div style="display:grid;grid-template-columns:80px repeat(7, 1fr);gap:6px;margin-bottom:6px;text-align:center">
-              <div></div>
-              <div style="font-size:.75rem;font-weight:800;color:#1a1a1a;padding:6px 0;background:#f9fafb;border-radius:6px">Mon <span style="font-weight:500;color:#9ca3af">21</span></div>
-              <div style="font-size:.75rem;font-weight:800;color:#1a1a1a;padding:6px 0;background:#f9fafb;border-radius:6px">Tue <span style="font-weight:500;color:#9ca3af">22</span></div>
-              <div style="font-size:.75rem;font-weight:800;color:#1a1a1a;padding:6px 0;background:#f9fafb;border-radius:6px">Wed <span style="font-weight:500;color:#9ca3af">23</span></div>
-              <div style="font-size:.75rem;font-weight:800;color:#1a1a1a;padding:6px 0;background:#f9fafb;border-radius:6px">Thu <span style="font-weight:500;color:#9ca3af">24</span></div>
-              <div style="font-size:.75rem;font-weight:800;color:#1a1a1a;padding:6px 0;background:#f9fafb;border-radius:6px">Fri <span style="font-weight:500;color:#9ca3af">25</span></div>
-              <div style="font-size:.75rem;font-weight:800;color:#0d2818;padding:6px 0;background:#e8f5e9;border-radius:6px">Sat <span style="font-weight:600;color:#2e7d32">26</span></div>
-              <div style="font-size:.75rem;font-weight:800;color:#0d2818;padding:6px 0;background:#e8f5e9;border-radius:6px">Sun <span style="font-weight:600;color:#2e7d32">27</span></div>
+            <div id="calendar-day-headers" style="display:grid;grid-template-columns:80px repeat(7, 1fr);gap:6px;margin-bottom:6px;text-align:center">
+              <!-- Dynamically populated day columns -->
             </div>
 
             <!-- Hour Rows Container -->
             <div id="calendar-rows-container" style="display:flex;flex-direction:column;gap:6px">
-              <!-- Dynamically rendered -->
+              <!-- Dynamically rendered rows -->
             </div>
           </div>
         </div>
@@ -320,7 +290,7 @@
 </div>
 
 <!-- Modal for Slot Team Details -->
-<div id="slot-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;align-items:center;justify-content:center">
+<div id="slot-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;align-items:center;justify-content:center;backdrop-filter:blur(3px)">
   <div style="background:#fff;border-radius:16px;width:90%;max-width:440px;padding:24px;box-shadow:0 20px 40px rgba(0,0,0,.2)">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
       <h3 style="font-weight:900;font-size:1.1rem;color:#0d2818" id="modal-title">Booking Details</h3>
@@ -329,9 +299,9 @@
     <div id="modal-content" style="font-size:.85rem;color:#4b5563;line-height:1.6;margin-bottom:20px">
       <!-- Injected -->
     </div>
-    <div style="display:flex;justify-content:flex-end;gap:8px">
+    <div style="display:flex;justify-content:flex-end;gap:8px" id="modal-actions">
       <button onclick="closeSlotModal()" class="btn-ghost" style="font-size:.82rem">Close</button>
-      <a href="owner-chat.html" class="btn-lime" style="font-size:.82rem;text-decoration:none">💬 Contact Captain</a>
+      <a href="owner-chat.html" class="btn-lime" style="font-size:.82rem;text-decoration:none">💬 Contact Customer</a>
     </div>
   </div>
 </div>
@@ -343,9 +313,9 @@
     <div style="background:linear-gradient(135deg,#0d2818,#1a4029);padding:20px 24px;display:flex;align-items:center;justify-content:space-between">
       <div>
         <h3 style="font-weight:900;font-size:1.1rem;color:#fff;margin:0">🔒 Reserve Slots for Own Use</h3>
-        <p style="font-size:.78rem;color:rgba(255,255,255,.75);margin:4px 0 0 0" id="reserve-modal-slot-count">2 slots selected</p>
+        <p style="font-size:.78rem;color:rgba(255,255,255,.75);margin:4px 0 0 0" id="reserve-modal-slot-count">0 slots selected</p>
       </div>
-      <button onclick="closeReserveModal()" style="border:none;background:rgba(255,255,255,.2);width:32px;height:32px;border-radius:8px;font-size:1.1rem;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;transition:background .15s" onmouseover="this.style.background='rgba(255,255,255,.35)'" onmouseout="this.style.background='rgba(255,255,255,.2)'">&times;</button>
+      <button onclick="closeReserveModal()" style="border:none;background:rgba(255,255,255,.2);width:32px;height:32px;border-radius:8px;font-size:1.1rem;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;transition:background .15s">&times;</button>
     </div>
     <!-- Modal Body -->
     <div style="padding:24px">
@@ -357,7 +327,7 @@
       <!-- Reason Selection -->
       <div style="margin-bottom:16px">
         <label style="display:block;font-size:.8rem;font-weight:700;color:#1a1a1a;margin-bottom:6px">Reservation Purpose</label>
-        <select id="reserve-reason" style="width:100%;padding:10px 14px;border:1.5px solid #e5e7eb;border-radius:10px;font-family:inherit;font-size:.84rem;font-weight:600;background:#fff;color:#1a1a1a;outline:none;cursor:pointer;transition:border-color .15s" onfocus="this.style.borderColor='#7ed321'" onblur="this.style.borderColor='#e5e7eb'">
+        <select id="reserve-reason" style="width:100%;padding:10px 14px;border:1.5px solid #e5e7eb;border-radius:10px;font-family:inherit;font-size:.84rem;font-weight:600;background:#fff;color:#1a1a1a;outline:none;cursor:pointer">
           <option value="personal-match">⚽ Personal Match / Practice</option>
           <option value="private-event">🎉 Private Event</option>
           <option value="training">🏋️ Training Session</option>
@@ -370,19 +340,19 @@
       <!-- Notes -->
       <div style="margin-bottom:20px">
         <label style="display:block;font-size:.8rem;font-weight:700;color:#1a1a1a;margin-bottom:6px">Notes <span style="color:#9ca3af;font-weight:400">(optional)</span></label>
-        <textarea id="reserve-notes" placeholder="e.g. Family football evening, friends tournament…" style="width:100%;padding:10px 14px;border:1.5px solid #e5e7eb;border-radius:10px;font-family:inherit;font-size:.82rem;color:#1a1a1a;outline:none;resize:vertical;min-height:60px;transition:border-color .15s;box-sizing:border-box" onfocus="this.style.borderColor='#7ed321'" onblur="this.style.borderColor='#e5e7eb'"></textarea>
+        <textarea id="reserve-notes" placeholder="e.g. Family football evening, friends tournament…" style="width:100%;padding:10px 14px;border:1.5px solid #e5e7eb;border-radius:10px;font-family:inherit;font-size:.82rem;color:#1a1a1a;outline:none;resize:vertical;min-height:60px;box-sizing:border-box"></textarea>
       </div>
 
       <!-- Info Note -->
       <div style="background:#fefce8;border:1px solid #fef08a;border-radius:10px;padding:10px 14px;font-size:.76rem;color:#854d0e;display:flex;align-items:flex-start;gap:8px;margin-bottom:20px">
         <span style="font-size:1rem;flex-shrink:0">💡</span>
-        <span>Reserved slots will be blocked from public booking. You can release them anytime by selecting and clicking "Make Available".</span>
+        <span>Reserved slots are marked unavailable to public search. You can unreserve them anytime.</span>
       </div>
 
       <!-- Action Buttons -->
       <div style="display:flex;justify-content:flex-end;gap:10px">
         <button onclick="closeReserveModal()" class="btn-ghost" style="font-size:.82rem;padding:9px 18px">Cancel</button>
-        <button onclick="confirmReserveSlots()" style="font-size:.82rem;padding:9px 22px;background:#0d2818;color:#fff;border:none;border-radius:10px;font-weight:800;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;transition:all .15s;box-shadow:0 3px 12px rgba(13,40,24,.35)" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 5px 16px rgba(13,40,24,.45)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 3px 12px rgba(13,40,24,.35)'">
+        <button onclick="confirmReserveSlots()" style="font-size:.82rem;padding:9px 22px;background:#0d2818;color:#fff;border:none;border-radius:10px;font-weight:800;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;box-shadow:0 3px 12px rgba(13,40,24,.35)">
           🔒 Confirm Reservation
         </button>
       </div>
@@ -390,193 +360,217 @@
   </div>
 </div>
 
-<style>
-  @keyframes reserveModalIn {
-    from { opacity: 0; transform: scale(.95) translateY(10px); }
-    to { opacity: 1; transform: scale(1) translateY(0); }
-  }
-</style>
+<script src="api-client.js"></script>
+<script src="auth.js"></script>
+<script src="layout.js"></script>
+<script src="page-init.js"></script>
 
 <script>
-  // Interactive Slot Calendar Logic
-
-  // Calendar Slots Database
-  const HOURS = [
-    '6:00 AM', '7:00 AM', '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM',
-    '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM',
-    '6:00 PM', '7:00 PM', '8:00 PM', '9:00 PM'
-  ];
-
-  const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-
-  // Matrix states: 0 = Available, 1 = Booked (team), 2 = Maintenance, 3 = Owner Reserved
-  // Reserved slot object: { reserved: true, reason: '...', notes: '...' }
-  const SLOT_DATA = {
-    'green-arena': {
-      '6:00 AM':  [0, 0, 2, 0, 0, 0, 0],
-      '7:00 AM':  [0, 0, 0, { team: 'FC Dynamo', cap: 'Rahim Khan', ph: '+880 1711-223344', paid: '৳800' }, 0, 0, 0],
-      '8:00 AM':  [{ team: 'Thunder FC', cap: 'Arif Hossain', ph: '+880 1812-345678', paid: '৳800' }, 0, 0, 0, 0, 0, 0],
-      '9:00 AM':  [{ team: 'Thunder FC', cap: 'Arif Hossain', ph: '+880 1812-345678', paid: '৳800' }, 0, 0, 0, 0, 0, 0],
-      '10:00 AM': [0, 0, 0, 0, 0, { team: 'City Kickers', cap: 'Saad Ahmed', ph: '+880 1913-445566', paid: '৳800' }, 0],
-      '11:00 AM': [0, { team: 'Rising Stars', cap: 'Fatema Begum', ph: '+880 1614-556677', paid: '৳800' }, 0, 0, 0, { team: 'City Kickers', cap: 'Saad Ahmed', ph: '+880 1913-445566', paid: '৳800' }, 0],
-      '12:00 PM': [0, 0, 0, 0, 0, 0, { team: 'Rapid Tigers', cap: 'Tanvir Hossain', ph: '+880 1715-667788', paid: '৳800' }],
-      '1:00 PM':  [0, 0, 0, 0, 0, 0, { team: 'Rapid Tigers', cap: 'Tanvir Hossain', ph: '+880 1715-667788', paid: '৳800' }],
-      '2:00 PM':  [0, 0, { team: 'Blaze United', cap: 'Karim Ullah', ph: '+880 1816-778899', paid: '৳800' }, 0, 0, 0, 0],
-      '3:00 PM':  [0, 0, 0, 0, 0, 0, 0],
-      '4:00 PM':  [0, 0, 0, 0, { team: 'Green Eagles', cap: 'Mominul Islam', ph: '+880 1517-889900', paid: '৳800' }, 0, 0],
-      '5:00 PM':  [0, 0, 0, 0, 0, 0, 0],
-      '6:00 PM':  [0, 0, 0, 0, 0, 0, 0],
-      '7:00 PM':  [0, 0, 0, 0, 0, 0, 0],
-      '8:00 PM':  [0, 0, 0, 0, 0, 2, 0],
-      '9:00 PM':  [0, 0, 0, 0, 0, 2, 0]
-    },
-    'court-pro': {
-      '7:00 AM':  [0, 0, 0, 0, 0, 0, 0],
-      '9:00 AM':  [{ team: 'Dhaka Hoopers', cap: 'Nasim Ahmed', ph: '+880 1712-001122', paid: '৳600' }, 0, 0, 0, 0, 0, 0],
-      '2:00 PM':  [0, 0, 2, 0, 0, 0, 0],
-      '5:00 PM':  [0, 0, 0, 0, { team: 'Court Kings', cap: 'Jubair Alam', ph: '+880 1813-112233', paid: '৳600' }, 0, 0],
-      '6:00 PM':  [0, 0, 0, 0, 0, 0, { team: 'Spartans BC', cap: 'Kamrul Hasan', ph: '+880 1914-223344', paid: '৳600' }]
-    },
-    'champions-field': {
-      '7:00 AM':  [2, 0, 0, 0, 0, 0, 0],
-      '10:00 AM': [0, { team: 'Bashundhara CC', cap: 'Tareq Aziz', ph: '+880 1715-334455', paid: '৳1,200' }, 0, 0, 0, 0, 0],
-      '4:00 PM':  [0, 0, 0, { team: 'Paltan Strikers', cap: 'Habibul Bashar', ph: '+880 1816-445566', paid: '৳1,200' }, 0, 0, 0],
-      '8:00 PM':  [0, 0, 0, 0, 0, { team: 'Gulshan Gladiators', cap: 'Sajid Iqbal', ph: '+880 1917-556677', paid: '৳1,200' }, 0]
-    }
-  };
-
-  // Booking Requests
-  let PENDING_REQUESTS = [
-    {
-      id: 'BK001',
-      team: 'Thunder FC',
-      captain: 'Arif Hossain',
-      phone: '+880 1812-345678',
-      date: 'Sat, 26 Jul 2025',
-      time: '6:00 PM – 8:00 PM (2 hrs)',
-      turf: 'The Green Arena',
-      amount: '৳1,600',
-      status: 'pending',
-      players: 14
-    },
-    {
-      id: 'BK003',
-      team: 'Blaze United',
-      captain: 'Karim Ullah',
-      phone: '+880 1816-778899',
-      date: 'Sun, 27 Jul 2025',
-      time: '8:00 PM – 9:00 PM (1 hr)',
-      turf: 'The Green Arena',
-      amount: '৳800',
-      status: 'pending',
-      players: 12
-    },
-    {
-      id: 'BK006',
-      team: 'Green Eagles',
-      captain: 'Mominul Islam',
-      phone: '+880 1517-889900',
-      date: 'Wed, 23 Jul 2025',
-      time: '5:00 PM – 6:00 PM (1 hr)',
-      turf: 'The Green Arena',
-      amount: '৳800',
-      status: 'pending',
-      players: 10
-    }
-  ];
-
-  let selectedSlots = new Set(); // Stores "hour_dayIndex"
+  // Dynamic State
+  let myTurfs = [];
+  let currentTurfId = 0;
   let currentWeekOffset = 0;
+  let weekDates = []; // 7 Date objects for Mon–Sun
+  let currentSlots = []; // Slots from DB for this turf & week
+  let ownerBookings = []; // All bookings for owner's turfs
+  let selectedSlots = new Map(); // key: "YYYY-MM-DD_HH:00:00" -> { slotId, date, time }
 
-  function switchView(view) {
-    if (view === 'calendar') {
-      document.getElementById('view-calendar').style.display = 'block';
-      document.getElementById('view-requests').style.display = 'none';
-      document.getElementById('tab-cal-btn').classList.add('active');
-      document.getElementById('tab-req-btn').classList.remove('active');
-    } else {
-      document.getElementById('view-calendar').style.display = 'none';
-      document.getElementById('view-requests').style.display = 'block';
-      document.getElementById('tab-cal-btn').classList.remove('active');
-      document.getElementById('tab-req-btn').classList.add('active');
+  const HOURS_24 = [
+    '06:00:00', '07:00:00', '08:00:00', '09:00:00', '10:00:00', '11:00:00',
+    '12:00:00', '13:00:00', '14:00:00', '15:00:00', '16:00:00', '17:00:00',
+    '18:00:00', '19:00:00', '20:00:00', '21:00:00', '22:00:00'
+  ];
+
+  const DAY_NAMES = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+  (async function init() {
+    const user = await initAuth('owner');
+    if (!user) return;
+    renderSidebar('calendar', user);
+
+    await loadInitialData();
+  })();
+
+  async function loadInitialData() {
+    try {
+      const [turfsRes, bookingsRes] = await Promise.all([
+        apiGet('turfs/my-turfs.php'),
+        apiGet('bookings/owner-bookings.php')
+      ]);
+
+      myTurfs = turfsRes.turfs || [];
+      ownerBookings = bookingsRes.bookings || [];
+
+      // Populate Turf Dropdown
+      const selectEl = document.getElementById('turf-select');
+      if (myTurfs.length === 0) {
+        selectEl.innerHTML = '<option value="">No turfs registered yet</option>';
+        document.getElementById('calendar-week-heading').textContent = 'No turfs found. Please add a turf first.';
+        return;
+      }
+
+      selectEl.innerHTML = myTurfs.map(t =>
+        `<option value="${t.id}">${t.name} (${t.sport_type || 'Ground'})</option>`
+      ).join('');
+
+      currentTurfId = myTurfs[0].id;
+
+      // Compute week dates & load slots
+      computeWeekDates();
+      await fetchWeekSlots();
+      renderCalendar();
       renderRequests();
+      updateKpiStats();
+    } catch (err) {
+      console.error('Init error in slot-calendar:', err);
+      alert('Failed to load turf calendar data: ' + err.message);
     }
+  }
+
+  function computeWeekDates() {
+    const now = new Date();
+    // Find Monday of current week
+    const dayOfWeek = now.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+    const diffToMon = (dayOfWeek === 0 ? -6 : 1) - dayOfWeek;
+    const monday = new Date(now);
+    monday.setDate(now.getDate() + diffToMon + (currentWeekOffset * 7));
+    monday.setHours(0, 0, 0, 0);
+
+    weekDates = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(monday);
+      d.setDate(monday.getDate() + i);
+      weekDates.push(d);
+    }
+
+    // Update Heading
+    const startStr = weekDates[0].toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const endStr = weekDates[6].toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    const currentTurf = myTurfs.find(t => t.id == currentTurfId);
+    const turfName = currentTurf ? currentTurf.name : 'Turf';
+    document.getElementById('calendar-week-heading').textContent = `${turfName} — Week of ${startStr} – ${endStr}`;
+  }
+
+  async function fetchWeekSlots() {
+    if (!currentTurfId || weekDates.length === 0) return;
+    const startDate = toYMD(weekDates[0]);
+    const endDate = toYMD(weekDates[6]);
+
+    try {
+      const res = await apiGet(`slots/list.php?turf_id=${currentTurfId}&start_date=${startDate}&end_date=${endDate}`);
+      currentSlots = res.slots || [];
+    } catch (err) {
+      console.error('Failed to fetch slots:', err);
+      currentSlots = [];
+    }
+  }
+
+  function toYMD(d) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
   }
 
   function onTurfChange() {
+    currentTurfId = parseInt(document.getElementById('turf-select').value, 10);
     clearSlotSelection();
-    renderCalendar();
+    computeWeekDates();
+    fetchWeekSlots().then(() => {
+      renderCalendar();
+      updateKpiStats();
+    });
   }
 
   function changeWeek(delta) {
     if (delta === 0) currentWeekOffset = 0;
     else currentWeekOffset += delta;
-    
-    const weekLabels = ['Week of Jul 14–20', 'Week of Jul 21–27', 'Week of Jul 28–Aug 3', 'Week of Aug 4–10'];
-    const label = weekLabels[Math.min(Math.max(currentWeekOffset + 1, 0), weekLabels.length - 1)];
-    const turfName = document.getElementById('turf-select').selectedOptions[0].text.split('(')[0].trim();
-    document.getElementById('calendar-week-heading').textContent = `${turfName} — ${label}`;
-    renderCalendar();
+    clearSlotSelection();
+    computeWeekDates();
+    fetchWeekSlots().then(() => {
+      renderCalendar();
+      updateKpiStats();
+    });
   }
 
   function renderCalendar() {
-    const turfKey = document.getElementById('turf-select').value;
-    const data = SLOT_DATA[turfKey] || SLOT_DATA['green-arena'];
-    const container = document.getElementById('calendar-rows-container');
+    // 1. Render Day Headers
+    const headersContainer = document.getElementById('calendar-day-headers');
+    const todayYMD = toYMD(new Date());
 
-    container.innerHTML = HOURS.map(hour => {
-      const rowData = data[hour] || [0, 0, 0, 0, 0, 0, 0];
-      
-      const colsHTML = rowData.map((cell, dayIdx) => {
-        const slotKey = `${hour}_${dayIdx}`;
+    let headersHTML = '<div></div>';
+    weekDates.forEach((d, idx) => {
+      const ymd = toYMD(d);
+      const isToday = (ymd === todayYMD);
+      const isWeekend = (idx >= 5);
+      const bgStyle = isToday ? 'background:#0d2818;color:#7ed321' : isWeekend ? 'background:#e8f5e9;color:#0d2818' : 'background:#f9fafb;color:#1a1a1a';
+      const dayName = DAY_NAMES[idx];
+      const dayNum = d.getDate();
+
+      headersHTML += `
+        <div style="font-size:.75rem;font-weight:800;padding:6px 0;border-radius:6px;${bgStyle}">
+          ${dayName} <span style="font-weight:600;opacity:.8">${dayNum}</span>
+        </div>`;
+    });
+    headersContainer.innerHTML = headersHTML;
+
+    // 2. Render Hour Rows
+    const rowsContainer = document.getElementById('calendar-rows-container');
+
+    rowsContainer.innerHTML = HOURS_24.map(h => {
+      const displayTime = formatTime(h);
+
+      const colsHTML = weekDates.map((d, dayIdx) => {
+        const dateYMD = toYMD(d);
+        const slotKey = `${dateYMD}_${h}`;
         const isSelected = selectedSlots.has(slotKey);
 
-        if (typeof cell === 'object' && cell !== null && cell.team) {
-          // Booked Slot
+        // Find existing slot in currentSlots
+        const slot = currentSlots.find(s => s.slot_date === dateYMD && s.start_time.startsWith(h.substring(0, 5)));
+
+        // Find matching booking if booked
+        let booking = null;
+        if (slot && (slot.status === 'booked' || slot.booked_by)) {
+          booking = ownerBookings.find(b => (b.slot_id && b.slot_id == slot.id) || (b.turf_id == currentTurfId && b.slot_date === dateYMD && b.start_time && b.start_time.startsWith(h.substring(0, 5))));
+        }
+
+        if (slot && slot.status === 'booked') {
+          const bookerTitle = booking ? (booking.customer_name || 'Booked') : (slot.booked_by_name || 'Booked');
+          const shortName = bookerTitle.split(' ')[0];
           return `
             <div 
               class="slot-cell slot-booked" 
-              onclick="showSlotModal('${hour}', ${dayIdx}, '${cell.team}', '${cell.cap}', '${cell.ph}', '${cell.paid}')"
-              title="${cell.team} (${cell.cap})"
+              onclick="showBookedSlotDetails(${slot.id}, '${dateYMD}', '${h}')"
+              title="Booked: ${bookerTitle}"
             >
-              <span class="truncate px-1 leading-none font-bold">${cell.team.split(' ')[0]}</span>
+              <span class="truncate px-1 leading-none font-bold">${shortName}</span>
             </div>`;
-        } else if (typeof cell === 'object' && cell !== null && cell.reserved) {
-          // Owner Reserved Slot
-          const reasonLabels = {
-            'personal-match': '⚽ Personal Match',
-            'private-event': '🎉 Private Event',
-            'training': '🏋️ Training',
-            'tournament-prep': '🏆 Tournament Prep',
-            'vip-booking': '👑 VIP Booking',
-            'other': '📝 Other'
-          };
-          const reasonText = reasonLabels[cell.reason] || cell.reason;
+        } else if (slot && slot.status === 'reserved') {
           return `
             <div 
               class="slot-cell slot-reserved ${isSelected ? 'slot-selected' : ''}" 
-              onclick="showReservedSlotDetails('${hour}', ${dayIdx}, '${cell.reason}', '${(cell.notes || '').replace(/'/g, "\\'")}')"
-              title="Owner Reserved: ${reasonText}"
+              onclick="showReservedSlotModal(${slot.id}, '${dateYMD}', '${h}')"
+              title="Owner Reserved"
             >
               <span style="font-size:.6rem">🔒</span>
             </div>`;
-        } else if (cell === 2) {
-          // Maintenance Slot
+        } else if (slot && slot.status === 'maintenance') {
           return `
             <div 
               class="slot-cell slot-maintenance ${isSelected ? 'slot-selected' : ''}" 
-              onclick="toggleSlotSelection('${hour}', ${dayIdx})"
-              title="Maintenance Block"
+              onclick="toggleSlotSelection('${dateYMD}', '${h}', ${slot.id})"
+              title="Maintenance Block — Click to select"
             >
               <span>🔧</span>
             </div>`;
         } else {
-          // Available Slot
+          // Available slot (or not yet created row)
+          const slotId = slot ? slot.id : 0;
           return `
             <div 
               class="slot-cell slot-available ${isSelected ? 'slot-selected' : ''}" 
-              onclick="toggleSlotSelection('${hour}', ${dayIdx})"
-              title="Available - Click to select"
+              onclick="toggleSlotSelection('${dateYMD}', '${h}', ${slotId})"
+              title="Available — Click to select"
             >
               ${isSelected ? '✓' : ''}
             </div>`;
@@ -585,19 +579,18 @@
 
       return `
         <div style="display:grid;grid-template-columns:80px repeat(7, 1fr);gap:6px;align-items:center">
-          <div style="font-size:.72rem;font-weight:600;color:#6b7280;text-align:right;padding-right:8px">${hour}</div>
+          <div style="font-size:.72rem;font-weight:600;color:#6b7280;text-align:right;padding-right:8px">${displayTime}</div>
           ${colsHTML}
-        </div>
-      `;
+        </div>`;
     }).join('');
   }
 
-  function toggleSlotSelection(hour, dayIdx) {
-    const key = `${hour}_${dayIdx}`;
+  function toggleSlotSelection(dateYMD, hour, slotId) {
+    const key = `${dateYMD}_${hour}`;
     if (selectedSlots.has(key)) {
       selectedSlots.delete(key);
     } else {
-      selectedSlots.add(key);
+      selectedSlots.set(key, { date: dateYMD, time: hour, slotId: slotId });
     }
     updateSelectionBar();
     renderCalendar();
@@ -620,69 +613,145 @@
     renderCalendar();
   }
 
-  function toggleMaintenanceForSelected() {
-    const turfKey = document.getElementById('turf-select').value;
-    const data = SLOT_DATA[turfKey] || SLOT_DATA['green-arena'];
+  async function applyBatchStatus(newStatus) {
+    if (selectedSlots.size === 0) return;
 
-    selectedSlots.forEach(key => {
-      const parts = key.split('_');
-      const hour = parts[0];
-      const dayIdx = parseInt(parts[1], 10);
-      if (!data[hour]) data[hour] = [0, 0, 0, 0, 0, 0, 0];
-      data[hour][dayIdx] = 2; // set to maintenance
-    });
+    try {
+      const promises = [];
+      for (const [key, item] of selectedSlots) {
+        promises.push(
+          apiPost('slots/update-status.php', {
+            slot_id: item.slotId || 0,
+            turf_id: currentTurfId,
+            slot_date: item.date,
+            start_time: item.time,
+            status: newStatus
+          })
+        );
+      }
 
-    clearSlotSelection();
+      await Promise.all(promises);
+      clearSlotSelection();
+      await fetchWeekSlots();
+      renderCalendar();
+      updateKpiStats();
+    } catch (err) {
+      alert('Error updating slot status: ' + err.message);
+    }
   }
 
-  function makeAvailableForSelected() {
-    const turfKey = document.getElementById('turf-select').value;
-    const data = SLOT_DATA[turfKey] || SLOT_DATA['green-arena'];
+  // ─── Modal Details for Booked Slot ───
+  function showBookedSlotDetails(slotId, dateYMD, hour) {
+    const booking = ownerBookings.find(b => (b.slot_id && b.slot_id == slotId) || (b.turf_id == currentTurfId && b.slot_date === dateYMD && b.start_time && b.start_time.startsWith(hour.substring(0, 5))));
 
-    selectedSlots.forEach(key => {
-      const parts = key.split('_');
-      const hour = parts[0];
-      const dayIdx = parseInt(parts[1], 10);
-      if (!data[hour]) data[hour] = [0, 0, 0, 0, 0, 0, 0];
-      data[hour][dayIdx] = 0; // set to available
-    });
+    const slot = currentSlots.find(s => s.id == slotId);
+    const dateFormatted = formatDate(dateYMD);
+    const timeFormatted = formatTime(hour);
 
-    clearSlotSelection();
+    document.getElementById('modal-title').textContent = booking ? `${booking.customer_name} — Confirmed Booking` : 'Booked Slot';
+
+    if (booking) {
+      document.getElementById('modal-content').innerHTML = `
+        <div style="background:#f8faf8;border:1px solid #e8ede8;border-radius:12px;padding:14px;margin-bottom:12px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+            <span style="color:#6b7280;font-size:.78rem">Schedule:</span>
+            <strong style="color:#0d2818">${dateFormatted} &middot; ${timeFormatted}</strong>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+            <span style="color:#6b7280;font-size:.78rem">Customer / Team:</span>
+            <strong style="color:#1a1a1a">${booking.customer_name}</strong>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+            <span style="color:#6b7280;font-size:.78rem">Phone Contact:</span>
+            <span style="color:#059669;font-weight:600">${booking.customer_phone || '—'}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+            <span style="color:#6b7280;font-size:.78rem">Payment Method:</span>
+            <span style="color:#1a1a1a;font-weight:700;text-transform:uppercase">${booking.payment_method || 'Online'}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between">
+            <span style="color:#6b7280;font-size:.78rem">Total Amount:</span>
+            <span style="color:#16a34a;font-weight:800">${formatBDT(booking.total_price)}</span>
+          </div>
+        </div>
+        <p style="font-size:.78rem;color:#9ca3af">TRX: <code>${booking.trx_id || '—'}</code> &middot; Status: <strong style="color:#16a34a">${booking.status}</strong></p>
+      `;
+    } else {
+      document.getElementById('modal-content').innerHTML = `
+        <div style="background:#f8faf8;border:1px solid #e8ede8;border-radius:12px;padding:14px">
+          <p style="margin:0;font-size:.85rem;color:#1a1a1a">Slot scheduled for <strong>${dateFormatted} at ${timeFormatted}</strong>.</p>
+        </div>`;
+    }
+
+    document.getElementById('slot-modal').style.display = 'flex';
   }
 
-  // ====== RESERVE FOR OWN USE ======
+  function showReservedSlotModal(slotId, dateYMD, hour) {
+    const dateFormatted = formatDate(dateYMD);
+    const timeFormatted = formatTime(hour);
 
+    document.getElementById('modal-title').textContent = '🔒 Owner Reserved Slot';
+    document.getElementById('modal-content').innerHTML = `
+      <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:14px;margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+          <span style="color:#6b7280;font-size:.78rem">Schedule:</span>
+          <strong style="color:#0d2818">${dateFormatted} &middot; ${timeFormatted}</strong>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+          <span style="color:#6b7280;font-size:.78rem">Status:</span>
+          <strong style="color:#92400e">Reserved for Owner Use</strong>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button onclick="releaseSingleReservedSlot(${slotId})" style="font-size:.78rem;padding:7px 14px;background:#fee2e2;color:#dc2626;border:1px solid #fecaca;border-radius:8px;font-weight:700;cursor:pointer">
+          Make Available Again
+        </button>
+      </div>
+    `;
+    document.getElementById('slot-modal').style.display = 'flex';
+  }
+
+  async function releaseSingleReservedSlot(slotId) {
+    try {
+      await apiPost('slots/update-status.php', { slot_id: slotId, status: 'available' });
+      closeSlotModal();
+      await fetchWeekSlots();
+      renderCalendar();
+      updateKpiStats();
+    } catch (err) {
+      alert('Error releasing slot: ' + err.message);
+    }
+  }
+
+  function closeSlotModal() {
+    document.getElementById('slot-modal').style.display = 'none';
+  }
+
+  // ─── Reserve Modal ───
   function openReserveModal() {
-    const availableSelected = getAvailableSelectedSlots();
-    if (availableSelected.length === 0) {
+    if (selectedSlots.size === 0) {
       alert('Please select at least one available slot to reserve.');
       return;
     }
 
-    // Update slot count in modal header
-    document.getElementById('reserve-modal-slot-count').textContent = 
-      `${availableSelected.length} slot${availableSelected.length > 1 ? 's' : ''} selected`;
+    document.getElementById('reserve-modal-slot-count').textContent = `${selectedSlots.size} slot${selectedSlots.size > 1 ? 's' : ''} selected`;
 
-    // Build preview of selected slots
-    const turfKey = document.getElementById('turf-select').value;
-    const turfName = document.getElementById('turf-select').selectedOptions[0].text.split('(')[0].trim();
-    const previewHTML = availableSelected.map(key => {
-      const parts = key.split('_');
-      const dayIdx = parseInt(parts[parts.length - 1], 10);
-      const hour = parts.slice(0, -1).join('_');
-      return `<div style="display:flex;align-items:center;gap:8px;padding:4px 0">
-        <span style="width:6px;height:6px;border-radius:50%;background:#f5a623;flex-shrink:0"></span>
-        <span style="font-size:.78rem;font-weight:600;color:#0d2818">${DAYS[dayIdx]}</span>
-        <span style="font-size:.78rem;color:#6b7280">&bull;</span>
-        <span style="font-size:.78rem;color:#1a1a1a;font-weight:500">${hour}</span>
-      </div>`;
-    }).join('');
-    document.getElementById('reserve-modal-slots-preview').innerHTML = 
-      `<div style="font-size:.72rem;font-weight:700;color:#0d2818;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">${turfName}</div>` + previewHTML;
+    const currentTurf = myTurfs.find(t => t.id == currentTurfId);
+    const turfName = currentTurf ? currentTurf.name : 'Turf';
 
-    // Reset form
-    document.getElementById('reserve-reason').value = 'personal-match';
-    document.getElementById('reserve-notes').value = '';
+    let previewHTML = '';
+    for (const [key, item] of selectedSlots) {
+      previewHTML += `
+        <div style="display:flex;align-items:center;gap:8px;padding:3px 0">
+          <span style="width:6px;height:6px;border-radius:50%;background:#f5a623"></span>
+          <span style="font-size:.78rem;font-weight:600;color:#0d2818">${formatDate(item.date)}</span>
+          <span style="font-size:.78rem;color:#6b7280">&bull;</span>
+          <span style="font-size:.78rem;color:#1a1a1a">${formatTime(item.time)}</span>
+        </div>`;
+    }
+
+    document.getElementById('reserve-modal-slots-preview').innerHTML =
+      `<div style="font-size:.72rem;font-weight:700;color:#0d2818;text-transform:uppercase;margin-bottom:6px">${turfName}</div>` + previewHTML;
 
     document.getElementById('reserve-modal').style.display = 'flex';
   }
@@ -691,148 +760,36 @@
     document.getElementById('reserve-modal').style.display = 'none';
   }
 
-  function getAvailableSelectedSlots() {
-    const turfKey = document.getElementById('turf-select').value;
-    const data = SLOT_DATA[turfKey] || SLOT_DATA['green-arena'];
-    const available = [];
-    selectedSlots.forEach(key => {
-      const parts = key.split('_');
-      const dayIdx = parseInt(parts[parts.length - 1], 10);
-      const hour = parts.slice(0, -1).join('_');
-      if (!data[hour]) data[hour] = [0, 0, 0, 0, 0, 0, 0];
-      const cell = data[hour][dayIdx];
-      // Allow reserving available (0) and maintenance (2) slots
-      if (cell === 0 || cell === 2) {
-        available.push(key);
-      }
-    });
-    return available;
-  }
-
-  function confirmReserveSlots() {
-    const turfKey = document.getElementById('turf-select').value;
-    const data = SLOT_DATA[turfKey] || SLOT_DATA['green-arena'];
-    const reason = document.getElementById('reserve-reason').value;
-    const notes = document.getElementById('reserve-notes').value.trim();
-
-    const availableSelected = getAvailableSelectedSlots();
-    availableSelected.forEach(key => {
-      const parts = key.split('_');
-      const dayIdx = parseInt(parts[parts.length - 1], 10);
-      const hour = parts.slice(0, -1).join('_');
-      if (!data[hour]) data[hour] = [0, 0, 0, 0, 0, 0, 0];
-      data[hour][dayIdx] = { reserved: true, reason: reason, notes: notes };
-    });
-
+  async function confirmReserveSlots() {
     closeReserveModal();
-    clearSlotSelection();
-
-    // Show success toast
-    showReserveToast(availableSelected.length);
+    await applyBatchStatus('reserved');
   }
 
-  function showReservedSlotDetails(hour, dayIdx, reason, notes) {
-    const day = DAYS[dayIdx];
-    const reasonLabels = {
-      'personal-match': '⚽ Personal Match / Practice',
-      'private-event': '🎉 Private Event',
-      'training': '🏋️ Training Session',
-      'tournament-prep': '🏆 Tournament Preparation',
-      'vip-booking': '👑 VIP / Priority Booking',
-      'other': '📝 Other'
-    };
-    const reasonText = reasonLabels[reason] || reason;
-
-    document.getElementById('modal-title').textContent = '🔒 Owner Reserved Slot';
-    document.getElementById('modal-content').innerHTML = `
-      <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:14px;margin-bottom:12px">
-        <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-          <span style="color:#6b7280;font-size:.78rem">Schedule:</span>
-          <strong style="color:#0d2818">${day}, Jul ${21 + dayIdx} &middot; ${hour}</strong>
-        </div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-          <span style="color:#6b7280;font-size:.78rem">Purpose:</span>
-          <strong style="color:#1a1a1a">${reasonText}</strong>
-        </div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-          <span style="color:#6b7280;font-size:.78rem">Reserved By:</span>
-          <strong style="color:#0d2818">Owner (You)</strong>
-        </div>
-        ${notes ? `<div style="margin-top:8px;padding-top:8px;border-top:1px solid #fde68a">
-          <span style="color:#6b7280;font-size:.76rem;display:block;margin-bottom:3px">Notes:</span>
-          <span style="color:#1a1a1a;font-size:.82rem">${notes}</span>
-        </div>` : ''}
-      </div>
-      <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
-        <button onclick="releaseReservedSlot('${hour}', ${dayIdx}); closeSlotModal();" style="font-size:.78rem;padding:7px 14px;background:#fee2e2;color:#dc2626;border:1px solid #fecaca;border-radius:8px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s" onmouseover="this.style.background='#fecaca'" onmouseout="this.style.background='#fee2e2'">Release Slot</button>
-        <span style="font-size:.72rem;color:#9ca3af">Make this slot available for public booking again</span>
-      </div>
-    `;
-    document.getElementById('slot-modal').style.display = 'flex';
-  }
-
-  function releaseReservedSlot(hour, dayIdx) {
-    const turfKey = document.getElementById('turf-select').value;
-    const data = SLOT_DATA[turfKey] || SLOT_DATA['green-arena'];
-    if (data[hour]) {
-      data[hour][dayIdx] = 0;
+  // ─── Requests Tab & Approvals ───
+  function switchView(view) {
+    if (view === 'calendar') {
+      document.getElementById('view-calendar').style.display = 'block';
+      document.getElementById('view-requests').style.display = 'none';
+      document.getElementById('tab-cal-btn').classList.add('active');
+      document.getElementById('tab-req-btn').classList.remove('active');
+    } else {
+      document.getElementById('view-calendar').style.display = 'none';
+      document.getElementById('view-requests').style.display = 'block';
+      document.getElementById('tab-cal-btn').classList.remove('active');
+      document.getElementById('tab-req-btn').classList.add('active');
+      renderRequests();
     }
-    renderCalendar();
-  }
-
-  function showReserveToast(count) {
-    const toast = document.createElement('div');
-    toast.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#0d2818;color:#fff;padding:14px 24px;border-radius:14px;font-size:.88rem;font-weight:700;z-index:1100;display:flex;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(13,40,24,.4);animation:reserveModalIn .3s ease-out';
-    toast.innerHTML = `<span style="font-size:1.2rem">🔒</span> ${count} slot${count > 1 ? 's' : ''} reserved successfully!`;
-    document.body.appendChild(toast);
-    setTimeout(() => {
-      toast.style.opacity = '0';
-      toast.style.transform = 'translateY(10px)';
-      toast.style.transition = 'all .3s';
-      setTimeout(() => toast.remove(), 300);
-    }, 3000);
-  }
-
-  function showSlotModal(hour, dayIdx, team, captain, phone, paid) {
-    const day = DAYS[dayIdx];
-    document.getElementById('modal-title').textContent = `${team} — Booked Slot`;
-    document.getElementById('modal-content').innerHTML = `
-      <div style="background:#f8faf8;border:1px solid #e8ede8;border-radius:12px;padding:14px;margin-bottom:12px">
-        <div style="display:flex;justify-content:space-between;margin-bottom:6px">
-          <span style="color:#6b7280;font-size:.78rem">Schedule:</span>
-          <strong style="color:#0d2818">${day}, Jul ${21 + dayIdx} &middot; ${hour}</strong>
-        </div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:6px">
-          <span style="color:#6b7280;font-size:.78rem">Team Captain:</span>
-          <strong style="color:#1a1a1a">${captain}</strong>
-        </div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:6px">
-          <span style="color:#6b7280;font-size:.78rem">Phone Contact:</span>
-          <span style="color:#059669;font-weight:600">${phone}</span>
-        </div>
-        <div style="display:flex;justify-content:space-between">
-          <span style="color:#6b7280;font-size:.78rem">Payment Received:</span>
-          <span style="color:#16a34a;font-weight:800">${paid} (Paid Online)</span>
-        </div>
-      </div>
-      <p style="font-size:.78rem;color:#9ca3af">Ref ID: #BK-${Math.floor(100000 + Math.random() * 900000)} &middot; TurfHub Verified Booking</p>
-    `;
-    document.getElementById('slot-modal').style.display = 'flex';
-  }
-
-  function closeSlotModal() {
-    document.getElementById('slot-modal').style.display = 'none';
   }
 
   function renderRequests() {
     const list = document.getElementById('requests-list-container');
-    const activeReqs = PENDING_REQUESTS.filter(r => r.status === 'pending');
+    const pendingReqs = ownerBookings.filter(b => b.status === 'pending');
 
-    document.getElementById('req-count-badge').textContent = activeReqs.length;
-    document.getElementById('topbar-pending-badge').innerHTML = `<span style="width:7px;height:7px;border-radius:50%;background:#f59e0b"></span> ${activeReqs.length} pending requests`;
-    document.getElementById('kpi-pending-req').textContent = activeReqs.length;
+    document.getElementById('req-count-badge').textContent = pendingReqs.length;
+    document.getElementById('topbar-pending-badge').innerHTML = `<span style="width:7px;height:7px;border-radius:50%;background:#f59e0b"></span> ${pendingReqs.length} pending requests`;
+    document.getElementById('kpi-pending-req').textContent = pendingReqs.length;
 
-    if (activeReqs.length === 0) {
+    if (pendingReqs.length === 0) {
       list.innerHTML = `
         <div style="padding:40px;text-align:center;color:#6b7280;background:#f9fafb;border-radius:12px;border:1px dashed #e5e7eb">
           <div style="font-size:2rem;margin-bottom:8px">🎉</div>
@@ -842,67 +799,128 @@
       return;
     }
 
-    list.innerHTML = activeReqs.map((req) => `
-      <div class="req-card" id="req-card-${req.id}">
-        <div style="display:flex;align-items:center;gap:14px">
-          <div style="width:44px;height:44px;border-radius:12px;background:#e8f5e9;color:#2e7d32;font-weight:900;font-size:1.1rem;display:flex;align-items:center;justify-content:center">
-            ${req.team.charAt(0)}
-          </div>
-          <div>
-            <div style="display:flex;align-items:center;gap:8px">
-              <h4 style="font-weight:800;font-size:.95rem;color:#1a1a1a">${req.team}</h4>
-              <span style="font-size:.7rem;font-weight:700;color:#0d2818;background:#f3f4f6;padding:2px 8px;border-radius:100px">${req.id}</span>
-            </div>
-            <div style="font-size:.78rem;color:#6b7280;margin-top:3px">
-              📅 ${req.date} &middot; 🕒 ${req.time} &middot; 👥 ${req.players} Players
-            </div>
-            <div style="font-size:.74rem;color:#9ca3af;margin-top:2px">
-              Captain: <strong style="color:#1a1a1a">${req.captain}</strong> (${req.phone})
-            </div>
-          </div>
-        </div>
+    list.innerHTML = pendingReqs.map(req => {
+      const initial = (req.customer_name || 'U').charAt(0).toUpperCase();
+      const dateStr = req.slot_date ? formatDate(req.slot_date) : '';
+      const timeStr = req.start_time && req.end_time ? `${formatTime(req.start_time)} – ${formatTime(req.end_time)}` : '';
 
-        <div style="display:flex;align-items:center;gap:14px;flex-shrink:0">
-          <div style="text-align:right">
-            <div style="font-weight:900;font-size:1.1rem;color:#0d2818">${req.amount}</div>
-            <span style="font-size:.7rem;font-weight:700;color:#f59e0b">Awaiting Owner Approval</span>
+      return `
+        <div class="req-card" id="req-card-${req.id}">
+          <div style="display:flex;align-items:center;gap:14px">
+            <div style="width:44px;height:44px;border-radius:12px;background:#e8f5e9;color:#2e7d32;font-weight:900;font-size:1.1rem;display:flex;align-items:center;justify-content:center">
+              ${initial}
+            </div>
+            <div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <h4 style="font-weight:800;font-size:.95rem;color:#1a1a1a">${req.customer_name || 'Customer'}</h4>
+                <span style="font-size:.7rem;font-weight:700;color:#0d2818;background:#f3f4f6;padding:2px 8px;border-radius:100px">#BK-${req.id}</span>
+              </div>
+              <div style="font-size:.78rem;color:#6b7280;margin-top:3px">
+                🏟️ <strong>${req.turf_name}</strong> &middot; 📅 ${dateStr} &middot; 🕒 ${timeStr}
+              </div>
+              <div style="font-size:.74rem;color:#9ca3af;margin-top:2px">
+                Phone: <strong style="color:#1a1a1a">${req.customer_phone || '—'}</strong> &middot; Payment: <strong style="color:#059669;text-transform:uppercase">${req.payment_method || 'Online'}</strong> (TRX: ${req.trx_id || '—'})
+              </div>
+            </div>
           </div>
-          <div style="display:flex;align-items:center;gap:6px">
-            <button onclick="approveRequest('${req.id}')" class="btn-lime" style="font-size:.78rem;padding:7px 14px">
-              ✓ Approve
-            </button>
-            <button onclick="rejectRequest('${req.id}')" class="btn-ghost" style="font-size:.78rem;padding:7px 12px;color:#dc2626;border-color:#fecaca">
-              ✕ Reject
-            </button>
+
+          <div style="display:flex;align-items:center;gap:14px;flex-shrink:0">
+            <div style="text-align:right">
+              <div style="font-weight:900;font-size:1.1rem;color:#0d2818">${formatBDT(req.total_price)}</div>
+              <span style="font-size:.7rem;font-weight:700;color:#f59e0b">Awaiting Owner Approval</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <button onclick="approveRequest(${req.id})" class="btn-lime" style="font-size:.78rem;padding:7px 14px">
+                ✓ Approve
+              </button>
+              <button onclick="rejectRequest(${req.id})" class="btn-ghost" style="font-size:.78rem;padding:7px 12px;color:#dc2626;border-color:#fecaca">
+                ✕ Reject
+              </button>
+            </div>
           </div>
-        </div>
-      </div>
-    `).join('');
+        </div>`;
+    }).join('');
   }
 
-  function approveRequest(id) {
-    const req = PENDING_REQUESTS.find(r => r.id === id);
-    if (req) {
-      req.status = 'approved';
-      renderRequests();
+  async function approveRequest(bookingId) {
+    try {
+      const res = await apiPost('bookings/update-status.php', { booking_id: bookingId, status: 'confirmed' });
+      if (res.success) {
+        // Refresh bookings and slots
+        const bookingsRes = await apiGet('bookings/owner-bookings.php');
+        ownerBookings = bookingsRes.bookings || [];
+        await fetchWeekSlots();
+        renderRequests();
+        renderCalendar();
+        updateKpiStats();
+      } else {
+        alert(res.error || 'Failed to approve booking');
+      }
+    } catch (err) {
+      alert('Error approving booking: ' + err.message);
     }
   }
 
-  function rejectRequest(id) {
-    const req = PENDING_REQUESTS.find(r => r.id === id);
-    if (req) {
-      req.status = 'rejected';
-      renderRequests();
+  async function rejectRequest(bookingId) {
+    if (!confirm('Are you sure you want to reject this booking request?')) return;
+    try {
+      const res = await apiPost('bookings/update-status.php', { booking_id: bookingId, status: 'rejected' });
+      if (res.success) {
+        const bookingsRes = await apiGet('bookings/owner-bookings.php');
+        ownerBookings = bookingsRes.bookings || [];
+        await fetchWeekSlots();
+        renderRequests();
+        renderCalendar();
+        updateKpiStats();
+      } else {
+        alert(res.error || 'Failed to reject booking');
+      }
+    } catch (err) {
+      alert('Error rejecting booking: ' + err.message);
     }
   }
 
-  function approveAllRequests() {
-    PENDING_REQUESTS.forEach(r => r.status = 'approved');
-    renderRequests();
+  async function approveAllRequests() {
+    const pendingReqs = ownerBookings.filter(b => b.status === 'pending');
+    if (pendingReqs.length === 0) {
+      alert('No pending requests to approve');
+      return;
+    }
+    if (!confirm(`Approve all ${pendingReqs.length} pending bookings?`)) return;
+
+    try {
+      for (const req of pendingReqs) {
+        await apiPost('bookings/update-status.php', { booking_id: req.id, status: 'confirmed' });
+      }
+      const bookingsRes = await apiGet('bookings/owner-bookings.php');
+      ownerBookings = bookingsRes.bookings || [];
+      await fetchWeekSlots();
+      renderRequests();
+      renderCalendar();
+      updateKpiStats();
+    } catch (err) {
+      alert('Error in batch approval: ' + err.message);
+    }
   }
 
-  // Initial Calendar Render
-  renderCalendar();
+  function updateKpiStats() {
+    const bookedThisWeek = currentSlots.filter(s => s.status === 'booked').length;
+    const maintThisWeek = currentSlots.filter(s => s.status === 'maintenance').length;
+    const reservedThisWeek = currentSlots.filter(s => s.status === 'reserved').length;
+    const pendingCount = ownerBookings.filter(b => b.status === 'pending').length;
+
+    // Confirmed revenue this week for this turf
+    const startYMD = toYMD(weekDates[0]);
+    const endYMD = toYMD(weekDates[6]);
+    const weeklyRev = ownerBookings
+      .filter(b => b.turf_id == currentTurfId && b.status === 'confirmed' && b.slot_date >= startYMD && b.slot_date <= endYMD)
+      .reduce((sum, b) => sum + Number(b.total_price || 0), 0);
+
+    document.getElementById('kpi-total-booked').textContent = bookedThisWeek;
+    document.getElementById('kpi-pending-req').textContent = pendingCount;
+    document.getElementById('kpi-projected-rev').textContent = formatBDT(weeklyRev);
+    document.getElementById('kpi-maint-slots').textContent = maintThisWeek + reservedThisWeek;
+  }
 </script>
 </body>
 </html>

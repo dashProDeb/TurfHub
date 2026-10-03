@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -153,5 +153,13 @@
     btn.classList.add('active');
   }
 </script>
+
+  <script src="api-client.js"></script>
+  <script src="auth.js"></script>
+  <script src="layout.js"></script>
+  <script src="page-init.js"></script>
+  <script>
+    initPage({ navId: 'tournaments', roles: ['captain','player'] });
+  </script>
 </body>
 </html>

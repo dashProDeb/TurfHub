@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TurfHub — Player Dashboard</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
     .fixture-row { display:flex; align-items:center; gap:12px; padding:13px 0; border-bottom:1px solid #f3f4f6; }
     .fixture-row:last-child { border-bottom:none; }
@@ -14,50 +16,20 @@
     .fix-date-month { font-size:.68rem; font-weight:600; color:#9ca3af; text-transform:uppercase; }
     .fix-team { font-weight:700; font-size:.88rem; color:#1a1a1a; }
     .fix-meta { font-size:.75rem; color:#6b7280; }
-    .avail-btn { padding:6px 14px; border-radius:8px; border:none; font-size:.75rem; font-weight:700; cursor:pointer; font-family:inherit; transition:background .15s; }
-    .avail-btn.yes { background:rgba(126,211,33,.12); color:#5a9e12; }
-    .avail-btn.yes:hover { background:rgba(126,211,33,.25); }
-    .avail-btn.no { background:rgba(229,57,53,.1); color:#e53935; }
-    .avail-btn.no:hover { background:rgba(229,57,53,.2); }
     .quick-action { display:flex; align-items:center; justify-content:space-between; padding:11px 0; border-bottom:1px solid #f3f4f6; text-decoration:none; }
     .quick-action:last-child { border-bottom:none; }
     .quick-action-left { display:flex; align-items:center; gap:10px; font-size:.85rem; font-weight:600; color:#1a1a1a; }
-    .badge-pill { display:inline-flex; align-items:center; gap:5px; padding:4px 12px; border-radius:100px; font-size:.72rem; font-weight:700; }
   </style>
 </head>
 <body>
   <div id="app-wrapper">
-    <!-- Standalone Player Sidebar -->
-    <aside id="sidebar" class="sidebar">
-      <a href="index.html" class="sidebar-logo">
-        <div class="sidebar-logo-icon">TH</div>
-        <span class="sidebar-logo-text">TurfHub</span>
-      </a>
-      <div class="sidebar-user">
-        <div class="sidebar-avatar" style="background:#7ed321;color:#0d2818">P</div>
-        <div class="sidebar-user-info">
-          <span class="sidebar-user-name">Sabbir Ahmed</span>
-          <span class="sidebar-user-role">Player (Striker)</span>
-        </div>
-      </div>
-      <nav class="sidebar-nav">
-        <a href="player-dashboard.html" class="sidebar-nav-item active"><span class="sidebar-label">Dashboard</span></a>
-        <a href="turf-detail.html" class="sidebar-nav-item"><span class="sidebar-label">Find Turf</span></a>
-        <a href="join-team.html" class="sidebar-nav-item"><span class="sidebar-label">Join Team</span></a>
-        <a href="player-fixtures.html" class="sidebar-nav-item"><span class="sidebar-label">Fixtures</span></a>
-        <a href="player-receipts.html" class="sidebar-nav-item"><span class="sidebar-label">My Receipts</span></a>
-        <a href="player-chat.html" class="sidebar-nav-item"><span class="sidebar-label">Team Chat</span></a>
-      </nav>
-      <a href="login.html" class="sidebar-signout">
-        <span class="sidebar-label">Sign Out</span>
-      </a>
-    </aside>
+    <!-- Sidebar injected by layout.js -->
 
     <div id="main-content">
       <div id="topbar">
         <div class="topbar-title">
           <span class="topbar-heading">Player Dashboard</span>
-          <span class="topbar-sub">Thunder FC &middot; Inter-City Football League 2025</span>
+          <span class="topbar-sub" id="topbar-sub"></span>
         </div>
         <div class="topbar-actions">
           <a href="turf-detail.html" class="btn-lime">Find Turfs</a>
@@ -65,126 +37,58 @@
       </div>
 
       <div class="page-body">
-        <!-- Stats -->
+        <!-- Stats — populated by JS -->
         <div class="stat-grid">
           <div class="stat-card">
             <div class="stat-icon" style="background:#dbeafe">📅</div>
             <div class="stat-body">
-              <div class="stat-value">3</div>
-              <div class="stat-label">Upcoming Matches</div>
-              <div class="stat-trend up">↑ Next: Sat 8 PM</div>
+              <div class="stat-value" id="stat-bookings">—</div>
+              <div class="stat-label">My Bookings</div>
             </div>
           </div>
           <div class="stat-card">
-            <div class="stat-icon" style="background:#dcfce7">⚽</div>
+            <div class="stat-icon" style="background:#dcfce7">🏟️</div>
             <div class="stat-body">
-              <div class="stat-value">7</div>
-              <div class="stat-label">Goals Scored</div>
-              <div class="stat-trend up">↑ Season best</div>
+              <div class="stat-value" id="stat-turfs">—</div>
+              <div class="stat-label">Turfs Available</div>
             </div>
           </div>
           <div class="stat-card">
             <div class="stat-icon" style="background:#f3e8ff">👥</div>
             <div class="stat-body">
-              <div class="stat-value">2</div>
-              <div class="stat-label">Teams Joined</div>
+              <div class="stat-value" id="stat-teams">—</div>
+              <div class="stat-label">Teams Recruiting</div>
             </div>
           </div>
           <div class="stat-card">
-            <div class="stat-icon" style="background:#fef3c7">🏅</div>
+            <div class="stat-icon" style="background:#fef3c7">🏆</div>
             <div class="stat-body">
-              <div class="stat-value">4</div>
-              <div class="stat-label">Badges Earned</div>
-              <div class="stat-trend up">↑ 1 new</div>
+              <div class="stat-value" id="stat-tournaments">—</div>
+              <div class="stat-label">Open Tournaments</div>
             </div>
           </div>
         </div>
 
         <div class="content-grid">
-          <!-- My Fixtures -->
+          <!-- My Recent Bookings -->
           <div class="content-panel">
             <div class="panel-header">
-              <span class="panel-title">My Upcoming Fixtures</span>
-              <a href="player-fixtures.html" class="panel-action">View All &rarr;</a>
+              <span class="panel-title">My Recent Bookings</span>
+              <a href="player-receipts.html" class="panel-action">View All &rarr;</a>
             </div>
-
-            <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
-              <button onclick="filterFix('all',this)" class="avail-btn yes" style="border-radius:20px;padding:6px 16px">All</button>
-              <button onclick="filterFix('upcoming',this)" class="avail-btn" style="border-radius:20px;padding:6px 16px;background:#f3f4f6;color:#6b7280">Upcoming</button>
-              <button onclick="filterFix('live',this)" class="avail-btn" style="border-radius:20px;padding:6px 16px;background:#f3f4f6;color:#6b7280">Live</button>
-              <button onclick="filterFix('completed',this)" class="avail-btn" style="border-radius:20px;padding:6px 16px;background:#f3f4f6;color:#6b7280">Completed</button>
-            </div>
-
-            <div class="fixture-row">
-              <div class="fix-date"><div class="fix-date-day">26</div><div class="fix-date-month">Jul</div></div>
-              <div style="flex:1">
-                <div class="fix-team">Thunder FC <span style="font-weight:400;color:#9ca3af;font-size:.82rem">vs</span> Rising Stars</div>
-                <div class="fix-meta">6:00 PM &middot; The Green Arena &middot; Inter-City League QF</div>
-              </div>
-              <span class="badge badge-pending badge-dot">Pending</span>
-              <div style="display:flex;gap:6px">
-                <button class="avail-btn yes">✓ Yes</button>
-                <button class="avail-btn no">✗ No</button>
-              </div>
-            </div>
-            <div class="fixture-row">
-              <div class="fix-date"><div class="fix-date-day">26</div><div class="fix-date-month">Jul</div></div>
-              <div style="flex:1">
-                <div class="fix-team">Blaze United <span style="font-weight:400;color:#9ca3af;font-size:.82rem">vs</span> City Kickers</div>
-                <div class="fix-meta">8:00 PM &middot; The Green Arena &middot; Inter-City League QF</div>
-              </div>
-              <span class="badge badge-live badge-dot">Live</span>
-              <span style="font-weight:900;font-size:1rem;color:#1a1a1a;min-width:36px;text-align:center">1–1</span>
-            </div>
-            <div class="fixture-row">
-              <div class="fix-date"><div class="fix-date-day">27</div><div class="fix-date-month">Jul</div></div>
-              <div style="flex:1">
-                <div class="fix-team">FC Dynamo <span style="font-weight:400;color:#9ca3af;font-size:.82rem">vs</span> Green Eagles</div>
-                <div class="fix-meta">5:00 PM &middot; Champions Field &middot; Inter-City League QF</div>
-              </div>
-              <span class="badge badge-pending badge-dot">Pending</span>
-              <div style="display:flex;gap:6px">
-                <button class="avail-btn yes">✓ Yes</button>
-                <button class="avail-btn no">✗ No</button>
-              </div>
-            </div>
-            <div class="fixture-row">
-              <div class="fix-date"><div class="fix-date-day">30</div><div class="fix-date-month">Jul</div></div>
-              <div style="flex:1">
-                <div class="fix-team">Thunder FC <span style="font-weight:400;color:#9ca3af;font-size:.82rem">vs</span> City Kickers</div>
-                <div class="fix-meta">7:00 PM &middot; Champions Field &middot; Summer Cup R16</div>
-              </div>
-              <span class="badge badge-pending badge-dot">Pending</span>
-              <div style="display:flex;gap:6px">
-                <button class="avail-btn yes">✓ Yes</button>
-                <button class="avail-btn no">✗ No</button>
-              </div>
+            <div id="bookings-list">
+              <!-- JS will populate -->
             </div>
           </div>
 
           <!-- Right column -->
           <div style="display:flex;flex-direction:column;gap:16px">
 
-            <!-- My Badges -->
+            <!-- Available Turfs preview -->
             <div class="content-panel">
-              <div class="panel-header"><span class="panel-title">My Badges</span></div>
-              <div style="display:flex;flex-wrap:wrap;gap:10px;padding:4px 0">
-                <div style="text-align:center;width:72px">
-                  <div style="font-size:2rem">🏆</div>
-                  <div style="font-size:.68rem;font-weight:600;color:#1a1a1a;margin-top:4px">Top Scorer</div>
-                </div>
-                <div style="text-align:center;width:72px">
-                  <div style="font-size:2rem">⚡</div>
-                  <div style="font-size:.68rem;font-weight:600;color:#1a1a1a;margin-top:4px">Hat-trick</div>
-                </div>
-                <div style="text-align:center;width:72px">
-                  <div style="font-size:2rem">🤝</div>
-                  <div style="font-size:.68rem;font-weight:600;color:#1a1a1a;margin-top:4px">Team Player</div>
-                </div>
-                <div style="text-align:center;width:72px">
-                  <div style="font-size:2rem">📅</div>
-                  <div style="font-size:.68rem;font-weight:600;color:#1a1a1a;margin-top:4px">100% Attend.</div>
-                </div>
+              <div class="panel-header"><span class="panel-title">Featured Turfs</span></div>
+              <div id="turfs-list">
+                <!-- JS will populate -->
               </div>
             </div>
 
@@ -219,13 +123,98 @@
     </div>
   </div>
 
+  <script src="api-client.js"></script>
+  <script src="auth.js"></script>
+  <script src="layout.js"></script>
   <script>
-    function filterFix(type, btn) {
-      document.querySelectorAll('.avail-btn[onclick^="filterFix"]').forEach(b => {
-        b.style.background = '#f3f4f6'; b.style.color = '#6b7280';
-      });
-      btn.style.background = 'rgba(126,211,33,.12)'; btn.style.color = '#5a9e12';
-    }
+    (async function() {
+      // 1. Auth
+      const user = await initAuth('player');
+      if (!user) return;
+
+      // 2. Sidebar
+      renderSidebar('dashboard', user);
+
+      // 3. Topbar subtitle
+      document.getElementById('topbar-sub').textContent = `${user.full_name} · Player`;
+
+      // 4. Fetch all data in parallel
+      try {
+        const [bookingsRes, turfsRes, teamsRes, tournamentsRes] = await Promise.allSettled([
+          apiGet('bookings/user-bookings.php'),
+          apiGet('turfs/list.php'),
+          apiGet('teams/recruiting.php'),
+          apiGet('tournaments/list.php')
+        ]);
+
+        const bookings = bookingsRes.status === 'fulfilled' ? (bookingsRes.value.bookings || []) : [];
+        const turfs = turfsRes.status === 'fulfilled' ? (turfsRes.value.turfs || []) : [];
+        const teams = teamsRes.status === 'fulfilled' ? (teamsRes.value.teams || []) : [];
+        const tournaments = tournamentsRes.status === 'fulfilled' ? (tournamentsRes.value.tournaments || []) : [];
+
+        // ── Stats ──
+        document.getElementById('stat-bookings').textContent = bookings.length;
+        document.getElementById('stat-turfs').textContent = turfs.length;
+        document.getElementById('stat-teams').textContent = teams.length;
+        document.getElementById('stat-tournaments').textContent = tournaments.length;
+
+        // ── My Bookings ──
+        const listEl = document.getElementById('bookings-list');
+        if (bookings.length === 0) {
+          listEl.innerHTML = `
+            <div style="text-align:center;padding:30px;color:#9ca3af;font-size:.85rem">
+              No bookings yet. <a href="turf-detail.html" style="color:#7ed321;font-weight:700;text-decoration:none">Find a turf</a> to get started!
+            </div>`;
+        } else {
+          listEl.innerHTML = bookings.slice(0, 5).map(b => {
+            const dateStr = b.slot_date ? new Date(b.slot_date) : null;
+            const day = dateStr ? dateStr.getDate() : '—';
+            const month = dateStr ? dateStr.toLocaleString('en-US', { month: 'short' }) : '';
+            const badgeClass = b.status === 'confirmed' ? 'badge-confirmed' :
+                               b.status === 'rejected' ? 'badge-rejected' : 'badge-pending';
+            return `
+              <div class="fixture-row">
+                <div class="fix-date">
+                  <div class="fix-date-day">${day}</div>
+                  <div class="fix-date-month">${month}</div>
+                </div>
+                <div style="flex:1">
+                  <div class="fix-team">${b.turf_name || 'Unknown Turf'}</div>
+                  <div class="fix-meta">${formatTime(b.start_time)} – ${formatTime(b.end_time)} · ${b.sport_type || ''}</div>
+                </div>
+                <span class="badge ${badgeClass} badge-dot">${b.status}</span>
+                <div style="font-weight:800;font-size:.88rem;color:#1a1a1a">${formatBDT(b.total_price)}</div>
+              </div>`;
+          }).join('');
+        }
+
+        // ── Featured Turfs ──
+        const turfsEl = document.getElementById('turfs-list');
+        if (turfs.length === 0) {
+          turfsEl.innerHTML = `
+            <div style="text-align:center;padding:20px;color:#9ca3af;font-size:.85rem">
+              No turfs available right now.
+            </div>`;
+        } else {
+          turfsEl.innerHTML = turfs.slice(0, 3).map(t => `
+            <a href="turf-detail.html" style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #f3f4f6;text-decoration:none">
+              <div style="width:44px;height:44px;border-radius:10px;background:#dcfce7;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">🏟️</div>
+              <div style="flex:1;min-width:0">
+                <div style="font-weight:700;font-size:.85rem;color:#1a1a1a">${t.name}</div>
+                <div style="font-size:.72rem;color:#6b7280">${t.location || t.district || ''} · ${t.sport_type || ''}</div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-weight:800;font-size:.85rem;color:#1a1a1a">${formatBDT(t.price_per_hour || t.price_per_slot || 800)}</div>
+                <div style="font-size:.68rem;color:#9ca3af">per hr</div>
+              </div>
+            </a>
+          `).join('');
+        }
+
+      } catch (err) {
+        console.error('Player dashboard error:', err);
+      }
+    })();
   </script>
 </body>
 </html>

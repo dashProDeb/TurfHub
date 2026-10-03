@@ -215,17 +215,6 @@ CREATE TABLE IF NOT EXISTS messages (
 ) ENGINE=InnoDB;
 
 -- ══════════════════════════════════════════════════════════
--- INDEXES for performance
+-- PERFORMANCE INDEXES (Created during table definitions or safely)
 -- ══════════════════════════════════════════════════════════
-CREATE INDEX idx_turf_slots_turf_date ON turf_slots(turf_id, slot_date);
-CREATE INDEX idx_bookings_user ON bookings(user_id);
-CREATE INDEX idx_bookings_turf ON bookings(turf_id);
-CREATE INDEX idx_messages_receiver ON messages(receiver_id, is_read);
-CREATE INDEX idx_messages_sender_receiver ON messages(sender_id, receiver_id);
-CREATE INDEX idx_fixtures_tournament ON fixtures(tournament_id);
-CREATE INDEX idx_team_members_team ON team_members(team_id);
-CREATE INDEX idx_team_members_player ON team_members(player_id);
-CREATE INDEX idx_turf_grounds_owner ON turf_grounds(owner_id);
-CREATE INDEX idx_turf_grounds_verified ON turf_grounds(is_verified, status);
-CREATE INDEX idx_users_role ON users(role);
-CREATE INDEX idx_users_kyc ON users(kyc_status);
+

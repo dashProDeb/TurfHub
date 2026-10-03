@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TurfHub — Captain Dashboard</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
     .roster-row { display:flex; align-items:center; padding:13px 0; border-bottom:1px solid #f3f4f6; gap:14px; }
     .roster-row:last-child { border-bottom:none; }
@@ -27,39 +29,14 @@
 </head>
 <body>
   <div id="app-wrapper">
-    <!-- Standalone Captain Sidebar -->
-    <aside id="sidebar" class="sidebar">
-      <a href="index.html" class="sidebar-logo">
-        <div class="sidebar-logo-icon">TH</div>
-        <span class="sidebar-logo-text">TurfHub</span>
-      </a>
-      <div class="sidebar-user">
-        <div class="sidebar-avatar" style="background:#7ed321;color:#0d2818">T</div>
-        <div class="sidebar-user-info">
-          <span class="sidebar-user-name">Tanvir Ahmed</span>
-          <span class="sidebar-user-role">Team Captain</span>
-        </div>
-      </div>
-      <nav class="sidebar-nav">
-        <a href="captain-dashboard.html" class="sidebar-nav-item active"><span class="sidebar-label">Dashboard</span></a>
-        <a href="book-turf.html" class="sidebar-nav-item"><span class="sidebar-label">Book a Turf</span></a>
-        <a href="manage-team.html" class="sidebar-nav-item"><span class="sidebar-label">Manage Team</span></a>
-        <a href="fixtures.html" class="sidebar-nav-item"><span class="sidebar-label">Tournaments</span></a>
-        <a href="create-tournament.html" class="sidebar-nav-item"><span class="sidebar-label">Host Tournament</span></a>
-        <a href="booking-receipt.html" class="sidebar-nav-item"><span class="sidebar-label">My Receipts</span></a>
-        <a href="chat.html" class="sidebar-nav-item"><span class="sidebar-label">Messages</span></a>
-      </nav>
-      <a href="login.html" class="sidebar-signout">
-        <span class="sidebar-label">Sign Out</span>
-      </a>
-    </aside>
+    <!-- Sidebar injected by layout.js -->
 
     <div id="main-content">
       <!-- Topbar -->
       <div id="topbar">
         <div class="topbar-title">
           <span class="topbar-heading">Captain Dashboard</span>
-          <span class="topbar-sub">Thunder FC &middot; Inter-City Football League 2025</span>
+          <span class="topbar-sub" id="topbar-sub"></span>
         </div>
         <div class="topbar-actions">
           <a href="book-turf.html" class="btn-lime">+ Book Turf</a>
@@ -69,37 +46,34 @@
       <!-- Page Body -->
       <div class="page-body">
 
-        <!-- Stat Cards -->
+        <!-- Stat Cards — populated by JS -->
         <div class="stat-grid">
           <div class="stat-card">
             <div class="stat-icon" style="background:#ede9fe">👥</div>
             <div class="stat-body">
-              <div class="stat-value">11</div>
+              <div class="stat-value" id="stat-squad">—</div>
               <div class="stat-label">Squad Size</div>
             </div>
           </div>
           <div class="stat-card">
             <div class="stat-icon" style="background:#dbeafe">📅</div>
             <div class="stat-body">
-              <div class="stat-value">3</div>
+              <div class="stat-value" id="stat-matches">—</div>
               <div class="stat-label">Upcoming Matches</div>
-              <div class="stat-trend up">↑ Next: Sat 8 PM</div>
             </div>
           </div>
           <div class="stat-card">
             <div class="stat-icon" style="background:#fef3c7">🏆</div>
             <div class="stat-body">
-              <div class="stat-value">2nd</div>
-              <div class="stat-label">League Standing</div>
-              <div class="stat-trend down">↓ 8 pts behind leader</div>
+              <div class="stat-value" id="stat-tournaments">—</div>
+              <div class="stat-label">Tournaments</div>
             </div>
           </div>
           <div class="stat-card">
-            <div class="stat-icon" style="background:#dcfce7">⚽</div>
+            <div class="stat-icon" style="background:#dcfce7">🧾</div>
             <div class="stat-body">
-              <div class="stat-value">18</div>
-              <div class="stat-label">Goals Scored</div>
-              <div class="stat-trend up">↑ 7 conceded</div>
+              <div class="stat-value" id="stat-bookings">—</div>
+              <div class="stat-label">Total Bookings</div>
             </div>
           </div>
         </div>
@@ -107,95 +81,34 @@
         <!-- Main content grid -->
         <div class="content-grid">
 
-          <!-- Team Roster -->
+          <!-- Team Roster — populated by JS -->
           <div class="content-panel">
             <div class="panel-header">
               <span class="panel-title">Team Roster</span>
-              <a href="join-team.html" class="btn-lime" style="font-size:.78rem;padding:7px 14px">+ Add Player</a>
+              <a href="manage-team.html" class="btn-lime" style="font-size:.78rem;padding:7px 14px">+ Add Player</a>
             </div>
             <!-- Roster table header -->
             <div style="display:flex;align-items:center;gap:14px;padding:0 0 8px;border-bottom:2px solid #f3f4f6">
               <div style="flex:1;font-size:.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em">Player</div>
-              <div class="player-stat"><span style="font-size:.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em">Goals</span></div>
-              <div class="player-stat"><span style="font-size:.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em">Attend.</span></div>
+              <div class="player-stat"><span style="font-size:.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em">Jersey</span></div>
+              <div class="player-stat"><span style="font-size:.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em">Position</span></div>
               <div style="width:90px;text-align:center;font-size:.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em">Status</div>
             </div>
-
-            <div class="roster-row">
-              <div class="player-num">#9</div>
-              <div style="flex:1"><div style="font-weight:700;font-size:.88rem">Arif Hossain</div><div style="font-size:.75rem;color:#9ca3af">Striker</div></div>
-              <div class="player-stat"><div class="player-stat-val">7</div><div class="player-stat-lbl">Goals</div></div>
-              <div class="player-stat"><div class="player-stat-val">92%</div><div class="player-stat-lbl">Attend.</div></div>
-              <div style="width:90px;text-align:center"><span class="badge badge-available badge-dot">Available</span></div>
-            </div>
-            <div class="roster-row">
-              <div class="player-num">#8</div>
-              <div style="flex:1"><div style="font-weight:700;font-size:.88rem">Delwar Khan</div><div style="font-size:.75rem;color:#9ca3af">Midfielder</div></div>
-              <div class="player-stat"><div class="player-stat-val">3</div><div class="player-stat-lbl">Goals</div></div>
-              <div class="player-stat"><div class="player-stat-val">88%</div><div class="player-stat-lbl">Attend.</div></div>
-              <div style="width:90px;text-align:center"><span class="badge badge-available badge-dot">Available</span></div>
-            </div>
-            <div class="roster-row">
-              <div class="player-num">#5</div>
-              <div style="flex:1"><div style="font-weight:700;font-size:.88rem">Rahim Uddin</div><div style="font-size:.75rem;color:#9ca3af">Defender</div></div>
-              <div class="player-stat"><div class="player-stat-val">0</div><div class="player-stat-lbl">Goals</div></div>
-              <div class="player-stat"><div class="player-stat-val">96%</div><div class="player-stat-lbl">Attend.</div></div>
-              <div style="width:90px;text-align:center"><span class="badge badge-uncertain badge-dot">Uncertain</span></div>
-            </div>
-            <div class="roster-row">
-              <div class="player-num">#1</div>
-              <div style="flex:1"><div style="font-weight:700;font-size:.88rem">Kamal Miah</div><div style="font-size:.75rem;color:#9ca3af">Goalkeeper</div></div>
-              <div class="player-stat"><div class="player-stat-val">0</div><div class="player-stat-lbl">Goals</div></div>
-              <div class="player-stat"><div class="player-stat-val">100%</div><div class="player-stat-lbl">Attend.</div></div>
-              <div style="width:90px;text-align:center"><span class="badge badge-available badge-dot">Available</span></div>
-            </div>
-            <div class="roster-row">
-              <div class="player-num">#4</div>
-              <div style="flex:1"><div style="font-weight:700;font-size:.88rem">Abul Bashar</div><div style="font-size:.75rem;color:#9ca3af">Defender</div></div>
-              <div class="player-stat"><div class="player-stat-val">1</div><div class="player-stat-lbl">Goals</div></div>
-              <div class="player-stat"><div class="player-stat-val">74%</div><div class="player-stat-lbl">Attend.</div></div>
-              <div style="width:90px;text-align:center"><span class="badge badge-unavailable badge-dot">Unavailable</span></div>
-            </div>
-            <div class="roster-row">
-              <div class="player-num">#6</div>
-              <div style="flex:1"><div style="font-weight:700;font-size:.88rem">Sabbir Ahmed</div><div style="font-size:.75rem;color:#9ca3af">Midfielder</div></div>
-              <div class="player-stat"><div class="player-stat-val">5</div><div class="player-stat-lbl">Goals</div></div>
-              <div class="player-stat"><div class="player-stat-val">90%</div><div class="player-stat-lbl">Attend.</div></div>
-              <div style="width:90px;text-align:center"><span class="badge badge-available badge-dot">Available</span></div>
+            <div id="roster-list">
+              <!-- JS will populate -->
             </div>
           </div>
 
           <!-- Right column -->
           <div style="display:flex;flex-direction:column;gap:16px">
 
-            <!-- Upcoming Matches -->
+            <!-- Upcoming Matches — populated by JS -->
             <div class="content-panel">
               <div class="panel-header">
                 <span class="panel-title">Upcoming Matches</span>
               </div>
-              <div class="match-item">
-                <div style="display:flex;justify-content:space-between;align-items:flex-start">
-                  <div class="match-league">Inter-City League</div>
-                  <span style="font-size:.7rem;color:#9ca3af">QF</span>
-                </div>
-                <div class="match-teams">Thunder FC <span>vs</span> Rising Stars</div>
-                <div class="match-meta">Sat, 26 Jul · 6:00 PM &nbsp;&bull;&nbsp; The Green Arena</div>
-              </div>
-              <div class="match-item">
-                <div style="display:flex;justify-content:space-between;align-items:flex-start">
-                  <div class="match-league">Summer Cup</div>
-                  <span style="font-size:.7rem;color:#9ca3af">R16</span>
-                </div>
-                <div class="match-teams">Thunder FC <span>vs</span> City Kickers</div>
-                <div class="match-meta">Wed, 30 Jul · 7:00 PM &nbsp;&bull;&nbsp; Champions Field</div>
-              </div>
-              <div class="match-item">
-                <div style="display:flex;justify-content:space-between;align-items:flex-start">
-                  <div class="match-league">Inter-City League</div>
-                  <span style="font-size:.7rem;color:#9ca3af">SF</span>
-                </div>
-                <div class="match-teams">Thunder FC <span>vs</span> FC Dynamo</div>
-                <div class="match-meta">Sat, 2 Aug · 5:00 PM &nbsp;&bull;&nbsp; Court Pro Indoor</div>
+              <div id="matches-list">
+                <!-- JS will populate -->
               </div>
               <a href="fixtures.html" style="display:block;margin-top:12px;font-size:.82rem;font-weight:700;color:#7ed321;text-decoration:none">View All Fixtures &rarr;</a>
             </div>
@@ -228,6 +141,121 @@
     </div>
   </div>
 
+  <script src="api-client.js"></script>
+  <script src="auth.js"></script>
+  <script src="layout.js"></script>
+  <script>
+    (async function() {
+      // 1. Auth check
+      const user = await initAuth('captain');
+      if (!user) return;
 
+      // 2. Render sidebar
+      renderSidebar('dashboard', user);
+
+      // 3. Topbar subtitle
+      document.getElementById('topbar-sub').textContent =
+        `${user.full_name} · Team Captain`;
+
+      // 4. Fetch team data & bookings
+      try {
+        // Try to get team data — captain might have a team
+        let team = null;
+        let members = [];
+        try {
+          // Try team_id=1 (from seed data — Thunder FC captain is Tanvir)
+          // In a real app you'd query for teams by captain_id
+          const teamData = await apiGet('teams/detail.php?team_id=1');
+          team = teamData.team;
+          members = team.members || [];
+        } catch (e) {
+          // No team yet
+        }
+
+        // Fetch bookings
+        let bookings = [];
+        try {
+          const bookingsData = await apiGet('bookings/user-bookings.php');
+          bookings = bookingsData.bookings || [];
+        } catch (e) { /* no bookings */ }
+
+        // Fetch tournaments
+        let tournaments = [];
+        try {
+          const tournData = await apiGet('tournaments/list.php');
+          tournaments = tournData.tournaments || [];
+        } catch (e) { /* no tournaments */ }
+
+        // ── Stats ──
+        document.getElementById('stat-squad').textContent = members.length || 0;
+        document.getElementById('stat-matches').textContent = '—'; // Will update if fixtures available
+        document.getElementById('stat-tournaments').textContent = tournaments.length;
+        document.getElementById('stat-bookings').textContent = bookings.length;
+
+        // ── Team Roster ──
+        const rosterEl = document.getElementById('roster-list');
+        if (members.length === 0) {
+          rosterEl.innerHTML = `
+            <div style="text-align:center;padding:30px;color:#9ca3af;font-size:.85rem">
+              No team members yet. <a href="manage-team.html" style="color:#7ed321;font-weight:700;text-decoration:none">Add players</a>
+            </div>`;
+        } else {
+          rosterEl.innerHTML = members.map(m => {
+            const statusClass = m.status === 'active' ? 'badge-available' :
+                                m.status === 'injured' ? 'badge-unavailable' : 'badge-uncertain';
+            const statusLabel = m.status ? m.status.charAt(0).toUpperCase() + m.status.slice(1) : 'Active';
+            return `
+              <div class="roster-row">
+                <div class="player-num">#${m.jersey_number || '?'}</div>
+                <div style="flex:1">
+                  <div style="font-weight:700;font-size:.88rem">${m.full_name}</div>
+                  <div style="font-size:.75rem;color:#9ca3af">${m.position || 'Player'}</div>
+                </div>
+                <div class="player-stat">
+                  <div class="player-stat-val">${m.jersey_number || '—'}</div>
+                  <div class="player-stat-lbl">Jersey</div>
+                </div>
+                <div class="player-stat">
+                  <div class="player-stat-val">${m.position || '—'}</div>
+                  <div class="player-stat-lbl">Position</div>
+                </div>
+                <div style="width:90px;text-align:center">
+                  <span class="badge ${statusClass} badge-dot">${statusLabel}</span>
+                </div>
+              </div>`;
+          }).join('');
+        }
+
+        // ── Upcoming Matches (from bookings as proxy) ──
+        const matchesEl = document.getElementById('matches-list');
+        const upcomingBookings = bookings.filter(b => {
+          if (!b.slot_date) return false;
+          return new Date(b.slot_date) >= new Date();
+        }).slice(0, 3);
+
+        if (upcomingBookings.length === 0) {
+          matchesEl.innerHTML = `
+            <div style="text-align:center;padding:20px;color:#9ca3af;font-size:.85rem">
+              No upcoming matches. <a href="book-turf.html" style="color:#7ed321;font-weight:700;text-decoration:none">Book a turf</a>
+            </div>`;
+        } else {
+          matchesEl.innerHTML = upcomingBookings.map(b => `
+            <div class="match-item">
+              <div class="match-league">${b.sport_type || 'Match'}</div>
+              <div class="match-teams">${b.turf_name || 'TBD'}</div>
+              <div class="match-meta">${formatDate(b.slot_date)} · ${formatTime(b.start_time)} – ${formatTime(b.end_time)}</div>
+            </div>
+          `).join('');
+        }
+
+      } catch (err) {
+        console.error('Captain dashboard error:', err);
+        document.getElementById('roster-list').innerHTML = `
+          <div style="text-align:center;padding:30px;color:#e53935;font-size:.85rem">
+            ⚠️ Failed to load data. Is the backend running?
+          </div>`;
+      }
+    })();
+  </script>
 </body>
 </html>

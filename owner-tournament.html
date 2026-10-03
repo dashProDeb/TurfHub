@@ -26,13 +26,19 @@
     .btn-view-fix { font-size:.78rem; font-weight:700; color:#7ed321; text-decoration:none; }
     .btn-view-fix:hover { color:#6ab81c; }
     .badge-draft { background:#f3f4f6; color:#6b7280; }
+    .badge-open { background:#dcfce7; color:#15803d; }
+    .badge-completed { background:#e0f2fe; color:#0369a1; }
     .venue-tag { display:inline-flex;align-items:center;gap:4px;font-size:.72rem;font-weight:600;color:#0d2818;background:#dcfce7;padding:3px 10px;border-radius:100px; }
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(.96) translateY(8px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
     @media(max-width:900px) { .tournaments-grid { grid-template-columns:1fr !important; } .form-row { grid-template-columns:1fr; } }
   </style>
 </head>
 <body>
   <div id="app-wrapper">
-    <!-- Standalone Owner Sidebar -->
+    <!-- Standalone Owner Sidebar (injected dynamically by page-init.js/layout.js) -->
     <aside id="sidebar" class="sidebar">
       <a href="index.html" class="sidebar-logo">
         <div class="sidebar-logo-icon">TH</div>
@@ -76,33 +82,33 @@
           <div class="stat-card">
             <div class="stat-icon" style="background:#dcfce7">🏆</div>
             <div class="stat-body">
-              <div class="stat-value">3</div>
+              <div class="stat-value" id="kpi-total-tournaments">0</div>
               <div class="stat-label">Total Tournaments</div>
-              <div class="stat-trend up">2 active, 1 completed</div>
+              <div class="stat-trend up" id="kpi-tournaments-sub">0 active, 0 completed</div>
             </div>
           </div>
           <div class="stat-card">
             <div class="stat-icon" style="background:#fef3c7">👥</div>
             <div class="stat-body">
-              <div class="stat-value">28</div>
+              <div class="stat-value" id="kpi-total-teams">0</div>
               <div class="stat-label">Teams Registered</div>
-              <div class="stat-trend up">↑ 8 new this week</div>
+              <div class="stat-trend up" id="kpi-teams-sub">Across all tournaments</div>
             </div>
           </div>
           <div class="stat-card">
             <div class="stat-icon" style="background:#dbeafe">💵</div>
             <div class="stat-body">
-              <div class="stat-value">&#2547;68,000</div>
+              <div class="stat-value" id="kpi-total-revenue">৳0</div>
               <div class="stat-label">Tournament Revenue</div>
-              <div class="stat-trend up">↑ Entry fees collected</div>
+              <div class="stat-trend up">Entry fees collected</div>
             </div>
           </div>
           <div class="stat-card">
             <div class="stat-icon" style="background:#e8f5e9">📅</div>
             <div class="stat-body">
-              <div class="stat-value">18</div>
+              <div class="stat-value" id="kpi-total-matches">0</div>
               <div class="stat-label">Matches Scheduled</div>
-              <div class="stat-trend" style="color:#f5a623">6 upcoming</div>
+              <div class="stat-trend" style="color:#f5a623" id="kpi-matches-sub">0 upcoming / live</div>
             </div>
           </div>
         </div>
@@ -114,82 +120,19 @@
             <div class="panel-header" style="margin-bottom:16px">
               <span class="panel-title">My Tournaments</span>
               <div style="display:flex;gap:6px">
-                <select class="form-input" style="max-width:130px;padding:6px 10px;font-size:.78rem">
-                  <option>All Status</option>
-                  <option>Live</option>
-                  <option>Open</option>
-                  <option>Draft</option>
-                  <option>Completed</option>
+                <select id="status-filter" class="form-input" style="max-width:140px;padding:6px 10px;font-size:.78rem" onchange="filterTournaments()">
+                  <option value="all">All Status</option>
+                  <option value="open">Open / Live</option>
+                  <option value="in_progress">In Progress</option>
+                  <option value="draft">Draft</option>
+                  <option value="completed">Completed</option>
                 </select>
               </div>
             </div>
 
-            <!-- Tournament 1: Live -->
-            <div class="tournament-card">
-              <div class="t-card-header">
-                <div>
-                  <div class="t-card-title">Inter-City Football League 2025</div>
-                  <div class="t-card-meta">Football &middot; Knockout &middot; 12 teams &middot; &#2547;2,000/team</div>
-                </div>
-                <span class="badge badge-live badge-dot">Live</span>
-              </div>
-              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-                <span class="venue-tag">🏟️ The Green Arena</span>
-                <span class="t-card-dates" style="margin:0">1 Aug – 30 Aug 2025</span>
-              </div>
-              <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
-              <div class="t-card-footer">
-                <span class="t-card-teams">12/12 teams &mdash; Registration Full</span>
-                <div style="display:flex;gap:8px">
-                  <a href="score-entry.html" class="btn-view-fix">Score Entry →</a>
-                  <a href="fixtures.html" class="btn-view-fix">Fixtures →</a>
-                </div>
-              </div>
-            </div>
-
-            <!-- Tournament 2: Open -->
-            <div class="tournament-card">
-              <div class="t-card-header">
-                <div>
-                  <div class="t-card-title">Summer Smash Basketball Cup</div>
-                  <div class="t-card-meta">Basketball &middot; Round Robin &middot; 8 teams &middot; &#2547;1,500/team</div>
-                </div>
-                <span class="badge badge-confirmed badge-dot">Open</span>
-              </div>
-              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-                <span class="venue-tag">🏟️ Court Pro Indoor</span>
-                <span class="t-card-dates" style="margin:0">15 Aug – 20 Aug 2025</span>
-              </div>
-              <div class="progress-bar"><div class="progress-fill" style="width:50%"></div></div>
-              <div class="t-card-footer">
-                <span class="t-card-teams">4/8 teams registered</span>
-                <div style="display:flex;gap:8px">
-                  <button onclick="editTournament('Summer Smash Basketball Cup')" style="font-size:.78rem;font-weight:700;color:#f5a623;background:none;border:none;cursor:pointer;font-family:inherit">✏️ Edit</button>
-                  <a href="fixtures.html" class="btn-view-fix">Fixtures →</a>
-                </div>
-              </div>
-            </div>
-
-            <!-- Tournament 3: Draft -->
-            <div class="tournament-card">
-              <div class="t-card-header">
-                <div>
-                  <div class="t-card-title">Monsoon Cricket Carnival</div>
-                  <div class="t-card-meta">Cricket &middot; League + Knockout &middot; 16 teams &middot; &#2547;3,000/team</div>
-                </div>
-                <span class="badge badge-draft badge-dot">Draft</span>
-              </div>
-              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-                <span class="venue-tag">🏟️ Champions Cricket Ground</span>
-                <span class="t-card-dates" style="margin:0">10 Sep – 28 Sep 2025</span>
-              </div>
-              <div class="progress-bar"><div class="progress-fill" style="width:56%"></div></div>
-              <div class="t-card-footer">
-                <span class="t-card-teams">9/16 teams registered</span>
-                <div style="display:flex;gap:8px">
-                  <button onclick="editTournament('Monsoon Cricket Carnival')" style="font-size:.78rem;font-weight:700;color:#f5a623;background:none;border:none;cursor:pointer;font-family:inherit">✏️ Edit</button>
-                  <button onclick="publishTournament('Monsoon Cricket Carnival')" class="btn-lime" style="font-size:.75rem;padding:5px 12px">Publish</button>
-                </div>
+            <div id="tournaments-list-container">
+              <div style="text-align:center;padding:40px;color:#9ca3af;font-size:.88rem">
+                Loading tournaments from database...
               </div>
             </div>
           </div>
@@ -198,73 +141,71 @@
           <div>
             <div class="content-panel" id="create-tournament-panel">
               <div class="panel-header" style="margin-bottom:16px">
-                <span class="panel-title">Create New Tournament</span>
+                <span class="panel-title" id="form-panel-title">Create New Tournament</span>
               </div>
-              <form onsubmit="handleCreate(event)">
+              <form id="create-tournament-form" onsubmit="handleCreateTournament(event)">
                 <div style="margin-bottom:14px">
-                  <label class="form-label">Tournament Name</label>
-                  <input type="text" class="form-input" placeholder="e.g. Champions Cup 2025" />
+                  <label class="form-label">Tournament Name *</label>
+                  <input type="text" id="t-name" class="form-input" placeholder="e.g. Champions Cup 2025" required />
                 </div>
                 <div class="form-row" style="margin-bottom:14px">
                   <div>
-                    <label class="form-label">Sport</label>
-                    <select class="form-input">
-                      <option value="">Select Sport</option>
-                      <option>Football</option>
-                      <option>Cricket</option>
-                      <option>Basketball</option>
-                      <option>Badminton</option>
+                    <label class="form-label">Sport *</label>
+                    <select id="t-sport" class="form-input" required>
+                      <option value="Football">Football</option>
+                      <option value="Cricket">Cricket</option>
+                      <option value="Basketball">Basketball</option>
+                      <option value="Badminton">Badminton</option>
                     </select>
                   </div>
                   <div>
                     <label class="form-label">Format</label>
-                    <select class="form-input">
-                      <option>Knockout</option>
-                      <option>Round Robin</option>
-                      <option>League + Knockout</option>
+                    <select id="t-format" class="form-input">
+                      <option value="Knockout">Knockout</option>
+                      <option value="Round Robin">Round Robin</option>
+                      <option value="League + Knockout">League + Knockout</option>
                     </select>
                   </div>
                 </div>
                 <div class="form-row" style="margin-bottom:14px">
                   <div>
-                    <label class="form-label">Entry Fee (&#2547;)</label>
-                    <input type="number" class="form-input" placeholder="2000" />
+                    <label class="form-label">Entry Fee (৳)</label>
+                    <input type="number" id="t-fee" class="form-input" placeholder="2000" min="0" value="2000" />
                   </div>
                   <div>
                     <label class="form-label">Max Teams</label>
-                    <select class="form-input">
-                      <option>8 teams</option>
-                      <option>12 teams</option>
-                      <option>16 teams</option>
-                      <option>32 teams</option>
+                    <select id="t-max-teams" class="form-input">
+                      <option value="8">8 teams</option>
+                      <option value="12">12 teams</option>
+                      <option value="16">16 teams</option>
+                      <option value="24">24 teams</option>
+                      <option value="32">32 teams</option>
                     </select>
                   </div>
                 </div>
                 <div class="form-row" style="margin-bottom:14px">
                   <div>
                     <label class="form-label">Start Date</label>
-                    <input type="date" class="form-input" />
+                    <input type="date" id="t-start" class="form-input" />
                   </div>
                   <div>
                     <label class="form-label">End Date</label>
-                    <input type="date" class="form-input" />
+                    <input type="date" id="t-end" class="form-input" />
                   </div>
                 </div>
                 <div style="margin-bottom:14px">
                   <label class="form-label">Venue (Your Turf)</label>
-                  <select class="form-input">
-                    <option>The Green Arena (Outdoor 5-a-side)</option>
-                    <option>Court Pro Indoor Arena</option>
-                    <option>Champions Cricket Ground</option>
+                  <select id="t-venue" class="form-input">
+                    <option value="">Select Ground...</option>
                   </select>
                 </div>
                 <div style="margin-bottom:18px">
-                  <label class="form-label">Description</label>
-                  <textarea class="form-input" rows="3" placeholder="Brief description of the tournament..." style="resize:vertical"></textarea>
+                  <label class="form-label">Rules / Description</label>
+                  <textarea id="t-rules" class="form-input" rows="3" placeholder="Brief description of rules, match durations, etc..." style="resize:vertical"></textarea>
                 </div>
                 <div style="display:flex;gap:10px">
-                  <button type="button" class="btn-ghost" style="flex:1;justify-content:center" onclick="saveDraft()">Save Draft</button>
-                  <button type="submit" class="btn-lime" style="flex:2;justify-content:center">Publish Tournament</button>
+                  <button type="button" class="btn-ghost" style="flex:1;justify-content:center" onclick="saveAsDraft()">Save Draft</button>
+                  <button type="submit" class="btn-lime" style="flex:2;justify-content:center" id="btn-submit-tournament">Publish Tournament</button>
                 </div>
               </form>
             </div>
@@ -274,30 +215,9 @@
               <div class="panel-header" style="margin-bottom:12px">
                 <span class="panel-title">Recent Registrations</span>
               </div>
-              <div style="display:flex;flex-direction:column;gap:10px">
-                <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f3f4f6">
-                  <div style="width:34px;height:34px;border-radius:10px;background:#e8f5e9;color:#2e7d32;font-weight:800;font-size:.85rem;display:flex;align-items:center;justify-content:center">T</div>
-                  <div style="flex:1;min-width:0">
-                    <div style="font-weight:700;font-size:.82rem;color:#1a1a1a">Thunder FC</div>
-                    <div style="font-size:.72rem;color:#9ca3af">Summer Smash Basketball Cup &middot; 2h ago</div>
-                  </div>
-                  <span class="badge badge-confirmed" style="font-size:.65rem">Paid</span>
-                </div>
-                <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f3f4f6">
-                  <div style="width:34px;height:34px;border-radius:10px;background:#fef3c7;color:#92400e;font-weight:800;font-size:.85rem;display:flex;align-items:center;justify-content:center">B</div>
-                  <div style="flex:1;min-width:0">
-                    <div style="font-weight:700;font-size:.82rem;color:#1a1a1a">Blaze United</div>
-                    <div style="font-size:.72rem;color:#9ca3af">Monsoon Cricket Carnival &middot; 5h ago</div>
-                  </div>
-                  <span class="badge badge-pending" style="font-size:.65rem">Pending</span>
-                </div>
-                <div style="display:flex;align-items:center;gap:10px;padding:8px 0">
-                  <div style="width:34px;height:34px;border-radius:10px;background:#dbeafe;color:#1d4ed8;font-weight:800;font-size:.85rem;display:flex;align-items:center;justify-content:center">G</div>
-                  <div style="flex:1;min-width:0">
-                    <div style="font-weight:700;font-size:.82rem;color:#1a1a1a">Green Eagles</div>
-                    <div style="font-size:.72rem;color:#9ca3af">Monsoon Cricket Carnival &middot; 1d ago</div>
-                  </div>
-                  <span class="badge badge-confirmed" style="font-size:.65rem">Paid</span>
+              <div id="recent-registrations-container" style="display:flex;flex-direction:column;gap:10px">
+                <div style="text-align:center;padding:15px;color:#9ca3af;font-size:.8rem">
+                  Loading registrations...
                 </div>
               </div>
             </div>
@@ -308,26 +228,417 @@
     </div>
   </div>
 
+  <!-- Edit Tournament Modal Dialog -->
+  <div id="edit-tournament-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(4px)">
+    <div style="background:#fff;border-radius:18px;width:92%;max-width:540px;box-shadow:0 24px 48px rgba(0,0,0,.2);overflow:hidden;animation:modalFadeIn .25s ease-out">
+      <div style="background:linear-gradient(135deg,#0d2818,#1a4029);padding:20px 24px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <h3 style="font-weight:900;font-size:1.1rem;color:#fff;margin:0">✏️ Edit Tournament</h3>
+          <p style="font-size:.78rem;color:rgba(255,255,255,.75);margin:4px 0 0 0" id="edit-modal-sub">Update tournament settings and status</p>
+        </div>
+        <button onclick="closeEditModal()" style="border:none;background:rgba(255,255,255,.2);width:32px;height:32px;border-radius:8px;font-size:1.1rem;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center">&times;</button>
+      </div>
+      <form id="edit-tournament-form" onsubmit="handleUpdateTournament(event)" style="padding:24px;max-height:80vh;overflow-y:auto">
+        <input type="hidden" id="edit-t-id" />
+        <div style="margin-bottom:14px">
+          <label class="form-label">Tournament Name *</label>
+          <input type="text" id="edit-t-name" class="form-input" required />
+        </div>
+        <div class="form-row" style="margin-bottom:14px">
+          <div>
+            <label class="form-label">Sport</label>
+            <select id="edit-t-sport" class="form-input">
+              <option value="Football">Football</option>
+              <option value="Cricket">Cricket</option>
+              <option value="Basketball">Basketball</option>
+              <option value="Badminton">Badminton</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label">Status</label>
+            <select id="edit-t-status" class="form-input">
+              <option value="draft">Draft</option>
+              <option value="open">Open (Accepting Teams)</option>
+              <option value="in_progress">In Progress / Live</option>
+              <option value="completed">Completed</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row" style="margin-bottom:14px">
+          <div>
+            <label class="form-label">Entry Fee (৳)</label>
+            <input type="number" id="edit-t-fee" class="form-input" min="0" />
+          </div>
+          <div>
+            <label class="form-label">Max Teams</label>
+            <input type="number" id="edit-t-max-teams" class="form-input" min="2" max="64" />
+          </div>
+        </div>
+        <div class="form-row" style="margin-bottom:14px">
+          <div>
+            <label class="form-label">Start Date</label>
+            <input type="date" id="edit-t-start" class="form-input" />
+          </div>
+          <div>
+            <label class="form-label">End Date</label>
+            <input type="date" id="edit-t-end" class="form-input" />
+          </div>
+        </div>
+        <div style="margin-bottom:14px">
+          <label class="form-label">Venue (Your Turf)</label>
+          <select id="edit-t-venue" class="form-input"></select>
+        </div>
+        <div style="margin-bottom:20px">
+          <label class="form-label">Rules / Description</label>
+          <textarea id="edit-t-rules" class="form-input" rows="3" style="resize:vertical"></textarea>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:10px">
+          <button type="button" onclick="closeEditModal()" class="btn-ghost" style="padding:9px 18px">Cancel</button>
+          <button type="submit" class="btn-lime" style="padding:9px 24px">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="api-client.js"></script>
+  <script src="auth.js"></script>
+  <script src="layout.js"></script>
+  <script src="page-init.js"></script>
   <script>
-    function handleCreate(e) {
+    let allTournaments = [];
+    let ownerTurfs = [];
+
+    initPage({ navId: 'tournaments', roles: ['owner', 'admin'] }).then(user => {
+      if (user) loadData();
+    });
+
+    async function loadData() {
+      try {
+        const [turfsRes, tournRes] = await Promise.all([
+          apiGet('turfs/my-turfs.php'),
+          apiGet('tournaments/my-tournaments.php')
+        ]);
+
+        ownerTurfs = turfsRes.turfs || [];
+        populateTurfDropdowns();
+
+        allTournaments = tournRes.tournaments || [];
+        renderStats(tournRes.kpis || {});
+        renderTournaments(allTournaments);
+        renderRecentRegistrations(tournRes.recent_registrations || []);
+      } catch (err) {
+        console.error('Error loading tournament data:', err);
+        document.getElementById('tournaments-list-container').innerHTML = `
+          <div style="padding:30px;text-align:center;color:#dc2626;background:#fef2f2;border-radius:12px">
+            ⚠️ Failed to load tournaments: ${err.message}
+          </div>`;
+      }
+    }
+
+    function populateTurfDropdowns() {
+      const createVenueSel = document.getElementById('t-venue');
+      const editVenueSel = document.getElementById('edit-t-venue');
+
+      let optionsHTML = '<option value="">No specific venue / TBD</option>';
+      if (ownerTurfs.length > 0) {
+        optionsHTML = ownerTurfs.map(t => `<option value="${t.id}">${t.name} (${t.sport_type || 'Ground'})</option>`).join('');
+      }
+
+      createVenueSel.innerHTML = optionsHTML;
+      editVenueSel.innerHTML = optionsHTML;
+    }
+
+    function renderStats(kpis) {
+      document.getElementById('kpi-total-tournaments').textContent = kpis.total_tournaments ?? 0;
+      document.getElementById('kpi-tournaments-sub').textContent = `${kpis.active_tournaments ?? 0} active, ${kpis.completed_tournaments ?? 0} completed`;
+      document.getElementById('kpi-total-teams').textContent = kpis.total_registered_teams ?? 0;
+      document.getElementById('kpi-total-revenue').textContent = `৳${(kpis.total_revenue ?? 0).toLocaleString()}`;
+      document.getElementById('kpi-total-matches').textContent = kpis.total_matches ?? 0;
+      document.getElementById('kpi-matches-sub').textContent = `${kpis.upcoming_matches ?? 0} upcoming / live`;
+    }
+
+    function renderTournaments(tournaments) {
+      const container = document.getElementById('tournaments-list-container');
+      if (!tournaments || tournaments.length === 0) {
+        container.innerHTML = `
+          <div style="padding:40px;text-align:center;color:#6b7280;background:#f9fafb;border-radius:12px;border:1px dashed #e5e7eb">
+            <div style="font-size:2rem;margin-bottom:8px">🏆</div>
+            <h4 style="font-weight:800;color:#0d2818;font-size:1rem">No Tournaments Found</h4>
+            <p style="font-size:.82rem;color:#9ca3af;margin-top:4px">Use the form on the right to create and host your first tournament.</p>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = tournaments.map(t => {
+        const registered = Number(t.registered_teams || 0);
+        const max = Number(t.max_teams || 8);
+        const pct = Math.min(100, Math.round((registered / max) * 100));
+
+        let badgeClass = 'badge-draft';
+        let badgeText = 'Draft';
+        let isLive = false;
+
+        if (t.status === 'open') {
+          badgeClass = 'badge-open';
+          badgeText = 'Open';
+        } else if (t.status === 'in_progress') {
+          badgeClass = 'badge-live';
+          badgeText = 'Live';
+          isLive = true;
+        } else if (t.status === 'completed') {
+          badgeClass = 'badge-completed';
+          badgeText = 'Completed';
+        }
+
+        const dateStr = (t.start_date && t.end_date) 
+          ? `${formatDateStr(t.start_date)} – ${formatDateStr(t.end_date)}`
+          : (t.start_date ? `Starts ${formatDateStr(t.start_date)}` : 'Dates TBD');
+
+        const venueName = t.venue_name || 'Your Venue';
+        const feeStr = t.entry_fee > 0 ? `৳${Number(t.entry_fee).toLocaleString()}/team` : 'Free Entry';
+
+        let actionButtons = '';
+        if (t.status === 'draft') {
+          actionButtons = `
+            <button onclick="openEditModal(${t.id})" style="font-size:.78rem;font-weight:700;color:#f5a623;background:none;border:none;cursor:pointer;font-family:inherit">✏️ Edit</button>
+            <button onclick="publishTournamentDirect(${t.id}, '${escapeQuotes(t.name)}')" class="btn-lime" style="font-size:.75rem;padding:5px 12px">Publish</button>
+          `;
+        } else {
+          actionButtons = `
+            <button onclick="openEditModal(${t.id})" style="font-size:.78rem;font-weight:700;color:#f5a623;background:none;border:none;cursor:pointer;font-family:inherit">✏️ Edit</button>
+            <a href="score-entry.html?tournament_id=${t.id}" class="btn-view-fix">Score Entry →</a>
+            <a href="fixtures.html?tournament_id=${t.id}" class="btn-view-fix">Fixtures →</a>
+          `;
+        }
+
+        return `
+          <div class="tournament-card">
+            <div class="t-card-header">
+              <div>
+                <div class="t-card-title">${t.name}</div>
+                <div class="t-card-meta">${t.sport} &middot; ${max} teams max &middot; ${feeStr}</div>
+              </div>
+              <span class="badge ${badgeClass} badge-dot">${badgeText}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+              <span class="venue-tag">🏟️ ${venueName}</span>
+              <span class="t-card-dates" style="margin:0">${dateStr}</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+            <div class="t-card-footer">
+              <span class="t-card-teams">${registered}/${max} teams ${registered >= max ? '— Registration Full' : 'registered'}</span>
+              <div style="display:flex;gap:10px;align-items:center">
+                ${actionButtons}
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function renderRecentRegistrations(registrations) {
+      const container = document.getElementById('recent-registrations-container');
+      if (!registrations || registrations.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center;padding:15px;color:#9ca3af;font-size:.8rem">
+            No team registrations yet.
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = registrations.map((r, idx) => {
+        const initial = (r.team_name || 'T').charAt(0).toUpperCase();
+        const isLast = idx === registrations.length - 1;
+        const borderStyle = isLast ? '' : 'border-bottom:1px solid #f3f4f6';
+        const statusBadge = r.status === 'approved'
+          ? '<span class="badge badge-confirmed" style="font-size:.65rem">Approved</span>'
+          : (r.status === 'rejected' ? '<span class="badge badge-rejected" style="font-size:.65rem">Rejected</span>' : '<span class="badge badge-pending" style="font-size:.65rem">Pending</span>');
+
+        const dateStr = r.registered_at ? formatDateStr(r.registered_at.split(' ')[0]) : 'Recently';
+
+        return `
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 0;${borderStyle}">
+            <div style="width:34px;height:34px;border-radius:10px;background:#e8f5e9;color:#2e7d32;font-weight:800;font-size:.85rem;display:flex;align-items:center;justify-content:center">
+              ${initial}
+            </div>
+            <div style="flex:1;min-width:0">
+              <div style="font-weight:700;font-size:.82rem;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.team_name}</div>
+              <div style="font-size:.72rem;color:#9ca3af">${r.tournament_name} &middot; ${dateStr}</div>
+            </div>
+            ${statusBadge}
+          </div>`;
+      }).join('');
+    }
+
+    function filterTournaments() {
+      const filter = document.getElementById('status-filter').value;
+      if (filter === 'all') {
+        renderTournaments(allTournaments);
+      } else if (filter === 'open') {
+        renderTournaments(allTournaments.filter(t => t.status === 'open' || t.status === 'in_progress'));
+      } else {
+        renderTournaments(allTournaments.filter(t => t.status === filter));
+      }
+    }
+
+    async function handleCreateTournament(e) {
       e.preventDefault();
-      alert('✅ Tournament published successfully! Teams can now register.');
+      await submitTournamentForm('open');
     }
 
-    function saveDraft() {
-      alert('📝 Tournament saved as draft.');
+    async function saveAsDraft() {
+      const name = document.getElementById('t-name').value.trim();
+      if (!name) {
+        alert('Please enter a tournament name to save draft.');
+        document.getElementById('t-name').focus();
+        return;
+      }
+      await submitTournamentForm('draft');
     }
 
-    function editTournament(name) {
-      alert('✏️ Editing: ' + name);
+    async function submitTournamentForm(status) {
+      const name = document.getElementById('t-name').value.trim();
+      const sport = document.getElementById('t-sport').value;
+      const format = document.getElementById('t-format').value;
+      const entry_fee = document.getElementById('t-fee').value;
+      const max_teams = document.getElementById('t-max-teams').value;
+      const start_date = document.getElementById('t-start').value;
+      const end_date = document.getElementById('t-end').value;
+      const turf_id = document.getElementById('t-venue').value;
+      const rules = document.getElementById('t-rules').value.trim();
+
+      const btn = document.getElementById('btn-submit-tournament');
+      const originalText = btn.textContent;
+      btn.textContent = 'Saving...';
+      btn.disabled = true;
+
+      try {
+        const payload = {
+          name,
+          sport,
+          format,
+          entry_fee: Number(entry_fee) || 0,
+          max_teams: Number(max_teams) || 8,
+          start_date: start_date || null,
+          end_date: end_date || null,
+          turf_id: turf_id ? Number(turf_id) : null,
+          rules,
+          status
+        };
+
+        const res = await apiPost('tournaments/create.php', payload);
+        if (res.success) {
+          alert(`✅ Tournament ${status === 'draft' ? 'saved as draft' : 'published'} successfully!`);
+          document.getElementById('create-tournament-form').reset();
+          await loadData();
+        } else {
+          alert('Error: ' + (res.error || 'Failed to create tournament'));
+        }
+      } catch (err) {
+        alert('Failed to save tournament: ' + err.message);
+      } finally {
+        btn.textContent = originalText;
+        btn.disabled = false;
+      }
     }
 
-    function publishTournament(name) {
-      alert('✅ ' + name + ' has been published! Teams can now register.');
+    async function publishTournamentDirect(id, name) {
+      if (!confirm(`Publish "${name}" now? Teams will be able to view and register.`)) return;
+      try {
+        const res = await apiPost('tournaments/update.php', { tournament_id: id, status: 'open' });
+        if (res.success) {
+          alert(`✅ "${name}" has been published!`);
+          await loadData();
+        } else {
+          alert(res.error || 'Failed to publish');
+        }
+      } catch (err) {
+        alert('Error publishing tournament: ' + err.message);
+      }
+    }
+
+    function openEditModal(tournamentId) {
+      const t = allTournaments.find(item => item.id == tournamentId);
+      if (!t) return;
+
+      document.getElementById('edit-t-id').value = t.id;
+      document.getElementById('edit-t-name').value = t.name || '';
+      document.getElementById('edit-t-sport').value = t.sport || 'Football';
+      document.getElementById('edit-t-status').value = t.status || 'draft';
+      document.getElementById('edit-t-fee').value = t.entry_fee || 0;
+      document.getElementById('edit-t-max-teams').value = t.max_teams || 8;
+      document.getElementById('edit-t-start').value = t.start_date || '';
+      document.getElementById('edit-t-end').value = t.end_date || '';
+      document.getElementById('edit-t-venue').value = t.turf_id || '';
+      document.getElementById('edit-t-rules').value = t.rules || '';
+
+      document.getElementById('edit-tournament-modal').style.display = 'flex';
+    }
+
+    function closeEditModal() {
+      document.getElementById('edit-tournament-modal').style.display = 'none';
+    }
+
+    async function handleUpdateTournament(e) {
+      e.preventDefault();
+      const id = document.getElementById('edit-t-id').value;
+      const name = document.getElementById('edit-t-name').value.trim();
+      const sport = document.getElementById('edit-t-sport').value;
+      const status = document.getElementById('edit-t-status').value;
+      const entry_fee = document.getElementById('edit-t-fee').value;
+      const max_teams = document.getElementById('edit-t-max-teams').value;
+      const start_date = document.getElementById('edit-t-start').value;
+      const end_date = document.getElementById('edit-t-end').value;
+      const turf_id = document.getElementById('edit-t-venue').value;
+      const rules = document.getElementById('edit-t-rules').value.trim();
+
+      try {
+        const payload = {
+          tournament_id: Number(id),
+          name,
+          sport,
+          status,
+          entry_fee: Number(entry_fee) || 0,
+          max_teams: Number(max_teams) || 8,
+          start_date: start_date || null,
+          end_date: end_date || null,
+          turf_id: turf_id ? Number(turf_id) : null,
+          rules
+        };
+
+        const res = await apiPost('tournaments/update.php', payload);
+        if (res.success) {
+          alert('✅ Tournament updated successfully!');
+          closeEditModal();
+          await loadData();
+        } else {
+          alert('Error: ' + (res.error || 'Failed to update tournament'));
+        }
+      } catch (err) {
+        alert('Failed to update tournament: ' + err.message);
+      }
     }
 
     function showCreateForm() {
       document.getElementById('create-tournament-panel').scrollIntoView({ behavior: 'smooth' });
+      document.getElementById('t-name').focus();
+    }
+
+    function formatDateStr(dateStr) {
+      if (!dateStr) return '';
+      try {
+        const parts = dateStr.split('-');
+        if (parts.length === 3) {
+          const d = new Date(parts[0], parts[1] - 1, parts[2]);
+          return d.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+        return dateStr;
+      } catch {
+        return dateStr;
+      }
+    }
+
+    function escapeQuotes(str) {
+      return (str || '').replace(/'/g, "\\'");
     }
   </script>
 </body>

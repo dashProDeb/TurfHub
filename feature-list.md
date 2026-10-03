@@ -1,66 +1,57 @@
-# 📱 TurfHub — Mobile Figma Design & Role-to-Feature Specification
+# 📱 TurfHub — Mobile & Web Role-to-Feature Specification & Design Blueprint
 
-> **A comprehensive, role-by-role feature architecture and mobile UI/UX blueprint (`Role <-> Feature` & `Role <-> Role`) specifically engineered for designing Figma mobile screen frames, prototypes, and design systems.**
+> **A comprehensive, role-by-role feature architecture and UI/UX blueprint (`Role <-> Feature` & `Role <-> Role`) specifically engineered on the basis of the whole UI of `http://localhost/TurfHub/` (Turf Booking, Tournament Management, Team Operations, Live Match Center, and Ground Administration), strictly scoped without Coach and Marketplace modules.**
 
 ---
 
 ## 📌 Table of Contents
-1. [Mobile UI/UX Foundations & Figma Frame Standards](#1-mobile-uiux-foundations--figma-frame-standards)
+1. [UI/UX Foundations & Design System Standards](#1-uiux-foundations--design-system-standards)
 2. [Master Role-to-Feature Architecture (`Role <-> Feature`)](#2-master-role-to-feature-architecture-role---feature)
    - [Role 0: Public Guest / Unauthenticated Visitor](#role-0-public-guest--unauthenticated-visitor)
    - [Role 1: Registered Player (Athlete / Free Agent)](#role-1-registered-player-athlete--free-agent)
    - [Role 2: Team Captain (Squad Leader & Organizer)](#role-2-team-captain-squad-leader--organizer)
-   - [Role 3: Certified Coach / Trainer (Athletic Mentor & Academy Specialist)](#role-3-certified-coach--trainer-athletic-mentor--academy-specialist)
-   - [Role 4: Turf Owner / Ground Manager](#role-4-turf-owner--ground-manager)
-   - [Role 5: Platform Administrator](#role-5-platform-administrator)
-3. [TurfHub Sports Marketplace Architecture (C2C & B2C)](#3-turfhub-sports-marketplace-architecture-c2c--b2c)
-   - [B2C Pro-Shop: Turf Owner to Players & Captains](#b2c-pro-shop-turf-owner-to-players--captains)
-   - [C2C Peer-to-Peer: Player-to-Player / Captain-to-Captain Gear Exchange](#c2c-peer-to-peer-player-to-player--captain-to-captain-gear-exchange)
-   - [Marketplace Core Mobile Feature Catalog](#marketplace-core-mobile-feature-catalog)
-4. [Inter-Role Collaboration Matrix (`Role <-> Role`)](#4-inter-role-collaboration-matrix-role---role)
-5. [Mobile Navigation Architecture & Bottom Tab Bars](#5-mobile-navigation-architecture--bottom-tab-bars)
-6. [Master Figma Mobile Screen & Component Inventory (Frame Catalog)](#6-master-figma-mobile-screen--component-inventory-frame-catalog)
-7. [Interactive Mobile Prototype Flows & Gestures](#7-interactive-mobile-prototype-flows--gestures)
+   - [Role 3: Turf Owner / Ground Manager](#role-3-turf-owner--ground-manager)
+   - [Role 4: Platform Administrator](#role-4-platform-administrator)
+3. [Inter-Role Collaboration Matrix (`Role <-> Role`)](#3-inter-role-collaboration-matrix-role---role)
+4. [Navigation Architecture & Layout Engine (Sidebars & Mobile Views)](#4-navigation-architecture--layout-engine-sidebars--mobile-views)
+5. [Payment Gateway Architecture (SSLCOMMERZ EasyCheckout Flow)](#5-payment-gateway-architecture-sslcommerz-easycheckout-flow)
+6. [Master UI Screen & Component Inventory (Frame Catalog)](#6-master-ui-screen--component-inventory-frame-catalog)
+7. [Interactive Prototype Flows & User Gesture Map](#7-interactive-prototype-flows--user-gesture-map)
+8. [Complete Codebase UI Page Mapping & Specification Matrix](#8-complete-codebase-ui-page-mapping--specification-matrix)
 
 ---
 
-## 1. Mobile UI/UX Foundations & Figma Frame Standards
+## 1. UI/UX Foundations & Design System Standards
 
-### 📐 Mobile Artboard & Screen Standards
-- **Primary Canvas Frame**: `393 x 852 px` (iPhone 15 / 16 Standard & Pixel 8 baseline).
-- **Safe Area Insets**:
-  - Top Notch / Dynamic Island: `54px` Status Bar.
-  - Bottom Home Indicator: `34px` Home Indicator Zone.
-  - Usable Content Viewport: `393 x 764 px`.
-- **Grid & Spacing Scale (8pt System)**:
-  - Screen Padding (Horizontal Gutter): `16px` or `20px`.
-  - Component Gap Spacing: `8px`, `12px`, `16px`, `24px`, `32px`.
-  - Minimum Touch Target: `44 x 44 px` (for all buttons, icon triggers, and slot chips).
-  - Corner Radii: `8px` (Tags), `12px` (Inputs/Buttons), `16px`–`20px` (Cards), `24px`–`28px` (Bottom Sheets).
+### 📐 Screen & Viewport Standards
+- **Desktop Primary Canvas**: `1240px` max-width centered container (`margin: 0 auto`), `220px` sticky fixed left sidebar, fluid main viewport.
+- **Mobile Responsive Frame**: `393 x 852 px` baseline (iPhone 15/16 & Pixel standard) with off-canvas hamburger drawer overlay.
+- **Safe Area Insets**: Top status bar `54px`, bottom home indicator `34px`, content viewport `393 x 764 px`.
+- **Spacing Scale (8pt System)**: `8px`, `12px`, `16px`, `20px`, `24px`, `32px`.
+- **Interactive Touch Targets**: Minimum `44 x 44 px` for buttons, slot chips, and navigation triggers.
+- **Corner Radii Tokens**: `6px`–`8px` (Pills, Badges), `12px` (Inputs, Buttons), `14px`–`16px` (Cards), `20px`–`24px` (Dialogs, Modals).
 
-### 🎨 Mobile Design System Variables (Figma Tokens)
+### 🎨 Design System Variables & Color Tokens
 - **Primary Brand (Forest)**:
-  - `Brand/Forest-Main`: `#0d2818` (Primary Dark Shell, Top Navs, Hero Cards)
-  - `Brand/Forest-Dark`: `#071e14` (Deep Backgrounds, Dark Footers)
-  - `Brand/Forest-Card`: `#133923` (Elevated dark containers)
+  - `Brand/Forest-Main`: `#0d2818` (Primary dark header, sidebars, hero containers, brand text)
+  - `Brand/Forest-Dark`: `#071e14` (Deep app background, dark footer surfaces, modal backdrops)
+  - `Brand/Forest-Card`: `#133923` (Elevated dark containers, header highlight cards)
 - **Accent Brand (Electric Lime)**:
-  - `Brand/Lime-Bright`: `#7ed321` (Primary CTAs, Active States, Live Indicators)
-  - `Brand/Lime-Dark`: `#6ab81c` (Pressed/Hover Button States)
-  - `Brand/Lime-Glow`: `rgba(126, 211, 33, 0.15)` (Active Chip Fills, Selected Card Outlines)
-- **Marketplace & Accent Tones**:
-  - `Accent/Gold`: `#f59e0b` (Coach Badges, Premium Gear, Verified Seller)
-  - `Accent/Purple`: `#8b5cf6` (C2C Community Marketplace Tag)
-  - `Accent/Teal`: `#0d9488` (B2C Pro-Shop Official Turf Tag)
+  - `Brand/Lime-Bright`: `#7ed321` (Primary CTAs, active states, available slots, success badges)
+  - `Brand/Lime-Dark`: `#6ab81c` (Hover and pressed states for primary buttons)
+  - `Brand/Lime-Glow`: `rgba(126, 211, 33, 0.18)` (Active pill glow, card outlines, focus rings)
 - **Neutrals & Surfaces**:
-  - `Surface/App-BG`: `#f5f5f0` (Mobile App Canvas BG)
-  - `Surface/Card-White`: `#ffffff` (Elevated White Cards & Bottom Sheets)
-  - `Surface/Border`: `#e8ede8` (1px Hairline dividers and card outlines)
-  - `Text/Primary`: `#1a1a1a` (Titles, Headings, Primary values)
-  - `Text/Muted`: `#6b7280` (Subtitles, Meta timestamps, labels)
-- **State Badges**:
-  - `State/Success`: `#5a9e12` (Confirmed, Available `#7ed321`, Paid, In-Stock)
-  - `State/Warning`: `#d97706` (Pending, Reserved, Live pulsing `#f59e0b`, Low Stock)
-  - `State/Danger`: `#e53935` (Booked `#fee2e2`, Rejected, Injured, Out of Stock)
+  - `Surface/App-BG`: `#f5f5f0` (Main light body canvas)
+  - `Surface/Card-White`: `#ffffff` (Elevated white cards, dialog boxes, receipt bills)
+  - `Surface/Border`: `#e8ede8` (Hairline dividers and subtle container outlines)
+  - `Text/Primary`: `#1a1a1a` (High-contrast titles, numbers, player names)
+  - `Text/Muted`: `#6b7280` (Subtitles, metadata timestamps, descriptions)
+- **State & Status Badges**:
+  - `State/Available`: Background `#eefbee`, Text `#2e7d32`, Border `#bbf7d0` (Slots ready to book)
+  - `State/Booked`: Background `#fee2e2`, Text `#b91c1c`, Border `#fca5a5` (Occupied slots)
+  - `State/Reserved`: Background `#fef3c7`, Text `#b45309`, Border `#fde68a` (Walk-in / Owner hold)
+  - `State/Live`: Background `#e53935`, Text `#ffffff` with pulsing dot animation (`@keyframes pulse-dot`)
+  - `State/Maintenance`: Background `#f1f5f9`, Text `#64748b` with subtle diagonal striping
 
 ---
 
@@ -68,331 +59,307 @@
 
 ```
                                           ┌────────────────────────────────┐
-                                          │      TURFHUB PLATFORM          │
+                                          │        TURFHUB PLATFORM        │
                                           └───────────────┬────────────────┘
-         ┌──────────────────┬─────────────────────┼────────────────────┬──────────────────┬─────────────────┐
-         ▼                  ▼                     ▼                    ▼                  ▼                 ▼
-┌─────────────────┐ ┌───────────────┐ ┌───────────────────────┐ ┌──────────────┐ ┌──────────────┐ ┌────────────────┐
-│  PUBLIC GUEST   │ │ PLAYER (USER) │ │  TEAM CAPTAIN (LEADER)│ │ COACH/TRAINER│ │  TURF OWNER  │ │ PLATFORM ADMIN │
-└─────────────────┘ └───────────────┘ └───────────────────────┘ └──────────────┘ └──────────────┘ └────────────────┘
+         ┌──────────────────┬─────────────────────┼────────────────────┬─────────────────┐
+         ▼                  ▼                     ▼                    ▼                 ▼
+┌─────────────────┐ ┌───────────────┐ ┌───────────────────────┐ ┌──────────────┐ ┌────────────────┐
+│  PUBLIC GUEST   │ │ PLAYER (USER) │ │  TEAM CAPTAIN (LEADER)│ │  TURF OWNER  │ │ PLATFORM ADMIN │
+└─────────────────┘ └───────────────┘ └───────────────────────┘ └──────────────┘ └────────────────┘
 ```
 
 ---
 
 ### Role 0: Public Guest / Unauthenticated Visitor
-> **User Goal**: Discover available turf grounds, explore sports tournaments, browse marketplace items, find coaches, and easily sign up or switch roles.
+> **User Goal**: Discover verified sports turfs, search slot availability, view live tournament fixtures, read FAQs, and sign in or register with a dedicated role.
 
-| # | Feature Name | Feature Description | Figma Mobile Screen / Component | User Interaction / Gesture |
+| # | Feature Name | Feature Description | Core UI Page / Component | Interaction & System Behavior |
 | :--- | :--- | :--- | :--- | :--- |
-| **G-01** | **Mobile Hero & Stadium Showcase** | High-contrast dark forest stadium header with live availability counter (`50+ premium turfs`) and value proposition. | `M-GUEST-01-Landing` (Top 40% Hero viewport) | Vertical scroll; Tap on "Get Started" to open Auth Switcher. |
-| **G-02** | **Sticky Quick-Search Pill Bar** | Compact mobile search bar with expandable bottom sheet filter for Location (Dhaka, Sylhet, Chittagong), Sport, Date, and Time. | `M-GUEST-01-Landing` + `M-BS-SearchFilter` (Bottom Sheet) | Tap search pill -> triggers 80% height bottom sheet with date picker and sport chips. |
-| **G-03** | **Featured Turfs Carousel** | Horizontal snap-scroll cards showcasing top-rated venues, pricing per hour (`৳800/hr`), sport badges, and real-time status. | `M-GUEST-01-Landing` (Carousel Component) | Horizontal swipe gestures; Tap card -> navigates to Venue Details. |
-| **G-04** | **Platform Metric Counters** | Animated stat chips displaying 12k+ players, 200+ tournaments, 50+ venues, 80+ coaches, 4.8/5 ratings. | `M-GUEST-01-Landing` (2x2 Grid Widget) | Passive display / Scroll into view. |
-| **G-05** | **Multi-Role Authentication Switcher** | Role selector cards (Player, Captain, Coach, Turf Owner, Admin) + Tab toggle for `Sign In` and `Sign Up`. | `M-AUTH-01-RoleSelect` & `M-AUTH-02-SignInUp` | Tap role card (glowing lime ring) -> updates form context and permissions. |
-| **G-06** | **Guest Public Fixtures & Standings** | View-only match center showcasing ongoing tournaments, live scores, and group standings. | `M-GUEST-02-PublicFixtures` (Tabbed View) | Segmented control toggle between "Fixtures" and "Standings". |
-| **G-07** | **Public Marketplace Showcase** | Browse trending sports gear (boots, kits, balls) with guest view price tags and sign-in prompts to buy/sell. | `M-GUEST-04-PublicMarketplace` | Horizontal scroll feed; Tap "Buy" prompts login modal. |
-| **G-08** | **Help, FAQs & Contact Support** | Accordion FAQ cards, direct hotline tap-to-call, WhatsApp trigger, and support ticket submission form. | `M-GUEST-03-ContactHelp` | Tap accordion to expand; Tap floating call button. |
+| **G-01** | **Hero Stadium & Value Proposition** | Dark forest stadium header with live availability counter (`50+ Verified Turfs`, `12k+ Athletes`, `200+ Tournaments`), search trigger, and instant CTA buttons. | `index.html` (Hero Section) | Smooth scrolling; "Book a Turf" jumps to search; "Get Started" opens authentication switcher. |
+| **G-02** | **Multi-Parameter Quick-Search Bar** | Floating search pill with live filters for Location (Dhaka, Sylhet, Chittagong), Sport (Football, Cricket, Basketball), Date picker, and Time of day. | `index.html` (Quick Search Widget) | Interactive filter inputs; Submitting redirects to `turf-detail.html` with pre-filled query parameters. |
+| **G-03** | **Featured Turfs Showcase** | Responsive card grid showcasing premier turf grounds with sport badges, location tags, hourly price (`৳800/hr`), and instant booking buttons. | `index.html` (Featured Turfs Grid) | Card hover zoom effect; Clicking card navigates directly to `turf-detail.html`. |
+| **G-04** | **Platform Metric Highlights** | High-impact stat counters highlighting platform reach: 12k+ active players, 50+ partner grounds, 200+ hosted tournaments, and 4.8/5 satisfaction rating. | `index.html` (Stats Strip) | Animated counter presentation and responsive 4-column layout. |
+| **G-05** | **Multi-Role Authentication Switcher** | Role selector cards (Turf Owner, Team Captain, Player, Platform Admin) with instant visual glow highlight, and Tab toggle between `Sign In` and `Sign Up`. | `login.html` (Auth Card & Tabs) | Clicking role card updates visual highlight (`.role-card.selected`), updates form context, and signs in with role profile. |
+| **G-06** | **Guest Fixtures & Standings Center** | Public match schedule viewer displaying ongoing tournament brackets, live score banners, and group points tables. | `fixtures.html` (Public View) | Segmented view switcher between "Fixtures" and "Standings" with W/D/L form badges. |
+| **G-07** | **Help, Support Hotline & FAQ Accordion** | Customer support inquiry form, direct phone hotline (`+880 1700-000000`), WhatsApp direct chat trigger, office address map, and accordion FAQs. | `contact.html` (Support Center) | Expandable FAQ cards; Form submission validation with success confirmation message. |
 
 ---
 
 ### Role 1: Registered Player (Athlete / Free Agent)
-> **User Goal**: Check upcoming match RSVPs, book individual slots, hire a coach, buy/sell pre-owned gear (C2C), purchase turf refreshments (B2C), join squads as a free agent, and track payments.
+> **User Goal**: Track personal performance statistics, RSVP to upcoming captain matches, discover and book turf slots via master-detail explorer, join squads as a free agent, inspect receipts, and chat with captains and turf owners.
 
-| # | Feature Name | Feature Description | Figma Mobile Screen / Component | User Interaction / Gesture |
+| # | Feature Name | Feature Description | Core UI Page / Component | Interaction & System Behavior |
 | :--- | :--- | :--- | :--- | :--- |
-| **P-01** | **Player Hub & Performance KPIs** | Personalized greeting with circular avatar, Player Rating (`4.8 ★`), Matches Played (`18`), Goals Scored (`12`), Win Rate (`72%`). | `M-PLY-01-Dashboard` (Header & Stat Row) | Pull-to-refresh; Tap avatar to edit profile. |
-| **P-02** | **Interactive Match RSVP Card** | Upcoming match banner with venue name, countdown clock, and one-tap RSVP buttons (`Attending` ✅ / `Unavailable` ❌). | `M-PLY-01-Dashboard` (Sticky Hero Card) | Tap "Attending" -> updates state badge to green & syncs with Captain's roster. |
-| **P-03** | **Master-Detail Turf Ground Explorer** | Search & filter turfs by sport, district, pricing, lighting, AC lounge, and parking. Master card list with thumbnail badges. | `M-PLY-02-TurfExplore` | Vertical list scroll; Filter pill chips; Tap card to push detail screen. |
-| **P-04** | **Mobile Venue Gallery & Amenity Tags** | Full-width photo carousel with thumbnail pagination, location map pin, surface type (FIFA 2-star artificial grass), and amenity icons. | `M-PLY-03-TurfDetail` | Swipe photos horizontally; Tap map to open Google Maps navigation. |
-| **P-05** | **Mobile Date & Hourly Slot Picker** | 7-day horizontal calendar date strip + 2-column touch-friendly time slot chips (`Available` [Lime Outline], `Booked` [Red Disabled], `Selected` [Solid Lime]). | `M-PLY-03-TurfDetail` (Slot Matrix Section) | Tap date chip -> updates slot matrix; Tap slot chip -> recalculates total price. |
-| **P-06** | **Mobile SSLCOMMERZ Checkout Sheet** | Native mobile payment sheet supporting bKash, Nagad, Rocket, Upay, Visa/Mastercard with simulated 1-tap OTP verification. | `M-BS-PaymentCheckout` (Full-Screen Bottom Sheet) | Tap "Proceed to Pay" -> displays MFS logos -> 1-tap instant payment success. |
-| **P-07** | **Digital Booking Receipts & Invoice Bar** | List of all paid bookings with unique Transaction ID, QR code badge, payment status, and 1-tap `Download PDF` / `Share Receipt`. | `M-PLY-04-Receipts` | Tap receipt card -> opens detailed invoice modal; Tap share icon. |
-| **P-08** | **Free Agent Board & Join Squad** | Athlete recruitment hub: browse open captain recruitment posts, filter by preferred sport/position, and submit "Request to Join". | `M-PLY-05-FreeAgentBoard` | Tap "Apply to Squad" -> opens message bottom sheet to captain. |
-| **P-09** | **Book Certified Coach for Training** | Browse certified coaches directory, view coaching rates (`৳500/session`), book private 1-on-1 coaching at verified turfs, and track personal fitness logs. | `M-PLY-09-CoachFinder` & `M-BS-CoachBooking` | Tap "Book Training Session" -> selects coach & slot matrix -> MFS payment. |
-| **P-10** | **C2C Player Gear Marketplace (Sell/Buy)** | Buy & sell pre-owned boots, bats, kits; snap camera photos, set price (`৳1,800`), choose handover venue, chat with buyer/seller. | `M-MKT-01-MarketHome` & `M-MKT-03-CreateListing` | Tap `+ Sell Gear` FAB -> upload 3 photos, select condition pill, post. |
-| **P-11** | **B2C Turf Pro-Shop Pre-Order** | Pre-order refreshments (energy drinks, hydration packs), grip socks, or rental bibs to be ready at turf reception upon arrival. | `M-MKT-02-ProductDetail` + `M-BS-TurfAddons` | Toggle "Add to Turf Booking" -> adds item cost to booking invoice. |
-| **P-12** | **1-on-1 & Team Squad Chat** | Real-time chat with Captain, Coach, teammates, or Ground Owners with unread badges, offer negotiation buttons, and location pins. | `M-PLY-07-ChatList` & `M-PLY-08-ChatThread` | Tap thread -> opens mobile chat screen; Send instant text & match location. |
+| **P-01** | **Player Hub & Performance KPIs** | Personalized greeting with avatar initial, performance KPI cards: Matches Played (`18`), Goals Scored (`12`), Win Rate (`72%`), and Player Rating (`4.8 ★`). | `player-dashboard.html` (Top Stat Grid) | Instant dashboard load; Dynamic user data populated from authentication session. |
+| **P-02** | **Interactive Match RSVP Banner** | Prominent hero match card with countdown clock, opponent team name, venue pitch, kick-off time, and 1-tap RSVP action buttons (`Attending` ✅ / `Unavailable` ❌). | `player-dashboard.html` (Match RSVP Hero) | Clicking "Attending" changes button to solid lime, updates status badge to green, and syncs response with Captain's squad roster. |
+| **P-03** | **Master-Detail Turf Ground Explorer** | Split-view master-detail ground finder. Left sidebar lists all turfs with search/district filters; right pane displays rich pitch details, pricing, and amenities. | `turf-detail.html` (Master-Detail Shell) | Clicking turf card on left switches right pane instantly with active green highlight. |
+| **P-04** | **Venue Photo Gallery & Amenity Tags** | Multi-photo hero viewer with clickable thumbnail carousel, verified turf badge, address pin, and facility amenity chips (Lighting, AC Lounge, Parking, Showers). | `turf-detail.html` (Gallery & Specs) | Clicking thumbnail updates main hero image; Amenity chips highlight included venue facilities. |
+| **P-05** | **Interactive 7-Day Date & Slot Picker** | 7-day horizontal calendar date strip combined with interactive 2-column slot pills (🟢 Available, 🔴 Booked, 🟩 Selected) with dynamic total price calculation. | `turf-detail.html` (Slot Matrix Section) | Clicking date strip refreshes slot availability; Clicking available slots toggles selection and updates checkout total. |
+| **P-06** | **SSLCOMMERZ EasyCheckout Gateway** | Integrated checkout modal supporting Mobile Banking (bKash, Nagad, Rocket, Upay), Credit/Debit Cards, and Net Banking with 1-click demo autofill and payment simulator. | `turf-detail.html` (SSLCOMMERZ Modal) | Clicking "Pay Now" runs 3-phase payment animation (Connecting → Authenticating OTP → Confirmed) and redirects to receipt. |
+| **P-07** | **Free Agent Board & Join Squad** | Athlete team recruitment directory: explore teams with open roster spots, filter by sport, view squad size tags (`Open` / `Full`), and submit "Request to Join". | `join-team.html` (Recruitment Cards) | Clicking "Request to Join" opens application modal; Submitting sends request to Captain's inbox. |
+| **P-08** | **Personal Fixtures & Tournament Tracker** | Dedicated schedule of upcoming matches, match attendance indicators, pitch locations, opponent details, and tournament group standings table. | `player-fixtures.html` (Fixtures View) | Filter by tournament/league; Displays live match score alerts with pulsing red dot indicator. |
+| **P-09** | **Digital Receipts & Payment History** | Complete payment ledger showing all paid bookings with unique TrxID, Reference ID, amount, payment method, date/time, and PDF invoice download trigger. | `player-receipts.html` (Receipts Grid) | Prepend recently completed SSLCOMMERZ transactions from `localStorage`; Filter by status (`All`, `Confirmed`, `Pending`). |
+| **P-10** | **Player Direct & Team Messaging** | Real-time chat interface to communicate with Team Captains and Turf Ground Owners, featuring unread message indicators and conversation threads. | `player-chat.html` (Chat Shell) | Select conversation on left list; Send instant text messages; Green bubbles for sent, white for received. |
 
 ---
 
 ### Role 2: Team Captain (Squad Leader & Organizer)
-> **User Goal**: Lead squad operations, recruit players & certified coaches, enter leagues, book turfs via 4-step stepper, order team uniforms (B2C), and manage split finances.
+> **User Goal**: Manage team squad rosters, track player match RSVPs, execute 4-step turf bookings, host custom tournaments, register for leagues, split expenses, and coordinate team tactical chat.
 
-| # | Feature Name | Feature Description | Figma Mobile Screen / Component | User Interaction / Gesture |
+| # | Feature Name | Feature Description | Core UI Page / Component | Interaction & System Behavior |
 | :--- | :--- | :--- | :--- | :--- |
-| **C-01** | **Captain Command Center** | Team badge, Next Match Countdown card (VS opponent, pitch name), Quick Action Floating Hub (Book Pitch, Hire Coach, Enter Cup, Order Kits). | `M-CAP-01-Dashboard` | Pull-to-refresh; Quick action shortcuts. |
-| **C-02** | **Squad Roster & Player Status Manager** | Player roster cards displaying Jersey Number badge, position pill (FWD, MID, DEF, GK), status tag (`Active`, `Bench`, `Injured`), and RSVP summary (`8/11 Confirmed`). | `M-CAP-02-ManageTeam` | Swipe left on player to Bench/Remove; Tap to edit jersey/position. |
-| **C-03** | **Player & Coach Recruitment Hub** | Post open positions for squad vacancies (e.g. Need Goalkeeper) or post Team Coach Vacancies with target tournament goals and budget. | `M-BS-InvitePlayer` & `M-CAP-09-HireCoach` | Tap "Hire Coach" -> opens coach candidate list with AFC/FIFA badges. |
-| **C-04** | **4-Step Mobile Turf Booking Stepper** | Streamlined booking workflow: (1) Select Sport & Date → (2) Pick Verified Turf → (3) Choose Hourly Slots & Add Pro-Shop Addons → (4) SSLCOMMERZ Deposit Checkout. | `M-CAP-03-BookStepper` (Steps 1–4) | Multi-step progress bar; Sticky bottom bar with "Next Step: Select Slots" button. |
-| **C-05** | **Tournament Hosting Wizard** | Mobile form wizard to create a custom tournament: Tournament Name, Sport, Pitch location, Entry Fee (`৳3,000`), Prize Pool (`৳25,000`), Max Teams (8/16/32), Rules. | `M-CAP-04-CreateTournament` | Form fields with step validation; Instant preview card rendering. |
-| **C-06** | **Tournament Directory & One-Tap Registration** | Explore active cups/leagues, view tournament prize pool cards, check registration deadlines, and pay team registration fees via MFS. | `M-CAP-05-Tournaments` | Tap "Register Team" -> opens team roster selector + MFS checkout sheet. |
-| **C-07** | **B2C Bulk Uniform & Gear Orders** | Order customized team kits, bulk practice balls, and hydration cases directly from Turf Pro-Shops or official suppliers at team discount. | `M-MKT-07-TeamUniformShop` | Select kit colors, input 15 player names/numbers, checkout via MFS. |
-| **C-08** | **Captain Invoices & Expense Splitter** | View detailed transaction receipts, split turf booking & coaching cost per attending player (`(৳800 + ৳500) ÷ 10 = ৳130/player`), and copy payment request links. | `M-CAP-07-BookingReceipts` | Tap "Split Cost" -> calculates per-player amount -> generates WhatsApp text. |
-| **C-09** | **Captain Team & Tactical Chat Channel** | Announcement channel with pinned tactical lineups, training schedules set by Team Coach, and match kick-off push alerts. | `M-CAP-08-TeamChat` | Send pinned announcement; View member read receipts. |
+| **C-01** | **Captain Command Center** | Team identity header, Next Match countdown hero card (VS opponent, pitch name, kick-off), Squad Roster overview with jersey badges, and quick action buttons. | `captain-dashboard.html` (Main Hub) | Quick navigation to Book Turf, Manage Team, Host Tournament, and View Receipts. |
+| **C-02** | **Squad Roster & Player Status Manager** | Player roster cards displaying Jersey Number badge, position pill (FWD, MID, DEF, GK), status tag (`Active`, `Bench`, `Injured`), and RSVP attendance summary (`8/11 Confirmed`). | `manage-team.html` (Roster Grid) | Open "+ Add Player" modal to invite new teammate; Tap player to edit jersey number/position or change active/bench status. |
+| **C-03** | **4-Step Interactive Turf Booking Stepper** | Streamlined booking wizard: (1) Select Sport & Date → (2) Pick Verified Turf Ground → (3) Choose Hourly Slots with live price calculator → (4) SSLCOMMERZ Deposit Checkout. | `book-turf.html` (4-Step Stepper) | Progress bar tracker (`.step.active`, `.step.done`); Responsive turf card selection; Live slot chip toggles; Modal payment launch. |
+| **C-04** | **Tournament Hosting Wizard** | Comprehensive tournament creator form: Tournament Name, Sport Category, Venue Ground, Entry Fee (`৳3,000`), Prize Pool (`৳25,000`), Max Teams (8/16/32), and Rules. | `create-tournament.html` (Host Wizard) | Side-by-side layout with live interactive Tournament Preview Card and registration progress fill bar. |
+| **C-05** | **Tournament Directory & Team Registration** | Explore active cups and leagues, view entry fee vs. prize pool boxes, inspect registration deadlines, and submit team registration. | `tournament-registration.html` & `fixtures.html` | Clicking "Register Team" opens registration modal to select squad roster and confirm entry. |
+| **C-06** | **Live Match Center & League Standings** | Real-time scoreboard with pulsating live indicator (`@keyframes pulse-dot`), match results, and official league standings table (Rank, Played, Won, Drawn, Lost, GD, Points). | `fixtures.html` (Standings Table) | Segmented tab switcher; Gold/Silver/Bronze rank medal badges; Color-coded form pills (`W`, `D`, `L`). |
+| **C-07** | **Captain Invoices & Expense Splitter** | Detailed transaction invoices with PDF download, dynamic SSLCOMMERZ success confirmation banner, and expense split calculator per attending player. | `booking-receipt.html` (Invoice Hub) | Dynamically renders confirmed booking cards from `localStorage`; Share invoice summary to team WhatsApp. |
+| **C-08** | **Captain Team & Direct Chat Channel** | Team communication hub featuring pinned announcements, match kick-off alerts, and direct messaging channels with Turf Owners. | `chat.html` (Split Chat Interface) | Split conversation layout (280px left thread list, fluid right chat viewport) with instant message composer. |
 
 ---
 
-### Role 3: Certified Coach / Trainer (Athletic Mentor & Academy Specialist)
-> **User Goal**: Build coaching profile, apply for team coaching jobs, apply for vacancies at Turf Owner venues / academies, run training sessions, track trainee development, and earn session fees.
+### Role 3: Turf Owner / Ground Manager
+> **User Goal**: Maximize venue slot utilization, manage pitch catalog and amenities, maintain 7-day booking matrix, enter live match scores, approve tournament entries, and track revenue reports.
 
-| # | Feature Name | Feature Description | Figma Mobile Screen / Component | User Interaction / Gesture |
+| # | Feature Name | Feature Description | Core UI Page / Component | Interaction & System Behavior |
 | :--- | :--- | :--- | :--- | :--- |
-| **CO-01** | **Coach Command Center & Schedule** | Daily coaching schedule, active trainees counter (`24`), booked 1-on-1 sessions, team contracts (`2 Active Teams`), monthly earnings (`৳34,000`). | `M-COA-01-Dashboard` | Stat cards with session timeline; Tap session to view trainee notes. |
-| **CO-02** | **Coach Profile & Credentials Inspector** | Certification showcase (AFC 'C'/'B' License, FIFA Grassroots, BPED), specialty pills (Tactics, Striker Finishing, Goalkeeping), hourly rate (`৳600/hr`), intro reel. | `M-COA-02-CoachProfile` | Tap "Edit Credentials" -> upload certification scan for Admin badge. |
-| **CO-03** | **Join a Team / Squad Job Board** | Browse team captain job posts seeking tournament coaches, view offered stipends, submit coaching proposals with tactical philosophies. | `M-COA-03-TeamJobBoard` | Tap "Apply to Squad" -> attach tactical portfolio & proposed session fee. |
-| **CO-04** | **Turf Owner Vacancy & Academy Residency** | Browse turf owner job listings seeking Resident Turf Coaches / Academy Directors; apply to run weekend football/cricket youth clinics at specific turf venues. | `M-COA-04-TurfVacancies` | Filter by Turf Venue; Tap "Apply for Turf Vacancy" -> submit pitch residency request. |
-| **CO-05** | **Training Session Manager & Turf Slot Booking** | Create customized training sessions (Solo Drill, Group 5v5 Tactical, Weekend Boot Camp), sync slot booking with venue calendar, send RSVP to trainees. | `M-COA-05-SessionManager` | Tap `+ New Session` -> select turf ground, date, maximum trainees, price. |
-| **CO-06** | **Trainee Roster & Skill Evaluation** | Performance scorecard for individual athletes (Pace, Stamina, Passing, Shooting, Discipline), progress radar chart, private feedback notes. | `M-COA-06-TraineeTracker` | Tap athlete card -> adjust skill sliders -> send feedback notification. |
-| **CO-07** | **Coach Earnings & Payout Ledger** | Track incoming payments from 1-on-1 bookings, team coaching stipends, turf academy commission cuts, 1-tap payout withdrawal request to bKash/Nagad. | `M-COA-07-EarningsLedger` | Tap "Withdraw Earnings" -> enter amount -> instant payout confirmation. |
-| **CO-08** | **Coach Direct Messaging & Tactical Board** | In-app chat with Captains (tactical planning), Players (personal fitness homework), and Turf Owners (ground reservation & equipment access). | `M-COA-08-CoachChat` | Send tactical whiteboard diagrams & training video clips. |
+| **O-01** | **Owner Operations Dashboard** | Operational pulse: Today's Bookings count, Today's Slot Revenue (`৳12,400`), Monthly Total Revenue (`৳60,900`), Occupancy Rate (`82%`), and recent customer bookings table. | `owner-dashboard.html` (Overview Hub) | Real-time KPI stat cards with trend badges; Quick-action shortcuts to slot calendar, pitch manager, and score entry. |
+| **O-02** | **Multi-Pitch & Facilities Catalog** | Pitch management cards (e.g. Pitch 1 5-a-side Outdoor, Pitch 2 7-a-side Indoor), surface specification, floodlight status, hourly price editor, and "+ Add New Pitch" modal. | `manage-turf.html` (Pitch Catalog) | Edit pricing and facility chips (Parking, Changing Room, Turf Shoes); Upload photo banners; Toggle pitch active state. |
+| **O-03** | **7-Day Hourly Interactive Slot Matrix** | 7-day hourly visual matrix grid. Color-coded states: 🟢 Available (Lime hover), 🔴 Customer Booked (with booker pill), 🟡 Walk-in Reserved, ⚪ Maintenance (striped). | `slot-calendar.html` (Matrix Grid) | Week navigation (`← Prev Week / Next Week →`); Turf ground switcher; Clicking any slot opens slot detail modal. |
+| **O-04** | **Owner Slot Action & Management Modal** | Contextual modal for any slot: (1) View booker details, (2) Reserve for Walk-in Customer, (3) Block for Maintenance, (4) Cancel / Release slot back to available. | `slot-calendar.html` (Slot Modal) | Instant client-side state toggle with badge color updates and confirmation toast. |
+| **O-05** | **Owner Tournament Operations Hub** | Venue tournament manager: view hosted leagues and cups, review and approve registered team entries, assign pitches, and publish tournament schedule. | `owner-tournament.html` (Tournament Hub) | Tab switcher (Active, Upcoming, Completed); Approve team entry; Assign pitch slots to match fixtures. |
+| **O-06** | **Digital Referee & Live Score Entry** | Digital match controller: large digital score counters (`.score-input`), goal increment buttons (`+1` / `-1`), goal scorer recorder, card markers (🟨 Yellow / 🟥 Red), and `Publish Score`. | `score-entry.html` (Scoreboard Tool) | Select Home/Away team; Increment goals; Record goal scorer; Publish updates to platform-wide live fixtures. |
+| **O-07** | **Revenue & Occupancy Analytics** | Visual CSS bar charts for monthly revenue trends, peak utilization hours (8 PM – 11 PM), occupancy percentages, and financial summary cards. | `owner-reports.html` (Analytics View) | Filter by Week / Month / Year; Export financial ledger as CSV or PDF report. |
+| **O-08** | **Customer Inquiries & Slot Messaging** | Inbox of customer inquiries regarding slot bookings, ground rules, and tournament hosting, with quick-reply templates. | `owner-chat.html` (Owner Messages) | Filter conversations by booker; Send instant replies to slot availability queries. |
 
 ---
 
-### Role 4: Turf Owner / Ground Manager
-> **User Goal**: Maximize pitch bookings, post coaching vacancies for venue academies, operate B2C Pro-Shop & concession sales, enter match scores, and track revenue.
+### Role 4: Platform Administrator
+> **User Goal**: Supervise platform operations, inspect and verify Turf Owner KYC documents and Trade Licenses, analyze platform utilization heatmaps, manage sport categories, audit financial reports, and broadcast system announcements.
 
-| # | Feature Name | Feature Description | Figma Mobile Screen / Component | User Interaction / Gesture |
+| # | Feature Name | Feature Description | Core UI Page / Component | Interaction & System Behavior |
 | :--- | :--- | :--- | :--- | :--- |
-| **O-01** | **Owner Operations Dashboard** | Operational pulse: Today's Bookings (`28`), Pro-Shop Revenue (`৳12,400`), Monthly Total (`৳60,900`), Occupancy Rate (`82%`), Active Academy Camps (`2`). | `M-OWN-01-Dashboard` | Stat cards with trend indicators; Tap card to view filtered report. |
-| **O-02** | **Multi-Pitch & Facilities Catalog** | Pitch management cards (Pitch 1 5-a-side Outdoor, Pitch 2 7-a-side Indoor), lighting status, hourly pricing editor, and photo gallery manager. | `M-OWN-02-ManageTurfs` | Tap "Edit Pricing/Amenities"; Tap `+ Add New Pitch` Floating Action Button (FAB). |
-| **O-03** | **Mobile 7-Day & Daily Slot Matrix** | Mobile day-view & week-view slot calendar. Visual color codes: 🟢 Available, 🔴 Customer Booked, 🟡 Owner Reserved, ⚪ Maintenance, 🔵 Coaching Camp. | `M-OWN-03-SlotCalendar` | Swipe between days; Tap any time slot to open Owner Action Bottom Sheet. |
-| **O-04** | **Owner Slot Action Bottom Sheet** | Quick-action sheet for any selected slot: (1) Reserve for Walk-in Customer, (2) Block for Pitch Maintenance, (3) Allocate to Academy Coach, (4) Contact Booker. | `M-BS-SlotAction` (Bottom Sheet) | Single-tap actions with instant status badge update and confirmation toast. |
-| **O-05** | **Turf Coach Vacancy & Academy Manager** | Post coaching vacancies for resident academy coaches (e.g. "Seeking Weekend Youth Football Coach, ৳15,000/mo + 20% clinic split"), review applicant certifications, hire coach. | `M-OWN-08-CoachRecruitment` | Tap `+ Post Coaching Vacancy` -> set requirements -> review applicant coach profiles. |
-| **O-06** | **B2C Turf Pro-Shop & Concession Manager** | Manage on-site retail inventory: drinks, grip socks, rental bibs, sports tape, match balls; set prices, track stock levels, and view online pre-orders. | `M-OWN-09-ProShopManager` | Tap "Add Product", update stock count, toggle "Available for Addon Booking". |
-| **O-07** | **Tournament Management Hub** | Tournament bracket overview, approving registered teams, assigning pitch slots to matches, and publishing tournament schedules. | `M-OWN-04-OwnerTournaments` | Tab switcher (Active / Pending / Draft); Tap team to approve entry. |
-| **O-08** | **Live Score Entry & Scorer Tracker** | Mobile digital referee tool: digital score counters (`+1 Goal`), team VS badge, goal scorer selection sheet, yellow/red card assignment, and `Publish Final Score`. | `M-OWN-05-ScoreEntry` | Tap large `+` button to increment goal; Opens player bottom sheet to pick scorer. |
-| **O-09** | **Revenue & Occupancy Analytics** | Visual mobile bar charts for slot revenue vs. pro-shop retail revenue vs. academy commission, peak hours (8 PM–11 PM), and daily cash ledger. | `M-OWN-06-OwnerReports` | Filter by Day / Week / Month; Export daily ledger as CSV/PDF. |
-| **O-10** | **Owner Customer Inquiries & Chat** | Inbox of customer inquiries regarding slot bookings, coach bookings, pro-shop gear availability, and tournament queries with fast-reply message chips. | `M-OWN-07-OwnerChat` | Tap inquiry -> reply with pre-saved quick response ("Pitch 1 is open at 9 PM"). |
+| **A-01** | **Admin Platform Command Hub** | Master executive metrics: Total Platform GMV (`৳1,850,000`), Verified Turfs (`54`), Registered Teams (`120`), Pending Approvals (`9`), and System Health monitors. | `admin-dashboard.html` (Master Overview) | Unified stat card grid; Pending approval alert counter; Recent system activity log. |
+| **A-02** | **KYC & Ground Approvals Queue** | Verification queue of pending Turf Owner registrations and newly submitted turf grounds awaiting platform listing approval. | `admin-approvals.html` (Approvals List) | Tab switcher between Pending, Approved, and Rejected; Tap "Inspect Documents" to launch modal. |
+| **A-03** | **Interactive KYC Document Inspector Modal** | High-fidelity zoomable document viewer featuring authentic Smart NID Card (Front/Back with hologram, chip, and MRZ barcode) and Municipal Councilor Character Certificate with rubber stamp. | `admin-approvals.html` (KYC Inspector Modal) | Switch between NID Part 1 / Part 2 and Ward Certificate; 1-tap "Approve & Verify" (Lime) or "Reject with Reason" (Red). |
+| **A-04** | **Platform Utilization Heatmaps & Analytics** | Hourly platform utilization matrix with 0–4 heat intensity levels, sport popularity distribution (Football 65%, Cricket 25%, Basketball 10%), and revenue growth curves. | `admin-analytics.html` (Heatmap & Charts) | Interactive heatmap grid; District and Sport filter controls; Visual CSS-based revenue bar charts. |
+| **A-05** | **Sports Categories & Specifications Manager** | Master catalog of supported sports (Football, Cricket, Basketball, Badminton), field dimensions, equipment guidelines, and "+ Add Sport Category" modal. | `admin-categories.html` (Categories Grid) | Toggle sport active/inactive status platform-wide; Add new sport categories with custom rules and specs. |
+| **A-06** | **Platform Financial Ledger & Payout Audits** | Comprehensive booking transaction audit ledger, platform commission breakdown, Turf Owner payout disbursements, and CSV/PDF export. | `admin-reports.html` (Financial Reports) | Filter transactions by date range; Trigger "Process Payout" for turf owners; Export financial summary. |
+| **A-07** | **System Broadcast & Push Announcements** | Platform broadcast composer: target audience selector (All Users, Turf Owners, Team Captains, Players), priority tagging (`Critical`, `Update`, `Maintenance`), and history list. | `admin-announcements.html` (Broadcast Composer) | Select recipient checkboxes; Enter title and announcement body; Send live notification banner. |
 
 ---
 
-### Role 5: Platform Administrator
-> **User Goal**: Supervise platform operations, verify Owner KYC and Coach certifications, moderate C2C/B2C marketplace listings, manage sports categories, and audit financial transactions.
+## 3. Inter-Role Collaboration Matrix (`Role <-> Role`)
 
-| # | Feature Name | Feature Description | Figma Mobile Screen / Component | User Interaction / Gesture |
-| :--- | :--- | :--- | :--- | :--- |
-| **A-01** | **Admin Platform Command Hub** | Master platform metrics: Total GMV (`৳1,850,000`), Verified Turfs (`54`), Certified Coaches (`42`), Pending Approvals (`9`), Marketplace Items (`310`). | `M-ADM-01-Dashboard` | Metric KPI grid; Alert banner for pending KYC & Coach license submissions. |
-| **A-02** | **KYC & Coach Certification Queue** | Verification queue with 2 tabs: (1) Turf Owner KYC (NID + Trade License) and (2) Coach Accreditation (AFC/FIFA Coaching Badges + Govt ID). | `M-ADM-02-ApprovalsQueue` | Swipe right to Approve; Tap card to inspect full security document viewer. |
-| **A-03** | **Interactive Document Verification Modal** | High-fidelity zoomable Smart NID card preview (front/back with holographic chip), Municipal Councilor Certificate, and Coach AFC License verification. | `M-BS-KYCInspector` (Full-Screen Modal) | Pinch-to-zoom on documents; Tap "Approve & Verify" (Lime) or "Reject with Reason" (Red). |
-| **A-04** | **Marketplace Moderation & Dispute Audit** | Moderate C2C peer-to-peer listings (flag counter, counterfeit checks, scam prevention), resolve buyer-seller disputes, hold/release escrow funds. | `M-ADM-07-MarketModeration` | Tap flagged listing -> review photos & chat history -> "Remove Listing" or "Dismiss". |
-| **A-05** | **Platform Utilization Heatmaps & Analytics** | Hourly platform utilization heatmaps (intensity scale 0–4), sport popularity charts (Football 65%, Cricket 25%, Basketball 10%), revenue trends. | `M-ADM-03-Analytics` | Horizontal scrollable heatmap matrix; Filter by City/Region. |
-| **A-06** | **Sports Categories & Equipment Manager** | Catalog of supported sports, field dimension specifications, recommended equipment checklists, and `+ Add Sport Category` modal. | `M-ADM-04-Categories` | Tap toggle to enable/disable sport platform-wide; Tap `+ Add Sport`. |
-| **A-07** | **Financial Audit & Payout Approvals** | Comprehensive transaction ledger (Turf slots, Coach sessions, Marketplace C2C/B2C sales), SSLCOMMERZ gateway fees, owner/coach payout disbursements. | `M-ADM-05-FinancialReports` | Tap "Process Payout" -> confirmation modal; Filter by date range. |
-| **A-08** | **System Broadcast & Push Notifications** | Push notification composer with audience targeting (All Users, Turf Owners, Coaches, Captains Only) and priority tagging (`Critical`, `Update`, `Maintenance`). | `M-ADM-06-Announcements` | Select target audience checkboxes; Tap "Send Broadcast" to fire instant push alert. |
-
----
-
-## 3. TurfHub Sports Marketplace Architecture (C2C & B2C)
-
-TurfHub features a hybrid **B2C & C2C Sports Marketplace** embedded directly into the turf ecosystem.
-
-```
-┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                       TURFHUB SPORTS COMMERCE ECOSYSTEM                                         │
-├────────────────────────────────────────────────────────┬─────────────────────────────────────────────────────────┤
-│ 🏬 B2C PRO-SHOP (Turf Owner -> Players & Teams)       │ 🔄 C2C PEER-TO-PEER (Player <-> Player / Captain)       │
-├────────────────────────────────────────────────────────┼─────────────────────────────────────────────────────────┤
-│ • Official turf merchandise & pro-shop inventory       │ • Community buy & sell for pre-owned / surplus gear     │
-│ • "Add-on to Turf Booking" 1-tap checkout              │ • Football boots, cricket bats, rackets, gloves, kits   │
-│ • Energy drinks, hydration packs, grip socks, ice packs│ • "Meet at Verified Turf" secure in-person pickup       │
-│ • Bulk team jerseys & tournament kit printing          │ • In-app offer bargaining & counter-offer chat          │
-│ • Immediate counter pickup upon ground arrival         │ • Escrow digital payment or cash on meetup              │
-└────────────────────────────────────────────────────────┴─────────────────────────────────────────────────────────┘
-```
-
-### Marketplace Core Mobile Feature Catalog
-
-| # | Feature Name | Description | Figma Screen / Component | Mobile Interaction / Flow |
-| :--- | :--- | :--- | :--- | :--- |
-| **MKT-01** | **Marketplace Hub & Segmented Switcher** | Main mobile shopping feed with segmented control: `All Items`, `Turf Pro-Shops (B2C)`, `Community Deals (C2C)`. Search bar with category chips (Footwear, Apparel, Balls, Protection). | `M-MKT-01-MarketHome` | Tap tab switcher; Horizontal swipe category pills; Pull-to-refresh deals. |
-| **MKT-02** | **Product Detail Card & Seller Verification** | High-res photo gallery, price tag in BDT (`৳2,400`), Condition badge (`Brand New`, `Like New`, `Good`), Seller card with "Verified Turf Owner 🏟️" or "Verified Athlete 🏃" badge, Pickup location map. | `M-MKT-02-ProductDetail` | Swipe product images; Tap "Make Offer" or "Buy Now" bottom bar. |
-| **MKT-03** | **1-Tap C2C Listing Creator** | Camera snap / gallery upload (up to 5 photos), auto-category detection, condition selector, asking price, negotiable toggle, and preferred handover turf dropdown. | `M-MKT-03-CreateListing` (Multi-Step Sheet) | Snap photos -> fill title/price -> select local turf ground -> publish in 30 seconds. |
-| **MKT-04** | **In-App Price Negotiation & Offer Engine** | Interactive offer sheet where buyers can propose a price (`৳1,500` instead of `৳1,800`). Seller receives instant push alert with 1-tap `Accept`, `Decline`, or `Counter-Offer`. | `M-BS-MakeOffer` & `M-PLY-08-ChatThread` | Tap "Make an Offer" -> slide amount -> triggers in-chat interactive offer card. |
-| **MKT-05** | **"Add-on to Booking" Seamless Checkout** | When booking a turf slot, an interactive drawer presents turf refreshments and gear (e.g. 10x Gatorade + 2x Grip Socks) bundled directly into SSLCOMMERZ checkout. | `M-BS-TurfAddons` (Drawer in Booking Stepper) | Checkbox toggle addons -> dynamically updates total checkout summary. |
-| **MKT-06** | **Turf Owner B2C Store Manager** | Mobile inventory manager for turf owners: add drinks, balls, jerseys; edit retail pricing; toggle active stock; view pending customer pickup orders. | `M-OWN-09-ProShopManager` | Tap product row to edit stock; Tap order to mark "Ready for Pickup". |
-| **MKT-07** | **Marketplace Order Tracking & QR Pickup** | Order receipt with unique QR verification code. For B2C turf items or C2C turf meetups, turf counter staff or seller scans QR code to confirm safe handover. | `M-MKT-08-OrderReceipt` | Display brightness auto-boosts QR code for seamless scanning at turf counter. |
-
----
-
-## 4. Inter-Role Collaboration Matrix (`Role <-> Role`)
-
-This matrix maps how all 5 authenticated roles and guests interact and exchange state across TurfHub mobile workflows:
-
-```
-┌────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                             INTER-ROLE INTERACTION WORKFLOW MATRIX                                                    │
-├───────────────────┬──────────────────────────┬──────────────────────────┬──────────────────────────┬───────────────────────────────────┤
-│ FROM \ TO         │ 🏃 PLAYER                │ 🏆 TEAM CAPTAIN          │ 🏅 CERTIFIED COACH       │ 🏟️ TURF OWNER / ADMIN             │
-├───────────────────┼──────────────────────────┼──────────────────────────┼──────────────────────────┼───────────────────────────────────┤
-│ 🏃 PLAYER         │ • C2C Gear trade/bargain │ • RSVP to match invites  │ • Book 1-on-1 coaching   │ • Owner: Book slot / buy drinks   │
-│                   │ • Free agent chats       │ • Request to join squad  │ • Receive drill feedback │ • Admin: Submit support dispute   │
-├───────────────────┼──────────────────────────┼──────────────────────────┼──────────────────────────┼───────────────────────────────────┤
-│ 🏆 TEAM CAPTAIN   │ • Send squad invites     │ • Challenge captain (VS) │ • Hire team coach        │ • Owner: Book practice / cup entry│
-│                   │ • Split invoices         │ • View league standings  │ • Assign match tactics   │ • Admin: Report score disputes    │
-├───────────────────┼──────────────────────────┼──────────────────────────┼──────────────────────────┼──────────────────────────┼────────┤
-│ 🏅 COACH/TRAINER  │ • Send training drills   │ • Submit tactical plan   │ • Peer coaching network  │ • Owner: Apply for turf vacancy   │
-│                   │ • Log performance scores │ • Manage squad lineup    │ • Share training venues  │ • Admin: Submit license for badge │
-├───────────────────┼──────────────────────────┼──────────────────────────┼──────────────────────────┼───────────────────────────────────┤
-│ 🏟️ TURF OWNER     │ • Confirm slot & orders  │ • Approve cup entry      │ • Hire academy coach     │ • Admin: Submit KYC & Trade lic.  │
-│                   │ • Handover B2C gear (QR) │ • Allocate match pitches │ • Host weekend clinics   │ • Admin: Request payout cash-out  │
-├───────────────────┼──────────────────────────┼──────────────────────────┼──────────────────────────┼───────────────────────────────────┤
-│ 🛡️ PLATFORM ADMIN │ • Moderate C2C listings  │ • Approve custom league  │ • Verify coaching license│ • Owner: Verify NID & Turf photos │
-│                   │ • Push broadcast alert   │ • Enforce cup rules      │ • Disburse training funds│ • Owner: Disburse platform payouts│
-└───────────────────┴──────────────────────────┴──────────────────────────┴──────────────────────────┴───────────────────────────────────┘
-```
-
----
-
-## 5. Mobile Navigation Architecture & Bottom Tab Bars
-
-In Figma mobile design, each authenticated role has a dedicated **Bottom Navigation Bar (Height: 64px + 34px Safe Area)** with persistent primary access:
-
-```
-┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                       ROLE BOTTOM NAVIGATION BARS                                        │
-├──────────────────────────────────────────────────────────────────────────────────────────────────────────┤
-│ 🏃 PLAYER:        [ 🏠 Home ]       [ 🔍 Explore ]     [ 🛍️ Market ]    [ ⚽ Fixtures ]   [ 👤 Profile ]    │
-├──────────────────────────────────────────────────────────────────────────────────────────────────────────┤
-│ 🏆 TEAM CAPTAIN:  [ 🏠 Captain ]    [ 👥 Squad ]       [ 📅 Book Turf ]  [ 🛍️ Shop/Kits ]  [ 💬 Messages ]   │
-├──────────────────────────────────────────────────────────────────────────────────────────────────────────┤
-│ 🏅 COACH/TRAINER: [ 🏠 Coach Hub ]  [ 📅 Schedule ]    [ 💼 Teams/Jobs ] [ 🏃 Trainees ]   [ 💬 Chat ]       │
-├──────────────────────────────────────────────────────────────────────────────────────────────────────────┤
-│ 🏟️ TURF OWNER:    [ 📊 Overview ]   [ 📅 Calendar ]    [ 🛍️ Pro-Shop ]   [ ⚽ Scores ]     [ 💬 Inquiries ]  │
-├──────────────────────────────────────────────────────────────────────────────────────────────────────────┤
-│ 🛡️ PLATFORM ADMIN:[ 📊 Dashboard ]  [ ✅ Approvals ]   [ 🛍️ Market Mod ] [ 📈 Analytics ]  [ 📢 Broadcast ]  │
-└──────────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-### Top App Bar (Header Architecture)
-- **Left**: Role Profile Avatar with Status Badge (`Online` Dot) or Contextual Back Button (`←`).
-- **Center**: Screen Title (`Turf Detail`, `Marketplace`, `Coach Schedule`, `KYC Verification`).
-- **Right**: Notification Bell with badge counter (`🔴 3`) + Role Switcher Icon / Cart Icon (`🛒 2`).
-
----
-
-## 6. Master Figma Mobile Screen & Component Inventory (Frame Catalog)
-
-Use this systematic naming convention when generating frames and components in Figma:
-
-### 📱 1. Authentication & Onboarding Flow (`M-AUTH`)
-- `M-AUTH-01`: Splash Screen with Stadium Background & TH Lime Logo.
-- `M-AUTH-02`: Role Selection Carousel (Player, Captain, Coach, Turf Owner, Platform Admin).
-- `M-AUTH-03`: Mobile Sign In Screen (Phone/Email + Password + OTP trigger).
-- `M-AUTH-04`: Mobile Sign Up Screen (Role-specific onboarding fields).
-- `M-AUTH-05`: Coach License & Certificate Upload Onboarding Screen.
-- `M-AUTH-06`: OTP Verification Bottom Sheet (6-digit keypad input).
-
-### 🏃 2. Player Experience Screens (`M-PLY`)
-- `M-PLY-01`: Player Dashboard (Greeting, Match RSVP Banner, Performance Stats, Quick Actions).
-- `M-PLY-02`: Master Turf Ground Explorer (Search Pill, Filter Chips, Master Venue Cards).
-- `M-PLY-03`: Turf Venue Detail & Gallery (Image Slider, Amenities, Location Map Pin).
-- `M-PLY-04`: Date & Time Slot Matrix Picker (Horizontal Date Strip + 2-Column Slot Chips).
-- `M-PLY-05`: Match Fixtures & Live Center (Upcoming matches, Live score badges, Group tables).
-- `M-PLY-06`: Free Agent & Team Finder (Browse open squad ads, Apply to team).
-- `M-PLY-07`: Digital Receipts & Invoices (Payment ledger, QR code passes, PDF export).
-- `M-PLY-08`: Player Chat Thread (1-on-1, Coach tactical chat, Offer negotiation card).
-- `M-PLY-09`: Coach Finder & Booking Hub (Coach cards, Hourly rates, Session slot booking).
-
-### 🏆 3. Captain Experience Screens (`M-CAP`)
-- `M-CAP-01`: Captain Command Center (Countdown clock, Match status, Next opponent card).
-- `M-CAP-02`: Squad Roster Management (Jersey number badges, Position chips, Bench/Active status).
-- `M-CAP-03`: 4-Step Turf Booking Stepper (Step 1: Sport/Date → Step 2: Turf → Step 3: Slots & Addons → Step 4: Pay).
-- `M-CAP-04`: Host Tournament Wizard (Multi-step form for creating leagues and prize pools).
-- `M-CAP-05`: Tournament Directory & Team Entry (Browse cups, Submit squad lineup, Pay fee).
-- `M-CAP-06`: League Standings & Match Scores (Form pills `W/D/L`, Goal Difference, Points).
-- `M-CAP-07`: Captain Invoices & Cost Splitter (Per-player calculation & WhatsApp share trigger).
-- `M-CAP-08`: Team Announcement Channel (Broadcast match details to all players).
-- `M-CAP-09`: Hire Team Coach Wizard (Post coaching requirements & review coach applicants).
-
-### 🏅 4. Coach Experience Screens (`M-COA`)
-- `M-COA-01`: Coach Command Center (Daily schedule timeline, Active trainees, Monthly earnings).
-- `M-COA-02`: Coach Profile & Certification Inspector (AFC licenses, Rates, Bio reel).
-- `M-COA-03`: Team Job Board (Browse captain posts seeking tournament coaches, Submit proposals).
-- `M-COA-04`: Turf Owner Vacancies & Pitch Residency (Apply for resident academy roles at turfs).
-- `M-COA-05`: Training Session Creator & Calendar (Schedule group drills, Book turf ground slots).
-- `M-COA-06`: Trainee Roster & Skill Scorecard (Player fitness radars, Tactical feedback notes).
-- `M-COA-07`: Coach Earnings & Payout Ledger (Session fee breakdown, Payout withdrawal to bKash).
-- `M-COA-08`: Coach Tactical Chat (Whiteboard diagrams, Video drill assignments).
-
-### 🏟️ 5. Turf Owner Experience Screens (`M-OWN`)
-- `M-OWN-01`: Turf Owner Operations Dashboard (Today's Bookings, Pro-Shop Revenue KPI, Occupancy).
-- `M-OWN-02`: Pitch Catalog & Facilities Editor (Pitch cards, Pricing per hour, Amenity toggles).
-- `M-OWN-03`: 7-Day / Daily Interactive Slot Matrix (Hourly slot grid with status colors & academy blocks).
-- `M-OWN-04`: Tournament Operations Hub (Approve registered teams, Schedule bracket matches).
-- `M-OWN-05`: Match Score Entry & Live Referee (Goal counters `+1`, Scorer picker, Card markers).
-- `M-OWN-06`: Revenue & Peak Hour Analytics (Slot fees vs. Pro-Shop vs. Academy cuts).
-- `M-OWN-07`: Customer Inquiries & Chat Inbox (Customer slot requests, Quick-reply pills).
-- `M-OWN-08`: Coach Vacancy & Academy Manager (Post resident coach job, Review coach applicants).
-- `M-OWN-09`: B2C Pro-Shop & Concession Manager (Add drinks/balls/gear, Edit prices, Track stock).
-
-### 🛍️ 6. Marketplace Screens (`M-MKT`)
-- `M-MKT-01`: Marketplace Main Feed (B2C & C2C toggle tabs, Category pills, Search, Trending gear).
-- `M-MKT-02`: Product Detail Screen (Image carousel, Price, Verified seller badge, Location map).
-- `M-MKT-03`: Create C2C Gear Listing Sheet (Photo snap, Condition tag, Price, Handover turf).
-- `M-MKT-04`: My Marketplace Listings & Sales (Active listings, Pending offers, Sold items).
-- `M-MKT-05`: Cart & Multi-Item Checkout Sheet (B2C + C2C items, MFS payment integration).
-- `M-MKT-06`: In-App Bargain & Negotiation Thread (Interactive offer status card in chat).
-- `M-MKT-07`: Team Bulk Uniform Shop (Custom jersey numbers & team kit bundle orders).
-- `M-MKT-08`: Digital Order Receipt & QR Handover Pass (Scan-to-verify item exchange).
-
-### 🛡️ 7. Platform Admin Screens (`M-ADM`)
-- `M-ADM-01`: Admin Platform Command Hub (Total GMV, Active Turfs, System Health stat cards).
-- `M-ADM-02`: KYC & Coach Verification Queue (List of pending ground owners and coaches).
-- `M-ADM-03`: KYC Document Inspector Modal (Zoomable Smart NID card, Sealed Certificate, Coach Badges).
-- `M-ADM-04`: Platform Utilization Heatmap (Hourly density matrix across sports and districts).
-- `M-ADM-05`: Sport Categories & Equipment Manager (Category cards, Dimensions, Gear lists).
-- `M-ADM-06`: Financial Audit & Payout Approvals (Platform fees, Owner/Coach withdrawal requests).
-- `M-ADM-07`: Marketplace Moderation & Dispute Hub (Flagged listings, Escrow hold/release).
-- `M-ADM-08`: System Push Notification Broadcast (Composer, Audience filters, Priority badges).
-
-### 🧩 8. Reusable Mobile Bottom Sheets & Modals (`M-BS`)
-- `M-BS-SearchFilter`: Filter by Sport, Price Range Slider, Location District, Amenities.
-- `M-BS-PaymentCheckout`: SSLCOMMERZ Mobile Banking (bKash/Nagad/Cards) with 1-tap OTP.
-- `M-BS-TurfAddons`: Pre-order drinks & gear drawer inside turf booking flow.
-- `M-BS-SlotAction`: Owner slot modal (Reserve for Walk-in, Block for Maintenance, Academy block).
-- `M-BS-InvitePlayer`: Captain share sheet (Copy invite link, WhatsApp trigger, QR code).
-- `M-BS-CoachBooking`: 1-on-1 coaching session time picker & fee summary.
-- `M-BS-MakeOffer`: In-app price bargaining input sheet with counter-offer preview.
-- `M-BS-ScorerSelect`: Referee sheet to select goal scorer and assist provider from team roster.
-- `M-BS-SuccessReceipt`: Booking confirmation overlay with green tick animation and Booking ID.
-
----
-
-## 7. Interactive Mobile Prototype Flows & Gestures
-
-When setting up Figma Interactive Prototype Connections, configure the following transitions:
+This matrix details the bidirectional operational and data workflows connecting all 4 authenticated roles and public guests across the TurfHub platform:
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                    FIGMA PROTOTYPE INTERACTION FLOWS                                   │
+│                                 INTER-ROLE INTERACTION WORKFLOW MATRIX                                 │
+├───────────────────┬──────────────────────┬──────────────────────┬──────────────────────┬───────────────┤
+│ FROM \ TO         │ 🏃 PLAYER            │ 🏆 TEAM CAPTAIN      │ 🏟️ TURF OWNER        │ 🛡️ ADMIN      │
+├───────────────────┼──────────────────────┼──────────────────────┼──────────────────────┼───────────────┤
+│ 🏃 PLAYER         │ • Peer match chat    │ • RSVP to match      │ • Book slot (SSL)    │ • Submit FAQ/ │
+│                   │ • View free agents   │ • Join squad request │ • Inquire on rules   │   help ticket │
+├───────────────────┼──────────────────────┼──────────────────────┼──────────────────────┼───────────────┤
+│ 🏆 TEAM CAPTAIN   │ • Send squad invites │ • Challenge VS match │ • 4-Step slot booking│ • Host tourney│
+│                   │ • Assign jersey & pos│ • Compare standings  │ • Register for cups  │ • Report score│
+├───────────────────┼──────────────────────┼──────────────────────┼──────────────────────┼───────────────┤
+│ 🏟️ TURF OWNER     │ • Confirm bookings   │ • Approve cup entry  │ • Coordinate venues  │ • Submit KYC  │
+│                   │ • Reply to inquiries │ • Allocate match slot│ • Share pitch specs  │ • Request pay │
+├───────────────────┼──────────────────────┼──────────────────────┼──────────────────────┼───────────────┤
+│ 🛡️ PLATFORM ADMIN │ • Push announcements │ • Approve tournament │ • Verify NID & Cert  │ • Platform    │
+│                   │ • Broadcast alerts   │ • Sanction league cup│ • Disburse payouts   │   Auditing    │
+└───────────────────┴──────────────────────┴──────────────────────┴──────────────────────┴───────────────┘
+```
+
+### Key Workflow Loops:
+1. **Turf Booking Loop**: Player/Captain selects turf (`turf-detail.html` or `book-turf.html`) → Selects slot → Pays via SSLCOMMERZ → Slot turns 🔴 Booked on Owner's Calendar (`slot-calendar.html`) → Confirmed receipt rendered (`booking-receipt.html` / `player-receipts.html`).
+2. **Team & RSVP Loop**: Captain creates squad roster (`manage-team.html`) → Player applies via Free Agent board (`join-team.html`) → Captain approves → Captain schedules match → Player clicks "Attending" on RSVP banner (`player-dashboard.html`) → Attendance syncs to Captain's roster (`8/11 Confirmed`).
+3. **Tournament & Score Entry Loop**: Captain creates tournament (`create-tournament.html`) → Other teams register (`tournament-registration.html`) → Turf Owner assigns pitches (`owner-tournament.html`) → Matches played → Owner enters live scores & goal scorers (`score-entry.html`) → Standings & fixtures auto-update live platform-wide (`fixtures.html` & `player-fixtures.html`).
+4. **KYC Verification Loop**: Turf Owner registers and submits documents → Admin reviews NID & Ward Councilor Certificate in interactive inspector (`admin-approvals.html`) → Admin approves → Owner pitch verified badge activates platform-wide.
+
+---
+
+## 4. Navigation Architecture & Layout Engine (Sidebars & Mobile Views)
+
+TurfHub implements a dual-mode layout architecture: **Static Inlined Shells** for instant zero-CLS static preview and a dynamic JavaScript engine (`auth.js` + `layout.js`) for runtime role switching and responsive off-canvas drawers.
+
+### Role-Based Navigation Specifications
+
+| Role | Dashboard URL | Sidebar & Nav Items | Primary Theme Accent |
+| :--- | :--- | :--- | :--- |
+| **Turf Owner** | `owner-dashboard.html` | `Dashboard` (📊), `Manage Turfs` (🏟️), `Slot Calendar` (📅), `Tournaments` (🏆), `Score Entry` (⚽), `Messages` (💬), `Reports` (📈) | Electric Lime (`#7ed321`) |
+| **Team Captain** | `captain-dashboard.html` | `Dashboard` (📊), `Book Turf` (📅), `Manage Team` (👥), `Tournaments` (🏆), `Host Tournament` (🏅), `My Receipts` (🧾), `Messages` (💬) | Electric Lime (`#7ed321`) |
+| **Player** | `player-dashboard.html` | `Dashboard` (📊), `Find Turfs` (🏟️), `Join Team` (👥), `Fixtures` (📋), `My Receipts` (🧾), `Team Chat` (💬) | Electric Lime (`#7ed321`) |
+| **Platform Admin** | `admin-dashboard.html` | `Overview` (📊), `Approvals` (✅), `Analytics` (📈), `Categories` (🏷️), `Reports` (📄), `Announce` (📢) | Electric Lime (`#7ed321`) |
+
+### Responsive Layout Behavior:
+- **Desktop (>= 900px)**: Fixed sticky left sidebar (`width: 220px`), topbar with brand indicator, page header, and centered main container (`max-width: 1240px`).
+- **Mobile (< 900px)**: Off-canvas drawer navigation triggered by `#sidebar-toggle` (hamburger button), dark backdrop overlay (`#sidebar-overlay`), and bottom action buttons.
+
+---
+
+## 5. Payment Gateway Architecture (SSLCOMMERZ EasyCheckout Flow)
+
+Integrated across both Player (`turf-detail.html`) and Captain (`book-turf.html`) booking journeys, the **SSLCOMMERZ EasyCheckout Simulator** replicates an end-to-end Bangladeshi digital payments experience:
+
+```
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                        SSLCOMMERZ EASYCHECKOUT PAYMENT FLOW                            │
+├────────────────────────────────────────────────────────────────────────────────────────┤
+│ 1. TRIGGER: User selects pitch slot & clicks "Proceed to Payment" / "Book Now"         │
+│    ├── Calculates dynamic amount (e.g. ৳800 or ৳1,600)                                 │
+│    └── Opens SSLCOMMERZ Modal Overlay with 256-Bit SSL Encryption Header               │
+├────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2. PAYMENT CHANNELS:                                                                   │
+│    ├── 📱 Mobile Financial Services (MFS): bKash, Nagad, Rocket, Upay (Demo Autofill)  │
+│    ├── 💳 Credit / Debit Cards: Visa, Mastercard, AMEX (Formatted input simulation)    │
+│    └── 🏦 Net Banking: City Touch, BRAC Bank Astha, Islami Bank CellFin, DBBL NexusPay │
+├────────────────────────────────────────────────────────────────────────────────────────┤
+│ 3. HANDSHAKE SIMULATION:                                                               │
+│    ├── Phase 1: "Connecting to SSLCOMMERZ Secure Gateway..."                           │
+│    ├── Phase 2: "Authenticating OTP & Wallet PIN..."                                   │
+│    └── Phase 3: "Payment Authorized & Confirmed!" with green checkmark animation       │
+├────────────────────────────────────────────────────────────────────────────────────────┤
+│ 4. PERSISTENCE & INVOICING:                                                            │
+│    ├── Saves transaction object to localStorage ('turfhub_recent_booking')             │
+│    │   { turfName, location, sport, date, time, price, paymentMethod, trxId, refId }   │
+│    └── Auto-redirects to booking-receipt.html / player-receipts.html with banner       │
+└────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 6. Master UI Screen & Component Inventory (Frame Catalog)
+
+Use this inventory to structure design files, Figma frames, component sets, and frontend routes:
+
+### 🏠 1. Public & Authentication Screens
+- `UI-GUEST-01` (`index.html`): Public Landing Page (Hero, Quick-Search, Features, Top Turfs, Stats, Footer).
+- `UI-GUEST-02` (`login.html`): Multi-Role Authentication Portal (Role Cards, Sign In / Sign Up Forms, Demo Switcher).
+- `UI-GUEST-03` (`contact.html`): Support & Inquiry Center (Contact Form, Phone/WhatsApp, Map, FAQ Accordion).
+
+### 🏃 2. Player Experience Screens
+- `UI-PLY-01` (`player-dashboard.html`): Player Hub & RSVP (Performance Stats, Upcoming Match Hero Card, Attending Toggle).
+- `UI-PLY-02` (`turf-detail.html`): Master-Detail Turf Ground Explorer (Search, Filter, Master List, Detail Pane).
+- `UI-PLY-03` (`turf-detail.html`): Venue Photo Gallery & Amenities (Thumbnail Carousel, Spec Badges, Amenities).
+- `UI-PLY-04` (`turf-detail.html`): 7-Day Slot Matrix & Checkout (Date Strip, Slot Pills, SSLCOMMERZ Modal).
+- `UI-PLY-05` (`join-team.html`): Free Agent & Team Recruitment (Team Cards, Squad Capacity, Join Application Modal).
+- `UI-PLY-06` (`player-fixtures.html`): Player Fixtures & Standings (Upcoming Schedule, Attendance State, League Table).
+- `UI-PLY-07` (`player-receipts.html`): Player Receipts & Payment History (Spend KPI Strip, Invoice Cards, PDF Export).
+- `UI-PLY-08` (`player-chat.html`): Player Direct & Team Chat (Captain & Owner Threads, Message Composer).
+
+### 🏆 3. Captain Experience Screens
+- `UI-CAP-01` (`captain-dashboard.html`): Captain Command Center (Team Header, Match Countdown, Roster Summary, Quick Actions).
+- `UI-CAP-02` (`manage-team.html`): Squad & Player Roster Manager (Jersey Badges, Position Pills, Active/Bench Tags, Add Player Modal).
+- `UI-CAP-03` (`book-turf.html`): 4-Step Turf Booking Stepper (Step 1: Sport/Date → Step 2: Pitch → Step 3: Slots → Step 4: Pay).
+- `UI-CAP-04` (`create-tournament.html`): Host Tournament Wizard (Organizer Form, Prize Pool Setup, Live Preview Card).
+- `UI-CAP-05` (`tournament-registration.html`): Tournament Directory & Registration (Browse Tournaments, Entry Fees, Prize Boxes).
+- `UI-CAP-06` (`fixtures.html`): Match Fixtures & Official League Standings (Live Score Pulse, Fixture Cards, Form Pills `W/D/L`).
+- `UI-CAP-07` (`booking-receipt.html`): Captain Receipts & Cost Splitter (Invoice Cards, WhatsApp Split Share, Download PDF).
+- `UI-CAP-08` (`chat.html`): Captain Team & Direct Chat Hub (Team Announcements Channel, Owner Direct Message Thread).
+
+### 🏟️ 4. Turf Owner Experience Screens
+- `UI-OWN-01` (`owner-dashboard.html`): Owner Operations Dashboard (Today's Bookings, Revenue KPIs, Occupancy Rate, Recent Bookings).
+- `UI-OWN-02` (`manage-turf.html`): Multi-Pitch & Facilities Catalog (Pitch Cards, Specs, Pricing Editor, Add Pitch Modal).
+- `UI-OWN-03` (`slot-calendar.html`): 7-Day Interactive Slot Matrix (Hourly Slot Grid, Available/Booked/Reserved/Maintenance States).
+- `UI-OWN-04` (`slot-calendar.html`): Owner Slot Action Modal (Walk-in Hold, Maintenance Block, Booker Inspection).
+- `UI-OWN-05` (`owner-tournament.html`): Owner Tournament Operations (Tournament Manager, Team Approvals, Pitch Scheduling).
+- `UI-OWN-06` (`score-entry.html`): Digital Referee & Score Entry (Score Inputs, Scorer Selector, Card Markers, Publish Score).
+- `UI-OWN-07` (`owner-reports.html`): Revenue & Occupancy Reports (Monthly Bar Charts, Peak Hour Analysis, CSV/PDF Export).
+- `UI-OWN-08` (`owner-chat.html`): Owner Customer Inquiries & Chat (Customer Conversation List, Quick-Reply Messages).
+
+### 🛡️ 5. Platform Admin Experience Screens
+- `UI-ADM-01` (`admin-dashboard.html`): Admin Platform Command Hub (Total GMV, Verified Grounds, Pending Queue, Activity Stream).
+- `UI-ADM-02` (`admin-approvals.html`): KYC & Ground Verification Queue (Pending Owner & Ground Submissions List).
+- `UI-ADM-03` (`admin-approvals.html`): Interactive KYC Inspector Modal (Zoomable Smart NID Part 1/2, Municipal Councilor Certificate).
+- `UI-ADM-04` (`admin-analytics.html`): Platform Heatmaps & Sport Popularity (Hourly Matrix Heatmap, Sport Distribution Charts).
+- `UI-ADM-05` (`admin-categories.html`): Sports Categories & Specifications (Sport Cards, Dimensions, Equipment, Add Category Modal).
+- `UI-ADM-06` (`admin-reports.html`): Platform Financial Audit & Payouts (Transaction Ledger, Commission Breakdown, Payout Disbursement).
+- `UI-ADM-07` (`admin-announcements.html`): System Broadcast & Announcements (Broadcast Composer, Target Checkboxes, Priority Tags).
+
+### 🧩 6. Reusable Global Modals & Dialogs
+- `UI-MODAL-01`: SSLCOMMERZ EasyCheckout Modal (`#ssl-modal` in `turf-detail.html` and `book-turf.html`).
+- `UI-MODAL-02`: Add / Invite Teammate Modal (`manage-team.html`).
+- `UI-MODAL-03`: Add Pitch / Ground Facility Modal (`manage-turf.html`).
+- `UI-MODAL-04`: Add Sport Category Modal (`admin-categories.html`).
+- `UI-MODAL-05`: KYC Smart Document Inspector Modal (`admin-approvals.html`).
+- `UI-MODAL-06`: Slot Action & Walk-In Reservation Modal (`slot-calendar.html`).
+
+---
+
+## 7. Interactive Prototype Flows & User Gesture Map
+
+```
+┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                FIGMA & FRONTEND INTERACTION FLOW MAP                                   │
 ├──────────────────────────┬─────────────────────────────┬──────────────────┬────────────────────────────┤
-│ Trigger Action           │ Source Frame                │ Animation Type   │ Destination Frame          │
+│ Trigger Action           │ Source Screen / Frame       │ Transition / UX  │ Destination Screen / State │
 ├──────────────────────────┼─────────────────────────────┼──────────────────┼────────────────────────────┤
-│ Tap "Sign In"            │ `M-AUTH-01-RoleSelect`      │ Smart Animate    │ `M-AUTH-03-SignIn`         │
-│ Submit Sign In           │ `M-AUTH-03-SignIn`          │ Push (Left)      │ Role Dashboard (`M-*-01`)  │
-│ Tap Search Bar           │ `M-PLY-02-TurfExplore`      │ Slide Up (300ms) │ `M-BS-SearchFilter`        │
-│ Tap Turf Venue Card      │ `M-PLY-02-TurfExplore`      │ Push (Left)      │ `M-PLY-03-TurfDetail`      │
-│ Tap Time Slot Chip       │ `M-PLY-04-SlotPicker`       │ Instant State    │ Toggle Active Lime State   │
-│ Tap "Add Drinks/Gear"    │ `M-CAP-03-BookStepper`      │ Slide Up (300ms) │ `M-BS-TurfAddons`          │
-│ Tap "Book Now"           │ `M-PLY-03-TurfDetail`       │ Slide Up (350ms) │ `M-BS-PaymentCheckout`     │
-│ Tap "Pay with bKash"     │ `M-BS-PaymentCheckout`      │ Smart Animate    │ `M-BS-SuccessReceipt`      │
-│ Tap `+ Sell Gear` FAB    │ `M-MKT-01-MarketHome`       │ Slide Up (350ms) │ `M-MKT-03-CreateListing`   │
-│ Tap "Make an Offer"      │ `M-MKT-02-ProductDetail`    │ Slide Up (250ms) │ `M-BS-MakeOffer`           │
-│ Tap "Book Coach"         │ `M-PLY-09-CoachFinder`      │ Slide Up (300ms) │ `M-BS-CoachBooking`        │
-│ Tap "Apply for Vacancy"  │ `M-COA-04-TurfVacancies`    │ Slide Up (300ms) │ Coach Proposal Sheet       │
-│ Tap Slot in Matrix       │ `M-OWN-03-SlotCalendar`     │ Slide Up (250ms) │ `M-BS-SlotAction`          │
-│ Tap "Inspect KYC/Badges" │ `M-ADM-02-ApprovalsQueue`   │ Slide Up (300ms) │ `M-BS-KYCInspector`        │
-│ Tap Goal `+` Counter     │ `M-OWN-05-ScoreEntry`       │ Spring Animate   │ Number increment + Modal   │
-│ Swipe Left on Player     │ `M-CAP-02-ManageTeam`       │ Interactive Drag │ Reveals "Bench / Remove"   │
+│ Tap "Sign In"            │ `login.html` (Role Select)  │ Smart Animate    │ Role Dashboard (`*-dash`)  │
+│ Select Quick Search Turf │ `index.html` (Search Pill)  │ Push / Navigate  │ `turf-detail.html`         │
+│ Tap Master Turf Card     │ `turf-detail.html` (Master) │ Instant DOM Swap │ Updates Right Detail Pane  │
+│ Tap Calendar Date Chip   │ `turf-detail.html` / Book   │ State Reload     │ Refreshes Hourly Slots     │
+│ Tap Available Slot Chip  │ `turf-detail.html` / Book   │ CSS Class Toggle │ Selected State + Recalc Sum│
+│ Tap "Proceed to Pay"     │ `turf-detail.html` / Book   │ Fade / Backdrop  │ SSLCOMMERZ Modal Opens     │
+│ Click bKash Demo Pay     │ SSLCOMMERZ Modal            │ Keyframe Spinner │ Payment Confirmed Checkmark│
+│ Redirect After Payment   │ SSLCOMMERZ Success State    │ Auto-Redirect    │ `booking-receipt.html`     │
+│ Tap "Attending" on RSVP  │ `player-dashboard.html`     │ Instant State    │ Badge turns Green (Active) │
+│ Tap "+ Add Player"       │ `manage-team.html`          │ Modal Slide In   │ Add Player Dialog Opens    │
+│ Tap Slot in Matrix       │ `slot-calendar.html`        │ Modal Fade In    │ Owner Slot Action Sheet    │
+│ Tap Goal `+1` Button     │ `score-entry.html`          │ Spring Animate   │ Score increments + Scorer  │
+│ Tap "Inspect KYC"        │ `admin-approvals.html`      │ Backdrop Zoom    │ Smart NID & Seal Modal     │
+│ Click "Process Payout"   │ `admin-reports.html`        │ Toast / Confirm  │ Payout Status Disbursed    │
+│ Toggle Sidebar Drawer    │ Mobile Hamburger (`<900px`) │ Slide Right 0.2s │ Off-Canvas Menu Drawer     │
 └──────────────────────────┴─────────────────────────────┴──────────────────┴────────────────────────────┘
 ```
 
 ---
 
-## 🎯 Summary Checklist for Figma Designers
-- [ ] **Styles**: Import color tokens (`#0d2818` Forest, `#7ed321` Lime, `#f59e0b` Gold, `#8b5cf6` Purple, `#0d9488` Teal) into Figma Variables.
-- [ ] **Components**: Build Master Component Sets for 5 Role Bottom Navigation Bars, Stat Cards, Slot Chips, Product Cards, Offer Status Bubbles, and Document Inspector Modals.
-- [ ] **Frames**: Set up Mobile Frames at `393 x 852 px` using Auto-Layout with `16px` horizontal padding.
-- [ ] **Coach & Market Flows**: Ensure dedicated frames for Coach Schedules (`M-COA-*`), Vacancy Application flows, and Marketplace feeds (`M-MKT-*`).
-- [ ] **Touch Usability**: Maintain all buttons, offer chips, and interactive slot matrix cells at minimum `44px` height with `8px` spacing.
-- [ ] **Prototype Links**: Wire up Bottom Navigation items, bottom sheets (`Open Overlay` -> `Bottom Center`), and interactive role switching.
+## 8. Complete Codebase UI Page Mapping & Specification Matrix
+
+This matrix maps every single HTML page in the TurfHub repository (`http://localhost/TurfHub/`) to its functional domain, authorized roles, and design specifications:
+
+| # | File Name | Primary Role Access | Primary Purpose & Key Features | CSS Architecture Used |
+| :--- | :--- | :--- | :--- | :--- |
+| **01** | `index.html` | Public Guest | Landing page with Hero stadium lighting, quick-search pill bar, featured turfs carousel, and platform stats. | Raw CSS Hero + Tailwind CDN Grid |
+| **02** | `login.html` | Public Guest | Multi-role authentication selector (Owner, Captain, Player, Admin) with instant glow selection and tab switcher. | Raw CSS Role Cards + Tailwind Form |
+| **03** | `contact.html` | Public Guest | Contact support center, inquiry form, hotline, WhatsApp trigger, and FAQ accordion. | Scoped CSS + Tailwind Grids |
+| **04** | `player-dashboard.html` | Player | Player performance statistics (Matches, Goals, Rating) and 1-tap Match RSVP banner (`Attending` / `Unavailable`). | Raw CSS Badges + Tailwind Metrics |
+| **05** | `turf-detail.html` | Player / Captain | Master-detail turf ground explorer, photo gallery switcher, 7-day slot matrix, and SSLCOMMERZ dummy payment gateway. | Scoped Master-Detail CSS + Gateway Modal |
+| **06** | `join-team.html` | Player | Free agent team recruitment board with squad capacity tags and team join request modal. | Raw CSS Capacity Tags + Tailwind Cards |
+| **07** | `player-fixtures.html` | Player | Player fixture schedule with live stadium markers, match attendance badges, and league standings. | Standings Table CSS + Tailwind Tabs |
+| **08** | `player-receipts.html` | Player | Booking receipts history with spend summary strip, dynamic invoice cards from `localStorage`, and PDF export. | Scoped Invoice CSS + Dynamic Injection |
+| **09** | `player-chat.html` | Player | Direct messaging interface between Player, Team Captain, and Turf Ground Hosts. | Raw CSS Chat Bubbles + Split Viewport |
+| **10** | `captain-dashboard.html` | Team Captain | Captain command hub with match countdown card, squad roster preview, and quick-action shortcuts. | Raw CSS Player Avatars + Tailwind Grid |
+| **11** | `manage-team.html` | Team Captain | Squad management with jersey number badges, position pills (FWD, MID, DEF, GK), status tags, and Add Player modal. | Scoped Roster CSS + Modal Overlay |
+| **12** | `book-turf.html` | Team Captain | 4-step turf booking stepper (Sport/Date → Turf → Slots → SSLCOMMERZ payment) with live price calculation. | Raw CSS Stepper + Centered Turf Grid |
+| **13** | `create-tournament.html` | Team Captain | Tournament hosting wizard with entry fee/prize pool setup and live interactive tournament preview card. | Progress Bar CSS + Tailwind 2-Col Form |
+| **14** | `tournament-registration.html` | Team Captain / Player | Tournament directory with prize pool boxes, entry fee cards, and squad registration flow. | Scoped Prize Cards + Tailwind Grid |
+| **15** | `fixtures.html` | Captain / Player / Guest | Live match center with pulsing red dot, fixture results, and official league standings table with form guide. | Pulse Dot CSS + Standings Table CSS |
+| **16** | `booking-receipt.html` | Team Captain | Captain transaction receipts with dynamic SSLCOMMERZ confirmation banner and WhatsApp expense splitter. | Scoped Receipt CSS + Dynamic Injection |
+| **17** | `chat.html` | Team Captain | Team announcement channel and owner direct messaging with custom speech bubbles and unread counters. | Full-Height Chat Shell CSS |
+| **18** | `owner-dashboard.html` | Turf Owner | Operations overview: Today's Bookings, Today's Slot Revenue, Monthly Total, Occupancy Rate, and Recent Bookings. | Unified Stat Card Grid CSS + Inlined Sidebar |
+| **19** | `manage-turf.html` | Turf Owner | Pitch catalog management (5-a-side / 7-a-side), pricing editor, facility amenity chips, and Add Pitch modal. | Pitch Card CSS + Modal Dialog |
+| **20** | `slot-calendar.html` | Turf Owner | 7-day hourly slot matrix calendar with state color rules (Available, Booked, Reserved, Maintenance) and Slot Action modal. | 7-Day Matrix CSS + Slot State Engine |
+| **21** | `owner-tournament.html` | Turf Owner | Venue tournament management: team entry approvals, pitch slot allocation, and schedule publishing. | Scoped Tournament CSS + Tailwind Tabs |
+| **22** | `score-entry.html` | Turf Owner | Digital scoreboard referee tool: digital score inputs, goal counters (`+1`), scorer recorder, and card markers. | Scored Referee Input CSS |
+| **23** | `owner-reports.html` | Turf Owner | Financial and occupancy analytics with vertical CSS revenue bars, peak hour breakdown, and PDF export. | Scoped CSS Chart Bars + Tailwind Stat Rows |
+| **24** | `owner-chat.html` | Turf Owner | Customer inquiry inbox for slot bookings and ground queries with quick-reply messaging. | Split Chat CSS Viewport |
+| **25** | `admin-dashboard.html` | Platform Admin | Admin command center: Total GMV, Active Turfs, Pending Approvals alert, and system activity log. | Master Admin Sidebar CSS + KPI Stat Grid |
+| **26** | `admin-approvals.html` | Platform Admin | KYC & ground verification queue with high-fidelity zoomable Smart NID card and Municipal Councilor Certificate inspector. | Authentic NID & Seal CSS + Modal Container |
+| **27** | `admin-analytics.html` | Platform Admin | Platform utilization hourly heatmap matrix (0–4 heat levels), sport popularity breakdown, and growth charts. | Heatmap Grid CSS + CSS Flex Bar Charts |
+| **28** | `admin-categories.html` | Platform Admin | Sports categories manager with pitch dimensions, equipment tags, and Add Sport Category modal. | Category Card CSS + Modal Form |
+| **29** | `admin-reports.html` | Platform Admin | Platform financial audit ledger, Turf Owner payout disbursements, commission tracking, and CSV/PDF export. | Financial Table CSS + Badge System |
+| **30** | `admin-announcements.html` | Platform Admin | System push broadcast composer with audience targeting (All, Owners, Captains, Players) and priority badges. | Broadcast Composer CSS + Alert Badges |
+
+---
+
+## 🎯 Summary Checklist for UI/UX Designers & Frontend Developers
+- [x] **Color Tokens**: Standardized Brand Forest (`#0d2818`), Brand Forest Card (`#133923`), Electric Lime (`#7ed321`), App BG (`#f5f5f0`), White (`#ffffff`), and status badge colors.
+- [x] **Role Hierarchy**: Clean 4-role authenticated structure (Player, Captain, Turf Owner, Admin) + Public Guest.
+- [x] **No Coach / Marketplace Elements**: Completely excised all references to Coach licensing, Trainee radars, B2C Pro-Shops, and C2C peer-to-peer gear commerce.
+- [x] **Booking & Payment Fidelity**: Accurately blueprints the 4-step stepper (`book-turf.html`), master-detail explorer (`turf-detail.html`), and SSLCOMMERZ EasyCheckout modal.
+- [x] **Sports Governance Fidelity**: Fully details the tournament wizard, live fixtures with pulsing indicator, league standings table, digital scoreboard referee entry (`score-entry.html`), and Smart NID KYC verification inspector (`admin-approvals.html`).
