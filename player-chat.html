@@ -1,31 +1,62 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TurfHub — Team Chat</title>
+  <title>TurfHub — Player Messages &amp; Team Chat</title>
+  <meta name="description" content="Direct real-time messaging with your team captain, teammates, and turf owners on TurfHub." />
   <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <style>
     .chat-shell {
       display: grid;
-      grid-template-columns: 280px 1fr;
-      height: calc(100vh - 60px);
-      overflow: hidden;
+      grid-template-columns: 320px 1fr;
+      height: calc(100vh - 65px);
+      background: #f8faf8;
     }
 
     .chat-list {
       border-right: 1px solid #e8ede8;
-      overflow-y: auto;
       background: #fff;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
     }
 
     .chat-list-header {
       padding: 16px 18px;
       border-bottom: 1px solid #f3f4f6;
-      font-weight: 800;
-      font-size: .95rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .chat-search-wrap {
+      padding: 10px 14px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .chat-search-input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: .84rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color .15s;
+    }
+    .chat-search-input:focus {
+      border-color: #7ed321;
+    }
+
+    .chat-threads {
+      flex: 1;
+      overflow-y: auto;
     }
 
     .chat-item {
@@ -35,44 +66,45 @@
       padding: 13px 18px;
       cursor: pointer;
       transition: background .15s;
-      border-bottom: 1px solid #f3f4f6;
+      border-bottom: 1px solid #f9fafb;
     }
-
     .chat-item:hover {
       background: #f9fafb;
     }
-
     .chat-item.active {
-      background: rgba(126, 211, 33, .07);
-      border-left: 3px solid #7ed321;
+      background: rgba(126, 211, 33, .08);
+      border-left: 3.5px solid #7ed321;
     }
 
     .chat-av {
-      width: 40px;
-      height: 40px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 800;
-      font-size: .9rem;
+      font-size: .95rem;
       color: #fff;
       flex-shrink: 0;
     }
 
     .chat-item-name {
-      font-weight: 700;
-      font-size: .85rem;
+      font-weight: 800;
+      font-size: .88rem;
       color: #1a1a1a;
-    }
-
-    .chat-item-preview {
-      font-size: .75rem;
-      color: #9ca3af;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 150px;
+    }
+
+    .chat-item-preview {
+      font-size: .76rem;
+      color: #6b7280;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
     }
 
     .chat-item-time {
@@ -82,42 +114,50 @@
       flex-shrink: 0;
     }
 
-    .unread-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
+    .unread-pill {
       background: #7ed321;
+      color: #0d2818;
+      font-size: .65rem;
+      font-weight: 900;
+      padding: 2px 7px;
+      border-radius: 100px;
+      margin-left: auto;
       flex-shrink: 0;
     }
 
     .chat-window {
       display: flex;
       flex-direction: column;
-      background: #f5f5f0;
+      height: 100%;
+      background: #f8faf8;
     }
 
     .chat-topbar {
       background: #fff;
       border-bottom: 1px solid #e8ede8;
-      padding: 14px 20px;
+      padding: 12px 20px;
       display: flex;
       align-items: center;
-      gap: 12px;
+      justify-content: space-between;
+      min-height: 60px;
     }
 
     .messages-area {
       flex: 1;
       overflow-y: auto;
       padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
-    .msg {
+    .msg-row {
       display: flex;
       gap: 10px;
-      margin-bottom: 14px;
+      max-width: 75%;
     }
-
-    .msg.mine {
+    .msg-row.mine {
+      margin-left: auto;
       flex-direction: row-reverse;
     }
 
@@ -136,20 +176,19 @@
     }
 
     .msg-bubble {
-      max-width: 70%;
       padding: 10px 14px;
       border-radius: 14px;
-      font-size: .85rem;
-      line-height: 1.5;
+      font-size: .86rem;
+      line-height: 1.45;
+      word-break: break-word;
     }
-
     .msg-bubble.them {
       background: #fff;
       border: 1px solid #e8ede8;
       color: #1a1a1a;
       border-radius: 4px 14px 14px 14px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.03);
     }
-
     .msg-bubble.mine {
       background: #0d2818;
       color: #fff;
@@ -157,7 +196,7 @@
     }
 
     .msg-time {
-      font-size: .68rem;
+      font-size: .65rem;
       color: #9ca3af;
       margin-top: 4px;
     }
@@ -181,205 +220,487 @@
       outline: none;
       transition: border-color .2s;
     }
-
     .chat-input:focus {
       border-color: #7ed321;
     }
 
-    @media(max-width:700px) {
+    .chat-empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      text-align: center;
+      padding: 30px;
+      color: #6b7280;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .contact-item:hover {
+      background: #f3f4f6;
+    }
+
+    @media(max-width: 768px) {
       .chat-shell {
         grid-template-columns: 1fr;
       }
-
-      .chat-list {
+      .chat-list.mobile-hidden {
+        display: none;
+      }
+      .chat-window.mobile-hidden {
         display: none;
       }
     }
   </style>
 </head>
-
 <body>
-  <div id="app-wrapper">
-    <!-- Standalone Player Sidebar -->
-    <aside id="sidebar" class="sidebar">
-      <a href="index.html" class="sidebar-logo">
-        <div class="sidebar-logo-icon">TH</div>
-        <span class="sidebar-logo-text">TurfHub</span>
-      </a>
-      <div class="sidebar-user">
-        <div class="sidebar-avatar" style="background:#7ed321;color:#0d2818">P</div>
-        <div class="sidebar-user-info">
-          <span class="sidebar-user-name">Sabbir Ahmed</span>
-          <span class="sidebar-user-role">Player (Striker)</span>
+<div id="app-wrapper">
+  <!-- Dynamic Sidebar rendered by layout.js -->
+
+  <div id="main-content">
+    <div class="chat-shell">
+      <!-- Conversation list -->
+      <div class="chat-list" id="chat-sidebar">
+        <div class="chat-list-header">
+          <div style="font-weight:900;font-size:1rem;color:#1a1a1a">💬 Messages</div>
+          <button onclick="openNewChatModal()" class="btn-lime" style="padding:5px 12px;font-size:.76rem;border-radius:8px">
+            + New Chat
+          </button>
+        </div>
+        <div class="chat-search-wrap">
+          <input type="text" id="thread-search" class="chat-search-input" placeholder="🔍 Search conversations..." oninput="filterThreads()" />
+        </div>
+        <div class="chat-threads" id="chat-threads-container">
+          <div style="text-align:center;padding:30px;color:#9ca3af;font-size:.85rem">
+            Loading conversations...
+          </div>
         </div>
       </div>
-      <nav class="sidebar-nav">
-        <a href="player-dashboard.html" class="sidebar-nav-item"><span
-            class="sidebar-label">Dashboard</span></a>
-        <a href="turf-detail.html" class="sidebar-nav-item"><span
-            class="sidebar-label">Find Turf</span></a>
-        <a href="join-team.html" class="sidebar-nav-item"><span
-            class="sidebar-label">Join Team</span></a>
-        <a href="player-fixtures.html" class="sidebar-nav-item"><span
-            class="sidebar-label">Fixtures</span></a>
-        <a href="player-receipts.html" class="sidebar-nav-item"><span
-            class="sidebar-label">My Receipts</span></a>
-        <a href="player-chat.html" class="sidebar-nav-item active"><span
-            class="sidebar-label">Team Chat</span></a>
-      </nav>
-      <a href="login.html" class="sidebar-signout">
-        <span class="sidebar-label">Sign Out</span>
-      </a>
-    </aside>
 
-    <div id="main-content">
-      <div id="topbar">
-        <div class="topbar-title">
-          <span class="topbar-heading">Team Chat</span>
-          <span class="topbar-sub">Chat with your team captain and teammates</span>
-        </div>
-        <div class="topbar-actions">
-          <span class="badge badge-confirmed">Team Inbox</span>
-        </div>
-      </div>
-      <div class="chat-shell">
-        <!-- Conversation list -->
-        <div class="chat-list">
-          <div class="chat-list-header">Conversations</div>
-
-          <div class="chat-item active" onclick="openChat(this,'Tanvir Ahmed (Captain)','#7ed321','T')">
-            <div class="chat-av" style="background:#7ed321;color:#0d2818">T</div>
-            <div style="min-width:0">
-              <div class="chat-item-name">Tanvir Ahmed (Captain)</div>
-              <div class="chat-item-preview">Match on Saturday at 6 PM. Be there by 5:30!</div>
-            </div>
-            <span class="chat-item-time">20m</span>
-            <div class="unread-dot"></div>
-          </div>
-          <div class="chat-item" onclick="openChat(this,'Arif Hossain','#f5a623','A')">
-            <div class="chat-av" style="background:#f5a623;color:#0d2818">A</div>
-            <div style="min-width:0">
-              <div class="chat-item-name">Arif Hossain</div>
-              <div class="chat-item-preview">Bro, can you bring extra bibs for the match?</div>
-            </div>
-            <span class="chat-item-time">1h</span>
-          </div>
-          <div class="chat-item" onclick="openChat(this,'Delwar Khan','#6d28d9','D')">
-            <div class="chat-av" style="background:#6d28d9">D</div>
-            <div style="min-width:0">
-              <div class="chat-item-name">Delwar Khan</div>
-              <div class="chat-item-preview">Which turf are we booking for Sunday?</div>
-            </div>
-            <span class="chat-item-time">Yesterday</span>
-            <div class="unread-dot"></div>
-          </div>
-          <div class="chat-item" onclick="openChat(this,'Thunder FC Group','#0d2818','⚽')">
-            <div class="chat-av" style="background:#0d2818">⚽</div>
-            <div style="min-width:0">
-              <div class="chat-item-name">Thunder FC Group</div>
-              <div class="chat-item-preview">Next practice session: Tuesday 7 AM</div>
-            </div>
-            <span class="chat-item-time">2d</span>
-          </div>
-        </div>
-
-        <!-- Chat window -->
-        <div class="chat-window">
-          <div class="chat-topbar">
-            <div class="chat-av" id="active-av"
-              style="background:#7ed321;color:#0d2818;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem">
-              T</div>
+      <!-- Chat window -->
+      <div class="chat-window" id="chat-main-window">
+        <!-- Topbar of active chat -->
+        <div class="chat-topbar" id="chat-active-topbar" style="display:none">
+          <div style="display:flex;align-items:center;gap:12px">
+            <button class="mobile-back-btn" onclick="backToThreadList()" style="display:none;background:none;border:none;font-size:1.2rem;cursor:pointer;padding:4px 8px;color:#0d2818">&larr;</button>
+            <div class="chat-av" id="active-av" style="background:#0d2818;color:#7ed321">?</div>
             <div>
-              <div style="font-weight:800;font-size:.92rem;color:#1a1a1a" id="active-name">Tanvir Ahmed (Captain)</div>
-              <div style="font-size:.72rem;color:#9ca3af">Team Captain &middot; Thunder FC</div>
+              <div style="font-weight:800;font-size:.92rem;color:#1a1a1a;display:flex;align-items:center;gap:6px">
+                <span id="active-name">Select a conversation</span>
+                <span class="badge" id="active-role-badge" style="font-size:.65rem;text-transform:capitalize">User</span>
+              </div>
+              <div style="font-size:.72rem;color:#16a34a;display:flex;align-items:center;gap:4px">
+                <span style="width:6px;height:6px;border-radius:50%;background:#16a34a;display:inline-block"></span>
+                <span>Active on TurfHub</span>
+              </div>
             </div>
           </div>
+          <div>
+            <button onclick="refreshActiveChat()" title="Refresh messages" style="background:none;border:none;cursor:pointer;color:#6b7280;padding:6px;font-size:1.1rem">&#x21bb;</button>
+          </div>
+        </div>
 
-          <div class="messages-area" id="messages-area">
-            <div class="msg">
-              <div class="msg-av" style="background:#7ed321;color:#0d2818">T</div>
-              <div>
-                <div class="msg-bubble them">Hey Sabbir! We've got a match this Saturday at 6 PM at The Green Arena. Can
-                  you make it?</div>
-                <div class="msg-time">5:30 PM</div>
-              </div>
-            </div>
-            <div class="msg mine">
-              <div class="msg-av" style="background:#059669">S</div>
-              <div>
-                <div class="msg-bubble mine">Yes Captain! I'll be there. Should I come early for warm-up?</div>
-                <div class="msg-time" style="text-align:right">5:35 PM</div>
-              </div>
-            </div>
-            <div class="msg">
-              <div class="msg-av" style="background:#7ed321;color:#0d2818">T</div>
-              <div>
-                <div class="msg-bubble them">Definitely! Come by 5:30. We're playing against City Kickers so we need to
-                  be sharp. I've confirmed our lineup — you're starting as striker 💪</div>
-                <div class="msg-time">5:38 PM</div>
-              </div>
-            </div>
-            <div class="msg mine">
-              <div class="msg-av" style="background:#059669">S</div>
-              <div>
-                <div class="msg-bubble mine">Awesome! I'll bring my boots and extra water. Let's win this 🔥</div>
-                <div class="msg-time" style="text-align:right">5:42 PM</div>
-              </div>
-            </div>
-            <div class="msg">
-              <div class="msg-av" style="background:#7ed321;color:#0d2818">T</div>
-              <div>
-                <div class="msg-bubble them">Match on Saturday at 6 PM. Be there by 5:30! Wearing green jerseys.</div>
-                <div class="msg-time">6:00 PM</div>
-              </div>
-            </div>
+        <!-- Messages Area -->
+        <div class="messages-area" id="messages-area">
+          <div class="chat-empty-state">
+            <div style="font-size:3rem;margin-bottom:12px">💬</div>
+            <h3 style="font-weight:800;font-size:1.05rem;color:#0d2818;margin:0">Player Chat Inbox</h3>
+            <p style="font-size:.84rem;color:#6b7280;margin:6px 0 16px 0;max-width:320px">Select a conversation on the left or message your team captain, pitch owners, or admin.</p>
+            <button onclick="openNewChatModal()" class="btn-lime" style="font-size:.82rem;padding:8px 18px">Start New Conversation</button>
           </div>
+        </div>
 
-          <div class="chat-input-bar">
-            <input class="chat-input" id="msg-input" type="text" placeholder="Type a message..."
-              onkeydown="sendOnEnter(event)" />
-            <button class="btn-lime" onclick="sendMsg()" style="padding:10px 18px">Send ➤</button>
-          </div>
+        <!-- Chat Input Bar -->
+        <div class="chat-input-bar" id="chat-input-panel" style="display:none">
+          <input class="chat-input" id="msg-input" type="text" placeholder="Type your message here..." onkeydown="sendOnEnter(event)" autocomplete="off" />
+          <button class="btn-lime" id="btn-send-msg" onclick="sendMsg()" style="padding:10px 20px;display:flex;align-items:center;gap:6px">
+            <span>Send</span> <span>➤</span>
+          </button>
         </div>
       </div>
     </div>
   </div>
-  <script>
-    function openChat(el, name, color, initials) {
-      document.querySelectorAll('.chat-item').forEach(i => i.classList.remove('active'));
-      el.classList.add('active');
-      document.getElementById('active-name').textContent = name;
-      document.getElementById('active-av').textContent = initials;
-      document.getElementById('active-av').style.background = color;
+</div>
+
+<!-- New Chat / Contacts Modal Dialog -->
+<div id="new-chat-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(4px)">
+  <div style="background:#fff;border-radius:18px;width:92%;max-width:480px;box-shadow:0 24px 48px rgba(0,0,0,.2);overflow:hidden">
+    <div style="background:linear-gradient(135deg,#0d2818,#1a4029);padding:20px 24px;display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <h3 style="font-weight:900;font-size:1.05rem;color:#fff;margin:0">✉️ Start New Conversation</h3>
+        <p style="font-size:.78rem;color:rgba(255,255,255,.75);margin:4px 0 0 0">Select a team captain, turf owner, or admin to message</p>
+      </div>
+      <button onclick="closeNewChatModal()" style="border:none;background:rgba(255,255,255,.2);width:32px;height:32px;border-radius:8px;font-size:1.1rem;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center">&times;</button>
+    </div>
+    <div style="padding:16px 20px;border-bottom:1px solid #f3f4f6">
+      <input type="text" id="contact-search-input" class="chat-search-input" placeholder="🔍 Search contacts..." oninput="filterContacts()" />
+    </div>
+    <div style="padding:16px 20px;max-height:55vh;overflow-y:auto" id="contacts-list-container">
+      <div style="text-align:center;padding:25px;color:#9ca3af;font-size:.85rem">Loading contacts...</div>
+    </div>
+    <div style="padding:12px 20px;background:#f9fafb;border-top:1px solid #e8ede8;display:flex;justify-content:flex-end">
+      <button onclick="closeNewChatModal()" class="btn-ghost" style="padding:7px 16px">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script src="api-client.js"></script>
+<script src="auth.js"></script>
+<script src="layout.js"></script>
+<script src="page-init.js"></script>
+<script>
+  let currentUser = null;
+  let allConversations = [];
+  let allContacts = [];
+  let activeOtherUserId = null;
+  let activeOtherUser = null;
+  let lastMessageId = 0;
+  let pollingInterval = null;
+
+  (async function() {
+    currentUser = await initPage({ navId: 'messages', roles: ['player', 'captain', 'owner', 'admin'] });
+    if (!currentUser) return;
+
+    if (window.innerWidth <= 768) {
+      document.querySelector('.mobile-back-btn').style.display = 'inline-block';
     }
 
-    function sendOnEnter(e) { if (e.key === 'Enter') sendMsg(); }
+    await loadConversations();
+    startPolling();
+  })();
 
-    function sendMsg() {
-      const input = document.getElementById('msg-input');
-      const text = input.value.trim();
-      if (!text) return;
-      const area = document.getElementById('messages-area');
-      area.insertAdjacentHTML('beforeend', `
-      <div class="msg mine">
-        <div class="msg-av" style="background:#059669">S</div>
+  async function loadConversations() {
+    try {
+      const res = await apiGet('chat/conversations.php');
+      allConversations = res.conversations || [];
+      renderConversationList(allConversations);
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const targetUid = urlParams.get('user_id');
+      if (targetUid && !activeOtherUserId) {
+        openChatById(parseInt(targetUid, 10));
+      }
+    } catch (err) {
+      console.error('Failed to load conversations:', err);
+      document.getElementById('chat-threads-container').innerHTML = `
+        <div style="text-align:center;padding:25px;color:#e53935;font-size:.82rem">
+          ⚠️ Could not load chats.
+        </div>`;
+    }
+  }
+
+  function renderConversationList(threads) {
+    const container = document.getElementById('chat-threads-container');
+    const query = (document.getElementById('thread-search').value || '').trim().toLowerCase();
+
+    const filtered = threads.filter(t => {
+      const name = t.other_name || t.other_user_name || '';
+      const content = t.last_content || t.last_message || '';
+      if (!query) return true;
+      return name.toLowerCase().includes(query) || content.toLowerCase().includes(query);
+    });
+
+    if (filtered.length === 0) {
+      container.innerHTML = `
+        <div style="text-align:center;padding:35px 20px;color:#9ca3af;font-size:.84rem">
+          <div style="font-size:2rem;margin-bottom:6px">📭</div>
+          <div style="font-weight:700;color:#1a1a1a">No conversations yet</div>
+          <div style="margin-top:4px;font-size:.78rem">Click "+ New Chat" to start messaging.</div>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = filtered.map(t => {
+      const uid = t.other_id || t.other_user_id;
+      const name = t.other_name || t.other_user_name || 'User';
+      const role = t.other_role || t.other_user_role || 'member';
+      const lastMsg = t.last_content || t.last_message || 'No messages yet';
+      const lastTime = t.last_time || t.last_message_at || '';
+      const unread = parseInt(t.unread_count, 10) || 0;
+
+      const isActive = activeOtherUserId === uid;
+      const initials = getInitials(name);
+      const bg = getAvatarColor(role);
+      const unreadBadge = unread > 0 ? `<div class="unread-pill">${unread}</div>` : '';
+      const timeStr = lastTime ? formatChatTime(lastTime) : '';
+
+      return `
+        <div class="chat-item ${isActive ? 'active' : ''}" onclick="selectConversation(${uid}, '${escapeHtml(name)}', '${role}', '${bg}')">
+          <div class="chat-av" style="background:${bg}">${initials}</div>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span class="chat-item-name">${name}</span>
+              <span class="chat-item-time">${timeStr}</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span class="chat-item-preview">${lastMsg}</span>
+              ${unreadBadge}
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  async function selectConversation(otherUserId, name, role, color) {
+    activeOtherUserId = otherUserId;
+    activeOtherUser = { id: otherUserId, name: name, role: role, color: color };
+
+    if (window.innerWidth <= 768) {
+      document.getElementById('chat-sidebar').classList.add('mobile-hidden');
+      document.getElementById('chat-main-window').classList.remove('mobile-hidden');
+    }
+
+    renderConversationList(allConversations);
+
+    const topbar = document.getElementById('chat-active-topbar');
+    const inputPanel = document.getElementById('chat-input-panel');
+    topbar.style.display = 'flex';
+    inputPanel.style.display = 'flex';
+
+    document.getElementById('active-name').textContent = name;
+    document.getElementById('active-av').textContent = getInitials(name);
+    document.getElementById('active-av').style.background = color;
+    document.getElementById('active-role-badge').textContent = role || 'User';
+
+    const area = document.getElementById('messages-area');
+    area.innerHTML = '<div style="text-align:center;padding:30px;color:#9ca3af;font-size:.85rem">Loading message history...</div>';
+
+    try {
+      const res = await apiGet(`chat/messages.php?user_id=${otherUserId}`);
+      const messages = res.messages || [];
+      renderMessages(messages);
+
+      if (messages.length > 0) {
+        lastMessageId = Math.max(...messages.map(m => m.id));
+      }
+    } catch (err) {
+      console.error('Failed to load messages:', err);
+      area.innerHTML = '<div style="text-align:center;padding:30px;color:#e53935;font-size:.85rem">⚠️ Failed to load messages.</div>';
+    }
+  }
+
+  function renderMessages(messages) {
+    const area = document.getElementById('messages-area');
+    if (messages.length === 0) {
+      area.innerHTML = `
+        <div class="chat-empty-state">
+          <div style="font-size:2.5rem;margin-bottom:8px">💬</div>
+          <div style="font-weight:800;color:#1a1a1a;font-size:1rem">No messages exchanged yet</div>
+          <div style="font-size:.82rem;color:#6b7280;margin-top:4px">Send a hello message below to start chatting!</div>
+        </div>`;
+      return;
+    }
+
+    area.innerHTML = messages.map(m => {
+      const isMine = m.sender_id === currentUser.id;
+      const initials = isMine ? getInitials(currentUser.full_name) : getInitials(activeOtherUser.name);
+      const avBg = isMine ? '#0d2818' : (activeOtherUser.color || '#7ed321');
+      const timeFormatted = m.created_at ? formatTime(m.created_at.substring(11, 16)) : '';
+
+      return `
+        <div class="msg-row ${isMine ? 'mine' : ''}">
+          <div class="msg-av" style="background:${avBg}">${initials}</div>
+          <div>
+            <div class="msg-bubble ${isMine ? 'mine' : 'them'}">${escapeHtml(m.content || m.message || '')}</div>
+            <div class="msg-time" style="${isMine ? 'text-align:right' : 'text-align:left'}">${timeFormatted}</div>
+          </div>
+        </div>`;
+    }).join('');
+
+    area.scrollTop = area.scrollHeight;
+  }
+
+  async function sendMsg() {
+    const input = document.getElementById('msg-input');
+    const text = input.value.trim();
+    if (!text || !activeOtherUserId) return;
+
+    input.value = '';
+    const area = document.getElementById('messages-area');
+
+    const tempTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const emptyState = area.querySelector('.chat-empty-state');
+    if (emptyState) area.innerHTML = '';
+
+    area.insertAdjacentHTML('beforeend', `
+      <div class="msg-row mine">
+        <div class="msg-av" style="background:#0d2818">${getInitials(currentUser.full_name)}</div>
         <div>
-          <div class="msg-bubble mine">${text.replace(/</g, '&lt;')}</div>
-          <div class="msg-time" style="text-align:right">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+          <div class="msg-bubble mine">${escapeHtml(text)}</div>
+          <div class="msg-time" style="text-align:right">${tempTime}</div>
         </div>
       </div>`);
-      input.value = '';
-      area.scrollTop = area.scrollHeight;
+    area.scrollTop = area.scrollHeight;
+
+    try {
+      const res = await apiPost('chat/send.php', {
+        receiver_id: activeOtherUserId,
+        content: text,
+        message: text
+      });
+      if (res.message && res.message.id) {
+        lastMessageId = Math.max(lastMessageId, res.message.id);
+      } else if (res.message_id) {
+        lastMessageId = Math.max(lastMessageId, res.message_id);
+      }
+      await loadConversations();
+    } catch (err) {
+      alert('Failed to send message: ' + (err.message || 'Unknown error'));
     }
-  </script>
+  }
 
-  <script src="api-client.js"></script>
-  <script src="auth.js"></script>
-  <script src="layout.js"></script>
-  <script src="page-init.js"></script>
-  <script>
-    initPage({ navId: 'messages', roles: ['player'] });
-  </script>
+  function sendOnEnter(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      sendMsg();
+    }
+  }
+
+  function startPolling() {
+    if (pollingInterval) clearInterval(pollingInterval);
+    pollingInterval = setInterval(async () => {
+      if (!activeOtherUserId) return;
+      try {
+        const res = await apiGet(`chat/poll.php?user_id=${activeOtherUserId}&last_id=${lastMessageId}`);
+        const newMsgs = res.messages || [];
+        if (newMsgs.length > 0) {
+          const area = document.getElementById('messages-area');
+          newMsgs.forEach(m => {
+            const isMine = m.sender_id === currentUser.id;
+            const initials = isMine ? getInitials(currentUser.full_name) : getInitials(activeOtherUser.name);
+            const avBg = isMine ? '#0d2818' : (activeOtherUser.color || '#7ed321');
+            const timeFormatted = m.created_at ? formatTime(m.created_at.substring(11, 16)) : '';
+
+            area.insertAdjacentHTML('beforeend', `
+              <div class="msg-row ${isMine ? 'mine' : ''}">
+                <div class="msg-av" style="background:${avBg}">${initials}</div>
+                <div>
+                  <div class="msg-bubble ${isMine ? 'mine' : 'them'}">${escapeHtml(m.content || m.message || '')}</div>
+                  <div class="msg-time" style="${isMine ? 'text-align:right' : 'text-align:left'}">${timeFormatted}</div>
+                </div>
+              </div>`);
+            lastMessageId = Math.max(lastMessageId, m.id);
+          });
+          area.scrollTop = area.scrollHeight;
+          await loadConversations();
+        }
+      } catch (e) {
+        // Silent poll error
+      }
+    }, 3000);
+  }
+
+  async function openNewChatModal() {
+    const modal = document.getElementById('new-chat-modal');
+    modal.style.display = 'flex';
+    const container = document.getElementById('contacts-list-container');
+    container.innerHTML = '<div style="text-align:center;padding:25px;color:#9ca3af;font-size:.85rem">Loading available contacts...</div>';
+
+    try {
+      const res = await apiGet('chat/contacts.php');
+      allContacts = res.contacts || [];
+      renderContacts(allContacts);
+    } catch (e) {
+      container.innerHTML = '<div style="text-align:center;padding:25px;color:#e53935;font-size:.85rem">⚠️ Failed to load contacts.</div>';
+    }
+  }
+
+  function closeNewChatModal() {
+    document.getElementById('new-chat-modal').style.display = 'none';
+  }
+
+  function renderContacts(contacts) {
+    const container = document.getElementById('contacts-list-container');
+    const query = (document.getElementById('contact-search-input').value || '').trim().toLowerCase();
+
+    const filtered = contacts.filter(c => {
+      if (!query) return true;
+      return (c.full_name && c.full_name.toLowerCase().includes(query)) ||
+             (c.role && c.role.toLowerCase().includes(query)) ||
+             (c.phone && c.phone.includes(query));
+    });
+
+    if (filtered.length === 0) {
+      container.innerHTML = '<div style="text-align:center;padding:25px;color:#9ca3af;font-size:.85rem">No contacts found matching search.</div>';
+      return;
+    }
+
+    container.innerHTML = filtered.map(c => {
+      const bg = getAvatarColor(c.role);
+      const roleBadge = c.role === 'captain' ? 'badge-confirmed' : c.role === 'owner' ? 'badge-pending' : 'badge-rejected';
+      return `
+        <div class="contact-item" onclick="startChatWithUser(${c.id}, '${escapeHtml(c.full_name)}', '${c.role}', '${bg}')">
+          <div class="chat-av" style="background:${bg};width:38px;height:38px;font-size:.85rem">${getInitials(c.full_name)}</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:800;font-size:.88rem;color:#1a1a1a">${c.full_name}</div>
+            <div style="font-size:.74rem;color:#6b7280">${c.email || ''} ${c.phone ? '&middot; ' + c.phone : ''}</div>
+          </div>
+          <span class="badge ${roleBadge}" style="font-size:.65rem;text-transform:capitalize">${c.role}</span>
+        </div>`;
+    }).join('');
+  }
+
+  function filterContacts() {
+    renderContacts(allContacts);
+  }
+
+  function filterThreads() {
+    renderConversationList(allConversations);
+  }
+
+  function startChatWithUser(id, name, role, color) {
+    closeNewChatModal();
+    selectConversation(id, name, role, color);
+  }
+
+  function refreshActiveChat() {
+    if (activeOtherUserId) {
+      selectConversation(activeOtherUser.id, activeOtherUser.name, activeOtherUser.role, activeOtherUser.color);
+    }
+  }
+
+  function backToThreadList() {
+    document.getElementById('chat-sidebar').classList.remove('mobile-hidden');
+    document.getElementById('chat-main-window').classList.add('mobile-hidden');
+  }
+
+  function getInitials(name) {
+    if (!name) return '?';
+    const parts = name.trim().split(' ');
+    if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+    return name.substring(0, 2).toUpperCase();
+  }
+
+  function getAvatarColor(role) {
+    if (role === 'captain') return '#0d2818';
+    if (role === 'owner') return '#0891b2';
+    if (role === 'admin') return '#dc2626';
+    return '#7ed321';
+  }
+
+  function formatChatTime(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    if (isNaN(d)) return '';
+    const now = new Date();
+    if (d.toDateString() === now.toDateString()) {
+      return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+    return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+</script>
 </body>
-
 </html>

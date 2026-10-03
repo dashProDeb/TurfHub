@@ -11,10 +11,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $input      = json_decode(file_get_contents('php://input'), true);
 $receiverId = (int) ($input['receiver_id'] ?? 0);
-$content    = trim($input['content'] ?? '');
+$content    = trim($input['content'] ?? $input['message'] ?? '');
 
 if (!$receiverId || !$content) {
-    jsonError('receiver_id and content are required');
+    jsonError('receiver_id and message content are required');
 }
 
 // Prevent messaging self
