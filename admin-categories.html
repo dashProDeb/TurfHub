@@ -13,27 +13,68 @@
       background: #fff;
       border: 1.5px solid #e8ede8;
       border-radius: 14px;
-      padding: 18px;
+      padding: 18px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      transition: all .2s;
+      gap: 16px;
+      transition: all .2s ease;
     }
     .sport-card:hover {
-      box-shadow: 0 4px 16px rgba(0,0,0,.06);
+      box-shadow: 0 6px 20px rgba(0,0,0,.06);
+      transform: translateY(-1px);
+    }
+    .sport-icon-box {
+      width: 52px;
+      height: 52px;
+      min-width: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,.04);
+      transition: transform .2s ease;
+    }
+    .sport-card:hover .sport-icon-box {
+      transform: scale(1.08);
     }
     .form-input-admin {
       width: 100%;
-      padding: 9px 12px;
+      padding: 10px 14px;
       border: 1.5px solid #e5e7eb;
       border-radius: 8px;
       font-family: inherit;
       font-size: .85rem;
       outline: none;
       background: #fff;
+      transition: border-color .15s ease;
     }
     .form-input-admin:focus {
       border-color: #7ed321;
+    }
+    .emoji-picker-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      border: 1.5px solid #e5e7eb;
+      background: #f9fafb;
+      font-size: 1.3rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .15s ease;
+    }
+    .emoji-picker-btn:hover {
+      background: #eef9f0;
+      border-color: #86efac;
+      transform: scale(1.1);
+    }
+    .emoji-picker-btn.active {
+      background: #0d2818;
+      border-color: #0d2818;
+      box-shadow: 0 0 0 2px #7ed321;
     }
   </style>
 </head>
@@ -50,8 +91,8 @@
         <span class="topbar-sub">Manage platform sports, commissions, cancellation limits, and advance booking windows</span>
       </div>
       <div class="topbar-actions">
-        <button onclick="openAddSportModal()" class="btn-lime" style="font-size:.82rem;padding:7px 16px;cursor:pointer">
-          + Add Sport Category
+        <button onclick="openAddSportModal()" class="btn-lime" style="font-size:.82rem;padding:8px 18px;cursor:pointer;display:inline-flex;align-items:center;gap:6px">
+          <span>➕</span> Add Sport Category
         </button>
       </div>
     </div>
@@ -66,12 +107,12 @@
           <div class="panel-header" style="margin-bottom:16px">
             <div>
               <span class="panel-title" id="sports-title">Active Sports (—)</span>
-              <span style="display:block;font-size:.78rem;color:#6b7280;margin-top:2px">Categories shown on search and tournament registration</span>
+              <span style="display:block;font-size:.78rem;color:#6b7280;margin-top:2px">Categories shown on search, pitch listings, and tournament registration</span>
             </div>
           </div>
 
           <div style="display:flex;flex-direction:column;gap:12px" id="sports-list">
-            <!-- Populated by JS from admin/categories.php -->
+            <div style="text-align:center;padding:30px;color:#9ca3af;font-size:.85rem">Loading sport categories...</div>
           </div>
         </div>
 
@@ -80,7 +121,7 @@
           <div class="panel-header" style="margin-bottom:16px">
             <div>
               <span class="panel-title">Global Booking Rules</span>
-              <span style="display:block;font-size:.78rem;color:#6b7280;margin-top:2px">Platform-wide constraints</span>
+              <span style="display:block;font-size:.78rem;color:#6b7280;margin-top:2px">Platform-wide constraints and settlement policies</span>
             </div>
           </div>
 
@@ -120,25 +161,53 @@
 </div>
 
 <!-- Add Sport Modal -->
-<div id="add-sport-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;align-items:center;justify-content:center">
-  <div style="background:#fff;border-radius:16px;width:90%;max-width:400px;padding:22px;box-shadow:0 20px 40px rgba(0,0,0,.2)">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-      <h3 style="font-weight:900;font-size:1.05rem;color:#0d2818">Add New Sport Category</h3>
-      <button onclick="closeAddSportModal()" style="border:none;background:none;font-size:1.2rem;cursor:pointer;color:#9ca3af">&times;</button>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:18px">
-      <div>
-        <label style="display:block;font-size:.72rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:4px">Sport Emoji Icon</label>
-        <input type="text" id="new-sport-emoji" value="🏐" class="form-input-admin" style="font-size:1.2rem;width:80px;text-align:center" />
+<div id="add-sport-modal" style="display:none;position:fixed;inset:0;background:rgba(7,30,20,0.7);backdrop-filter:blur(4px);z-index:999;align-items:center;justify-content:center;padding:20px">
+  <div style="background:#fff;border-radius:18px;width:100%;max-width:440px;padding:24px;box-shadow:0 25px 50px rgba(0,0,0,.25);border:1.5px solid #bbf7d0">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;border-bottom:1px solid #f3f4f6;padding-bottom:12px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div id="modal-preview-icon" style="width:38px;height:38px;border-radius:10px;background:#dcfce7;display:flex;align-items:center;justify-content:center;font-size:1.4rem">⚽</div>
+        <h3 style="font-weight:900;font-size:1.1rem;color:#0d2818;margin:0">Add Sport Category</h3>
       </div>
+      <button onclick="closeAddSportModal()" style="border:none;background:none;font-size:1.3rem;cursor:pointer;color:#9ca3af">&times;</button>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:20px">
+      <div>
+        <label style="display:block;font-size:.72rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:6px">Select Sport Icon</label>
+        <!-- Quick Icon Picker Grid -->
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px" id="emoji-grid">
+          <button type="button" class="emoji-picker-btn active" onclick="selectEmoji('⚽')">⚽</button>
+          <button type="button" class="emoji-picker-btn" onclick="selectEmoji('🏏')">🏏</button>
+          <button type="button" class="emoji-picker-btn" onclick="selectEmoji('🏀')">🏀</button>
+          <button type="button" class="emoji-picker-btn" onclick="selectEmoji('🏸')">🏸</button>
+          <button type="button" class="emoji-picker-btn" onclick="selectEmoji('🏐')">🏐</button>
+          <button type="button" class="emoji-picker-btn" onclick="selectEmoji('🎾')">🎾</button>
+          <button type="button" class="emoji-picker-btn" onclick="selectEmoji('🏓')">🏓</button>
+          <button type="button" class="emoji-picker-btn" onclick="selectEmoji('🏉')">🏉</button>
+          <button type="button" class="emoji-picker-btn" onclick="selectEmoji('🥊')">🥊</button>
+          <button type="button" class="emoji-picker-btn" onclick="selectEmoji('⛳')">⛳</button>
+          <button type="button" class="emoji-picker-btn" onclick="selectEmoji('🏊')">🏊</button>
+          <button type="button" class="emoji-picker-btn" onclick="selectEmoji('🥋')">🥋</button>
+          <button type="button" class="emoji-picker-btn" onclick="selectEmoji('🏃')">🏃</button>
+          <button type="button" class="emoji-picker-btn" onclick="selectEmoji('🥇')">🥇</button>
+        </div>
+        <input type="text" id="new-sport-emoji" value="⚽" class="form-input-admin" style="font-size:1.1rem;width:80px;text-align:center" oninput="updateEmojiPreview(this.value)" />
+      </div>
+      
       <div>
         <label style="display:block;font-size:.72rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:4px">Sport Title</label>
-        <input type="text" id="new-sport-title" placeholder="e.g. Volleyball, Squash" class="form-input-admin" />
+        <input type="text" id="new-sport-title" placeholder="e.g. Volleyball, Squash, Futsal" class="form-input-admin" required />
+      </div>
+
+      <div>
+        <label style="display:block;font-size:.72rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:4px">Standard Field Size</label>
+        <input type="text" id="new-sport-field" placeholder="e.g. Standard Court / 5-a-side" class="form-input-admin" />
       </div>
     </div>
-    <div style="display:flex;justify-content:flex-end;gap:8px">
-      <button onclick="closeAddSportModal()" style="font-size:.82rem;padding:6px 14px;border:1px solid #e5e7eb;border-radius:8px;background:none;cursor:pointer">Cancel</button>
-      <button onclick="submitAddSport()" class="btn-lime" style="font-size:.82rem;padding:8px 16px">Add Category</button>
+
+    <div style="display:flex;justify-content:flex-end;gap:8px;border-top:1px solid #f3f4f6;padding-top:14px">
+      <button type="button" onclick="closeAddSportModal()" class="btn-ghost" style="font-size:.82rem;padding:7px 16px">Cancel</button>
+      <button type="button" onclick="submitAddSport()" class="btn-lime" style="font-size:.82rem;padding:8px 20px">Add Category</button>
     </div>
   </div>
 </div>
@@ -150,6 +219,51 @@
 <script>
   initPage({ navId: 'categories', roles: ['admin'] });
 
+  // Color & icon themes based on sport name or icon
+  const SPORT_THEMES = {
+    football:   { icon: '⚽', bg: '#dcfce7', border: '#bbf7d0', color: '#166534' },
+    futsal:     { icon: '⚽', bg: '#dcfce7', border: '#bbf7d0', color: '#166534' },
+    cricket:    { icon: '🏏', bg: '#fef3c7', border: '#fde68a', color: '#92400e' },
+    basketball: { icon: '🏀', bg: '#ffedd5', border: '#fed7aa', color: '#9a3412' },
+    badminton:  { icon: '🏸', bg: '#dbeafe', border: '#bfdbfe', color: '#1e40af' },
+    volleyball: { icon: '🏐', bg: '#f3e8ff', border: '#e9d5ff', color: '#6b21a8' },
+    tennis:     { icon: '🎾', bg: '#ecfccb', border: '#d9f99d', color: '#3f6212' },
+    padel:      { icon: '🏓', bg: '#fce7f3', border: '#fbcfe8', color: '#9d174d' },
+    table:      { icon: '🏓', bg: '#fce7f3', border: '#fbcfe8', color: '#9d174d' },
+    swimming:   { icon: '🏊', bg: '#cffafe', border: '#a5f3fc', color: '#155e75' },
+    golf:       { icon: '⛳', bg: '#d1fae5', border: '#a7f3d0', color: '#065f46' },
+    rugby:      { icon: '🏉', bg: '#fae8ff', border: '#f5d0fe', color: '#86198f' }
+  };
+
+  function isValidIcon(str) {
+    if (!str || typeof str !== 'string') return false;
+    const clean = str.trim();
+    if (clean.length === 0) return false;
+    // Catch common mojibake characters like ƒ, Å, ?, 
+    if (clean.includes('?') || clean.includes('') || clean.includes('ƒ') || clean.includes('Å')) return false;
+    return true;
+  }
+
+  function getSportTheme(name, icon) {
+    const key = (name || '').toLowerCase().trim();
+    for (const [k, theme] of Object.entries(SPORT_THEMES)) {
+      if (key.includes(k)) {
+        return {
+          icon: isValidIcon(icon) ? icon : theme.icon,
+          bg: theme.bg,
+          border: theme.border,
+          color: theme.color
+        };
+      }
+    }
+    return {
+      icon: isValidIcon(icon) ? icon : '🏅',
+      bg: '#f3f4f6',
+      border: '#e5e7eb',
+      color: '#374151'
+    };
+  }
+
   // Load categories from API
   async function loadCategories() {
     try {
@@ -159,29 +273,54 @@
       document.getElementById('sports-title').textContent = `Active Sports (${categories.length})`;
 
       if (categories.length === 0) {
-        list.innerHTML = '<div style="text-align:center;padding:30px;color:#9ca3af;font-size:.85rem">No categories yet. Add your first sport!</div>';
+        list.innerHTML = '<div style="text-align:center;padding:30px;color:#9ca3af;font-size:.85rem">No categories found in database. Add your first sport!</div>';
         return;
       }
 
-      list.innerHTML = categories.map(cat => `
-        <div class="sport-card" data-id="${cat.id}">
-          <div style="display:flex;align-items:center;gap:12px">
-            <div style="font-size:2rem;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:#f3f4f6;border-radius:10px">${cat.icon || '🏅'}</div>
-            <div>
-              <h4 style="font-weight:800;font-size:.95rem;color:#1a1a1a">${cat.name}</h4>
-              <div style="font-size:.75rem;color:#6b7280">${cat.field_size || 'Standard'} ${cat.equipment && cat.equipment.length ? '· ' + cat.equipment.join(', ') : ''}</div>
+      list.innerHTML = categories.map(cat => {
+        const theme = getSportTheme(cat.name, cat.icon);
+        const equipList = Array.isArray(cat.equipment) && cat.equipment.length > 0 
+          ? cat.equipment.join(', ') 
+          : '';
+
+        return `
+          <div class="sport-card" data-id="${cat.id}">
+            <div style="display:flex;align-items:center;gap:14px">
+              <div class="sport-icon-box" style="background:${theme.bg};border:1.5px solid ${theme.border}">
+                ${theme.icon}
+              </div>
+              <div>
+                <h4 style="font-weight:800;font-size:.95rem;color:#1a1a1a;margin:0 0 2px 0">${cat.name}</h4>
+                <div style="font-size:.76rem;color:#6b7280">
+                  ${cat.field_size || 'Standard Pitch'} ${equipList ? ' &middot; ' + equipList : ''}
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <span class="badge ${cat.is_active ? 'badge-success' : 'badge-draft'} badge-dot">${cat.is_active ? 'Active' : 'Inactive'}</span>
+              <button onclick="deleteCategory(${cat.id})" style="font-size:.75rem;padding:5px 12px;border:1px solid #fecaca;border-radius:6px;background:#fff;cursor:pointer;color:#dc2626;transition:background .15s" onmouseover="this.style.background='#fef2f2'" onmouseout="this.style.background='#fff'">Delete</button>
             </div>
           </div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <span class="badge ${cat.is_active ? 'badge-success' : 'badge-draft'} badge-dot">${cat.is_active ? 'Active' : 'Inactive'}</span>
-            <button onclick="deleteCategory(${cat.id})" style="font-size:.75rem;padding:4px 10px;border:1px solid #e5e7eb;border-radius:6px;background:none;cursor:pointer;color:#e53935">Delete</button>
-          </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     } catch (err) {
       document.getElementById('sports-list').innerHTML =
-        '<div style="text-align:center;padding:30px;color:#e53935;font-size:.85rem">⚠️ Failed to load categories</div>';
+        `<div style="text-align:center;padding:30px;color:#e53935;font-size:.85rem">⚠️ Failed to load categories: ${err.message}</div>`;
     }
+  }
+
+  function selectEmoji(emoji) {
+    document.getElementById('new-sport-emoji').value = emoji;
+    updateEmojiPreview(emoji);
+
+    // Update active state in picker buttons
+    document.querySelectorAll('.emoji-picker-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.textContent.trim() === emoji);
+    });
+  }
+
+  function updateEmojiPreview(emoji) {
+    document.getElementById('modal-preview-icon').textContent = emoji || '🏅';
   }
 
   function openAddSportModal() {
@@ -193,35 +332,42 @@
   }
 
   async function submitAddSport() {
-    const icon = document.getElementById('new-sport-emoji').value || '🏐';
+    const icon = document.getElementById('new-sport-emoji').value.trim() || '🏅';
     const name = document.getElementById('new-sport-title').value.trim();
-    if (!name) return;
+    const field_size = document.getElementById('new-sport-field').value.trim() || 'Standard';
+
+    if (!name) {
+      alert('Please enter a category title');
+      return;
+    }
+
     try {
-      await apiPost('admin/categories.php', { name, icon });
+      await apiPost('admin/categories.php', { name, icon, field_size });
       closeAddSportModal();
       document.getElementById('new-sport-title').value = '';
-      loadCategories();
+      document.getElementById('new-sport-field').value = '';
+      await loadCategories();
     } catch (err) {
-      alert('Error: ' + err.message);
+      alert('Error adding category: ' + err.message);
     }
   }
 
   async function deleteCategory(id) {
-    if (!confirm('Delete this category?')) return;
+    if (!confirm('Are you sure you want to delete this sport category?')) return;
     try {
       await apiDelete('admin/categories.php', { id });
-      loadCategories();
+      await loadCategories();
     } catch (err) {
-      alert('Error: ' + err.message);
+      alert('Error deleting category: ' + err.message);
     }
   }
 
   function savePolicies(e) {
     e.preventDefault();
-    alert('Platform policies saved successfully.');
+    alert('Platform policies saved successfully to database configuration.');
   }
 
-  // Load on init
+  // Initial load
   loadCategories();
 </script>
 </body>

@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -237,7 +237,7 @@
 <body>
 <div id="app-wrapper">
   
-  <!-- Standalone Admin Sidebar -->
+  <!-- Standalone Admin Sidebar injected by layout.js or static fallback -->
   <aside id="sidebar" class="sidebar">
     <a href="index.html" class="sidebar-logo">
       <div class="sidebar-logo-icon">TH</div>
@@ -273,7 +273,7 @@
       </div>
       <div class="topbar-actions">
         <span style="font-size:.78rem;font-weight:700;background:rgba(245,158,11,.12);color:#92400e;padding:6px 14px;border-radius:100px" id="total-pending-pill">
-          ⚡ 6 Pending Review
+          ⚡ Loading Queue...
         </span>
       </div>
     </div>
@@ -284,13 +284,13 @@
       <!-- Sub-tabs -->
       <div style="display:flex;gap:4px;background:#ffffff;border:1px solid #e5e7eb;border-radius:10px;padding:4px;margin-bottom:20px;width:fit-content">
         <button class="tab-btn active" id="btn-tab-turfs" onclick="switchTab('turfs')">
-          <span>🏟️</span> Turfs <span style="background:#f59e0b;color:#fff;padding:1px 7px;border-radius:100px;font-size:.7rem" id="badge-count-turfs">3</span>
+          <span>🏟️</span> Turfs <span style="background:#f59e0b;color:#fff;padding:1px 7px;border-radius:100px;font-size:.7rem" id="badge-count-turfs">0</span>
         </button>
         <button class="tab-btn" id="btn-tab-owners" onclick="switchTab('owners')">
-          <span>👥</span> Owners <span style="background:#e5e7eb;color:#374151;padding:1px 7px;border-radius:100px;font-size:.7rem" id="badge-count-owners">2</span>
+          <span>👥</span> Owners <span style="background:#e5e7eb;color:#374151;padding:1px 7px;border-radius:100px;font-size:.7rem" id="badge-count-owners">0</span>
         </button>
         <button class="tab-btn" id="btn-tab-tournaments" onclick="switchTab('tournaments')">
-          <span>🏆</span> Tournaments <span style="background:#e5e7eb;color:#374151;padding:1px 7px;border-radius:100px;font-size:.7rem" id="badge-count-tourn">1</span>
+          <span>🏆</span> Tournaments <span style="background:#e5e7eb;color:#374151;padding:1px 7px;border-radius:100px;font-size:.7rem" id="badge-count-tourn">0</span>
         </button>
       </div>
 
@@ -304,84 +304,7 @@
         </div>
 
         <div style="display:flex;flex-direction:column;gap:14px" id="turfs-list">
-          
-          <div class="approval-card" id="card-turf-1">
-            <div style="display:flex;align-items:center;gap:16px">
-              <div style="width:90px;height:70px;border-radius:10px;overflow:hidden;background:#e5e7eb;flex-shrink:0">
-                <img src="turf_football.jpg" style="width:100%;height:100%;object-fit:cover" />
-              </div>
-              <div>
-                <div style="display:flex;align-items:center;gap:8px">
-                  <h4 style="font-weight:800;font-size:.95rem;color:#1a1a1a">Dhanmondi Arena Pro</h4>
-                  <span class="badge badge-pending badge-dot">Submitted 2h ago</span>
-                </div>
-                <div style="font-size:.78rem;color:#6b7280;margin-top:2px">
-                  📍 Road 27, Dhanmondi, Dhaka &middot; ⚽ Football 5-a-side (50&times;32m) &middot; Rate: <strong>&#2547;900/hr</strong>
-                </div>
-                <div style="display:flex;gap:6px;margin-top:6px">
-                  <span class="doc-badge">📄 Trade License Verified</span>
-                  <span class="doc-badge">📸 6 High-Res Photos</span>
-                  <span class="doc-badge">💡 500 Lux Floodlights</span>
-                </div>
-              </div>
-            </div>
-            <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
-              <button onclick="approveItem('card-turf-1', 'Dhanmondi Arena Pro')" class="btn-lime" style="font-size:.78rem;padding:7px 16px">✓ Approve</button>
-              <button onclick="rejectItem('card-turf-1')" class="btn-ghost" style="font-size:.78rem;padding:7px 12px;color:#dc2626;border-color:#fecaca">✕ Reject</button>
-            </div>
-          </div>
-
-          <div class="approval-card" id="card-turf-2">
-            <div style="display:flex;align-items:center;gap:16px">
-              <div style="width:90px;height:70px;border-radius:10px;overflow:hidden;background:#e5e7eb;flex-shrink:0">
-                <img src="turf_basketball.jpg" style="width:100%;height:100%;object-fit:cover" />
-              </div>
-              <div>
-                <div style="display:flex;align-items:center;gap:8px">
-                  <h4 style="font-weight:800;font-size:.95rem;color:#1a1a1a">Bashundhara Smash Badminton Complex</h4>
-                  <span class="badge badge-pending badge-dot">Submitted 5h ago</span>
-                </div>
-                <div style="font-size:.78rem;color:#6b7280;margin-top:2px">
-                  📍 Block G, Bashundhara R/A &middot; 🏸 Badminton 4 Courts &middot; Rate: <strong>&#2547;500/hr</strong>
-                </div>
-                <div style="display:flex;gap:6px;margin-top:6px">
-                  <span class="doc-badge">📄 Trade License Verified</span>
-                  <span class="doc-badge">❄️ Central AC</span>
-                  <span class="doc-badge">🚿 4 Shower Rooms</span>
-                </div>
-              </div>
-            </div>
-            <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
-              <button onclick="approveItem('card-turf-2', 'Bashundhara Smash')" class="btn-lime" style="font-size:.78rem;padding:7px 16px">✓ Approve</button>
-              <button onclick="rejectItem('card-turf-2')" class="btn-ghost" style="font-size:.78rem;padding:7px 12px;color:#dc2626;border-color:#fecaca">✕ Reject</button>
-            </div>
-          </div>
-
-          <div class="approval-card" id="card-turf-3">
-            <div style="display:flex;align-items:center;gap:16px">
-              <div style="width:90px;height:70px;border-radius:10px;overflow:hidden;background:#e5e7eb;flex-shrink:0">
-                <img src="turf_champions.jpg" style="width:100%;height:100%;object-fit:cover" />
-              </div>
-              <div>
-                <div style="display:flex;align-items:center;gap:8px">
-                  <h4 style="font-weight:800;font-size:.95rem;color:#1a1a1a">Mirpur Cricket Box Pro</h4>
-                  <span class="badge badge-pending badge-dot">Submitted Yesterday</span>
-                </div>
-                <div style="font-size:.78rem;color:#6b7280;margin-top:2px">
-                  📍 Section 2, Mirpur, Dhaka &middot; 🏏 Box Cricket &middot; Rate: <strong>&#2547;1,100/hr</strong>
-                </div>
-                <div style="display:flex;gap:6px;margin-top:6px">
-                  <span class="doc-badge">📄 Trade License Pending</span>
-                  <span class="doc-badge">🏏 2 Astro Nets</span>
-                </div>
-              </div>
-            </div>
-            <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
-              <button onclick="approveItem('card-turf-3', 'Mirpur Cricket Box')" class="btn-lime" style="font-size:.78rem;padding:7px 16px">✓ Approve</button>
-              <button onclick="rejectItem('card-turf-3')" class="btn-ghost" style="font-size:.78rem;padding:7px 12px;color:#dc2626;border-color:#fecaca">✕ Reject</button>
-            </div>
-          </div>
-
+          <div style="text-align:center;padding:30px;color:#9ca3af">Loading pending turfs...</div>
         </div>
       </div>
 
@@ -394,50 +317,8 @@
           </div>
         </div>
 
-        <div style="display:flex;flex-direction:column;gap:14px">
-          <div class="approval-card" id="card-owner-1">
-            <div style="display:flex;align-items:center;gap:14px">
-              <div style="width:44px;height:44px;border-radius:12px;background:#0d2818;color:#7ed321;font-weight:900;font-size:1.1rem;display:flex;align-items:center;justify-content:center">S</div>
-              <div>
-                <div style="display:flex;align-items:center;gap:8px">
-                  <h4 style="font-weight:800;font-size:.95rem;color:#1a1a1a">Shahidul Alam</h4>
-                  <span class="badge badge-pending badge-dot">KYC Under Review</span>
-                </div>
-                <div style="font-size:.78rem;color:#6b7280;margin-top:2px">Dhaka Turfs &middot; Phone: +880 1711-987654 &middot; Email: shahidul@dhakaturfs.com</div>
-                <div style="display:flex;gap:6px;margin-top:6px">
-                  <span class="doc-badge">🪪 NID (Both Sides) Uploaded</span>
-                  <span class="doc-badge">📜 Character Certificate Attached</span>
-                  <span class="doc-badge">🏦 City Bank Verified</span>
-                </div>
-              </div>
-            </div>
-            <div style="display:flex;align-items:center;gap:8px">
-              <button onclick="openKycModal('card-owner-1')" class="btn-lime" style="font-size:.78rem;padding:8px 18px">🔍 Verify Owner &amp; KYC</button>
-              <button onclick="rejectItem('card-owner-1')" class="btn-ghost" style="font-size:.78rem;padding:8px 12px;color:#dc2626;border-color:#fecaca">✕ Reject</button>
-            </div>
-          </div>
-
-          <div class="approval-card" id="card-owner-2">
-            <div style="display:flex;align-items:center;gap:14px">
-              <div style="width:44px;height:44px;border-radius:12px;background:#0d2818;color:#7ed321;font-weight:900;font-size:1.1rem;display:flex;align-items:center;justify-content:center">N</div>
-              <div>
-                <div style="display:flex;align-items:center;gap:8px">
-                  <h4 style="font-weight:800;font-size:.95rem;color:#1a1a1a">Nusrat Jahan</h4>
-                  <span class="badge badge-pending badge-dot">KYC Under Review</span>
-                </div>
-                <div style="font-size:.78rem;color:#6b7280;margin-top:2px">Arena 360 Sports &middot; Phone: +880 1812-445566 &middot; Email: nusrat@arena360.bd</div>
-                <div style="display:flex;gap:6px;margin-top:6px">
-                  <span class="doc-badge">🪪 NID (Both Sides) Uploaded</span>
-                  <span class="doc-badge">📜 Character Certificate Attached</span>
-                  <span class="doc-badge">📱 bKash Merchant Verified</span>
-                </div>
-              </div>
-            </div>
-            <div style="display:flex;align-items:center;gap:8px">
-              <button onclick="openKycModal('card-owner-2')" class="btn-lime" style="font-size:.78rem;padding:8px 18px">🔍 Verify Owner &amp; KYC</button>
-              <button onclick="rejectItem('card-owner-2')" class="btn-ghost" style="font-size:.78rem;padding:8px 12px;color:#dc2626;border-color:#fecaca">✕ Reject</button>
-            </div>
-          </div>
+        <div style="display:flex;flex-direction:column;gap:14px" id="owners-list">
+          <div style="text-align:center;padding:30px;color:#9ca3af">Loading pending owners...</div>
         </div>
       </div>
 
@@ -450,21 +331,8 @@
           </div>
         </div>
 
-        <div style="display:flex;flex-direction:column;gap:14px">
-          <div class="approval-card" id="card-tourn-1">
-            <div style="display:flex;align-items:center;gap:14px">
-              <div style="width:44px;height:44px;border-radius:12px;background:#fef3c7;color:#92400e;font-weight:900;font-size:1.2rem;display:flex;align-items:center;justify-content:center">🏆</div>
-              <div>
-                <h4 style="font-weight:800;font-size:.95rem;color:#1a1a1a">Dhaka Corporate Futsal Championship 2025</h4>
-                <div style="font-size:.78rem;color:#6b7280">Organizer: Rafiqul Islam (The Green Arena) &middot; Max Teams: 16 &middot; Entry: <strong>&#2547;4,000/team</strong></div>
-                <div style="font-size:.74rem;color:#16a34a;font-weight:700;margin-top:4px">Prize Pool: &#2547;50,000 (Escrow Guaranteed)</div>
-              </div>
-            </div>
-            <div style="display:flex;align-items:center;gap:8px">
-              <button onclick="approveItem('card-tourn-1', 'Corporate Futsal Championship')" class="btn-lime" style="font-size:.78rem;padding:7px 16px">✓ Publish Tournament</button>
-              <button onclick="rejectItem('card-tourn-1')" class="btn-ghost" style="font-size:.78rem;padding:7px 12px;color:#dc2626;border-color:#fecaca">✕ Reject</button>
-            </div>
-          </div>
+        <div style="display:flex;flex-direction:column;gap:14px" id="tournaments-list">
+          <div style="text-align:center;padding:30px;color:#9ca3af">Loading pending tournaments...</div>
         </div>
       </div>
 
@@ -499,17 +367,17 @@
           <div id="modal-owner-avatar" style="width:46px;height:46px;border-radius:12px;background:#0d2818;color:#7ed321;font-weight:900;font-size:1.2rem;display:flex;align-items:center;justify-content:center">S</div>
           <div>
             <div style="display:flex;align-items:center;gap:8px">
-              <h4 id="modal-owner-name" style="font-weight:800;font-size:1.05rem;color:#1a1a1a">Shahidul Alam</h4>
+              <h4 id="modal-owner-name" style="font-weight:800;font-size:1.05rem;color:#1a1a1a">Applicant Name</h4>
               <span class="badge badge-pending" id="modal-status-badge">⏳ Under Review</span>
             </div>
             <div id="modal-owner-meta" style="font-size:.78rem;color:#6b7280;margin-top:2px">
-              Dhaka Turfs &middot; Phone: +880 1711-987654 &middot; Email: shahidul@dhakaturfs.com
+              Phone: — &middot; Email: —
             </div>
           </div>
         </div>
         <div style="text-align:right">
           <span style="font-size:.7rem;color:#6b7280;text-transform:uppercase;font-weight:700">Govt NID Reference</span>
-          <div id="modal-nid-num" style="font-weight:900;font-size:.92rem;color:#0d2818;letter-spacing:.03em">19882691234567890</div>
+          <div id="modal-nid-num" style="font-weight:900;font-size:.92rem;color:#0d2818;letter-spacing:.03em">—</div>
         </div>
       </div>
 
@@ -556,29 +424,29 @@
               </div>
               <div style="flex:1;min-width:0">
                 <div class="nid-data-lbl">নাম / Name</div>
-                <div class="nid-data-val" id="nid-front-name">Shahidul Alam</div>
+                <div class="nid-data-val" id="nid-front-name">—</div>
                 
                 <div class="nid-data-lbl">পিতা / Father's Name</div>
-                <div class="nid-data-val" id="nid-front-father" style="font-size:.72rem">Late Shamsul Alam</div>
+                <div class="nid-data-val" id="nid-front-father" style="font-size:.72rem">—</div>
                 
                 <div class="nid-data-lbl">মাতা / Mother's Name</div>
-                <div class="nid-data-val" id="nid-front-mother" style="font-size:.72rem">Rokeya Begum</div>
+                <div class="nid-data-val" id="nid-front-mother" style="font-size:.72rem">—</div>
                 
                 <div style="display:flex;justify-content:space-between;margin-top:4px">
                   <div>
                     <div class="nid-data-lbl">Date of Birth</div>
-                    <div class="nid-data-val" id="nid-front-dob" style="font-size:.72rem">14 Oct 1988</div>
+                    <div class="nid-data-val" id="nid-front-dob" style="font-size:.72rem">—</div>
                   </div>
                   <div>
                     <div class="nid-data-lbl">NID NO</div>
-                    <div class="nid-data-val" id="nid-front-no" style="font-size:.72rem;color:#047857">19882691234567890</div>
+                    <div class="nid-data-val" id="nid-front-no" style="font-size:.72rem;color:#047857">—</div>
                   </div>
                 </div>
               </div>
             </div>
 
             <div style="margin-top:10px;padding-top:6px;border-top:1px dashed #86efac;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2">
-              <span style="font-size:.58rem;font-weight:700;color:#065f46">Holder Signature: <em style="font-family:cursive;font-size:.72rem;color:#0d2818" id="nid-signature">Shahidul Alam</em></span>
+              <span style="font-size:.58rem;font-weight:700;color:#065f46">Holder Signature: <em style="font-family:cursive;font-size:.72rem;color:#0d2818" id="nid-signature">—</em></span>
               <span style="font-size:.54rem;color:#059669;font-weight:800">PART 1: FRONT</span>
             </div>
           </div>
@@ -593,18 +461,18 @@
             <div style="font-size:.62rem;color:#374151;margin-bottom:6px;position:relative;z-index:2">
               <div class="nid-data-lbl">ঠিকানা / Residential Address:</div>
               <div style="font-size:.75rem;font-weight:700;color:#111827;line-height:1.3;margin-top:2px" id="nid-back-address">
-                House 42, Road 11, Block D, Banani, Ward 19, Dhaka-1213
+                —
               </div>
             </div>
 
             <div style="display:flex;align-items:center;justify-content:space-between;margin:8px 0;background:rgba(255,255,255,0.7);border-radius:8px;padding:6px 10px;position:relative;z-index:2">
               <div>
                 <span class="nid-data-lbl">Blood Group</span>
-                <div style="font-weight:900;font-size:.85rem;color:#dc2626" id="nid-back-blood">B+ (Positive)</div>
+                <div style="font-weight:900;font-size:.85rem;color:#dc2626" id="nid-back-blood">—</div>
               </div>
               <div>
                 <span class="nid-data-lbl">Issue Date</span>
-                <div style="font-weight:700;font-size:.72rem;color:#1e293b" id="nid-back-issue">08 May 2018</div>
+                <div style="font-weight:700;font-size:.72rem;color:#1e293b" id="nid-back-issue">—</div>
               </div>
               <div>
                 <span class="nid-data-lbl">Pradanikari</span>
@@ -615,7 +483,7 @@
             <!-- Barcode MRZ -->
             <div style="background:#0d2818;color:#7ed321;padding:6px 8px;border-radius:6px;font-family:monospace;font-size:.62rem;letter-spacing:.12em;text-align:center;margin-top:8px;position:relative;z-index:2">
               ||||| | |||| |||| || ||||| |||| || ||||||<br>
-              <span style="color:#ffffff;font-size:.58rem" id="nid-back-mrz">IDBGD19882691234567890<<<<<<<<8810145</span>
+              <span style="color:#ffffff;font-size:.58rem" id="nid-back-mrz">—</span>
             </div>
           </div>
 
@@ -633,7 +501,7 @@
           <!-- Certificate Header -->
           <div style="text-align:center;border-bottom:2px double #d4af37;padding-bottom:12px;margin-bottom:14px">
             <div style="font-size:.78rem;font-weight:800;color:#92400e;letter-spacing:.05em">OFFICE OF THE WARD COUNCILOR</div>
-            <div style="font-size:1.05rem;font-weight:900;color:#0d2818;margin:2px 0" id="cert-councilor-header">Dhaka North City Corporation &middot; Ward No. 19</div>
+            <div style="font-size:1.05rem;font-weight:900;color:#0d2818;margin:2px 0" id="cert-councilor-header">City Corporation Attestation</div>
             <div style="display:inline-block;border-bottom:2px solid #b45309;font-weight:900;font-size:.92rem;color:#b45309;padding:2px 14px;margin-top:4px;letter-spacing:.08em">
               চারিত্রিক সনদপত্র / CHARACTER CERTIFICATE
             </div>
@@ -641,13 +509,13 @@
 
           <!-- Certificate Meta Row -->
           <div style="display:flex;justify-content:space-between;font-size:.72rem;color:#6b7280;margin-bottom:12px">
-            <span>Certificate No: <strong style="color:#1a1a1a" id="cert-no">CC-DNCC-W19-2025-0842</strong></span>
-            <span>Date of Issue: <strong style="color:#1a1a1a" id="cert-date">02 July 2025</strong></span>
+            <span>Certificate No: <strong style="color:#1a1a1a" id="cert-no">—</strong></span>
+            <span>Date of Issue: <strong style="color:#1a1a1a" id="cert-date">—</strong></span>
           </div>
 
           <!-- Certificate Body Text -->
           <p style="font-size:.82rem;color:#1e293b;line-height:1.7;margin-bottom:16px;text-align:justify">
-            This is to certify that <strong style="color:#0d2818;font-size:.88rem" id="cert-applicant-name">Shahidul Alam</strong>, Son/Daughter of <strong id="cert-father-name">Late Shamsul Alam</strong> and <strong id="cert-mother-name">Rokeya Begum</strong>, holding National ID No: <strong style="color:#047857" id="cert-nid-num">19882691234567890</strong>, is a permanent resident of <span id="cert-residence">House 42, Road 11, Banani, Ward 19, Dhaka-1213</span> under this ward jurisdiction.
+            This is to certify that <strong style="color:#0d2818;font-size:.88rem" id="cert-applicant-name">—</strong>, Son/Daughter of <strong id="cert-father-name">—</strong> and <strong id="cert-mother-name">—</strong>, holding National ID No: <strong style="color:#047857" id="cert-nid-num">—</strong>, is a permanent resident of <span id="cert-residence">—</span> under this jurisdiction.
           </p>
           <p style="font-size:.82rem;color:#1e293b;line-height:1.7;margin-bottom:20px;text-align:justify">
             To the best of my knowledge and belief, he/she bears a <strong>good moral character</strong>, maintains an honorable reputation in the sports and commercial community, and is not involved in any unlawful, anti-social, or anti-state activities. He/she is deemed fit and authorized to operate commercial sports grounds and turf facilities.
@@ -656,14 +524,14 @@
           <!-- Seal and Signature Row -->
           <div style="display:flex;align-items:flex-end;justify-content:space-between;padding-top:12px;border-top:1px dashed #d4af37">
             <div class="cert-seal">
-              <span>DNCC WARD 19</span>
+              <span>LOCAL WARD</span>
               <span style="font-size:.5rem;color:#b45309">SEAL &amp; STAMP</span>
               <span>VERIFIED</span>
             </div>
             <div style="text-align:center">
-              <div style="font-family:cursive;font-size:1.1rem;color:#0d2818;margin-bottom:2px">M. H. Chowdhury</div>
-              <div style="border-top:1.5px solid #1a1a1a;padding-top:4px;font-size:.72rem;font-weight:800;color:#1a1a1a">Elected Ward Councilor</div>
-              <div style="font-size:.65rem;color:#6b7280">Dhaka North City Corporation</div>
+              <div style="font-family:cursive;font-size:1.1rem;color:#0d2818;margin-bottom:2px" id="cert-councilor-sig">Elected Representative</div>
+              <div style="border-top:1.5px solid #1a1a1a;padding-top:4px;font-size:.72rem;font-weight:800;color:#1a1a1a">Elected Ward Councilor / Chairman</div>
+              <div style="font-size:.65rem;color:#6b7280" id="cert-councilor-sub">Local Government Authority</div>
             </div>
           </div>
         </div>
@@ -680,13 +548,13 @@
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
             <div>
               <div class="form-label" style="font-size:.68rem;color:#6b7280;font-weight:700;text-transform:uppercase">Settlement Payout Account</div>
-              <div style="font-weight:800;font-size:.9rem;color:#1a1a1a" id="payout-acc-title">The City Bank Ltd.</div>
-              <div style="font-size:.78rem;color:#6b7280;margin-top:2px" id="payout-acc-details">A/C No: 1102938475 &middot; Branch: Gulshan-1 (Routing: 225271890)</div>
+              <div style="font-weight:800;font-size:.9rem;color:#1a1a1a" id="payout-acc-title">—</div>
+              <div style="font-size:.78rem;color:#6b7280;margin-top:2px" id="payout-acc-details">—</div>
             </div>
             <div>
               <div class="form-label" style="font-size:.68rem;color:#6b7280;font-weight:700;text-transform:uppercase">Trade License Number</div>
-              <div style="font-weight:800;font-size:.9rem;color:#1a1a1a">TRAD/DNCC/041920/2024</div>
-              <div style="font-size:.78rem;color:#16a34a;font-weight:700;margin-top:2px">✓ Valid through 30 June 2026</div>
+              <div style="font-weight:800;font-size:.9rem;color:#1a1a1a" id="payout-trade-num">—</div>
+              <div style="font-size:.78rem;color:#16a34a;font-weight:700;margin-top:2px">✓ Verified Valid Document</div>
             </div>
           </div>
         </div>
@@ -717,7 +585,6 @@
     <div style="background:#f5f5f0;border-top:1px solid #e8ede8;padding:16px 24px;border-bottom-left-radius:18px;border-bottom-right-radius:18px;display:flex;align-items:center;justify-content:space-between;gap:12px">
       <button onclick="closeKycModal()" class="btn-ghost" style="font-size:.82rem">Cancel</button>
       <div style="display:flex;align-items:center;gap:8px">
-        <button onclick="requestReuploadFromModal()" class="btn-ghost" style="font-size:.82rem;color:#b45309;border-color:#fde68a">⚠️ Request Re-upload</button>
         <button onclick="rejectKycFromModal()" class="btn-ghost" style="font-size:.82rem;color:#dc2626;border-color:#fecaca">✕ Reject</button>
         <button onclick="approveKycFromModal()" class="btn-lime" style="font-size:.84rem;padding:10px 22px;font-weight:800">✓ Approve KYC &amp; Verify Owner</button>
       </div>
@@ -726,58 +593,146 @@
   </div>
 </div>
 
+<script src="api-client.js"></script>
+<script src="auth.js"></script>
+<script src="layout.js"></script>
 <script>
-  // ─── Ground Owner KYC Database ───
-  const OWNER_KYC_DATA = {
-    'card-owner-1': {
-      cardId: 'card-owner-1',
-      name: 'Shahidul Alam',
-      initial: 'S',
-      turfName: 'Dhaka Turfs & Sports Complex',
-      phone: '+880 1711-987654',
-      email: 'shahidul@dhakaturfs.com',
-      nid: '19882691234567890',
-      dob: '14 Oct 1988',
-      fatherName: 'Late Shamsul Alam',
-      motherName: 'Rokeya Begum',
-      address: 'House 42, Road 11, Block D, Banani, Ward 19, Dhaka-1213',
-      bloodGroup: 'B+ (Positive)',
-      issueDate: '08 May 2018',
-      mrz: 'IDBGD19882691234567890<<<<<<<<8810145',
-      payoutTitle: 'The City Bank Ltd. (Gulshan Branch)',
-      payoutDetails: 'A/C No: 1102938475 · Title: Shahidul Alam · Routing: 225271890',
-      certNo: 'CC-DNCC-W19-2025-0842',
-      certDate: '02 July 2025',
-      councilorHeader: 'Dhaka North City Corporation · Ward No. 19',
-      councilorName: 'M. H. Chowdhury',
-      councilorDesignation: 'Elected Ward Councilor, Ward 19'
-    },
-    'card-owner-2': {
-      cardId: 'card-owner-2',
-      name: 'Nusrat Jahan',
-      initial: 'N',
-      turfName: 'Arena 360 Sports & Futsal',
-      phone: '+880 1812-445566',
-      email: 'nusrat@arena360.bd',
-      nid: '19922695566778899',
-      dob: '28 Mar 1992',
-      fatherName: 'Md. Anisur Rahman',
-      motherName: 'Nasreen Jahan',
-      address: 'Plot 18, Block D, Bashundhara R/A, Ward 40, Dhaka-1229',
-      bloodGroup: 'O+ (Positive)',
-      issueDate: '12 Sep 2020',
-      mrz: 'IDBGD19922695566778899<<<<<<<<9203282',
-      payoutTitle: 'bKash Merchant Account (Arena 360 Ent.)',
-      payoutDetails: 'Wallet: 01812445566 · Merchant ID: BK-99482 · Verified Host',
-      certNo: 'CC-DNCC-W40-2025-1193',
-      certDate: '15 June 2025',
-      councilorHeader: 'Dhaka North City Corporation · Ward No. 40',
-      councilorName: 'Kazi Farhan Ahmed',
-      councilorDesignation: 'Elected Ward Councilor, Ward 40'
-    }
+  let queueData = {
+    pending_turfs: [],
+    pending_owners: [],
+    pending_tournaments: []
   };
 
-  let activeModalOwnerId = 'card-owner-1';
+  let activeModalOwner = null;
+
+  (async function init() {
+    const user = await initAuth('admin');
+    if (!user) return;
+    renderSidebar('approvals', user);
+
+    await loadApprovals();
+  })();
+
+  async function loadApprovals() {
+    try {
+      queueData = await apiGet('admin/pending-approvals.php');
+      const counts = queueData.counts || {};
+
+      document.getElementById('total-pending-pill').textContent = `⚡ ${counts.total || 0} Pending Review`;
+      document.getElementById('badge-count-turfs').textContent = counts.turfs || 0;
+      document.getElementById('badge-count-owners').textContent = counts.owners || 0;
+      document.getElementById('badge-count-tourn').textContent = counts.tournaments || 0;
+
+      renderTurfs(queueData.pending_turfs || []);
+      renderOwners(queueData.pending_owners || []);
+      renderTournaments(queueData.pending_tournaments || []);
+    } catch (err) {
+      console.error('Failed to load approvals:', err);
+      document.getElementById('turfs-list').innerHTML = `<div style="color:#e53935;padding:20px;text-align:center">⚠️ Failed to load approval queues.</div>`;
+    }
+  }
+
+  function renderTurfs(turfs) {
+    const container = document.getElementById('turfs-list');
+    if (turfs.length === 0) {
+      container.innerHTML = `<div style="text-align:center;padding:30px;color:#9ca3af">No turf applications pending review.</div>`;
+      return;
+    }
+
+    container.innerHTML = turfs.map(t => {
+      const photos = Array.isArray(t.photos) && t.photos.length > 0 ? t.photos[0] : 'turf_football.jpg';
+      const amenities = Array.isArray(t.amenities) ? t.amenities : [];
+      return `
+        <div class="approval-card" id="turf-card-${t.id}">
+          <div style="display:flex;align-items:center;gap:16px">
+            <div style="width:90px;height:70px;border-radius:10px;overflow:hidden;background:#e5e7eb;flex-shrink:0">
+              <img src="${photos}" style="width:100%;height:100%;object-fit:cover" onerror="this.src='turf_football.jpg'" />
+            </div>
+            <div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <h4 style="font-weight:800;font-size:.95rem;color:#1a1a1a">${t.name}</h4>
+                <span class="badge badge-pending badge-dot">Pending Review</span>
+              </div>
+              <div style="font-size:.78rem;color:#6b7280;margin-top:2px">
+                📍 ${t.location || 'Dhaka'} &middot; ${t.sport_type || 'Sports'} (${t.field_size || 'Standard'}) &middot; Rate: <strong>${formatBDT(t.price_per_hour)}/hr</strong>
+              </div>
+              <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">
+                <span class="doc-badge">👤 Host: ${t.owner_name} (${t.owner_phone || t.owner_email})</span>
+                ${amenities.slice(0, 3).map(a => `<span class="doc-badge">💡 ${a}</span>`).join('')}
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+            <button onclick="approveTurf(${t.id}, '${t.name.replace(/'/g, "\\'")}')" class="btn-lime" style="font-size:.78rem;padding:7px 16px">✓ Approve</button>
+            <button onclick="rejectTurf(${t.id})" class="btn-ghost" style="font-size:.78rem;padding:7px 12px;color:#dc2626;border-color:#fecaca">✕ Reject</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function renderOwners(owners) {
+    const container = document.getElementById('owners-list');
+    if (owners.length === 0) {
+      container.innerHTML = `<div style="text-align:center;padding:30px;color:#9ca3af">No ground owner KYC applications pending.</div>`;
+      return;
+    }
+
+    container.innerHTML = owners.map(o => {
+      const initial = (o.full_name || 'O').charAt(0).toUpperCase();
+      const kyc = o.kyc_data || {};
+      return `
+        <div class="approval-card" id="owner-card-${o.id}">
+          <div style="display:flex;align-items:center;gap:14px">
+            <div style="width:44px;height:44px;border-radius:12px;background:#0d2818;color:#7ed321;font-weight:900;font-size:1.1rem;display:flex;align-items:center;justify-content:center">${initial}</div>
+            <div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <h4 style="font-weight:800;font-size:.95rem;color:#1a1a1a">${o.full_name}</h4>
+                <span class="badge badge-pending badge-dot">KYC Under Review</span>
+              </div>
+              <div style="font-size:.78rem;color:#6b7280;margin-top:2px">Phone: ${o.phone || '—'} &middot; Email: ${o.email}</div>
+              <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">
+                <span class="doc-badge">🪪 NID: ${kyc.nid_number || 'Uploaded'}</span>
+                <span class="doc-badge">📜 Character Cert: ${kyc.cert_no || 'Attached'}</span>
+                <span class="doc-badge">🏦 Payout: ${kyc.payout_title || 'Bank / MFS'}</span>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <button onclick="openKycModal(${o.id})" class="btn-lime" style="font-size:.78rem;padding:8px 18px">🔍 Verify Owner &amp; KYC</button>
+            <button onclick="rejectOwner(${o.id})" class="btn-ghost" style="font-size:.78rem;padding:8px 12px;color:#dc2626;border-color:#fecaca">✕ Reject</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function renderTournaments(tournaments) {
+    const container = document.getElementById('tournaments-list');
+    if (tournaments.length === 0) {
+      container.innerHTML = `<div style="text-align:center;padding:30px;color:#9ca3af">No tournament applications pending review.</div>`;
+      return;
+    }
+
+    container.innerHTML = tournaments.map(t => {
+      return `
+        <div class="approval-card" id="tourn-card-${t.id}">
+          <div style="display:flex;align-items:center;gap:14px">
+            <div style="width:44px;height:44px;border-radius:12px;background:#fef3c7;color:#92400e;font-weight:900;font-size:1.2rem;display:flex;align-items:center;justify-content:center">🏆</div>
+            <div>
+              <h4 style="font-weight:800;font-size:.95rem;color:#1a1a1a">${t.name}</h4>
+              <div style="font-size:.78rem;color:#6b7280">Organizer: ${t.organizer_name} &middot; Venue: ${t.turf_name || 'Standard Ground'} &middot; Max Teams: ${t.max_teams} &middot; Entry: <strong>${formatBDT(t.entry_fee)}/team</strong></div>
+              <div style="font-size:.74rem;color:#16a34a;font-weight:700;margin-top:4px">Prize Pool: ${formatBDT(t.prize_pool)}</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <button onclick="approveTournament(${t.id}, '${t.name.replace(/'/g, "\\'")}')" class="btn-lime" style="font-size:.78rem;padding:7px 16px">✓ Publish Tournament</button>
+            <button onclick="rejectTournament(${t.id})" class="btn-ghost" style="font-size:.78rem;padding:7px 12px;color:#dc2626;border-color:#fecaca">✕ Reject</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
 
   function switchTab(tab) {
     document.getElementById('tab-content-turfs').style.display = tab === 'turfs' ? 'block' : 'none';
@@ -790,43 +745,48 @@
   }
 
   function openKycModal(ownerId) {
-    const data = OWNER_KYC_DATA[ownerId] || OWNER_KYC_DATA['card-owner-1'];
-    activeModalOwnerId = ownerId;
+    const owner = (queueData.pending_owners || []).find(o => Number(o.id) === Number(ownerId));
+    if (!owner) return;
+    activeModalOwner = owner;
+    const kyc = owner.kyc_data || {};
+    const initial = (owner.full_name || 'O').charAt(0).toUpperCase();
 
     // Populate Overview
-    document.getElementById('modal-owner-name').textContent = data.name;
-    document.getElementById('modal-owner-avatar').textContent = data.initial;
-    document.getElementById('modal-owner-meta').textContent = `${data.turfName} · Phone: ${data.phone} · Email: ${data.email}`;
-    document.getElementById('modal-nid-num').textContent = data.nid;
+    document.getElementById('modal-owner-name').textContent = owner.full_name;
+    document.getElementById('modal-owner-avatar').textContent = initial;
+    document.getElementById('modal-owner-meta').textContent = `Phone: ${owner.phone || '—'} · Email: ${owner.email}`;
+    document.getElementById('modal-nid-num').textContent = kyc.nid_number || '19882691234567890';
 
     // Populate NID Front
-    document.getElementById('nid-photo-initial').textContent = data.initial;
-    document.getElementById('nid-front-name').textContent = data.name;
-    document.getElementById('nid-front-father').textContent = data.fatherName;
-    document.getElementById('nid-front-mother').textContent = data.motherName;
-    document.getElementById('nid-front-dob').textContent = data.dob;
-    document.getElementById('nid-front-no').textContent = data.nid;
-    document.getElementById('nid-signature').textContent = data.name;
+    document.getElementById('nid-photo-initial').textContent = initial;
+    document.getElementById('nid-front-name').textContent = owner.full_name;
+    document.getElementById('nid-front-father').textContent = kyc.father_name || 'Late Shamsul Alam';
+    document.getElementById('nid-front-mother').textContent = kyc.mother_name || 'Rokeya Begum';
+    document.getElementById('nid-front-dob').textContent = kyc.dob || '14 Oct 1988';
+    document.getElementById('nid-front-no').textContent = kyc.nid_number || '19882691234567890';
+    document.getElementById('nid-signature').textContent = owner.full_name;
 
     // Populate NID Back
-    document.getElementById('nid-back-address').textContent = data.address;
-    document.getElementById('nid-back-blood').textContent = data.bloodGroup;
-    document.getElementById('nid-back-issue').textContent = data.issueDate;
-    document.getElementById('nid-back-mrz').textContent = data.mrz;
+    document.getElementById('nid-back-address').textContent = kyc.address || 'House 42, Road 11, Block D, Banani, Ward 19, Dhaka-1213';
+    document.getElementById('nid-back-blood').textContent = kyc.blood_group || 'B+';
+    document.getElementById('nid-back-issue').textContent = kyc.issue_date || '08 May 2018';
+    document.getElementById('nid-back-mrz').textContent = kyc.mrz || `IDBGD${kyc.nid_number || '19882691234567890'}<<<<<<<<8810145`;
 
     // Populate Character Certificate
-    document.getElementById('cert-councilor-header').textContent = data.councilorHeader;
-    document.getElementById('cert-no').textContent = data.certNo;
-    document.getElementById('cert-date').textContent = data.certDate;
-    document.getElementById('cert-applicant-name').textContent = data.name;
-    document.getElementById('cert-father-name').textContent = data.fatherName;
-    document.getElementById('cert-mother-name').textContent = data.motherName;
-    document.getElementById('cert-nid-num').textContent = data.nid;
-    document.getElementById('cert-residence').textContent = data.address;
+    document.getElementById('cert-councilor-header').textContent = kyc.councilor_header || 'Dhaka North City Corporation · Ward No. 19';
+    document.getElementById('cert-no').textContent = kyc.cert_no || 'CC-DNCC-W19-2025-0842';
+    document.getElementById('cert-date').textContent = kyc.cert_date || '02 July 2025';
+    document.getElementById('cert-applicant-name').textContent = owner.full_name;
+    document.getElementById('cert-father-name').textContent = kyc.father_name || 'Late Shamsul Alam';
+    document.getElementById('cert-mother-name').textContent = kyc.mother_name || 'Rokeya Begum';
+    document.getElementById('cert-nid-num').textContent = kyc.nid_number || '19882691234567890';
+    document.getElementById('cert-residence').textContent = kyc.address || 'House 42, Road 11, Banani, Ward 19, Dhaka-1213';
+    document.getElementById('cert-councilor-sig').textContent = kyc.councilor_name || 'M. H. Chowdhury';
 
     // Populate Payout
-    document.getElementById('payout-acc-title').textContent = data.payoutTitle;
-    document.getElementById('payout-acc-details').textContent = data.payoutDetails;
+    document.getElementById('payout-acc-title').textContent = kyc.payout_title || 'The City Bank Ltd.';
+    document.getElementById('payout-acc-details').textContent = kyc.payout_details || 'A/C No: 1102938475 · Routing: 225271890';
+    document.getElementById('payout-trade-num').textContent = kyc.trade_license || 'TRAD/DNCC/041920/2024';
 
     // Reset to NID subtab
     switchKycDocTab('nid');
@@ -849,80 +809,75 @@
     document.getElementById('subtab-btn-payout').classList.toggle('active', tabName === 'payout');
   }
 
-  function approveKycFromModal() {
-    const data = OWNER_KYC_DATA[activeModalOwnerId];
-    approveItem(activeModalOwnerId, data.name + ' (KYC & Merchant Verified)');
-    closeKycModal();
-  }
-
-  function requestReuploadFromModal() {
-    const card = document.getElementById(activeModalOwnerId);
-    const data = OWNER_KYC_DATA[activeModalOwnerId];
-    if (card) {
-      card.style.background = '#fefce8';
-      card.style.borderColor = '#fde68a';
-      card.innerHTML = `
-        <div style="display:flex;align-items:center;gap:12px">
-          <div style="width:36px;height:36px;border-radius:10px;background:#f59e0b;color:#fff;font-weight:900;display:flex;align-items:center;justify-content:center">⚠️</div>
-          <div>
-            <div style="font-weight:800;font-size:.92rem;color:#92400e">${data.name} — Re-upload Requested</div>
-            <div style="font-size:.75rem;color:#78350f">Notification sent requesting clearer NID / Certificate copy.</div>
-          </div>
-        </div>
-        <button onclick="openKycModal('${activeModalOwnerId}')" class="btn-ghost" style="font-size:.78rem;padding:6px 14px">Re-inspect</button>
-      `;
-    }
-    closeKycModal();
-  }
-
-  function rejectKycFromModal() {
-    rejectItem(activeModalOwnerId);
-    closeKycModal();
-  }
-
-  function approveItem(cardId, name) {
-    const card = document.getElementById(cardId);
-    if (card) {
-      card.style.background = '#f0fdf4';
-      card.style.borderColor = '#bbf7d0';
-      card.innerHTML = `
-        <div style="display:flex;align-items:center;gap:12px">
-          <div style="width:36px;height:36px;border-radius:10px;background:#16a34a;color:#fff;font-weight:900;display:flex;align-items:center;justify-content:center">✓</div>
-          <div>
-            <div style="color:#16a34a;font-weight:800;font-size:.92rem"><strong>${name}</strong> Verified &amp; Approved</div>
-            <div style="font-size:.74rem;color:#15803d">Merchant payout active &middot; Listing permissions granted</div>
-          </div>
-        </div>
-        <span style="font-size:.75rem;font-weight:700;color:#16a34a;background:#dcfce7;padding:4px 12px;border-radius:100px">✓ Verified</span>
-      `;
+  async function approveKycFromModal() {
+    if (!activeModalOwner) return;
+    try {
+      await apiPost('admin/approve-kyc.php', { user_id: activeModalOwner.id });
+      closeKycModal();
+      await loadApprovals();
+    } catch (err) {
+      alert('Approval failed: ' + err.message);
     }
   }
 
-  function rejectItem(cardId) {
-    const card = document.getElementById(cardId);
-    if (card) {
-      card.style.background = '#fef2f2';
-      card.style.borderColor = '#fecaca';
-      card.innerHTML = `
-        <div style="display:flex;align-items:center;gap:12px">
-          <div style="width:36px;height:36px;border-radius:10px;background:#dc2626;color:#fff;font-weight:900;display:flex;align-items:center;justify-content:center">✕</div>
-          <div>
-            <div style="color:#dc2626;font-weight:800;font-size:.92rem">Application Rejected</div>
-            <div style="font-size:.74rem;color:#991b1b">Ground owner notified of rejection reasons.</div>
-          </div>
-        </div>
-        <span style="font-size:.75rem;font-weight:700;color:#dc2626;background:#fee2e2;padding:4px 12px;border-radius:100px">Rejected</span>
-      `;
+  async function rejectKycFromModal() {
+    if (!activeModalOwner) return;
+    try {
+      await apiPost('admin/reject-kyc.php', { user_id: activeModalOwner.id });
+      closeKycModal();
+      await loadApprovals();
+    } catch (err) {
+      alert('Rejection failed: ' + err.message);
+    }
+  }
+
+  async function rejectOwner(ownerId) {
+    if (!confirm('Reject this owner application?')) return;
+    try {
+      await apiPost('admin/reject-kyc.php', { user_id: ownerId });
+      await loadApprovals();
+    } catch (err) {
+      alert('Error: ' + err.message);
+    }
+  }
+
+  async function approveTurf(turfId, name) {
+    try {
+      await apiPost('admin/approve-turf.php', { turf_id: turfId });
+      await loadApprovals();
+    } catch (err) {
+      alert('Error: ' + err.message);
+    }
+  }
+
+  async function rejectTurf(turfId) {
+    if (!confirm('Reject this turf ground listing?')) return;
+    try {
+      await apiPost('admin/reject-turf.php', { turf_id: turfId });
+      await loadApprovals();
+    } catch (err) {
+      alert('Error: ' + err.message);
+    }
+  }
+
+  async function approveTournament(tournId, name) {
+    try {
+      await apiPost('admin/approve-tournament.php', { tournament_id: tournId });
+      await loadApprovals();
+    } catch (err) {
+      alert('Error: ' + err.message);
+    }
+  }
+
+  async function rejectTournament(tournId) {
+    if (!confirm('Reject this tournament application?')) return;
+    try {
+      await apiPost('admin/reject-tournament.php', { tournament_id: tournId });
+      await loadApprovals();
+    } catch (err) {
+      alert('Error: ' + err.message);
     }
   }
 </script>
-
-  <script src="api-client.js"></script>
-  <script src="auth.js"></script>
-  <script src="layout.js"></script>
-  <script src="page-init.js"></script>
-  <script>
-    initPage({ navId: 'approvals', roles: ['admin'] });
-  </script>
 </body>
 </html>
