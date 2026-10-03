@@ -680,7 +680,7 @@
         <div>
           <div style="font-size:.7rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.04em">Merchant: TurfHub Bangladesh Ltd.</div>
           <div style="font-weight:800;font-size:.95rem;color:#0f172a;margin-top:2px" id="ssl-summary-turf">The Green Arena</div>
-          <div style="font-size:.76rem;color:#64748b" id="ssl-summary-slot">Sat, 26 Jul 2025 · 6:00 PM – 7:00 PM</div>
+          <div style="font-size:.76rem;color:#64748b" id="ssl-summary-slot">Select a date and time slot</div>
         </div>
         <div style="text-align:right">
           <div style="font-size:.7rem;font-weight:700;color:#64748b;text-transform:uppercase">Total Amount</div>
@@ -824,11 +824,16 @@
     </div>
   </div>
 
+  <script src="api-client.js"></script>
+  <script src="auth.js"></script>
+  <script src="layout.js"></script>
+  <script src="page-init.js"></script>
+
   <script>
-    // Database of Turfs
-    const TURFS = [
+    // Fallback seed turfs if backend is unreachable
+    let TURFS = [
       {
-        id: 'green-arena',
+        id: 1,
         name: 'The Green Arena',
         sport: 'Football',
         type: 'Outdoor 5-a-side',
@@ -846,10 +851,9 @@
         ownerAvatar: 'R',
         about: "Dhaka's premier 5-a-side and 7-a-side football ground, built with FIFA-certified artificial grass and rubber infill. Features high-power LED floodlights for seamless evening matches, full referee support, and an on-site sports café.",
         images: [
-          'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&h=450&fit=crop&auto=format',
-          'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=800&h=450&fit=crop&auto=format',
-          'https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=800&h=450&fit=crop&auto=format',
-          'https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=800&h=450&fit=crop&auto=format'
+          'turf_football.jpg',
+          'turf_champions.jpg',
+          'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&h=450&fit=crop&auto=format'
         ],
         amenities: [
           '💡 High-Output LED Floodlights',
@@ -862,102 +866,66 @@
         bookedSlots: ['8:00 AM', '9:00 AM', '12:00 PM', '3:00 PM', '4:00 PM', '7:00 PM', '8:00 PM']
       },
       {
-        id: 'court-pro',
-        name: 'Court Pro Indoor Arena',
-        sport: 'Basketball',
-        type: 'Indoor Multi-Sport',
+        id: 2,
+        name: 'Champions Ground',
+        sport: 'Football',
+        type: 'Outdoor 7-a-side',
         location: 'Banani, Dhaka',
         fullAddress: 'Road 11, Block D, Banani, Dhaka 1213',
-        rating: 4.9,
+        rating: 4.5,
         reviewsCount: '94 reviews',
-        price: 600,
+        price: 1200,
         timing: '7:00 AM – 10:00 PM',
-        dimensions: '28 × 15 m',
-        surface: 'Hardwood Maple Flooring',
-        capacity: '10 vs 10 Max',
+        dimensions: '75 × 50 m',
+        surface: 'Natural Grass',
+        capacity: '14 vs 14 Max',
         light: '600 Lux Diffused LED',
-        ownerName: 'Zahid Karim',
-        ownerAvatar: 'Z',
-        about: 'State-of-the-art climate-controlled indoor arena with FIBA-regulation hardwood courts. Perfect for competitive basketball and badminton tournaments with high-speed air conditioning and electronic scoreboards.',
+        ownerName: 'Rafiqul Islam',
+        ownerAvatar: 'R',
+        about: 'Natural grass stadium turf perfect for competitive 7-a-side and 11-a-side matches, with professional player galleries, showers, and match recording facilities.',
         images: [
-          'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&h=450&fit=crop&auto=format',
-          'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800&h=450&fit=crop&auto=format',
-          'https://images.unsplash.com/photo-1519766304817-4f37bda74a29?w=800&h=450&fit=crop&auto=format',
-          'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&h=450&fit=crop&auto=format'
+          'turf_champions.jpg',
+          'turf_football.jpg'
         ],
         amenities: [
-          '❄️ Central Air-Conditioning',
-          '🏀 Spalding Regulation Hoops',
-          '🚿 Hot Water Showers',
-          '⏱️ Digital Shot Clocks',
-          '🥤 Energy Drinks Bar'
+          '🏟️ Gallery Seating',
+          '💡 High-Power LED Floodlights',
+          '🚿 Hot Showers & Locker Rooms',
+          '📹 Match Video Recording',
+          '🩹 On-site First Aid'
         ],
         bookedSlots: ['10:00 AM', '11:00 AM', '2:00 PM', '6:00 PM', '9:00 PM']
       },
       {
-        id: 'champions-field',
-        name: 'Champions Field Stadium',
-        sport: 'Cricket',
-        type: 'Outdoor Turf Box',
-        location: 'Mirpur, Dhaka',
-        fullAddress: 'Section 2, Mirpur Stadium Road, Dhaka 1216',
-        rating: 4.7,
+        id: 3,
+        name: 'Thunder Court',
+        sport: 'Basketball',
+        type: 'Indoor Hardwood',
+        location: 'Dhanmondi, Dhaka',
+        fullAddress: 'Road 27, Dhanmondi, Dhaka 1209',
+        rating: 4.2,
         reviewsCount: '86 reviews',
-        price: 1200,
+        price: 600,
         timing: '6:00 AM – 12:00 AM',
-        dimensions: '80 × 50 m',
-        surface: 'High-Density Hybrid Astro',
-        capacity: '16 vs 16 Max',
+        dimensions: '28 × 15 m',
+        surface: 'Hardwood Maple Flooring',
+        capacity: '10 vs 10 Max',
         light: '750 Lux Broadcast LED',
-        ownerName: 'Tamim Chowdhury',
-        ownerAvatar: 'T',
-        about: 'Large-format box cricket and football facility with full netting enclosure and tournament-grade pitch bounce. Features spectator pavilions and professional bowling machines.',
+        ownerName: 'Rafiqul Islam',
+        ownerAvatar: 'R',
+        about: 'Indoor hardwood court facility with climate control, electronic scoreboards, and professional FIBA hoops.',
         images: [
-          'https://images.unsplash.com/photo-1624880357913-a8539238245b?w=800&h=450&fit=crop&auto=format',
-          'https://images.unsplash.com/photo-1531415074868-036b1c57e3ce?w=800&h=450&fit=crop&auto=format',
-          'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=800&h=450&fit=crop&auto=format',
-          'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&h=450&fit=crop&auto=format'
+          'turf_basketball.jpg',
+          'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&h=450&fit=crop&auto=format'
         ],
         amenities: [
-          '🏏 Practice Bowling Machines',
-          '🏟️ Spectator Pavilion (100 seats)',
-          '💡 750 Lux Broadcast Lights',
+          '❄️ Climate Controlled AC',
+          '🏀 FIBA Regulation Hoops',
+          '⏱️ Digital Shot Clocks',
           '🚿 Locker Rooms',
           '🥤 Refreshment Lounge'
         ],
-        bookedSlots: ['6:00 AM', '7:00 AM', '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM', '7:00 PM', '8:00 PM', '9:00 PM', '10:00 PM']
-      },
-      {
-        id: 'uttara-smash',
-        name: 'Uttara Smash Badminton Hub',
-        sport: 'Badminton',
-        type: 'Indoor Synthetic Courts',
-        location: 'Uttara, Dhaka',
-        fullAddress: 'Sector 4, Road 7, Uttara, Dhaka 1230',
-        rating: 4.8,
-        reviewsCount: '62 reviews',
-        price: 500,
-        timing: '7:00 AM – 11:00 PM',
-        dimensions: '15 × 8 m',
-        surface: 'BWF-Approved Yonex Mat',
-        capacity: '4 vs 4 Doubles',
-        light: '450 Lux Anti-Glare LED',
-        ownerName: 'Farhana Hossain',
-        ownerAvatar: 'F',
-        about: 'BWF tournament standard synthetic badminton court with non-slip grip and anti-glare overhead lighting. Shuttlecock and racket rental available.',
-        images: [
-          'https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=800&h=450&fit=crop&auto=format',
-          'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&h=450&fit=crop&auto=format',
-          'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&h=450&fit=crop&auto=format',
-          'https://images.unsplash.com/photo-1519766304817-4f37bda74a29?w=800&h=450&fit=crop&auto=format'
-        ],
-        amenities: [
-          '🏸 Yonex Mat Floor',
-          '✨ Anti-Glare Illumination',
-          '🎾 Equipment Rental Available',
-          '🚿 Changing Shower Booths'
-        ],
-        bookedSlots: ['8:00 AM', '12:00 PM', '4:00 PM', '8:00 PM']
+        bookedSlots: ['6:00 PM', '7:00 PM']
       }
     ];
 
@@ -970,33 +938,130 @@
     let currentStep = 1;
     let selectedTurf = TURFS[0];
     let selectedSlot = '6:00 PM';
+    let selectedSlotId = 0;
     let selectedMFSMethod = 'bKash';
     let selectedPaymentTab = 'mfs';
     let currentGalleryIndex = 0;
+    let activeFilter = 'all';
+
+    // Format time helper: '18:00:00' -> '6:00 PM'
+    function formatTime24to12(timeStr) {
+      if (!timeStr) return '';
+      const [h, m] = timeStr.split(':');
+      const hour = parseInt(h, 10);
+      const ampm = hour >= 12 ? 'PM' : 'AM';
+      const displayHour = hour % 12 || 12;
+      return `${displayHour}:00 ${ampm}`;
+    }
+
+    // Convert '6:00 PM' -> '18:00:00'
+    function parseTimeTo24(timeStr) {
+      if (!timeStr) return '18:00:00';
+      const parts = timeStr.trim().split(' ');
+      const timePart = parts[0];
+      const ampm = (parts[1] || 'PM').toUpperCase();
+      let [h, m] = timePart.split(':');
+      let hour = parseInt(h, 10);
+      let min = m ? parseInt(m, 10) : 0;
+      if (ampm === 'PM' && hour < 12) hour += 12;
+      if (ampm === 'AM' && hour === 12) hour = 0;
+      return `${String(hour).padStart(2, '0')}:${String(min).padStart(2, '0')}:00`;
+    }
+
+    // Initialize page & load turfs
+    (async function boot() {
+      const user = await initPage({ navId: 'book', roles: ['captain', 'player', 'owner', 'admin'] });
+      if (!user) return;
+
+      // Set date picker bounds
+      const dateInput = document.getElementById('booking-date');
+      const todayIso = new Date().toISOString().split('T')[0];
+      if (dateInput) {
+        dateInput.min = todayIso;
+        if (!dateInput.value || dateInput.value < todayIso) {
+          dateInput.value = todayIso;
+        }
+        dateInput.addEventListener('change', () => {
+          fetchAndRenderSlots();
+        });
+      }
+
+      // Fetch turfs from backend
+      try {
+        const res = await apiGet('turfs/list.php');
+        if (res && res.turfs && res.turfs.length > 0) {
+          TURFS = res.turfs.map(t => ({
+            id: t.id,
+            name: t.name,
+            sport: t.sport_type || 'Football',
+            type: t.surface_type || 'Outdoor Astro',
+            location: t.location || 'Dhaka',
+            fullAddress: t.location || 'Dhaka, Bangladesh',
+            rating: parseFloat(t.rating) || 4.8,
+            reviewsCount: 'Verified Turf',
+            price: parseInt(t.price_per_hour, 10) || 800,
+            timing: '6:00 AM – 11:00 PM',
+            dimensions: t.field_size || 'Standard Size',
+            surface: t.surface_type || 'Artificial Grass',
+            capacity: '14 vs 14 Max',
+            light: 'Floodlights Available',
+            ownerName: 'Verified Owner',
+            ownerAvatar: (t.name || 'T').charAt(0).toUpperCase(),
+            about: `Premium ${t.sport_type} facility located at ${t.location}. Features verified ground standards, floodlighting, and top-tier playing experience.`,
+            images: Array.isArray(t.photos) && t.photos.length > 0 ? t.photos : ['turf_football.jpg'],
+            amenities: Array.isArray(t.amenities) && t.amenities.length > 0 ? t.amenities : ['Floodlights', 'Changing Room', 'Parking', 'Washroom'],
+            bookedSlots: []
+          }));
+        }
+      } catch (err) {
+        console.warn('Backend turfs fetch error, using local data:', err);
+      }
+
+      // Check if URL query contains turf_id
+      const urlParams = new URLSearchParams(window.location.search);
+      const turfIdParam = urlParams.get('turf_id') || urlParams.get('id');
+      if (turfIdParam) {
+        const found = TURFS.find(t => String(t.id) === String(turfIdParam));
+        if (found) {
+          selectedTurf = found;
+        }
+      } else if (TURFS.length > 0) {
+        selectedTurf = TURFS[0];
+      }
+
+      renderTurfCards();
+    })();
 
     // Render Cards in Step 1
-    function renderTurfCards(filter = 'all') {
+    function renderTurfCards(filter = activeFilter) {
+      activeFilter = filter;
       const container = document.getElementById('turf-cards-container');
       if (!container) return;
 
-      const filtered = filter === 'all' ? TURFS : TURFS.filter(t => t.sport.toLowerCase() === filter.toLowerCase());
+      const filtered = filter === 'all' 
+        ? TURFS 
+        : TURFS.filter(t => (t.sport || '').toLowerCase() === filter.toLowerCase());
       
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div style="grid-column: 1/-1; text-align:center; padding: 40px; color:#9ca3af">
+            <p style="font-weight:700;font-size:1.1rem">No turfs found for "${filter}"</p>
+            <p style="font-size:0.85rem;margin-top:4px">Try choosing "All Sports" or a different category.</p>
+          </div>`;
+        return;
+      }
+
       container.innerHTML = filtered.map(turf => {
-        const isSelected = selectedTurf && selectedTurf.id === turf.id;
-        const isFullyBooked = turf.bookedSlots.length >= ALL_TIME_SLOTS.length;
-        const tagClass = turf.type.toLowerCase().includes('indoor') ? 'tag-indoor' : 'tag-outdoor';
-        const tagLabel = turf.type.toLowerCase().includes('indoor') ? 'Indoor' : 'Outdoor';
+        const isSelected = selectedTurf && String(selectedTurf.id) === String(turf.id);
+        const tagClass = (turf.type || '').toLowerCase().includes('indoor') ? 'tag-indoor' : 'tag-outdoor';
+        const tagLabel = (turf.type || '').toLowerCase().includes('indoor') ? 'Indoor' : 'Outdoor';
+        const mainImg = (turf.images && turf.images[0]) || 'turf_football.jpg';
 
         return `
-          <div class="turf-card ${isSelected ? 'selected' : ''} ${isFullyBooked ? 'disabled' : ''}" onclick="pickAndConfigureTurf('${turf.id}')">
+          <div class="turf-card ${isSelected ? 'selected' : ''}" onclick="pickAndConfigureTurf('${turf.id}')">
             <div class="turf-img">
-              <img src="${turf.images[0]}" alt="${turf.name}" />
+              <img src="${mainImg}" alt="${turf.name}" onerror="this.src='turf_football.jpg'" />
               <span class="turf-tag ${tagClass}">${tagLabel}</span>
-              ${isFullyBooked ? `
-                <div style="position:absolute;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center">
-                  <span style="background:#e53935;color:#fff;padding:6px 16px;border-radius:100px;font-size:.78rem;font-weight:800">Fully Booked</span>
-                </div>
-              ` : ''}
             </div>
             <div class="turf-card-body">
               <div>
@@ -1007,7 +1072,7 @@
                 <h3 style="font-weight:800;font-size:1.05rem;color:#1a1a1a;margin-bottom:6px">${turf.name}</h3>
                 <p style="font-size:.78rem;color:#6b7280;margin-bottom:12px">📍 ${turf.location}</p>
                 <div style="display:flex;flex-wrap:wrap;gap:5px">
-                  ${turf.amenities.slice(0, 3).map(a => `<span class="amenity-pill">${a}</span>`).join('')}
+                  ${(turf.amenities || []).slice(0, 3).map(a => `<span class="amenity-pill">${a}</span>`).join('')}
                 </div>
               </div>
               <div class="turf-card-footer">
@@ -1016,13 +1081,9 @@
                   <span style="font-size:.78rem;font-weight:500;color:#9ca3af">/hr</span>
                 </div>
                 <div>
-                  ${isFullyBooked ? `
-                    <span style="font-size:.78rem;font-weight:700;color:#9ca3af">Unavailable</span>
-                  ` : `
-                    <button type="button" class="btn-lime" style="font-size:.78rem;padding:7px 16px;border-radius:8px;font-weight:700">
-                      Pick Slot &rarr;
-                    </button>
-                  `}
+                  <button type="button" class="btn-lime" style="font-size:.78rem;padding:7px 16px;border-radius:8px;font-weight:700">
+                    Book Slot &rarr;
+                  </button>
                 </div>
               </div>
             </div>
@@ -1038,10 +1099,9 @@
     }
 
     function pickAndConfigureTurf(id) {
-      const found = TURFS.find(t => t.id === id);
+      const found = TURFS.find(t => String(t.id) === String(id));
       if (found) {
         selectedTurf = found;
-        populateTurfDetails();
         goToStep(2);
       }
     }
@@ -1058,27 +1118,27 @@
       const l2 = document.getElementById('line-2');
       const l3 = document.getElementById('line-3');
 
-      [s1, s2, s3, s4].forEach(s => { s.className = 'step todo'; });
-      [l1, l2, l3].forEach(l => { l.classList.remove('done'); });
+      [s1, s2, s3, s4].forEach(s => { if (s) s.className = 'step todo'; });
+      [l1, l2, l3].forEach(l => { if (l) l.classList.remove('done'); });
 
       if (stepNumber === 1) {
-        s1.className = 'step active';
+        if (s1) s1.className = 'step active';
         document.getElementById('step-1-view').style.display = 'block';
         document.getElementById('step-2-view').style.display = 'none';
         renderTurfCards();
       } else if (stepNumber === 2) {
-        s1.className = 'step done';
-        l1.classList.add('done');
-        s2.className = 'step active';
+        if (s1) s1.className = 'step done';
+        if (l1) l1.classList.add('done');
+        if (s2) s2.className = 'step active';
         document.getElementById('step-1-view').style.display = 'none';
         document.getElementById('step-2-view').style.display = 'flex';
         populateTurfDetails();
       } else if (stepNumber === 3) {
-        s1.className = 'step done';
-        l1.classList.add('done');
-        s2.className = 'step done';
-        l2.classList.add('done');
-        s3.className = 'step active';
+        if (s1) s1.className = 'step done';
+        if (l1) l1.classList.add('done');
+        if (s2) s2.className = 'step done';
+        if (l2) l2.classList.add('done');
+        if (s3) s3.className = 'step active';
       }
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -1108,7 +1168,7 @@
       document.getElementById('owner-avatar').textContent = selectedTurf.ownerAvatar;
 
       // Amenities
-      document.getElementById('amenities-container').innerHTML = selectedTurf.amenities.map(a => `
+      document.getElementById('amenities-container').innerHTML = (selectedTurf.amenities || []).map(a => `
         <div style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;background:#f5f5f0;font-size:.78rem;font-weight:600;color:#4b5563">
           ${a}
         </div>
@@ -1116,39 +1176,57 @@
 
       // Gallery
       currentGalleryIndex = 0;
-      document.getElementById('main-gallery-img').src = selectedTurf.images[0];
-      document.getElementById('gallery-counter').textContent = `Photo 1 of ${selectedTurf.images.length}`;
-      document.getElementById('gallery-thumbnails').innerHTML = selectedTurf.images.map((img, idx) => `
+      const images = (selectedTurf.images && selectedTurf.images.length > 0) ? selectedTurf.images : ['turf_football.jpg'];
+      document.getElementById('main-gallery-img').src = images[0];
+      document.getElementById('gallery-counter').textContent = `Photo 1 of ${images.length}`;
+      document.getElementById('gallery-thumbnails').innerHTML = images.map((img, idx) => `
         <div class="gallery-thumb ${idx === 0 ? 'active' : ''}" onclick="switchGalleryImg(${idx})">
-          <img src="${img}" style="width:100%;height:100%;object-fit:cover" />
+          <img src="${img}" onerror="this.src='turf_football.jpg'" style="width:100%;height:100%;object-fit:cover" />
         </div>
       `).join('');
 
-      generateSlots();
+      fetchAndRenderSlots();
     }
 
     function switchGalleryImg(idx) {
+      const images = (selectedTurf.images && selectedTurf.images.length > 0) ? selectedTurf.images : ['turf_football.jpg'];
       currentGalleryIndex = idx;
-      document.getElementById('main-gallery-img').src = selectedTurf.images[idx];
-      document.getElementById('gallery-counter').textContent = `Photo ${idx + 1} of ${selectedTurf.images.length}`;
+      document.getElementById('main-gallery-img').src = images[idx];
+      document.getElementById('gallery-counter').textContent = `Photo ${idx + 1} of ${images.length}`;
       document.querySelectorAll('.gallery-thumb').forEach((el, i) => {
         el.classList.toggle('active', i === idx);
       });
     }
 
-    function generateSlots() {
+    // Fetch slot statuses from backend for the selected date
+    async function fetchAndRenderSlots() {
       const grid = document.getElementById('slots-grid');
       if (!grid || !selectedTurf) return;
 
-      const dateVal = document.getElementById('booking-date').value;
-      const booked = selectedTurf.bookedSlots || [];
+      const dateVal = document.getElementById('booking-date').value || new Date().toISOString().split('T')[0];
+      grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:20px;color:#9ca3af;font-size:.85rem">Checking slot availability...</div>`;
+
+      let bookedSlotTimes = selectedTurf.bookedSlots || [];
+      selectedSlotId = 0;
+
+      try {
+        const data = await apiGet(`slots/list.php?turf_id=${selectedTurf.id}&start_date=${dateVal}&end_date=${dateVal}`);
+        if (data && data.slots) {
+          bookedSlotTimes = data.slots
+            .filter(s => s.status === 'booked' || s.status === 'maintenance')
+            .map(s => formatTime24to12(s.start_time));
+        }
+      } catch (err) {
+        console.warn('Could not fetch live slots from DB:', err);
+      }
+
       let foundFirstAvailable = false;
 
       grid.innerHTML = ALL_TIME_SLOTS.map(timeStr => {
-        const isBooked = booked.includes(timeStr);
+        const isBooked = bookedSlotTimes.includes(timeStr);
         let isSelected = false;
 
-        if (!isBooked && !foundFirstAvailable && (!selectedSlot || booked.includes(selectedSlot))) {
+        if (!isBooked && !foundFirstAvailable && (!selectedSlot || bookedSlotTimes.includes(selectedSlot))) {
           selectedSlot = timeStr;
           foundFirstAvailable = true;
           isSelected = true;
@@ -1157,7 +1235,7 @@
         }
 
         if (isBooked) {
-          return `<div class="slot-pill booked" title="Slot Occupied">${timeStr}</div>`;
+          return `<div class="slot-pill booked" title="Slot Occupied / Booked">${timeStr} <span style="font-size:0.65rem">(Booked)</span></div>`;
         } else {
           return `<div class="slot-pill available ${isSelected ? 'selected' : ''}" onclick="chooseTimeSlot('${timeStr}', this)">${timeStr}</div>`;
         }
@@ -1176,17 +1254,20 @@
     function updateSlotSummary() {
       const nextHour = getNextHour(selectedSlot);
       const slotRange = `${selectedSlot} – ${nextHour}`;
+      const dateVal = document.getElementById('booking-date').value || new Date().toISOString().split('T')[0];
+      
       document.getElementById('selected-slot-text').textContent = slotRange;
       document.getElementById('total-price-text').textContent = `৳${selectedTurf.price}`;
       document.getElementById('ssl-summary-turf').textContent = selectedTurf.name;
-      document.getElementById('ssl-summary-slot').textContent = `${formatDisplayDate(document.getElementById('booking-date').value)} · ${slotRange}`;
+      document.getElementById('ssl-summary-slot').textContent = `${formatDisplayDate(dateVal)} · ${slotRange}`;
       document.getElementById('ssl-summary-price').textContent = `৳ ${selectedTurf.price}.00`;
       document.getElementById('ssl-pay-btn-label').textContent = `Pay ৳ ${selectedTurf.price}.00 via ${selectedMFSMethod}`;
     }
 
     function getNextHour(timeStr) {
+      if (!timeStr) return '7:00 PM';
       const parts = timeStr.split(' ');
-      const hour = parseInt(parts[0]);
+      const hour = parseInt(parts[0], 10);
       const ampm = parts[1];
       if (hour === 11 && ampm === 'AM') return '12:00 PM';
       if (hour === 11 && ampm === 'PM') return '12:00 AM';
@@ -1207,6 +1288,10 @@
     /* ─── SSLCOMMERZ Modal Controls ─── */
     function openPaymentModal() {
       if (!selectedTurf) return;
+      if (!selectedSlot) {
+        alert('Please pick an available time slot before continuing to payment.');
+        return;
+      }
       updateSlotSummary();
       const modal = document.getElementById('ssl-modal');
       modal.classList.add('open');
@@ -1246,7 +1331,8 @@
     function switchPaymentTab(tab) {
       selectedPaymentTab = tab;
       document.querySelectorAll('.ssl-tab-btn').forEach(btn => btn.classList.remove('active'));
-      document.getElementById(`tab-${tab}`).classList.add('active');
+      const activeBtn = document.getElementById(`tab-${tab}`);
+      if (activeBtn) activeBtn.classList.add('active');
 
       document.getElementById('panel-mfs').style.display = tab === 'mfs' ? 'block' : 'none';
       document.getElementById('panel-cards').style.display = tab === 'cards' ? 'block' : 'none';
@@ -1276,7 +1362,8 @@
       document.getElementById('mfs-account-input').value = '01844991122';
     }
 
-    function executeDummyPayment() {
+    // Real transactional booking to Backend API + SSLCOMMERZ gateway simulation
+    async function executeDummyPayment() {
       const payBtn = document.getElementById('ssl-pay-button');
       payBtn.disabled = true;
 
@@ -1290,58 +1377,107 @@
       const trxBlock = document.getElementById('ssl-proc-trx');
       const trxIdSpan = document.getElementById('ssl-proc-trx-id');
 
-      const randTrx = 'SSL-TH-' + Math.floor(100000 + Math.random() * 900000);
-      const randRef = 'TH-' + new Date().toISOString().slice(0,10).replace(/-/g,'') + '-' + Math.floor(100 + Math.random() * 900);
-      const nextHour = getNextHour(selectedSlot);
-      const slotTimeText = `${selectedSlot} – ${nextHour}`;
-      const dateText = formatDisplayDate(document.getElementById('booking-date').value);
+      const dateVal = document.getElementById('booking-date').value || new Date().toISOString().split('T')[0];
+      const startTime24 = parseTimeTo24(selectedSlot);
+      const nextHourStr = getNextHour(selectedSlot);
+      const endTime24 = parseTimeTo24(nextHourStr);
+      const dateText = formatDisplayDate(dateVal);
+      const slotTimeText = `${selectedSlot} – ${nextHourStr}`;
 
       procTitle.textContent = `Connecting to ${selectedMFSMethod || 'SSLCOMMERZ'}...`;
-      procDesc.textContent = 'Simulating instant handshake and 256-bit encryption with gateway...';
+      procDesc.textContent = 'Simulating instant handshake and 256-bit TLS encryption with payment gateway...';
 
-      // Simulation Timeline
-      setTimeout(() => {
-        procTitle.textContent = 'Authenticating OTP & Wallet PIN...';
-        procDesc.textContent = 'Verifying wallet balance and merchant escrow settlement...';
-      }, 900);
+      // Map payment method
+      let paymentMethodKey = 'bkash';
+      if (selectedPaymentTab === 'cards') {
+        paymentMethodKey = 'card';
+      } else if (selectedPaymentTab === 'net') {
+        paymentMethodKey = 'net_banking';
+      } else {
+        const m = (selectedMFSMethod || '').toLowerCase();
+        if (m.includes('nagad')) paymentMethodKey = 'nagad';
+        else if (m.includes('rocket')) paymentMethodKey = 'rocket';
+        else if (m.includes('upay')) paymentMethodKey = 'upay';
+        else paymentMethodKey = 'bkash';
+      }
 
-      setTimeout(() => {
-        spinner.style.display = 'none';
-        checkmark.style.display = 'flex';
-        procTitle.textContent = 'Payment Authorized & Confirmed!';
-        procDesc.textContent = `৳${selectedTurf.price}.00 successfully credited to TurfHub merchant account. Slot reserved for ${selectedTurf.name}.`;
-        trxIdSpan.textContent = randTrx;
-        trxBlock.style.display = 'inline-block';
-
-        // Save booking data to localStorage
-        const recentBooking = {
-          turfName: selectedTurf.name,
-          turfLocation: selectedTurf.location,
-          sport: selectedTurf.sport,
-          date: dateText,
-          time: slotTimeText,
-          price: selectedTurf.price,
-          paymentMethod: `${selectedMFSMethod || 'Mobile Banking'} (SSLCOMMERZ)`,
-          trxId: randTrx,
-          refId: randRef,
-          status: 'confirmed',
-          timestamp: new Date().toISOString()
+      try {
+        // Send actual booking request to backend
+        const bookingPayload = {
+          turf_id: parseInt(selectedTurf.id, 10) || 1,
+          slot_date: dateVal,
+          start_time: startTime24,
+          end_time: endTime24,
+          total_price: parseInt(selectedTurf.price, 10),
+          payment_method: paymentMethodKey
         };
 
-        try {
-          localStorage.setItem('turfhub_recent_booking', JSON.stringify(recentBooking));
-        } catch(e) {}
+        const res = await apiPost('bookings/create.php', bookingPayload);
+        const bookingData = res.booking || {};
+        const trxId = bookingData.trx_id || ('SSL-TH-' + Math.floor(100000 + Math.random() * 900000));
+        const refId = bookingData.ref_id || ('TH-' + dateVal.replace(/-/g, '') + '-' + Math.floor(100 + Math.random() * 900));
 
-        // Redirection to booking-receipt.html
+        // Show successful completion
         setTimeout(() => {
-          window.location.href = `booking-receipt.html?turf=${encodeURIComponent(selectedTurf.name)}&date=${encodeURIComponent(dateText)}&slot=${encodeURIComponent(slotTimeText)}&price=${selectedTurf.price}&trx=${randTrx}&ref=${randRef}`;
-        }, 1600);
+          spinner.style.display = 'none';
+          checkmark.style.display = 'flex';
+          procTitle.textContent = 'Payment Authorized & Booking Confirmed!';
+          procDesc.textContent = `৳${selectedTurf.price}.00 successfully debited. Your turf slot at ${selectedTurf.name} is permanently booked in the database.`;
+          trxIdSpan.textContent = trxId;
+          trxBlock.style.display = 'inline-block';
 
-      }, 2000);
+          // Save recent booking data to localStorage for instant client view
+          const recentBooking = {
+            id: bookingData.id,
+            turfName: selectedTurf.name,
+            turfLocation: selectedTurf.location,
+            sport: selectedTurf.sport,
+            date: dateText,
+            slotDate: dateVal,
+            time: slotTimeText,
+            startTime: startTime24,
+            endTime: endTime24,
+            price: selectedTurf.price,
+            paymentMethod: `${selectedMFSMethod || 'bKash'} (SSLCOMMERZ)`,
+            trxId: trxId,
+            refId: refId,
+            status: 'confirmed',
+            timestamp: new Date().toISOString()
+          };
+
+          try {
+            localStorage.setItem('turfhub_recent_booking', JSON.stringify(recentBooking));
+          } catch(e) {}
+
+          // Redirection to booking receipts
+          setTimeout(() => {
+            const role = typeof getRole === 'function' ? getRole() : 'captain';
+            const targetPage = role === 'player' ? 'player-receipts.html' : 'booking-receipt.html';
+            window.location.href = `${targetPage}?turf=${encodeURIComponent(selectedTurf.name)}&date=${encodeURIComponent(dateText)}&slot=${encodeURIComponent(slotTimeText)}&price=${selectedTurf.price}&trx=${trxId}&ref=${refId}`;
+          }, 1500);
+
+        }, 1200);
+
+      } catch (err) {
+        console.error('Booking failed:', err);
+        spinner.style.display = 'none';
+        procTitle.textContent = 'Booking Failed';
+        procTitle.style.color = '#e53935';
+        procDesc.textContent = err.message || 'Unable to confirm booking. The slot might already be reserved.';
+        
+        // Add a retry button
+        const retryBtn = document.createElement('button');
+        retryBtn.type = 'button';
+        retryBtn.className = 'btn-lime';
+        retryBtn.style.marginTop = '16px';
+        retryBtn.textContent = 'Pick Another Slot';
+        retryBtn.onclick = () => {
+          closePaymentModal();
+          fetchAndRenderSlots();
+        };
+        document.getElementById('ssl-processing-view').appendChild(retryBtn);
+      }
     }
-
-    // Initial boot
-    renderTurfCards();
   </script>
 </body>
 

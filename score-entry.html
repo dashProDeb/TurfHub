@@ -19,11 +19,13 @@
     .goal-btn { width:28px;height:28px;border-radius:8px;border:1.5px solid #e5e7eb;background:#fff;cursor:pointer;font-size:.9rem;font-weight:800;color:#6b7280;transition:all .15s;display:flex;align-items:center;justify-content:center; }
     .goal-btn:hover { border-color:#7ed321;color:#5a9e12;background:rgba(126,211,33,.08); }
     .goal-count { min-width:24px;text-align:center;font-weight:700;font-size:.88rem; }
+    .recent-match-item { padding:12px 0;border-bottom:1px solid #f3f4f6;transition:background .15s; }
+    .recent-match-item:last-child { border-bottom:none; }
   </style>
 </head>
 <body>
 <div id="app-wrapper">
-  <!-- Standalone Owner Sidebar -->
+  <!-- Standalone Owner Sidebar (injected dynamically by page-init.js/layout.js) -->
   <aside id="sidebar" class="sidebar">
     <a href="index.html" class="sidebar-logo">
       <div class="sidebar-logo-icon">TH</div>
@@ -54,178 +56,115 @@
     <div id="topbar">
       <div class="topbar-title">
         <span class="topbar-heading">Score Entry</span>
-        <span class="topbar-sub">Update match results for your tournament</span>
+        <span class="topbar-sub">Update match results and live scores for your tournaments</span>
       </div>
       <div class="topbar-actions">
         <span class="badge badge-owner">Owner Portal</span>
       </div>
     </div>
     <div class="page-body">
-      <div class="content-grid">
+      <div class="content-grid" style="display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start">
         <!-- Score Entry Form -->
         <div class="content-panel">
-          <div class="panel-header"><span class="panel-title">Enter Match Score</span></div>
+          <div class="panel-header" style="margin-bottom:16px">
+            <span class="panel-title">Enter Match Score</span>
+            <span id="match-status-badge" class="badge badge-live badge-dot" style="display:none">Live Match</span>
+          </div>
 
           <!-- Match Selection -->
           <div style="background:#f5f5f0;border-radius:12px;padding:16px;margin-bottom:20px">
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
               <div>
-                <label class="form-label">Tournament</label>
-                <select class="form-input" style="padding:9px 12px">
-                  <option>Inter-City Football League</option>
-                  <option>Summer Smash Cup</option>
-                  <option>Monsoon Cricket Carnival</option>
+                <label class="form-label">Tournament *</label>
+                <select class="form-input" style="padding:9px 12px" id="tournament-select" onchange="onTournamentChange()">
+                  <option value="">Loading tournaments...</option>
                 </select>
               </div>
               <div>
-                <label class="form-label">Stage</label>
-                <select class="form-input" style="padding:9px 12px">
-                  <option>Quarter Final</option>
-                  <option>Semi Final</option>
-                  <option>Final</option>
+                <label class="form-label">Fixture / Match *</label>
+                <select class="form-input" style="padding:9px 12px" id="fixture-select" onchange="onFixtureChange()">
+                  <option value="">Select tournament first...</option>
                 </select>
+              </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+              <div>
+                <label class="form-label">Stage / Round</label>
+                <input type="text" class="form-input" style="padding:9px 12px" id="stage-input" placeholder="e.g. Quarter Final" />
               </div>
               <div>
                 <label class="form-label">Match Date</label>
-                <input type="date" class="form-input" style="padding:9px 12px" />
-              </div>
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-              <div>
-                <label class="form-label">Home Team</label>
-                <select class="form-input" style="padding:9px 12px" id="home-select" onchange="updateTeamName('home',this)">
-                  <option>Thunder FC</option>
-                  <option>Blaze United</option>
-                  <option>Rising Stars</option>
-                  <option>City Kickers</option>
-                  <option>FC Dynamo</option>
-                </select>
+                <input type="date" class="form-input" style="padding:9px 12px" id="match-date-input" />
               </div>
               <div>
-                <label class="form-label">Away Team</label>
-                <select class="form-input" style="padding:9px 12px" id="away-select" onchange="updateTeamName('away',this)">
-                  <option>Rising Stars</option>
-                  <option>Blaze United</option>
-                  <option>Thunder FC</option>
-                  <option>City Kickers</option>
-                  <option>FC Dynamo</option>
-                </select>
+                <label class="form-label">Venue</label>
+                <input type="text" class="form-input" style="padding:9px 12px" id="venue-input" placeholder="Ground name" readonly style="background:#f9fafb" />
               </div>
             </div>
           </div>
 
           <!-- Score Entry -->
           <div style="background:#fff;border:1.5px solid #e8ede8;border-radius:14px;padding:24px;margin-bottom:20px">
-            <div style="display:flex;align-items:flex-end;justify-content:center;gap:16px">
-              <div class="score-box">
-                <div style="font-weight:800;font-size:.88rem;color:#1a1a1a;margin-bottom:8px" id="home-team-label">Thunder FC</div>
-                <input class="score-input" type="number" id="home-score" value="2" min="0" onchange="updateGoalLists()" />
+            <div style="display:flex;align-items:flex-end;justify-content:center;gap:20px">
+              <div class="score-box" style="flex:1;max-width:200px">
+                <div style="font-weight:800;font-size:.95rem;color:#1a1a1a;margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="home-team-label">Home Team</div>
+                <input class="score-input" type="number" id="home-score" value="0" min="0" />
               </div>
               <div class="vs-sep">&ndash;</div>
-              <div class="score-box">
-                <div style="font-weight:800;font-size:.88rem;color:#1a1a1a;margin-bottom:8px" id="away-team-label">Rising Stars</div>
-                <input class="score-input" type="number" id="away-score" value="1" min="0" onchange="updateGoalLists()" />
+              <div class="score-box" style="flex:1;max-width:200px">
+                <div style="font-weight:800;font-size:.95rem;color:#1a1a1a;margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="away-team-label">Away Team</div>
+                <input class="score-input" type="number" id="away-score" value="0" min="0" />
               </div>
             </div>
-            <div style="display:flex;justify-content:center;gap:8px;margin-top:16px">
-              <span style="display:inline-flex;align-items:center;gap:5px;background:rgba(126,211,33,.1);color:#5a9e12;font-size:.78rem;font-weight:700;padding:5px 14px;border-radius:100px">&#128308; Live &middot; 67&prime;</span>
-              <label style="display:flex;align-items:center;gap:6px;font-size:.82rem;font-weight:600;color:#6b7280;cursor:pointer">
-                <input type="checkbox" id="full-time" /> Full Time
+            <div style="display:flex;justify-content:center;gap:14px;margin-top:16px;align-items:center">
+              <label style="display:flex;align-items:center;gap:6px;font-size:.82rem;font-weight:700;color:#0d2818;cursor:pointer;background:#f3f4f6;padding:5px 12px;border-radius:8px">
+                <input type="radio" name="match-state" id="state-live" value="live" checked /> 🔴 In Progress (Live)
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:.82rem;font-weight:700;color:#0d2818;cursor:pointer;background:#f3f4f6;padding:5px 12px;border-radius:8px">
+                <input type="radio" name="match-state" id="state-completed" value="completed" /> 🏁 Full Time (Completed)
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:.82rem;font-weight:700;color:#0d2818;cursor:pointer;background:#f3f4f6;padding:5px 12px;border-radius:8px">
+                <input type="radio" name="match-state" id="state-upcoming" value="upcoming" /> ⏳ Upcoming
               </label>
             </div>
           </div>
 
-          <!-- Goal Scorers -->
+          <!-- Goal Scorers Section -->
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
             <div class="content-panel" style="padding:16px">
-              <div class="panel-header" style="margin-bottom:10px"><span style="font-weight:700;font-size:.88rem">Thunder FC Scorers</span></div>
+              <div class="panel-header" style="margin-bottom:10px">
+                <span style="font-weight:700;font-size:.88rem" id="home-scorers-title">Home Team Scorers</span>
+              </div>
               <div id="home-scorers">
-                <div class="scorer-row">
-                  <div style="font-size:.85rem;font-weight:600;color:#1a1a1a">Arif Hossain</div>
-                  <div style="display:flex;align-items:center;gap:8px">
-                    <button class="goal-btn" onclick="changeGoals(this,-1)">&#8722;</button>
-                    <span class="goal-count">2</span>
-                    <button class="goal-btn" onclick="changeGoals(this,1)">+</button>
-                  </div>
-                </div>
-                <div class="scorer-row">
-                  <div style="font-size:.85rem;font-weight:600;color:#1a1a1a">Sabbir Ahmed</div>
-                  <div style="display:flex;align-items:center;gap:8px">
-                    <button class="goal-btn" onclick="changeGoals(this,-1)">&#8722;</button>
-                    <span class="goal-count">0</span>
-                    <button class="goal-btn" onclick="changeGoals(this,1)">+</button>
-                  </div>
-                </div>
-                <div class="scorer-row">
-                  <div style="font-size:.85rem;font-weight:600;color:#1a1a1a">Delwar Khan</div>
-                  <div style="display:flex;align-items:center;gap:8px">
-                    <button class="goal-btn" onclick="changeGoals(this,-1)">&#8722;</button>
-                    <span class="goal-count">0</span>
-                    <button class="goal-btn" onclick="changeGoals(this,1)">+</button>
-                  </div>
-                </div>
+                <div style="color:#9ca3af;font-size:.8rem;padding:8px 0;text-align:center">Select a fixture to load players</div>
               </div>
             </div>
             <div class="content-panel" style="padding:16px">
-              <div class="panel-header" style="margin-bottom:10px"><span style="font-weight:700;font-size:.88rem">Rising Stars Scorers</span></div>
+              <div class="panel-header" style="margin-bottom:10px">
+                <span style="font-weight:700;font-size:.88rem" id="away-scorers-title">Away Team Scorers</span>
+              </div>
               <div id="away-scorers">
-                <div class="scorer-row">
-                  <div style="font-size:.85rem;font-weight:600;color:#1a1a1a">Nayeem Ali</div>
-                  <div style="display:flex;align-items:center;gap:8px">
-                    <button class="goal-btn" onclick="changeGoals(this,-1)">&#8722;</button>
-                    <span class="goal-count">1</span>
-                    <button class="goal-btn" onclick="changeGoals(this,1)">+</button>
-                  </div>
-                </div>
-                <div class="scorer-row">
-                  <div style="font-size:.85rem;font-weight:600;color:#1a1a1a">Tanvir Hasan</div>
-                  <div style="display:flex;align-items:center;gap:8px">
-                    <button class="goal-btn" onclick="changeGoals(this,-1)">&#8722;</button>
-                    <span class="goal-count">0</span>
-                    <button class="goal-btn" onclick="changeGoals(this,1)">+</button>
-                  </div>
-                </div>
+                <div style="color:#9ca3af;font-size:.8rem;padding:8px 0;text-align:center">Select a fixture to load players</div>
               </div>
             </div>
           </div>
 
           <div style="display:flex;gap:12px;justify-content:flex-end">
-            <button class="btn-outline">Cancel</button>
-            <button class="btn-lime" onclick="saveScore()">&#9999; Update Score</button>
+            <button type="button" class="btn-outline" onclick="resetCurrentForm()">Reset</button>
+            <button type="button" class="btn-lime" id="btn-save-score" onclick="saveScore()">✏️ Update Score</button>
           </div>
         </div>
 
-        <!-- Recent Scores -->
+        <!-- Recent Scores Panel -->
         <div>
           <div class="content-panel">
-            <div class="panel-header"><span class="panel-title">Recent Results</span></div>
-            <div style="display:flex;flex-direction:column;gap:0">
-              <div style="padding:12px 0;border-bottom:1px solid #f3f4f6">
-                <div style="font-size:.68rem;font-weight:700;color:#7ed321;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Inter-City League &middot; QF</div>
-                <div style="display:flex;align-items:center;justify-content:space-between">
-                  <span style="font-weight:700;font-size:.88rem">Thunder FC</span>
-                  <span style="font-weight:900;font-size:1.1rem;color:#1a1a1a">3 &ndash; 1</span>
-                  <span style="font-weight:700;font-size:.88rem">City Kickers</span>
-                </div>
-                <div style="font-size:.72rem;color:#9ca3af;margin-top:3px">Wed, 23 Jul &middot; Champions Field</div>
-              </div>
-              <div style="padding:12px 0;border-bottom:1px solid #f3f4f6">
-                <div style="font-size:.68rem;font-weight:700;color:#7ed321;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Inter-City League &middot; QF</div>
-                <div style="display:flex;align-items:center;justify-content:space-between">
-                  <span style="font-weight:700;font-size:.88rem">Blaze United</span>
-                  <span style="font-weight:900;font-size:1.1rem;color:#1a1a1a">2 &ndash; 0</span>
-                  <span style="font-weight:700;font-size:.88rem">Green Eagles</span>
-                </div>
-                <div style="font-size:.72rem;color:#9ca3af;margin-top:3px">Tue, 22 Jul &middot; The Green Arena</div>
-              </div>
-              <div style="padding:12px 0">
-                <div style="font-size:.68rem;font-weight:700;color:#7ed321;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Summer Cup &middot; R16</div>
-                <div style="display:flex;align-items:center;justify-content:space-between">
-                  <span style="font-weight:700;font-size:.88rem">Rising Stars</span>
-                  <span style="font-weight:900;font-size:1.1rem;color:#1a1a1a">1 &ndash; 1</span>
-                  <span style="font-weight:700;font-size:.88rem">FC Dynamo</span>
-                </div>
-                <div style="font-size:.72rem;color:#9ca3af;margin-top:3px">Mon, 21 Jul &middot; Court Pro Indoor</div>
+            <div class="panel-header" style="margin-bottom:12px">
+              <span class="panel-title">Recent Results</span>
+            </div>
+            <div id="recent-results-container" style="display:flex;flex-direction:column;gap:0">
+              <div style="text-align:center;padding:20px;color:#9ca3af;font-size:.8rem">
+                Loading recent match results...
               </div>
             </div>
           </div>
@@ -233,18 +172,367 @@
       </div>
     </div>
   </div>
+</div>
+
+<script src="api-client.js"></script>
+<script src="auth.js"></script>
+<script src="layout.js"></script>
+<script src="page-init.js"></script>
 <script>
-  function updateTeamName(side, sel) {
-    document.getElementById(side + '-team-label').textContent = sel.value;
+  let myTournaments = [];
+  let currentFixtures = [];
+  let selectedFixture = null;
+  let homeTeamMembers = [];
+  let awayTeamMembers = [];
+
+  initPage({ navId: 'score', roles: ['owner', 'admin'] }).then(user => {
+    if (user) loadScoreEntryData();
+  });
+
+  async function loadScoreEntryData() {
+    try {
+      // 1. Fetch tournaments
+      const [tournRes, completedRes] = await Promise.all([
+        apiGet('tournaments/my-tournaments.php'),
+        apiGet('fixtures/list.php?status=completed&limit=6')
+      ]);
+
+      myTournaments = tournRes.tournaments || [];
+      renderTournamentsDropdown();
+      renderRecentResults(completedRes.fixtures || []);
+
+      // Check URL params for pre-selection
+      const params = new URLSearchParams(window.location.search);
+      const preTournId = params.get('tournament_id');
+      const preFixtureId = params.get('fixture_id');
+
+      if (preTournId && myTournaments.some(t => t.id == preTournId)) {
+        document.getElementById('tournament-select').value = preTournId;
+        await onTournamentChange(preFixtureId);
+      } else if (myTournaments.length > 0) {
+        document.getElementById('tournament-select').value = myTournaments[0].id;
+        await onTournamentChange();
+      }
+    } catch (err) {
+      console.error('Error loading score entry data:', err);
+      alert('Failed to load tournaments: ' + err.message);
+    }
   }
-  function changeGoals(btn, delta) {
+
+  function renderTournamentsDropdown() {
+    const sel = document.getElementById('tournament-select');
+    if (myTournaments.length === 0) {
+      sel.innerHTML = '<option value="">No tournaments available</option>';
+      return;
+    }
+    sel.innerHTML = myTournaments.map(t =>
+      `<option value="${t.id}">${t.name} (${t.sport})</option>`
+    ).join('');
+  }
+
+  async function onTournamentChange(targetFixtureId = null) {
+    const tournId = document.getElementById('tournament-select').value;
+    const fixtureSel = document.getElementById('fixture-select');
+
+    if (!tournId) {
+      fixtureSel.innerHTML = '<option value="">Select a tournament</option>';
+      return;
+    }
+
+    fixtureSel.innerHTML = '<option value="">Loading fixtures...</option>';
+
+    try {
+      const res = await apiGet(`fixtures/list.php?tournament_id=${tournId}`);
+      currentFixtures = res.fixtures || [];
+
+      if (currentFixtures.length === 0) {
+        fixtureSel.innerHTML = '<option value="">No fixtures scheduled yet</option>';
+        clearMatchDisplay();
+        return;
+      }
+
+      fixtureSel.innerHTML = currentFixtures.map(f => {
+        const home = f.home_team_name || 'TBD';
+        const away = f.away_team_name || 'TBD';
+        const round = f.round_name || 'Match';
+        const statusTag = f.status === 'live' ? '🔴 LIVE' : (f.status === 'completed' ? '🏁 FT' : '⏳ Scheduled');
+        return `<option value="${f.id}">[${statusTag}] ${home} vs ${away} (${round})</option>`;
+      }).join('');
+
+      if (targetFixtureId && currentFixtures.some(f => f.id == targetFixtureId)) {
+        fixtureSel.value = targetFixtureId;
+      }
+
+      onFixtureChange();
+    } catch (err) {
+      console.error('Error loading fixtures:', err);
+      fixtureSel.innerHTML = '<option value="">Failed to load fixtures</option>';
+    }
+  }
+
+  async function onFixtureChange() {
+    const fixtureId = document.getElementById('fixture-select').value;
+    if (!fixtureId) {
+      clearMatchDisplay();
+      return;
+    }
+
+    selectedFixture = currentFixtures.find(f => f.id == fixtureId);
+    if (!selectedFixture) return;
+
+    // Set Labels
+    const homeName = selectedFixture.home_team_name || 'Home Team';
+    const awayName = selectedFixture.away_team_name || 'Away Team';
+    document.getElementById('home-team-label').textContent = homeName;
+    document.getElementById('away-team-label').textContent = awayName;
+    document.getElementById('home-scorers-title').textContent = `${homeName} Scorers`;
+    document.getElementById('away-scorers-title').textContent = `${awayName} Scorers`;
+
+    // Set Scores
+    document.getElementById('home-score').value = selectedFixture.home_score ?? 0;
+    document.getElementById('away-score').value = selectedFixture.away_score ?? 0;
+
+    // Set Stage & Date & Venue
+    document.getElementById('stage-input').value = selectedFixture.round_name || '';
+    if (selectedFixture.match_date) {
+      document.getElementById('match-date-input').value = selectedFixture.match_date.split(' ')[0] || selectedFixture.match_date.split('T')[0];
+    } else {
+      document.getElementById('match-date-input').value = new Date().toISOString().split('T')[0];
+    }
+    document.getElementById('venue-input').value = selectedFixture.venue_name || 'Main Pitch';
+
+    // Status Radio
+    const status = selectedFixture.status || 'upcoming';
+    if (status === 'completed') {
+      document.getElementById('state-completed').checked = true;
+    } else if (status === 'live') {
+      document.getElementById('state-live').checked = true;
+    } else {
+      document.getElementById('state-upcoming').checked = true;
+    }
+
+    // Load Rosters / Scorers
+    await loadTeamRosters(selectedFixture);
+  }
+
+  async function loadTeamRosters(fixture) {
+    const homeContainer = document.getElementById('home-scorers');
+    const awayContainer = document.getElementById('away-scorers');
+    homeContainer.innerHTML = '<div style="color:#9ca3af;font-size:.8rem;padding:8px 0;text-align:center">Loading players...</div>';
+    awayContainer.innerHTML = '<div style="color:#9ca3af;font-size:.8rem;padding:8px 0;text-align:center">Loading players...</div>';
+
+    try {
+      const promises = [];
+      if (fixture.home_team_id) promises.push(apiGet(`teams/detail.php?team_id=${fixture.home_team_id}`));
+      else promises.push(Promise.resolve({ team: null }));
+
+      if (fixture.away_team_id) promises.push(apiGet(`teams/detail.php?team_id=${fixture.away_team_id}`));
+      else promises.push(Promise.resolve({ team: null }));
+
+      const [homeTeamRes, awayTeamRes] = await Promise.all(promises);
+
+      homeTeamMembers = (homeTeamRes.team && homeTeamRes.team.members) ? homeTeamRes.team.members : [];
+      awayTeamMembers = (awayTeamRes.team && awayTeamRes.team.members) ? awayTeamRes.team.members : [];
+
+      renderScorersList('home', homeTeamMembers, fixture);
+      renderScorersList('away', awayTeamMembers, fixture);
+    } catch (err) {
+      console.error('Error fetching squad rosters:', err);
+      // Fallback: render default scorers list
+      renderScorersList('home', [], fixture);
+      renderScorersList('away', [], fixture);
+    }
+  }
+
+  function renderScorersList(side, members, fixture) {
+    const container = document.getElementById(side + '-scorers');
+    const existingScorers = Array.isArray(fixture.scorers) ? fixture.scorers : [];
+    const teamName = side === 'home' ? fixture.home_team_name : fixture.away_team_name;
+
+    // Count existing goals per player
+    const goalCounts = {};
+    existingScorers.forEach(s => {
+      const pName = typeof s === 'string' ? s : (s.name || '');
+      const tName = typeof s === 'object' ? s.team : null;
+      if (!tName || tName === teamName) {
+        goalCounts[pName] = (goalCounts[pName] || 0) + 1;
+      }
+    });
+
+    let playerList = members.map(m => m.full_name);
+    if (playerList.length === 0) {
+      // Provide default/sample squad names if no members in DB yet
+      playerList = side === 'home' 
+        ? ['Arif Hossain', 'Sabbir Ahmed', 'Delwar Khan', 'Tanvir Ahmed']
+        : ['Nayeem Ali', 'Tanvir Hasan', 'Imran Hossain', 'Kamrul Islam'];
+    }
+
+    container.innerHTML = playerList.map(name => {
+      const count = goalCounts[name] || 0;
+      return `
+        <div class="scorer-row" data-name="${escapeQuotes(name)}" data-side="${side}">
+          <div style="font-size:.85rem;font-weight:600;color:#1a1a1a">${name}</div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <button type="button" class="goal-btn" onclick="changePlayerGoals(this, -1, '${side}')">&#8722;</button>
+            <span class="goal-count">${count}</span>
+            <button type="button" class="goal-btn" onclick="changePlayerGoals(this, 1, '${side}')">+</button>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function changePlayerGoals(btn, delta, side) {
     const row = btn.closest('.scorer-row');
     const countEl = row.querySelector('.goal-count');
-    const val = Math.max(0, parseInt(countEl.textContent) + delta);
-    countEl.textContent = val;
+    const currentVal = parseInt(countEl.textContent) || 0;
+    const newVal = Math.max(0, currentVal + delta);
+    countEl.textContent = newVal;
+
+    // Recalculate total score for this side
+    const container = document.getElementById(side + '-scorers');
+    const allCounts = container.querySelectorAll('.goal-count');
+    let totalGoals = 0;
+    allCounts.forEach(c => { totalGoals += parseInt(c.textContent) || 0; });
+
+    document.getElementById(side + '-score').value = totalGoals;
   }
-  function saveScore() {
-    alert('Score updated successfully!');
+
+  async function saveScore() {
+    if (!selectedFixture) {
+      alert('Please select a fixture first');
+      return;
+    }
+
+    const homeScore = parseInt(document.getElementById('home-score').value) || 0;
+    const awayScore = parseInt(document.getElementById('away-score').value) || 0;
+    const stage = document.getElementById('stage-input').value.trim();
+    const matchDate = document.getElementById('match-date-input').value;
+    const status = document.querySelector('input[name="match-state"]:checked').value;
+
+    // Collect scorers
+    const scorers = [];
+    const homeRows = document.querySelectorAll('#home-scorers .scorer-row');
+    homeRows.forEach(row => {
+      const name = row.dataset.name;
+      const count = parseInt(row.querySelector('.goal-count').textContent) || 0;
+      for (let i = 0; i < count; i++) {
+        scorers.push({ name: name, team: selectedFixture.home_team_name || 'Home Team' });
+      }
+    });
+
+    const awayRows = document.querySelectorAll('#away-scorers .scorer-row');
+    awayRows.forEach(row => {
+      const name = row.dataset.name;
+      const count = parseInt(row.querySelector('.goal-count').textContent) || 0;
+      for (let i = 0; i < count; i++) {
+        scorers.push({ name: name, team: selectedFixture.away_team_name || 'Away Team' });
+      }
+    });
+
+    const saveBtn = document.getElementById('btn-save-score');
+    saveBtn.textContent = 'Saving...';
+    saveBtn.disabled = true;
+
+    try {
+      const payload = {
+        fixture_id: selectedFixture.id,
+        home_score: homeScore,
+        away_score: awayScore,
+        status: status,
+        round_name: stage,
+        match_date: matchDate,
+        scorers: scorers
+      };
+
+      const res = await apiPost('fixtures/update-score.php', payload);
+      if (res.success) {
+        alert('✅ Score updated successfully!');
+        // Refresh fixture and completed list
+        const tournId = document.getElementById('tournament-select').value;
+        const [fRes, compRes] = await Promise.all([
+          apiGet(`fixtures/list.php?tournament_id=${tournId}`),
+          apiGet('fixtures/list.php?status=completed&limit=6')
+        ]);
+        currentFixtures = fRes.fixtures || [];
+        renderRecentResults(compRes.fixtures || []);
+      } else {
+        alert(res.error || 'Failed to update score');
+      }
+    } catch (err) {
+      alert('Error updating score: ' + err.message);
+    } finally {
+      saveBtn.textContent = '✏️ Update Score';
+      saveBtn.disabled = false;
+    }
+  }
+
+  function renderRecentResults(fixtures) {
+    const container = document.getElementById('recent-results-container');
+    if (!fixtures || fixtures.length === 0) {
+      container.innerHTML = `
+        <div style="text-align:center;padding:20px;color:#9ca3af;font-size:.8rem">
+          No completed matches recorded yet.
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = fixtures.map((f, idx) => {
+      const isLast = idx === fixtures.length - 1;
+      const borderStyle = isLast ? '' : 'border-bottom:1px solid #f3f4f6';
+      const home = f.home_team_name || 'Home';
+      const away = f.away_team_name || 'Away';
+      const round = f.round_name ? ` &middot; ${f.round_name}` : '';
+      const dateStr = f.match_date ? formatDateSimple(f.match_date) : '';
+      const venue = f.venue_name ? ` &middot; ${f.venue_name}` : '';
+
+      return `
+        <div class="recent-match-item" style="padding:12px 0;${borderStyle}">
+          <div style="font-size:.68rem;font-weight:700;color:#7ed321;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">
+            ${f.tournament_name || 'Tournament'}${round}
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span style="font-weight:700;font-size:.88rem;color:#1a1a1a;max-width:110px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${home}</span>
+            <span style="font-weight:900;font-size:1.1rem;color:#0d2818">${f.home_score ?? 0} &ndash; ${f.away_score ?? 0}</span>
+            <span style="font-weight:700;font-size:.88rem;color:#1a1a1a;max-width:110px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right">${away}</span>
+          </div>
+          <div style="font-size:.72rem;color:#9ca3af;margin-top:3px">
+            ${dateStr}${venue}
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function clearMatchDisplay() {
+    selectedFixture = null;
+    document.getElementById('home-team-label').textContent = 'Home Team';
+    document.getElementById('away-team-label').textContent = 'Away Team';
+    document.getElementById('home-score').value = 0;
+    document.getElementById('away-score').value = 0;
+    document.getElementById('stage-input').value = '';
+    document.getElementById('venue-input').value = '';
+    document.getElementById('home-scorers').innerHTML = '<div style="color:#9ca3af;font-size:.8rem;padding:8px 0;text-align:center">Select a fixture to load players</div>';
+    document.getElementById('away-scorers').innerHTML = '<div style="color:#9ca3af;font-size:.8rem;padding:8px 0;text-align:center">Select a fixture to load players</div>';
+  }
+
+  function resetCurrentForm() {
+    if (selectedFixture) {
+      onFixtureChange();
+    } else {
+      clearMatchDisplay();
+    }
+  }
+
+  function formatDateSimple(dateStr) {
+    try {
+      const d = new Date(dateStr);
+      return d.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' });
+    } catch {
+      return dateStr;
+    }
+  }
+
+  function escapeQuotes(str) {
+    return (str || '').replace(/'/g, "\\'");
   }
 </script>
 </body>

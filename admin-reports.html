@@ -17,31 +17,7 @@
 <body>
 <div id="app-wrapper">
   
-  <!-- Standalone Admin Sidebar -->
-  <aside id="sidebar" class="sidebar">
-    <a href="index.html" class="sidebar-logo">
-      <div class="sidebar-logo-icon">TH</div>
-      <span class="sidebar-logo-text">TurfHub</span>
-    </a>
-    <div class="sidebar-user">
-      <div class="sidebar-avatar">A</div>
-      <div class="sidebar-user-info">
-        <span class="sidebar-user-name">Admin User</span>
-        <span class="sidebar-user-role">Platform Admin</span>
-      </div>
-    </div>
-    <nav class="sidebar-nav">
-      <a href="admin-dashboard.html" class="sidebar-nav-item"><span class="sidebar-label">Overview</span></a>
-      <a href="admin-approvals.html" class="sidebar-nav-item"><span class="sidebar-label">Approvals</span></a>
-      <a href="admin-analytics.html" class="sidebar-nav-item"><span class="sidebar-label">Analytics</span></a>
-      <a href="admin-categories.html" class="sidebar-nav-item"><span class="sidebar-label">Categories</span></a>
-      <a href="admin-reports.html" class="sidebar-nav-item active"><span class="sidebar-label">Reports</span></a>
-      <a href="admin-announcements.html" class="sidebar-nav-item"><span class="sidebar-label">Announce</span></a>
-    </nav>
-    <a href="login.html" class="sidebar-signout">
-      <span class="sidebar-label">Sign Out</span>
-    </a>
-  </aside>
+  <!-- Sidebar injected by layout.js -->
 
   <div id="main-content">
     
@@ -61,21 +37,41 @@
     <!-- Page Body -->
     <div class="page-body">
       
+      <!-- Date Filter Bar -->
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:12px 18px;margin-bottom:20px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:6px">
+            <span style="font-size:.78rem;font-weight:700;color:#6b7280">From:</span>
+            <input type="date" id="filter-start-date" style="padding:6px 10px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:.82rem;outline:none" />
+          </div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span style="font-size:.78rem;font-weight:700;color:#6b7280">To:</span>
+            <input type="date" id="filter-end-date" style="padding:6px 10px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:.82rem;outline:none" />
+          </div>
+          <button onclick="loadFinancialReports()" class="btn-lime" style="font-size:.8rem;padding:7px 16px;cursor:pointer">
+            🔍 Filter Ledger
+          </button>
+        </div>
+        <div style="font-size:.78rem;color:#6b7280">
+          Platform Fee: <strong style="color:#0d2818">5.0% flat commission</strong>
+        </div>
+      </div>
+
       <!-- Financial Summary Metric Cards -->
       <div class="stat-grid" style="margin-bottom:24px">
         <div class="stat-card">
           <div class="stat-icon" style="background:#dcfce7">💰</div>
           <div class="stat-body">
-            <div class="stat-value">&#2547;5,24,000</div>
+            <div class="stat-value" id="kpi-gmv">—</div>
             <div class="stat-label">Gross Platform GMV</div>
-            <div class="stat-trend up">↑ 100% Collected</div>
+            <div class="stat-trend up" id="kpi-gmv-sub">Confirmed volume</div>
           </div>
         </div>
 
         <div class="stat-card">
           <div class="stat-icon" style="background:#dbeafe">🏷️</div>
           <div class="stat-body">
-            <div class="stat-value">&#2547;26,200</div>
+            <div class="stat-value" id="kpi-commission">—</div>
             <div class="stat-label">Platform 5% Commission</div>
             <div class="stat-trend up">Net Platform Revenue</div>
           </div>
@@ -84,18 +80,18 @@
         <div class="stat-card">
           <div class="stat-icon" style="background:#fef3c7">🏦</div>
           <div class="stat-body">
-            <div class="stat-value">&#2547;4,97,800</div>
+            <div class="stat-value" id="kpi-payout">—</div>
             <div class="stat-label">Disbursed to Turf Owners</div>
-            <div class="stat-trend" style="color:#6b7280">Auto Bank/bKash Payout</div>
+            <div class="stat-trend" style="color:#6b7280">Auto 95% Host Payout</div>
           </div>
         </div>
 
         <div class="stat-card">
           <div class="stat-icon" style="background:#fee2e2">↩️</div>
           <div class="stat-body">
-            <div class="stat-value">&#2547;3,200</div>
-            <div class="stat-label">Refunds Processed</div>
-            <div class="stat-trend" style="color:#dc2626">4 weather cancellations</div>
+            <div class="stat-value" id="kpi-refunds">—</div>
+            <div class="stat-label">Cancelled / Refund Volume</div>
+            <div class="stat-trend" style="color:#dc2626" id="kpi-refunds-sub">Cancelled bookings</div>
           </div>
         </div>
       </div>
@@ -104,11 +100,11 @@
       <div class="content-panel" style="padding:22px">
         <div class="panel-header" style="margin-bottom:16px">
           <div>
-            <span class="panel-title">Recent Settled Dispatches</span>
-            <span class="panel-sub" style="display:block;font-size:.78rem;color:#6b7280;margin-top:2px">Weekly payout audit ledger with invoice references</span>
+            <span class="panel-title">Platform Booking &amp; Settlement Ledger</span>
+            <span class="panel-sub" style="display:block;font-size:.78rem;color:#6b7280;margin-top:2px">Transaction audit records and individual booking settlements</span>
           </div>
           <div style="display:flex;gap:8px">
-            <button class="btn-ghost" style="font-size:.78rem">Download CSV</button>
+            <button onclick="downloadLedgerCSV()" class="btn-ghost" style="font-size:.78rem">Download CSV</button>
           </div>
         </div>
 
@@ -116,51 +112,19 @@
           <table class="table-custom">
             <thead>
               <tr>
-                <th>Disbursement ID</th>
-                <th>Ground / Host</th>
-                <th>Gross Volume</th>
-                <th>Platform 5%</th>
-                <th>Net Payout</th>
-                <th>Payout Channel</th>
+                <th>Booking TRX</th>
+                <th>Ground &amp; Sport</th>
+                <th>Customer</th>
+                <th>Gross Price</th>
+                <th>5% Fee</th>
+                <th>Owner Net</th>
+                <th>Channel</th>
                 <th>Status</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="ledger-tbody">
               <tr>
-                <td><strong style="color:#1a1a1a">#DIS-2025-0726-01</strong></td>
-                <td>Rafiqul Islam &middot; The Green Arena</td>
-                <td>&#2547;72,000</td>
-                <td>&#2547;3,600</td>
-                <td><strong style="color:#16a34a">&#2547;68,400</strong></td>
-                <td>City Bank A/C &middot;&middot;4875</td>
-                <td><span class="badge badge-success badge-dot">Disbursed</span></td>
-              </tr>
-              <tr>
-                <td><strong style="color:#1a1a1a">#DIS-2025-0726-02</strong></td>
-                <td>Zahid Karim &middot; Court Pro Indoor</td>
-                <td>&#2547;48,000</td>
-                <td>&#2547;2,400</td>
-                <td><strong style="color:#16a34a">&#2547;45,600</strong></td>
-                <td>bKash Merchant &middot;&middot;1122</td>
-                <td><span class="badge badge-success badge-dot">Disbursed</span></td>
-              </tr>
-              <tr>
-                <td><strong style="color:#1a1a1a">#DIS-2025-0726-03</strong></td>
-                <td>Tanvir Hossain &middot; Champions Field</td>
-                <td>&#2547;64,000</td>
-                <td>&#2547;3,200</td>
-                <td><strong style="color:#16a34a">&#2547;60,800</strong></td>
-                <td>BRAC Bank A/C &middot;&middot;9921</td>
-                <td><span class="badge badge-success badge-dot">Disbursed</span></td>
-              </tr>
-              <tr>
-                <td><strong style="color:#1a1a1a">#DIS-2025-0726-04</strong></td>
-                <td>Mahbubur Rahman &middot; Uttara Arena</td>
-                <td>&#2547;38,000</td>
-                <td>&#2547;1,900</td>
-                <td><strong style="color:#16a34a">&#2547;36,100</strong></td>
-                <td>Nagad Merchant &middot;&middot;7788</td>
-                <td><span class="badge badge-success badge-dot">Disbursed</span></td>
+                <td colspan="8" style="text-align:center;padding:30px;color:#9ca3af">Loading ledger transactions...</td>
               </tr>
             </tbody>
           </table>
@@ -170,5 +134,140 @@
     </div>
   </div>
 </div>
+
+  <script src="api-client.js"></script>
+  <script src="auth.js"></script>
+  <script src="layout.js"></script>
+  <script>
+    let currentBookings = [];
+
+    (async function init() {
+      const user = await initAuth('admin');
+      if (!user) return;
+      renderSidebar('reports', user);
+
+      // Default dates: first of month to today
+      const now = new Date();
+      const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+      
+      document.getElementById('filter-start-date').value = toYMD(firstOfMonth);
+      document.getElementById('filter-end-date').value = toYMD(now);
+
+      await loadFinancialReports();
+    })();
+
+    function toYMD(d) {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    }
+
+    async function loadFinancialReports() {
+      const startDate = document.getElementById('filter-start-date').value;
+      const endDate = document.getElementById('filter-end-date').value;
+
+      try {
+        const data = await apiGet(`admin/financial-reports.php?start_date=${startDate}&end_date=${endDate}`);
+        currentBookings = data.bookings || [];
+        const summary = data.summary || {};
+
+        const confirmedRev = Number(summary.confirmed_revenue || 0);
+        const commission = Math.round(confirmedRev * 0.05);
+        const ownerNet = confirmedRev - commission;
+        const cancelledRev = Number(summary.cancelled_revenue || 0);
+
+        // Update KPIs
+        document.getElementById('kpi-gmv').textContent = formatBDT(confirmedRev);
+        document.getElementById('kpi-commission').textContent = formatBDT(commission);
+        document.getElementById('kpi-payout').textContent = formatBDT(ownerNet);
+        document.getElementById('kpi-refunds').textContent = formatBDT(cancelledRev);
+
+        const tbody = document.getElementById('ledger-tbody');
+        if (currentBookings.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="8" style="text-align:center;padding:30px;color:#9ca3af">No booking transactions found in this date range</td>
+            </tr>`;
+          return;
+        }
+
+        tbody.innerHTML = currentBookings.map(b => {
+          const gross = Number(b.total_price || 0);
+          const fee = Math.round(gross * 0.05);
+          const net = gross - fee;
+
+          const badgeClass = b.status === 'confirmed' ? 'badge-confirmed' :
+                             b.status === 'pending' ? 'badge-pending' : 'badge-rejected';
+          const statusLabel = b.status ? b.status.charAt(0).toUpperCase() + b.status.slice(1) : 'Pending';
+
+          return `
+            <tr>
+              <td>
+                <div style="font-weight:700;color:#0d2818">#BK-${b.id}</div>
+                <code style="font-size:.72rem;color:#6b7280">${b.trx_id || '—'}</code>
+              </td>
+              <td>
+                <div style="font-weight:700;color:#1a1a1a">${b.turf_name}</div>
+                <div style="font-size:.72rem;color:#6b7280;text-transform:capitalize">${b.sport_type || 'Ground'}</div>
+              </td>
+              <td>
+                <div style="font-weight:600">${b.customer_name}</div>
+                <div style="font-size:.72rem;color:#6b7280">${b.customer_email || ''}</div>
+              </td>
+              <td><strong>${formatBDT(gross)}</strong></td>
+              <td style="color:#6b7280">${formatBDT(fee)}</td>
+              <td><strong style="color:#16a34a">${formatBDT(net)}</strong></td>
+              <td style="text-transform:uppercase;font-size:.75rem;font-weight:700">${b.payment_method || 'Online'}</td>
+              <td><span class="badge ${badgeClass} badge-dot">${statusLabel}</span></td>
+            </tr>`;
+        }).join('');
+
+      } catch (err) {
+        console.error('Failed to load financial reports:', err);
+        document.getElementById('ledger-tbody').innerHTML = `
+          <tr>
+            <td colspan="8" style="text-align:center;padding:30px;color:#dc2626">Failed to load reports: ${err.message}</td>
+          </tr>`;
+      }
+    }
+
+    function downloadLedgerCSV() {
+      if (currentBookings.length === 0) {
+        alert('No data available to download');
+        return;
+      }
+
+      const headers = ['Booking ID', 'TRX ID', 'Turf Name', 'Sport Type', 'Customer Name', 'Customer Email', 'Gross Price (BDT)', '5% Platform Fee', 'Owner Net Payout', 'Payment Channel', 'Status', 'Date'];
+      const rows = currentBookings.map(b => {
+        const gross = Number(b.total_price || 0);
+        const fee = Math.round(gross * 0.05);
+        const net = gross - fee;
+        return [
+          `BK-${b.id}`,
+          b.trx_id || '',
+          `"${(b.turf_name || '').replace(/"/g, '""')}"`,
+          b.sport_type || '',
+          `"${(b.customer_name || '').replace(/"/g, '""')}"`,
+          b.customer_email || '',
+          gross,
+          fee,
+          net,
+          b.payment_method || '',
+          b.status || '',
+          b.created_at || ''
+        ];
+      });
+
+      const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', `TurfHub_Ledger_${document.getElementById('filter-start-date').value}_to_${document.getElementById('filter-end-date').value}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  </script>
 </body>
 </html>

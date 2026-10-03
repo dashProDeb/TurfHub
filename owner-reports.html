@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TurfHub — Reports</title>
+  <title>TurfHub — Reports &amp; Analytics</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <style>
-    .mini-bar { height:40px;background:#e8ede8;border-radius:6px;position:relative;overflow:hidden;transition:height .3s; }
+    .mini-bar { height:70px;background:#e8ede8;border-radius:6px;position:relative;overflow:hidden;transition:height .3s; }
     .mini-bar-fill { position:absolute;bottom:0;left:0;right:0;background:#7ed321;border-radius:6px;transition:height .4s; }
     .bar-lbl { font-size:.68rem;color:#9ca3af;text-align:center;margin-top:4px; }
     .bar-val { font-size:.72rem;font-weight:700;color:#1a1a1a;text-align:center; }
@@ -19,32 +19,7 @@
 </head>
 <body>
 <div id="app-wrapper">
-  <!-- Standalone Owner Sidebar -->
-  <aside id="sidebar" class="sidebar">
-    <a href="index.html" class="sidebar-logo">
-      <div class="sidebar-logo-icon">TH</div>
-      <span class="sidebar-logo-text">TurfHub</span>
-    </a>
-    <div class="sidebar-user">
-      <div class="sidebar-avatar">R</div>
-      <div class="sidebar-user-info">
-        <span class="sidebar-user-name">Rafiqul Islam</span>
-        <span class="sidebar-user-role">Turf Owner</span>
-      </div>
-    </div>
-    <nav class="sidebar-nav">
-      <a href="owner-dashboard.html" class="sidebar-nav-item"><span class="sidebar-label">Dashboard</span></a>
-      <a href="manage-turf.html" class="sidebar-nav-item"><span class="sidebar-label">Manage Turfs</span></a>
-      <a href="slot-calendar.html" class="sidebar-nav-item"><span class="sidebar-label">Slot Calendar</span></a>
-      <a href="owner-tournament.html" class="sidebar-nav-item"><span class="sidebar-label">Tournaments</span></a>
-      <a href="score-entry.html" class="sidebar-nav-item"><span class="sidebar-label">Score Entry</span></a>
-      <a href="owner-chat.html" class="sidebar-nav-item"><span class="sidebar-label">Messages</span></a>
-      <a href="owner-reports.html" class="sidebar-nav-item active"><span class="sidebar-label">Reports</span></a>
-    </nav>
-    <a href="login.html" class="sidebar-signout">
-      <span class="sidebar-label">Sign Out</span>
-    </a>
-  </aside>
+  <!-- Sidebar injected dynamically by layout.js -->
 
   <div id="main-content">
     <div id="topbar">
@@ -53,11 +28,14 @@
         <span class="topbar-sub">Revenue, bookings, and performance insights</span>
       </div>
       <div class="topbar-actions">
-        <span class="badge badge-owner">Owner Portal</span>
+        <button onclick="window.print()" class="btn-lime" style="font-size:.82rem;padding:7px 16px;cursor:pointer">
+          📄 Export Statement (PDF)
+        </button>
       </div>
     </div>
+    
     <div class="page-body">
-      <!-- Period tabs -->
+      <!-- Period filter tabs -->
       <div style="display:flex;gap:8px;margin-bottom:20px">
         <button class="period-tab" onclick="setPeriod('week',this)">This Week</button>
         <button class="period-tab active" onclick="setPeriod('month',this)">This Month</button>
@@ -68,35 +46,38 @@
       <!-- Stat cards -->
       <div class="stat-grid" style="margin-bottom:20px">
         <div class="stat-card">
-          <div class="stat-icon" style="background:#dcfce7">&#128197;</div>
+          <div class="stat-icon" style="background:#dcfce7">📅</div>
           <div class="stat-body">
-            <div class="stat-value">34</div>
+            <div class="stat-value" id="kpi-total-bookings">—</div>
             <div class="stat-label">Total Bookings</div>
-            <div class="stat-trend up">&#8593; 12% vs last month</div>
+            <div class="stat-trend up" id="kpi-confirmed-sub">Confirmed in period</div>
           </div>
         </div>
+        
         <div class="stat-card">
-          <div class="stat-icon" style="background:#dcfce7">&#128176;</div>
+          <div class="stat-icon" style="background:#dcfce7">💰</div>
           <div class="stat-body">
-            <div class="stat-value">&#2547;68,400</div>
+            <div class="stat-value" id="kpi-total-revenue">—</div>
             <div class="stat-label">Total Revenue</div>
-            <div class="stat-trend up">&#8593; 8% vs last month</div>
+            <div class="stat-trend up" id="kpi-net-payout">Net Disbursed</div>
           </div>
         </div>
+
         <div class="stat-card">
-          <div class="stat-icon" style="background:#dbeafe">&#128336;</div>
+          <div class="stat-icon" style="background:#dbeafe">⏱️</div>
           <div class="stat-body">
-            <div class="stat-value">71%</div>
+            <div class="stat-value" id="kpi-utilization">—</div>
             <div class="stat-label">Avg Utilization</div>
-            <div class="stat-trend up">&#8593; 5% vs last month</div>
+            <div class="stat-trend up" id="kpi-active-turfs">Managed Venues</div>
           </div>
         </div>
+
         <div class="stat-card">
-          <div class="stat-icon" style="background:#fef3c7">&#11088;</div>
+          <div class="stat-icon" style="background:#fef3c7">⭐</div>
           <div class="stat-body">
-            <div class="stat-value">4.7</div>
+            <div class="stat-value" id="kpi-avg-rating">—</div>
             <div class="stat-label">Avg Rating</div>
-            <div class="stat-trend up">&#8593; from 4.5</div>
+            <div class="stat-trend up">Across all turfs</div>
           </div>
         </div>
       </div>
@@ -104,61 +85,19 @@
       <div class="content-grid">
         <!-- Revenue Chart (visual bar chart) -->
         <div class="content-panel">
-          <div class="panel-header"><span class="panel-title">Revenue by Week</span><span style="font-size:.78rem;color:#9ca3af">July 2025</span></div>
-          <div style="display:flex;align-items:flex-end;gap:8px;height:140px;padding:8px 0">
-            <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center">
-              <div class="mini-bar" style="width:100%;height:60px"><div class="mini-bar-fill" style="height:60%"></div></div>
-              <div class="bar-lbl">W1</div>
-              <div class="bar-val">&#2547;14k</div>
-            </div>
-            <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center">
-              <div class="mini-bar" style="width:100%;height:80px"><div class="mini-bar-fill" style="height:75%"></div></div>
-              <div class="bar-lbl">W2</div>
-              <div class="bar-val">&#2547;18k</div>
-            </div>
-            <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center">
-              <div class="mini-bar" style="width:100%;height:100px"><div class="mini-bar-fill" style="height:88%"></div></div>
-              <div class="bar-lbl">W3</div>
-              <div class="bar-val">&#2547;22k</div>
-            </div>
-            <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center">
-              <div class="mini-bar" style="width:100%;height:70px"><div class="mini-bar-fill" style="height:65%"></div></div>
-              <div class="bar-lbl">W4</div>
-              <div class="bar-val">&#2547;14k</div>
-            </div>
+          <div class="panel-header">
+            <span class="panel-title">Revenue by Week</span>
+            <span style="font-size:.78rem;color:#9ca3af" id="chart-subtitle">This Month</span>
+          </div>
+          
+          <div id="revenue-bars-container" style="display:flex;align-items:flex-end;gap:12px;height:140px;padding:8px 0">
+            <!-- Dynamically populated bars -->
           </div>
 
           <div style="margin-top:20px">
             <div class="panel-header"><span class="panel-title" style="font-size:.88rem">Revenue by Turf</span></div>
-            <div class="report-row">
-              <div style="display:flex;align-items:center;gap:10px">
-                <div style="width:8px;height:8px;border-radius:2px;background:#7ed321"></div>
-                <span style="font-size:.85rem;font-weight:600">The Green Arena</span>
-              </div>
-              <div style="text-align:right">
-                <div style="font-weight:800;font-size:.9rem">&#2547;27,200</div>
-                <div style="font-size:.72rem;color:#9ca3af">34 bookings</div>
-              </div>
-            </div>
-            <div class="report-row">
-              <div style="display:flex;align-items:center;gap:10px">
-                <div style="width:8px;height:8px;border-radius:2px;background:#60a5fa"></div>
-                <span style="font-size:.85rem;font-weight:600">Court Pro Indoor</span>
-              </div>
-              <div style="text-align:right">
-                <div style="font-weight:800;font-size:.9rem">&#2547;24,400</div>
-                <div style="font-size:.72rem;color:#9ca3af">28 bookings</div>
-              </div>
-            </div>
-            <div class="report-row">
-              <div style="display:flex;align-items:center;gap:10px">
-                <div style="width:8px;height:8px;border-radius:2px;background:#f59e0b"></div>
-                <span style="font-size:.85rem;font-weight:600">Champions Field</span>
-              </div>
-              <div style="text-align:right">
-                <div style="font-weight:800;font-size:.9rem">&#2547;16,800</div>
-                <div style="font-size:.72rem;color:#9ca3af">14 bookings</div>
-              </div>
+            <div id="turf-breakdown-list">
+              <!-- Dynamically populated -->
             </div>
           </div>
         </div>
@@ -167,44 +106,188 @@
         <div style="display:flex;flex-direction:column;gap:16px">
           <div class="content-panel">
             <div class="panel-header"><span class="panel-title">Top Customers</span></div>
-            <div class="report-row">
-              <div style="display:flex;align-items:center;gap:10px">
-                <div style="width:32px;height:32px;border-radius:50%;background:#0d2818;color:#7ed321;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.78rem">T</div>
-                <span style="font-size:.85rem;font-weight:600">Thunder FC</span>
-              </div>
-              <div style="font-weight:800;font-size:.88rem">&#2547;9,600</div>
-            </div>
-            <div class="report-row">
-              <div style="display:flex;align-items:center;gap:10px">
-                <div style="width:32px;height:32px;border-radius:50%;background:#6d28d9;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.78rem">C</div>
-                <span style="font-size:.85rem;font-weight:600">City Kickers</span>
-              </div>
-              <div style="font-weight:800;font-size:.88rem">&#2547;7,200</div>
-            </div>
-            <div class="report-row">
-              <div style="display:flex;align-items:center;gap:10px">
-                <div style="width:32px;height:32px;border-radius:50%;background:#dc2626;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.78rem">B</div>
-                <span style="font-size:.85rem;font-weight:600">Blaze United</span>
-              </div>
-              <div style="font-weight:800;font-size:.88rem">&#2547;6,400</div>
+            <div id="top-customers-list">
+              <!-- Dynamically populated -->
             </div>
           </div>
+          
           <div class="content-panel">
             <div class="panel-header"><span class="panel-title">Peak Booking Hours</span></div>
-            <div class="report-row"><span style="font-size:.85rem;color:#6b7280">6:00 AM &ndash; 9:00 AM</span><div style="width:100px;height:8px;background:#e5e7eb;border-radius:4px;overflow:hidden;margin:0 10px"><div style="width:30%;height:100%;background:#7ed321;border-radius:4px"></div></div><span style="font-size:.78rem;font-weight:700">18%</span></div>
-            <div class="report-row"><span style="font-size:.85rem;color:#6b7280">4:00 PM &ndash; 8:00 PM</span><div style="width:100px;height:8px;background:#e5e7eb;border-radius:4px;overflow:hidden;margin:0 10px"><div style="width:85%;height:100%;background:#7ed321;border-radius:4px"></div></div><span style="font-size:.78rem;font-weight:700">62%</span></div>
-            <div class="report-row"><span style="font-size:.85rem;color:#6b7280">8:00 PM &ndash; 10:00 PM</span><div style="width:100px;height:8px;background:#e5e7eb;border-radius:4px;overflow:hidden;margin:0 10px"><div style="width:55%;height:100%;background:#7ed321;border-radius:4px"></div></div><span style="font-size:.78rem;font-weight:700">33%</span></div>
-            <div class="report-row"><span style="font-size:.85rem;color:#6b7280">Weekend</span><div style="width:100px;height:8px;background:#e5e7eb;border-radius:4px;overflow:hidden;margin:0 10px"><div style="width:92%;height:100%;background:#f59e0b;border-radius:4px"></div></div><span style="font-size:.78rem;font-weight:700">91%</span></div>
+            <div id="peak-hours-list">
+              <!-- Dynamically populated -->
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-<script>
-  function setPeriod(p, btn) {
-    document.querySelectorAll('.period-tab').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-  }
-</script>
+</div>
+
+  <script src="api-client.js"></script>
+  <script src="auth.js"></script>
+  <script src="layout.js"></script>
+  <script>
+    let activePeriod = 'month';
+
+    (async function init() {
+      const user = await initAuth('owner');
+      if (!user) return;
+      renderSidebar('reports', user);
+
+      await fetchAndRenderReports(activePeriod);
+    })();
+
+    async function setPeriod(p, btn) {
+      document.querySelectorAll('.period-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activePeriod = p;
+      await fetchAndRenderReports(p);
+    }
+
+    async function fetchAndRenderReports(period) {
+      try {
+        const data = await apiGet(`turfs/reports.php?period=${period}`);
+        renderReports(data);
+      } catch (err) {
+        console.error('Failed to load owner reports:', err);
+      }
+    }
+
+    function renderReports(data) {
+      document.getElementById('chart-subtitle').textContent = data.period_label || 'Period Overview';
+
+      // ── KPIs ──
+      document.getElementById('kpi-total-bookings').textContent = data.total_bookings;
+      document.getElementById('kpi-confirmed-sub').textContent = `↑ ${data.confirmed_bookings} confirmed`;
+      document.getElementById('kpi-total-revenue').textContent = formatBDT(data.total_revenue);
+      document.getElementById('kpi-net-payout').textContent = `↑ 95% Net: ${formatBDT(data.net_payout)}`;
+      document.getElementById('kpi-utilization').textContent = `${data.utilization_rate}%`;
+      document.getElementById('kpi-active-turfs').textContent = `${data.active_turfs} Managed Grounds`;
+      document.getElementById('kpi-avg-rating').textContent = Number(data.avg_rating).toFixed(1);
+
+      // ── Revenue Buckets ──
+      renderRevenueBars(data.revenue_buckets || []);
+
+      // ── Revenue by Turf ──
+      renderTurfBreakdown(data.turf_breakdown || []);
+
+      // ── Top Customers ──
+      renderTopCustomers(data.top_customers || []);
+
+      // ── Peak Hours ──
+      renderPeakHours(data.peak_hours || {});
+    }
+
+    function renderRevenueBars(buckets) {
+      const container = document.getElementById('revenue-bars-container');
+      if (!buckets || buckets.length === 0) {
+        container.innerHTML = `<div style="width:100%;text-align:center;color:#9ca3af;padding:20px;font-size:.85rem">No revenue in this period</div>`;
+        return;
+      }
+
+      const maxAmount = Math.max(...buckets.map(b => b.amount), 1);
+
+      container.innerHTML = buckets.map(b => {
+        const pct = b.amount > 0 ? Math.max(15, Math.round((b.amount / maxAmount) * 100)) : 8;
+        const fillStyle = b.amount > 0 ? `height:${pct}%;background:#7ed321` : `height:8%;background:#e5e7eb`;
+        return `
+          <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center">
+            <div class="mini-bar" style="width:100%;height:100px"><div class="mini-bar-fill" style="${fillStyle}"></div></div>
+            <div class="bar-lbl">${b.label}</div>
+            <div class="bar-val">${formatBDT(b.amount)}</div>
+          </div>`;
+      }).join('');
+    }
+
+    function renderTurfBreakdown(turfs) {
+      const listEl = document.getElementById('turf-breakdown-list');
+      if (!turfs || turfs.length === 0) {
+        listEl.innerHTML = `<div style="color:#9ca3af;font-size:.85rem;padding:10px 0">No turfs registered yet</div>`;
+        return;
+      }
+
+      const colors = ['#7ed321', '#60a5fa', '#f59e0b', '#ec4899', '#8b5cf6'];
+
+      listEl.innerHTML = turfs.map((turf, idx) => {
+        const revenue = Number(turf.revenue || 0);
+        const count = Number(turf.bookings_count || 0);
+        const color = colors[idx % colors.length];
+
+        return `
+          <div class="report-row">
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="width:10px;height:10px;border-radius:3px;background:${color}"></div>
+              <span style="font-size:.85rem;font-weight:600">${turf.name}</span>
+            </div>
+            <div style="text-align:right">
+              <div style="font-weight:800;font-size:.9rem">${formatBDT(revenue)}</div>
+              <div style="font-size:.72rem;color:#9ca3af">${count} booking${count !== 1 ? 's' : ''}</div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function renderTopCustomers(customers) {
+      const listEl = document.getElementById('top-customers-list');
+      if (!customers || customers.length === 0) {
+        listEl.innerHTML = `<div style="color:#9ca3af;font-size:.85rem;padding:10px 0">No customers in this period</div>`;
+        return;
+      }
+
+      const avatarColors = [
+        { bg: '#0d2818', text: '#7ed321' },
+        { bg: '#6d28d9', text: '#fff' },
+        { bg: '#dc2626', text: '#fff' },
+        { bg: '#2563eb', text: '#fff' }
+      ];
+
+      listEl.innerHTML = customers.map((c, idx) => {
+        const color = avatarColors[idx % avatarColors.length];
+        const initial = (c.name || 'U').charAt(0).toUpperCase();
+        const total = Number(c.total || 0);
+        const count = Number(c.count || 0);
+
+        return `
+          <div class="report-row">
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="width:32px;height:32px;border-radius:50%;background:${color.bg};color:${color.text};display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.78rem">
+                ${initial}
+              </div>
+              <div>
+                <span style="font-size:.85rem;font-weight:600">${c.name}</span>
+                <span style="display:block;font-size:.72rem;color:#9ca3af">${count} booking${count > 1 ? 's' : ''}</span>
+              </div>
+            </div>
+            <div style="font-weight:800;font-size:.88rem;color:#16a34a">${formatBDT(total)}</div>
+          </div>`;
+      }).join('');
+    }
+
+    function renderPeakHours(peak) {
+      const listEl = document.getElementById('peak-hours-list');
+      if (!peak || Object.keys(peak).length === 0) {
+        listEl.innerHTML = `<div style="color:#9ca3af;font-size:.85rem;padding:10px 0">No slot data available</div>`;
+        return;
+      }
+
+      const keys = ['morning', 'afternoon', 'evening', 'night'];
+      const colors = ['#7ed321', '#7ed321', '#15803d', '#f59e0b'];
+
+      listEl.innerHTML = keys.map((k, idx) => {
+        const item = peak[k] || { label: k, percentage: 0, count: 0 };
+        const color = colors[idx];
+        const pct = item.percentage || 0;
+
+        return `
+          <div class="report-row">
+            <span style="font-size:.85rem;color:#6b7280">${item.label}</span>
+            <div style="width:100px;height:8px;background:#e5e7eb;border-radius:4px;overflow:hidden;margin:0 10px">
+              <div style="width:${pct}%;height:100%;background:${color};border-radius:4px"></div>
+            </div>
+            <span style="font-size:.78rem;font-weight:700">${pct}%</span>
+          </div>`;
+      }).join('');
+    }
+  </script>
 </body>
 </html>

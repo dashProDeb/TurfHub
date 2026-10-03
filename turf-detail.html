@@ -640,7 +640,7 @@
       <div>
         <div style="font-size:.7rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.04em">Merchant: TurfHub Bangladesh Ltd.</div>
         <div style="font-weight:800;font-size:.95rem;color:#0f172a;margin-top:2px" id="ssl-summary-turf">The Green Arena</div>
-        <div style="font-size:.76rem;color:#64748b" id="ssl-summary-slot">Sat, 26 Jul 2025 · 6:00 PM – 7:00 PM</div>
+        <div style="font-size:.76rem;color:#64748b" id="ssl-summary-slot">Select a date and time slot</div>
       </div>
       <div style="text-align:right">
         <div style="font-size:.7rem;font-weight:700;color:#64748b;text-transform:uppercase">Total Amount</div>
@@ -784,7 +784,11 @@
   </div>
 </div>
 
-<script>
+  <script src="api-client.js"></script>
+  <script src="auth.js"></script>
+  <script src="layout.js"></script>
+  <script src="page-init.js"></script>
+  <script>
   // Database of turfs for rich exploration
   const TURFS = [
     {
@@ -1000,28 +1004,70 @@
     });
   }
 
-  function generateSlots() {
+  function formatTime24to12(timeStr) {
+    if (!timeStr) return '';
+    const [h, m] = timeStr.split(':');
+    const hour = parseInt(h, 10);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour % 12 || 12;
+    return `${displayHour}:00 ${ampm}`;
+  }
+
+  function parseTimeTo24(timeStr) {
+    if (!timeStr) return '18:00:00';
+    const parts = timeStr.trim().split(' ');
+    const timePart = parts[0];
+    const ampm = (parts[1] || 'PM').toUpperCase();
+    let [h, m] = timePart.split(':');
+    let hour = parseInt(h, 10);
+    let min = m ? parseInt(m, 10) : 0;
+    if (ampm === 'PM' && hour < 12) hour += 12;
+    if (ampm === 'AM' && hour === 12) hour = 0;
+    return `${String(hour).padStart(2, '0')}:${String(min).padStart(2, '0')}:00`;
+  }
+
+  function getNextHour(timeStr) {
+    if (!timeStr) return '7:00 PM';
+    const parts = timeStr.split(' ');
+    const hour = parseInt(parts[0], 10);
+    const ampm = parts[1];
+    if (hour === 11 && ampm === 'AM') return '12:00 PM';
+    if (hour === 11 && ampm === 'PM') return '12:00 AM';
+    if (hour === 12 && ampm === 'PM') return '1:00 PM';
+    if (hour === 12 && ampm === 'AM') return '1:00 AM';
+    return `${hour + 1}:00 ${ampm}`;
+  }
+
+  async function generateSlots() {
     const t = TURFS[selectedTurfIndex];
+    if (!t) return;
     const grid = document.getElementById('slots-grid');
+    if (!grid) return;
     
-    // Choose active slot if currently chosen slot is booked
-    if (t.bookedSlots.includes(activeSelectedSlot)) {
-      const firstAvailable = ALL_SLOTS.find(s => !t.bookedSlots.includes(s));
+    const dateVal = document.getElementById('booking-date').value || new Date().toISOString().split('T')[0];
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:12px;color:#9ca3af;font-size:.8rem">Checking slots...</div>';
+
+    let bookedSlots = t.bookedSlots || [];
+    try {
+      const data = await apiGet('slots/list.php?turf_id=' + t.id + '&start_date=' + dateVal + '&end_date=' + dateVal);
+      if (data && data.slots) {
+        bookedSlots = data.slots
+          .filter(s => s.status === 'booked' || s.status === 'maintenance')
+          .map(s => formatTime24to12(s.start_time));
+      }
+    } catch(e) {
+      console.warn('Live slot fetch error:', e);
+    }
+
+    if (bookedSlots.includes(activeSelectedSlot) || !activeSelectedSlot) {
+      const firstAvailable = ALL_SLOTS.find(s => !bookedSlots.includes(s));
       activeSelectedSlot = firstAvailable || '';
     }
 
     grid.innerHTML = ALL_SLOTS.map(slot => {
-      const isBooked = t.bookedSlots.includes(slot);
+      const isBooked = bookedSlots.includes(slot);
       const isSelected = slot === activeSelectedSlot;
-      return `
-        <button 
-          type="button"
-          class="slot-pill ${isBooked ? 'booked' : ''} ${isSelected ? 'selected' : ''}" 
-          ${isBooked ? 'disabled' : `onclick="selectSlot('${slot}')"`}
-        >
-          ${slot}
-        </button>
-      `;
+      return '<button type="button" class="slot-pill ' + (isBooked ? 'booked' : 'available') + ' ' + (isSelected ? 'selected' : '') + '" ' + (isBooked ? 'disabled' : 'onclick="selectSlot('' + slot + '')"') + '>' + slot + (isBooked ? ' <span style="font-size:0.65rem">(Booked)</span>' : '') + '</button>';
     }).join('');
 
     updateSlotSelectionDisplay();
@@ -1164,11 +1210,12 @@
     document.getElementById('mfs-account-input').value = '017' + Math.floor(10000000 + Math.random() * 90000000);
   }
 
-  function executeDummyPayment() {
+  async function executeDummyPayment() {
     const t = TURFS[selectedTurfIndex];
-    const date = document.getElementById('booking-date').value || '2025-07-26';
-    const randomTrx = 'SSL-' + Math.random().toString(36).substring(2, 9).toUpperCase();
-    const randomBookingRef = 'TH-' + date.replace(/-/g, '') + '-' + Math.floor(100 + Math.random() * 900);
+    const date = document.getElementById('booking-date').value || new Date().toISOString().split('T')[0];
+    const startTime24 = parseTimeTo24(activeSelectedSlot);
+    const nextHourStr = getNextHour(activeSelectedSlot);
+    const endTime24 = parseTimeTo24(nextHourStr);
 
     // Switch to processing view
     document.getElementById('ssl-form-view').style.display = 'none';
@@ -1182,56 +1229,78 @@
     const trxBox = document.getElementById('ssl-proc-trx');
     const trxIdSpan = document.getElementById('ssl-proc-trx-id');
 
-    title.textContent = `Connecting to SSLCOMMERZ Gateway...`;
-    desc.textContent = `Establishing secure 256-bit TLS connection with ${currentSelectedMethod} server.`;
+    title.textContent = 'Connecting to SSLCOMMERZ Gateway...';
+    desc.textContent = 'Establishing secure 256-bit TLS connection with ' + currentSelectedMethod + ' server.';
 
-    // Step 1: Processing
-    setTimeout(() => {
-      title.textContent = `Authorizing ৳${t.price}.00 via ${currentSelectedMethod}...`;
-      desc.textContent = `Simulating OTP & PIN verification for mobile/card account authorization.`;
-    }, 700);
+    let paymentMethodKey = 'bkash';
+    if (currentPaymentTab === 'cards') paymentMethodKey = 'card';
+    else if (currentPaymentTab === 'net') paymentMethodKey = 'net_banking';
+    else {
+      const m = (currentSelectedMethod || '').toLowerCase();
+      if (m.includes('nagad')) paymentMethodKey = 'nagad';
+      else if (m.includes('rocket')) paymentMethodKey = 'rocket';
+      else if (m.includes('upay')) paymentMethodKey = 'upay';
+      else paymentMethodKey = 'bkash';
+    }
 
-    // Step 2: Success
-    setTimeout(() => {
-      spinner.style.display = 'none';
-      successIcon.style.display = 'flex';
-      title.textContent = `Payment Successful!`;
-      desc.textContent = `৳${t.price}.00 paid successfully. Your slot at ${t.name} is now confirmed. Redirecting to receipt...`;
-      trxIdSpan.textContent = randomTrx;
-      trxBox.style.display = 'inline-block';
-
-      // Save full booking record to localStorage
-      const newBooking = {
-        turfName: t.name,
-        turfLocation: t.location,
-        sport: t.sport,
-        type: t.type,
-        date: date,
-        time: activeSelectedSlot,
-        price: t.price,
-        refId: randomBookingRef,
-        trxId: randomTrx,
-        paymentMethod: `SSLCOMMERZ (${currentSelectedMethod})`,
-        status: 'confirmed',
-        timestamp: 'Just now'
+    try {
+      const bookingPayload = {
+        turf_id: parseInt(t.id, 10) || 1,
+        slot_date: date,
+        start_time: startTime24,
+        end_time: endTime24,
+        total_price: parseInt(t.price, 10),
+        payment_method: paymentMethodKey
       };
 
-      localStorage.setItem('turfhub_recent_booking', JSON.stringify(newBooking));
+      const res = await apiPost('bookings/create.php', bookingPayload);
+      const bookingData = res.booking || {};
+      const randomTrx = bookingData.trx_id || ('SSL-' + Math.random().toString(36).substring(2, 9).toUpperCase());
+      const randomBookingRef = bookingData.ref_id || ('TH-' + date.replace(/-/g, '') + '-' + Math.floor(100 + Math.random() * 900));
 
-      // Append to list of all receipts
-      let allReceipts = [];
-      try {
-        allReceipts = JSON.parse(localStorage.getItem('turfhub_all_receipts') || '[]');
-      } catch(e) { allReceipts = []; }
-      allReceipts.unshift(newBooking);
-      localStorage.setItem('turfhub_all_receipts', JSON.stringify(allReceipts));
-
-      // Redirect after brief celebration
       setTimeout(() => {
-        window.location.href = 'booking-receipt.html';
-      }, 1200);
+        spinner.style.display = 'none';
+        successIcon.style.display = 'flex';
+        title.textContent = 'Payment Successful!';
+        desc.textContent = '৳' + t.price + '.00 paid successfully. Your slot at ' + t.name + ' is confirmed in the database.';
+        trxIdSpan.textContent = randomTrx;
+        trxBox.style.display = 'inline-block';
 
-    }, 1700);
+        const newBooking = {
+          id: bookingData.id,
+          turfName: t.name,
+          turfLocation: t.location,
+          sport: t.sport,
+          type: t.type,
+          date: date,
+          time: activeSelectedSlot + ' – ' + nextHourStr,
+          price: t.price,
+          refId: randomBookingRef,
+          trxId: randomTrx,
+          paymentMethod: 'SSLCOMMERZ (' + currentSelectedMethod + ')',
+          status: 'confirmed',
+          timestamp: 'Just now'
+        };
+
+        try {
+          localStorage.setItem('turfhub_recent_booking', JSON.stringify(newBooking));
+        } catch(e) {}
+
+        setTimeout(() => {
+          const role = typeof getRole === 'function' ? getRole() : 'player';
+          const target = role === 'player' ? 'player-receipts.html' : 'booking-receipt.html';
+          window.location.href = target + '?turf=' + encodeURIComponent(t.name) + '&date=' + encodeURIComponent(date) + '&slot=' + encodeURIComponent(activeSelectedSlot) + '&price=' + t.price + '&trx=' + randomTrx + '&ref=' + randomBookingRef;
+        }, 1400);
+
+      }, 1000);
+
+    } catch (err) {
+      console.error('Booking failed:', err);
+      spinner.style.display = 'none';
+      title.textContent = 'Booking Failed';
+      title.style.color = '#e53935';
+      desc.textContent = err.message || 'Unable to confirm booking. The slot might already be reserved.';
+    }
   }
 
   function confirmSlotBooking() {
@@ -1239,8 +1308,62 @@
   }
 
   // Initial Boot
-  applyFilters();
-  renderTurfDetails();
+  (async function boot() {
+    const user = await initPage({ navId: 'turfs', roles: ['player', 'captain', 'owner', 'admin'] });
+    if (!user) return;
+
+    const dateInput = document.getElementById('booking-date');
+    const todayIso = new Date().toISOString().split('T')[0];
+    if (dateInput) {
+      dateInput.min = todayIso;
+      if (!dateInput.value || dateInput.value < todayIso) {
+        dateInput.value = todayIso;
+      }
+      dateInput.addEventListener('change', () => {
+        generateSlots();
+      });
+    }
+
+    try {
+      const res = await apiGet('turfs/list.php');
+      if (res && res.turfs && res.turfs.length > 0) {
+        TURFS = res.turfs.map(t => ({
+          id: t.id,
+          name: t.name,
+          sport: t.sport_type || 'Football',
+          type: t.surface_type || 'Outdoor Astro',
+          location: t.location || 'Dhaka',
+          fullAddress: t.location || 'Dhaka, Bangladesh',
+          rating: parseFloat(t.rating) || 4.8,
+          reviewsCount: 'Verified Turf',
+          price: parseInt(t.price_per_hour, 10) || 800,
+          timing: '6:00 AM – 11:00 PM',
+          dimensions: t.field_size || 'Standard Size',
+          surface: t.surface_type || 'Artificial Grass',
+          capacity: '14 vs 14 Max',
+          light: 'Floodlights Available',
+          ownerName: 'Verified Owner',
+          ownerAvatar: (t.name || 'T').charAt(0).toUpperCase(),
+          about: 'Premium ' + t.sport_type + ' ground located at ' + t.location + '. Features verified ground standards, floodlighting, and top-tier playing experience.',
+          images: Array.isArray(t.photos) && t.photos.length > 0 ? t.photos : ['turf_football.jpg'],
+          amenities: Array.isArray(t.amenities) && t.amenities.length > 0 ? t.amenities : ['Floodlights', 'Changing Room', 'Parking', 'Washroom'],
+          bookedSlots: []
+        }));
+      }
+    } catch (err) {
+      console.warn('Backend turfs fetch error:', err);
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const turfIdParam = urlParams.get('turf_id') || urlParams.get('id');
+    if (turfIdParam) {
+      const idx = TURFS.findIndex(t => String(t.id) === String(turfIdParam));
+      if (idx !== -1) selectedTurfIndex = idx;
+    }
+
+    applyFilters();
+    renderTurfDetails();
+  })();
 </script>
 </body>
 </html>

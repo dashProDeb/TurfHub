@@ -12,7 +12,7 @@
     .receipt-card:hover { box-shadow:0 4px 16px rgba(0,0,0,.08); }
     .receipt-body { display:flex;align-items:center;gap:16px;padding:16px 20px; }
     .receipt-icon { width:44px;height:44px;border-radius:12px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0; }
-    .receipt-foot { background:#fafafa;border-top:1px solid #f3f4f6;padding:10px 20px;display:flex;align-items:center;justify-content:space-between; }
+    .receipt-foot { background:#fafafa;border-top:1px solid #f3f4f6;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px; }
     .filter-tab { padding:7px 18px;border-radius:100px;border:1.5px solid #e5e7eb;font-size:.8rem;font-weight:600;cursor:pointer;font-family:inherit;background:#fff;color:#6b7280;transition:all .15s; }
     .filter-tab.active { background:#0d2818;border-color:#0d2818;color:#fff; }
     .summary-strip { display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:22px; }
@@ -20,35 +20,13 @@
     .summary-val { font-size:1.35rem;font-weight:900;color:#0d2818; }
     .summary-lbl { font-size:.72rem;color:#6b7280;font-weight:500; }
     .badge-player { background:rgba(126,211,33,.12);color:#5a9e12;border-radius:100px;padding:4px 12px;font-size:.72rem;font-weight:700; }
+    .btn-cancel-bk { background:none;border:none;color:#ef4444;font-size:.76rem;font-weight:700;cursor:pointer;padding:4px 8px;border-radius:6px;transition:background .15s; }
+    .btn-cancel-bk:hover { background:rgba(239,68,68,0.1); }
   </style>
 </head>
 <body>
 <div id="app-wrapper">
-  <!-- Player Sidebar -->
-  <aside id="sidebar" class="sidebar">
-    <a href="index.html" class="sidebar-logo">
-      <div class="sidebar-logo-icon">TH</div>
-      <span class="sidebar-logo-text">TurfHub</span>
-    </a>
-    <div class="sidebar-user">
-      <div class="sidebar-avatar" style="background:#7ed321;color:#0d2818">P</div>
-      <div class="sidebar-user-info">
-        <span class="sidebar-user-name">Sabbir Ahmed</span>
-        <span class="sidebar-user-role">Player (Striker)</span>
-      </div>
-    </div>
-    <nav class="sidebar-nav">
-      <a href="player-dashboard.html" class="sidebar-nav-item"><span class="sidebar-label">Dashboard</span></a>
-      <a href="turf-detail.html" class="sidebar-nav-item"><span class="sidebar-label">Find Turf</span></a>
-      <a href="join-team.html" class="sidebar-nav-item"><span class="sidebar-label">Join Team</span></a>
-      <a href="player-fixtures.html" class="sidebar-nav-item"><span class="sidebar-label">Fixtures</span></a>
-      <a href="player-receipts.html" class="sidebar-nav-item active"><span class="sidebar-label">My Receipts</span></a>
-      <a href="player-chat.html" class="sidebar-nav-item"><span class="sidebar-label">Team Chat</span></a>
-    </nav>
-    <a href="login.html" class="sidebar-signout">
-      <span class="sidebar-label">Sign Out</span>
-    </a>
-  </aside>
+  <!-- Dynamic Sidebar rendered by layout.js -->
 
   <div id="main-content">
     <div id="topbar">
@@ -59,25 +37,28 @@
       <div class="topbar-actions">
         <a href="turf-detail.html" class="btn-lime">+ Book a Turf</a>
       </div>
-    </div>    <div class="page-body">
+    </div>
+
+    <div class="page-body">
       <div style="max-width: 980px; margin: 0 auto; width: 100%;">
+        
         <!-- Summary strip -->
         <div class="summary-strip">
           <div class="summary-card">
-            <div class="summary-val">4</div>
+            <div class="summary-val" id="stat-total-bookings">0</div>
             <div class="summary-lbl">Total Bookings</div>
           </div>
           <div class="summary-card">
-            <div class="summary-val" style="color:#16a34a">&#2547;3,200</div>
+            <div class="summary-val" id="stat-total-spent" style="color:#16a34a">৳0</div>
             <div class="summary-lbl">Total Spent</div>
           </div>
           <div class="summary-card">
-            <div class="summary-val">3</div>
+            <div class="summary-val" id="stat-confirmed-count">0</div>
             <div class="summary-lbl">Confirmed</div>
           </div>
           <div class="summary-card">
-            <div class="summary-val" style="color:#e53935">&#2547;1,200</div>
-            <div class="summary-lbl">Pending Payment</div>
+            <div class="summary-val" id="stat-pending-count" style="color:#e53935">0</div>
+            <div class="summary-lbl">Cancelled / Other</div>
           </div>
         </div>
 
@@ -91,144 +72,152 @@
 
         <!-- Receipt list -->
         <div id="receipts-list">
-          <div class="receipt-card" data-status="confirmed">
-            <div class="receipt-body">
-              <div class="receipt-icon" style="background:#dcfce7">&#128197;</div>
-              <div style="flex:1;min-width:0">
-                <div style="font-weight:800;font-size:.92rem;color:#1a1a1a">The Green Arena</div>
-                <div style="font-size:.78rem;color:#6b7280;margin-top:2px">Sat, 26 Jul 2025 &middot; 6:00 PM &ndash; 8:00 PM &middot; Football 5-a-side</div>
-                <div style="font-size:.72rem;color:#9ca3af;margin-top:3px">Booked for: Thunder FC practice</div>
-              </div>
-              <div style="text-align:right;flex-shrink:0">
-                <div style="font-weight:900;font-size:1rem;color:#1a1a1a">&#2547;1,600</div>
-                <div style="margin-top:4px"><span class="badge badge-confirmed badge-dot">Confirmed</span></div>
-              </div>
-            </div>
-            <div class="receipt-foot">
-              <span style="font-size:.72rem;color:#9ca3af">Booking ID: TH-2025-0726-001</span>
-              <a href="#" style="font-size:.78rem;font-weight:700;color:#7ed321;text-decoration:none">Download PDF &darr;</a>
-            </div>
-          </div>
-
-          <div class="receipt-card" data-status="confirmed">
-            <div class="receipt-body">
-              <div class="receipt-icon" style="background:#dbeafe">&#128197;</div>
-              <div style="flex:1;min-width:0">
-                <div style="font-weight:800;font-size:.92rem;color:#1a1a1a">Champions Field</div>
-                <div style="font-size:.78rem;color:#6b7280;margin-top:2px">Sun, 20 Jul 2025 &middot; 5:00 PM &ndash; 7:00 PM &middot; Football 7-a-side</div>
-                <div style="font-size:.72rem;color:#9ca3af;margin-top:3px">Booked for: Friendly match</div>
-              </div>
-              <div style="text-align:right;flex-shrink:0">
-                <div style="font-weight:900;font-size:1rem;color:#1a1a1a">&#2547;2,400</div>
-                <div style="margin-top:4px"><span class="badge badge-confirmed badge-dot">Confirmed</span></div>
-              </div>
-            </div>
-            <div class="receipt-foot">
-              <span style="font-size:.72rem;color:#9ca3af">Booking ID: TH-2025-0720-002</span>
-              <a href="#" style="font-size:.78rem;font-weight:700;color:#7ed321;text-decoration:none">Download PDF &darr;</a>
-            </div>
-          </div>
-
-          <div class="receipt-card" data-status="pending">
-            <div class="receipt-body">
-              <div class="receipt-icon" style="background:#fef3c7">&#128197;</div>
-              <div style="flex:1;min-width:0">
-                <div style="font-weight:800;font-size:.92rem;color:#1a1a1a">Court Pro Indoor</div>
-                <div style="font-size:.78rem;color:#6b7280;margin-top:2px">Wed, 30 Jul 2025 &middot; 7:00 PM &ndash; 9:00 PM &middot; Basketball</div>
-                <div style="font-size:.72rem;color:#9ca3af;margin-top:3px">Awaiting payment confirmation</div>
-              </div>
-              <div style="text-align:right;flex-shrink:0">
-                <div style="font-weight:900;font-size:1rem;color:#1a1a1a">&#2547;1,200</div>
-                <div style="margin-top:4px"><span class="badge badge-pending badge-dot">Pending</span></div>
-              </div>
-            </div>
-            <div class="receipt-foot">
-              <span style="font-size:.72rem;color:#9ca3af">Booking ID: TH-2025-0730-003</span>
-              <div style="display:flex;gap:10px;align-items:center">
-                <button onclick="this.textContent='Paid ✓';this.style.color='#16a34a';this.style.cursor='default'" style="font-size:.78rem;font-weight:700;color:#7ed321;background:none;border:none;cursor:pointer;font-family:inherit;padding:0">Pay Now &rarr;</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="receipt-card" data-status="cancelled">
-            <div class="receipt-body">
-              <div class="receipt-icon" style="background:#fee2e2">&#128197;</div>
-              <div style="flex:1;min-width:0">
-                <div style="font-weight:800;font-size:.92rem;color:#1a1a1a">The Green Arena</div>
-                <div style="font-size:.78rem;color:#6b7280;margin-top:2px">Sat, 12 Jul 2025 &middot; 4:00 PM &ndash; 6:00 PM &middot; Football 5-a-side</div>
-                <div style="font-size:.72rem;color:#9ca3af;margin-top:3px">Booking cancelled &mdash; Refund processed</div>
-              </div>
-              <div style="text-align:right;flex-shrink:0">
-                <div style="font-weight:900;font-size:1rem;color:#9ca3af;text-decoration:line-through">&#2547;1,600</div>
-                <div style="margin-top:4px"><span class="badge badge-rejected badge-dot">Cancelled</span></div>
-              </div>
-            </div>
-            <div class="receipt-foot">
-              <span style="font-size:.72rem;color:#9ca3af">Booking ID: TH-2025-0712-004 &middot; Refunded</span>
-              <a href="#" style="font-size:.78rem;font-weight:700;color:#9ca3af;text-decoration:none">Download PDF &darr;</a>
-            </div>
+          <div style="text-align:center;padding:40px;color:#9ca3af;font-size:.85rem">
+            Loading your bookings...
           </div>
         </div>
+
       </div>
     </div>
   </div>
 </div>
-<script>
-  function loadRecentBookings() {
-    let recent = null;
-    try {
-      recent = JSON.parse(localStorage.getItem('turfhub_recent_booking') || 'null');
-    } catch(e) {}
 
-    if (recent) {
-      const list = document.getElementById('receipts-list');
-      if (list && !document.getElementById('dynamic-recent-card')) {
-        const card = document.createElement('div');
-        card.id = 'dynamic-recent-card';
-        card.className = 'receipt-card';
-        card.dataset.status = 'confirmed';
-        card.style.border = '2px solid #7ed321';
-        card.style.background = '#fcfefb';
-        card.innerHTML = `
-          <div class="receipt-body">
-            <div class="receipt-icon" style="background:#bbf7d0;color:#0d2818;font-weight:900">&#10003;</div>
-            <div style="flex:1;min-width:0">
-              <div style="display:flex;align-items:center;gap:8px">
-                <span style="font-weight:800;font-size:.95rem;color:#0d2818">${recent.turfName}</span>
-                <span style="font-size:.65rem;font-weight:800;background:#7ed321;color:#0d2818;padding:2px 6px;border-radius:4px;text-transform:uppercase">NEW BOOKING</span>
-              </div>
-              <div style="font-size:.78rem;color:#4b5563;margin-top:2px">
-                ${recent.date} &middot; ${recent.time} &middot; ${recent.sport || 'Sports'} (${recent.turfLocation || 'Dhaka'})
-              </div>
-              <div style="font-size:.72rem;color:#059669;font-weight:600;margin-top:3px">
-                Paid via ${recent.paymentMethod || 'SSLCOMMERZ'} &middot; TrxID: ${recent.trxId || 'N/A'}
-              </div>
-            </div>
-            <div style="text-align:right;flex-shrink:0">
-              <div style="font-weight:900;font-size:1.1rem;color:#0d2818">&#2547;${recent.price}</div>
-              <div style="margin-top:4px"><span class="badge badge-confirmed badge-dot">Confirmed</span></div>
-            </div>
-          </div>
-          <div class="receipt-foot" style="background:#f4fbf4">
-            <span style="font-size:.72rem;color:#6b7280">Booking Ref: ${recent.refId} &middot; Verified by SSLCOMMERZ</span>
-            <a href="#" onclick="alert('Downloading official tax invoice PDF for ${recent.refId}...');return false;" style="font-size:.78rem;font-weight:700;color:#0d2818;text-decoration:none">Download Invoice PDF &darr;</a>
-          </div>
-        `;
-        list.prepend(card);
-      }
+<script src="api-client.js"></script>
+<script src="auth.js"></script>
+<script src="layout.js"></script>
+<script src="page-init.js"></script>
+
+<script>
+  let allBookings = [];
+  let currentFilter = 'all';
+
+  (async function() {
+    const user = await initPage({ navId: 'receipts', roles: ['player', 'captain', 'owner', 'admin'] });
+    if (!user) return;
+    await loadUserBookings();
+  })();
+
+  async function loadUserBookings() {
+    const listEl = document.getElementById('receipts-list');
+    try {
+      const data = await apiGet('bookings/user-bookings.php');
+      allBookings = data.bookings || [];
+      
+      updateSummaryStats(allBookings);
+      renderBookings(allBookings);
+    } catch (err) {
+      console.error('Failed to load bookings:', err);
+      listEl.innerHTML = `
+        <div style="text-align:center;padding:40px;color:#e53935;font-size:.85rem">
+          ⚠️ Failed to load bookings from backend. Is the server running?
+        </div>`;
     }
   }
 
-  function setFilter(f, btn) {
-    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.receipt-card').forEach(card => {
-      card.style.display = (f === 'all' || card.dataset.status === f) ? 'block' : 'none';
-    });
+  function updateSummaryStats(bookings) {
+    const totalCount = bookings.length;
+    const confirmedList = bookings.filter(b => b.status === 'confirmed');
+    const totalSpent = confirmedList.reduce((acc, b) => acc + (parseInt(b.total_price, 10) || 0), 0);
+    const confirmedCount = confirmedList.length;
+    const pendingOrCancelled = totalCount - confirmedCount;
+
+    document.getElementById('stat-total-bookings').textContent = totalCount;
+    document.getElementById('stat-total-spent').textContent = formatBDT(totalSpent);
+    document.getElementById('stat-confirmed-count').textContent = confirmedCount;
+    document.getElementById('stat-pending-count').textContent = pendingOrCancelled;
   }
 
-  // Load dynamically
-  loadRecentBookings();
+  function renderBookings(bookings) {
+    const listEl = document.getElementById('receipts-list');
+    const filtered = currentFilter === 'all' 
+      ? bookings 
+      : bookings.filter(b => b.status === currentFilter);
+
+    if (filtered.length === 0) {
+      listEl.innerHTML = `
+        <div style="text-align:center;padding:40px;background:#fff;border:1px solid #e8ede8;border-radius:14px;color:#9ca3af;font-size:.9rem">
+          <div style="font-size:2.5rem;margin-bottom:12px">📋</div>
+          <div style="font-weight:700;color:#1a1a1a">No bookings found</div>
+          <div style="margin-top:6px;font-size:.82rem">You have no ${currentFilter !== 'all' ? currentFilter : ''} bookings recorded yet.</div>
+          <div style="margin-top:16px">
+            <a href="turf-detail.html" class="btn-lime" style="font-size:0.8rem;padding:8px 18px">Book a Turf Now</a>
+          </div>
+        </div>`;
+      return;
+    }
+
+    listEl.innerHTML = filtered.map(b => {
+      const isConfirmed = b.status === 'confirmed';
+      const isCancelled = b.status === 'cancelled';
+      const statusClass = isConfirmed ? 'badge-confirmed' : isCancelled ? 'badge-rejected' : 'badge-pending';
+      const iconBg = isConfirmed ? '#dcfce7' : isCancelled ? '#fee2e2' : '#fef3c7';
+      const statusLabel = b.status ? (b.status.charAt(0).toUpperCase() + b.status.slice(1)) : 'Pending';
+      const dateStr = b.slot_date ? formatDate(b.slot_date) : formatDate(b.created_at);
+      const timeStr = b.start_time && b.end_time 
+        ? `${formatTime(b.start_time)} – ${formatTime(b.end_time)}`
+        : '6:00 PM – 7:00 PM';
+      const trxId = b.trx_id || `SSL-TH-${b.id}`;
+      const refId = b.ref_id || `TH-${b.id}`;
+      const paymentMethodStr = (b.payment_method || 'bkash').toUpperCase();
+
+      return `
+        <div class="receipt-card" data-status="${b.status}">
+          <div class="receipt-body">
+            <div class="receipt-icon" style="background:${iconBg}">📅</div>
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                <span style="font-weight:800;font-size:.95rem;color:#1a1a1a">${b.turf_name || 'Turf Ground'}</span>
+                <span style="font-size:.65rem;font-weight:700;background:#f3f4f6;color:#6b7280;padding:2px 8px;border-radius:4px">${b.sport_type || 'Sports'}</span>
+              </div>
+              <div style="font-size:.78rem;color:#6b7280;margin-top:3px">
+                ${dateStr} &middot; ${timeStr} &middot; 📍 ${b.turf_location || 'Dhaka'}
+              </div>
+              <div style="font-size:.72rem;color:#059669;font-weight:600;margin-top:2px">
+                Paid via ${paymentMethodStr} &middot; Trx: ${trxId}
+              </div>
+            </div>
+            <div style="text-align:right;flex-shrink:0">
+              <div style="font-weight:900;font-size:1.1rem;color:#1a1a1a">${formatBDT(b.total_price)}</div>
+              <div style="margin-top:4px"><span class="badge ${statusClass} badge-dot">${statusLabel}</span></div>
+            </div>
+          </div>
+          <div class="receipt-foot">
+            <span style="font-size:.72rem;color:#9ca3af">Ref: ${refId} &middot; Booked on ${formatDate(b.created_at)}</span>
+            <div style="display:flex;align-items:center;gap:12px">
+              ${isConfirmed ? `
+                <button type="button" class="btn-cancel-bk" onclick="cancelBooking(${b.id}, '${b.turf_name}')">Cancel Booking</button>
+              ` : ''}
+              <a href="#" onclick="downloadInvoice('${refId}', '${b.turf_name}', '${b.total_price}', '${dateStr}', '${timeStr}');return false;" style="font-size:.78rem;font-weight:700;color:#0d2818;text-decoration:none">Download Invoice &darr;</a>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function setFilter(f, btn) {
+    currentFilter = f;
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderBookings(allBookings);
+  }
+
+  async function cancelBooking(bookingId, turfName) {
+    if (!confirm(`Are you sure you want to cancel your booking at "${turfName}"? This will release the slot back for other users.`)) {
+      return;
+    }
+
+    try {
+      const res = await apiPost('bookings/cancel.php', { booking_id: bookingId });
+      alert(res.message || 'Booking cancelled and slot released successfully!');
+      await loadUserBookings();
+    } catch (err) {
+      alert('Failed to cancel booking: ' + (err.message || 'Unknown error'));
+    }
+  }
+
+  function downloadInvoice(refId, turfName, amount, dateStr, timeStr) {
+    alert(`📄 Tax Invoice Receipt [${refId}]\nTurf: ${turfName}\nAmount: ৳${amount}\nSlot: ${dateStr} (${timeStr})\n\nSimulating instant PDF download.`);
+  }
 </script>
 </body>
 </html>
