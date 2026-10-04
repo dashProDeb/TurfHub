@@ -12,57 +12,201 @@
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <style>
     /* Tournament tabs */
-    .tournament-tab { padding:9px 20px; border-radius:100px; border:1.5px solid #e5e7eb; background:#fff; font-size:.85rem; font-weight:700; cursor:pointer; color:#6b7280; font-family:inherit; transition:all .15s; }
-    .tournament-tab.active { background:#0d2818; border-color:#0d2818; color:#fff; }
-    .tournament-tab:hover:not(.active) { border-color:#9ca3af; color:#1a1a1a; }
+    .tournament-tab {
+      padding: 9px 20px;
+      border-radius: 100px;
+      border: 1.5px solid #e5e7eb;
+      background: #fff;
+      font-size: .85rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: #6b7280;
+      font-family: inherit;
+      transition: all .15s ease;
+      white-space: nowrap;
+    }
+    .tournament-tab.active { background: #0d2818; border-color: #0d2818; color: #fff; }
+    .tournament-tab:hover:not(.active) { border-color: #9ca3af; color: #1a1a1a; }
 
     /* Live banner */
-    .live-banner { background:#fefce8; border:1px solid #fde68a; border-radius:12px; padding:14px 20px; display:flex; align-items:center; gap:12px; margin-bottom:20px; }
-    .live-dot { width:8px; height:8px; border-radius:50%; background:#f59e0b; flex-shrink:0; animation:pulse-dot 1.5s infinite; }
-    @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.7;transform:scale(1.3)} }
+    .live-banner {
+      background: #fefce8;
+      border: 1px solid #fde68a;
+      border-radius: 12px;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #f59e0b;
+      flex-shrink: 0;
+      animation: pulse-dot 1.5s infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .7; transform: scale(1.3); }
+    }
 
     /* Tab switcher */
-    .view-tabs { display:flex; gap:4px; background:#f3f4f6; border-radius:10px; padding:3px; margin-bottom:18px; width:fit-content; }
-    .view-tab { padding:8px 18px; border-radius:8px; border:none; font-family:inherit; font-size:.85rem; font-weight:600; cursor:pointer; transition:all .15s; background:transparent; color:#6b7280; display:flex; align-items:center; gap:6px; }
-    .view-tab.active { background:#0d2818; color:#fff; }
+    .view-tabs {
+      display: flex;
+      gap: 4px;
+      background: #f3f4f6;
+      border-radius: 10px;
+      padding: 3px;
+      margin-bottom: 18px;
+      width: fit-content;
+    }
+    .view-tab {
+      padding: 8px 18px;
+      border-radius: 8px;
+      border: none;
+      font-family: inherit;
+      font-size: .85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .15s;
+      background: transparent;
+      color: #6b7280;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .view-tab.active { background: #0d2818; color: #fff; }
 
     /* Status filter pills */
-    .filter-pill { padding:5px 16px; border-radius:100px; border:1.5px solid #e5e7eb; background:#fff; font-size:.8rem; font-weight:600; cursor:pointer; color:#6b7280; font-family:inherit; transition:all .15s; }
-    .filter-pill.active { background:#1a1a1a; border-color:#1a1a1a; color:#fff; }
+    .filter-pill {
+      padding: 6px 16px;
+      border-radius: 100px;
+      border: 1.5px solid #e5e7eb;
+      background: #fff;
+      font-size: .8rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: #6b7280;
+      font-family: inherit;
+      transition: all .15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .filter-pill.active { background: #1a1a1a; border-color: #1a1a1a; color: #fff; }
+    .filter-pill:hover:not(.active) { border-color: #9ca3af; color: #1a1a1a; }
 
     /* Fixture card */
-    .fixture-card { background:#fff; border:1px solid #e8ede8; border-radius:12px; padding:0; margin-bottom:10px; overflow:hidden; transition:box-shadow .2s; }
-    .fixture-card:hover { box-shadow:0 4px 16px rgba(0,0,0,.08); }
-    .fix-meta-bar { padding:8px 18px; border-bottom:1px solid #f3f4f6; display:flex; align-items:center; justify-content:space-between; }
-    .fix-league { font-size:.68rem; font-weight:700; color:#16a34a; text-transform:uppercase; letter-spacing:.07em; }
-    .fix-round { font-size:.68rem; color:#9ca3af; font-weight:600; }
-    .fix-body { padding:16px 18px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
-    .fix-team-name { font-weight:800; font-size:1rem; color:#1a1a1a; }
-    .fix-center { text-align:center; min-width:80px; }
-    .fix-vs { font-size:.85rem; font-weight:700; color:#9ca3af; }
-    .fix-score { font-size:1.5rem; font-weight:900; color:#0d2818; }
-    .fix-datetime { font-size:.75rem; color:#6b7280; margin-top:2px; }
-    .fix-venue { font-size:.72rem; color:#9ca3af; }
+    .fixture-card {
+      background: #fff;
+      border: 1px solid #e8ede8;
+      border-radius: 14px;
+      padding: 0;
+      margin-bottom: 12px;
+      overflow: hidden;
+      transition: box-shadow .2s ease, border-color .2s ease;
+    }
+    .fixture-card:hover {
+      box-shadow: 0 4px 20px rgba(0,0,0,.08);
+      border-color: #7ed321;
+    }
+    .fix-meta-bar {
+      padding: 9px 18px;
+      background: #f9fafb;
+      border-bottom: 1px solid #f3f4f6;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .fix-league { font-size: .72rem; font-weight: 800; color: #15803d; text-transform: uppercase; letter-spacing: .06em; }
+    .fix-round { font-size: .72rem; color: #6b7280; font-weight: 600; }
+    .fix-body {
+      padding: 18px 20px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 16px;
+    }
+    .fix-team-name { font-weight: 800; font-size: 1.05rem; color: #1a1a1a; }
+    .fix-center { text-align: center; min-width: 90px; }
+    .fix-vs { font-size: .9rem; font-weight: 800; color: #9ca3af; }
+    .fix-score { font-size: 1.6rem; font-weight: 900; color: #0d2818; letter-spacing: .04em; }
+    .fix-datetime { font-size: .75rem; color: #6b7280; margin-top: 3px; }
+    .fix-venue { font-size: .72rem; color: #9ca3af; margin-top: 1px; }
+
+    /* Scorers list */
+    .fix-scorers-box {
+      padding: 8px 18px;
+      background: #fdfdfd;
+      border-top: 1px dashed #edf2ed;
+      font-size: .72rem;
+      color: #6b7280;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
 
     /* Standings table */
-    .standings-table { width:100%; border-collapse:collapse; }
-    .standings-table th { background:#0d2818; color:#fff; font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; padding:11px 14px; text-align:center; }
-    .standings-table th:first-child { text-align:left; width:50px; }
-    .standings-table th:nth-child(2) { text-align:left; }
-    .standings-table td { padding:11px 14px; text-align:center; font-size:.85rem; border-bottom:1px solid #f3f4f6; }
-    .standings-table td:nth-child(2) { text-align:left; font-weight:700; color:#1a1a1a; }
-    .standings-table td.win { color:#16a34a; font-weight:700; }
-    .standings-table td.loss { color:#e53935; font-weight:700; }
-    .standings-table td.pts { font-weight:900; color:#1a1a1a; font-size:1rem; }
-    .standings-table tr.my-team { background:rgba(126,211,33,.05); }
-    .rank-badge { width:26px; height:26px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:.78rem; }
-    .rank-1 { background:#fde68a; color:#92400e; }
-    .rank-2 { background:#e5e7eb; color:#374151; }
-    .rank-3 { background:#fed7aa; color:#9a3412; }
-    .form-badge { display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:5px; font-size:.65rem; font-weight:800; margin:0 1px; }
-    .form-w { background:#16a34a; color:#fff; }
-    .form-l { background:#e53935; color:#fff; }
-    .form-d { background:#9ca3af; color:#fff; }
+    .standings-table { width: 100%; border-collapse: collapse; }
+    .standings-table th {
+      background: #0d2818;
+      color: #fff;
+      font-size: .72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      padding: 12px 14px;
+      text-align: center;
+    }
+    .standings-table th:first-child { text-align: center; width: 60px; }
+    .standings-table th:nth-child(2) { text-align: left; }
+    .standings-table td { padding: 12px 14px; text-align: center; font-size: .85rem; border-bottom: 1px solid #f3f4f6; }
+    .standings-table td:nth-child(2) { text-align: left; font-weight: 700; color: #1a1a1a; }
+    .standings-table td.win { color: #16a34a; font-weight: 700; }
+    .standings-table td.loss { color: #dc2626; font-weight: 700; }
+    .standings-table td.pts { font-weight: 900; color: #1a1a1a; font-size: 1.05rem; }
+    .standings-table tr.my-team { background: rgba(126,211,33,.12); font-weight: 800; }
+    .standings-table tr.my-team td:nth-child(2) { color: #0d2818; }
+
+    .rank-badge {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: .8rem;
+    }
+    .rank-1 { background: #fef08a; color: #854d0e; }
+    .rank-2 { background: #e5e7eb; color: #374151; }
+    .rank-3 { background: #fed7aa; color: #9a3412; }
+
+    .form-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      font-size: .65rem;
+      font-weight: 800;
+      margin: 0 1.5px;
+    }
+    .form-w { background: #16a34a; color: #fff; }
+    .form-l { background: #dc2626; color: #fff; }
+    .form-d { background: #9ca3af; color: #fff; }
+
+    @media (max-width: 768px) {
+      .fix-body { grid-template-columns: 1fr; text-align: center; gap: 8px; }
+      .standings-table th:nth-child(6), .standings-table td:nth-child(6),
+      .standings-table th:nth-child(7), .standings-table td:nth-child(7),
+      .standings-table th:nth-child(8), .standings-table td:nth-child(8) { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -72,11 +216,14 @@
     <div id="main-content">
       <div id="topbar">
         <div class="topbar-title">
-          <span class="topbar-heading">Fixtures &amp; Standings</span>
-          <span class="topbar-sub">Match schedules, live scores, and tournament tables</span>
+          <span class="topbar-heading">📋 Fixtures &amp; Standings</span>
+          <span class="topbar-sub">Match schedules, scores, and live points tables</span>
         </div>
-        <div class="topbar-actions">
-          <a href="create-tournament.html" class="btn-lime" style="font-size:.82rem;padding:7px 16px;text-decoration:none">
+        <div class="topbar-actions" style="display:flex;gap:10px;align-items:center">
+          <a href="tournament-registration.html" class="btn-outline" style="font-size:.82rem;padding:7px 14px">
+            🏆 Tournaments Directory
+          </a>
+          <a href="create-tournament.html" class="btn-lime" style="font-size:.82rem;padding:7px 16px">
             ➕ Host Tournament
           </a>
         </div>
@@ -84,30 +231,53 @@
 
       <div class="page-body">
         <!-- Tournament tabs dynamically populated -->
-        <div id="tournaments-tabs-bar" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px">
-          <div style="font-size:.85rem;color:#9ca3af;padding:6px 0">Loading tournaments...</div>
+        <div style="margin-bottom:20px">
+          <div style="font-size:.74rem;font-weight:800;text-transform:uppercase;color:#6b7280;margin-bottom:8px;letter-spacing:.06em">
+            Select Tournament
+          </div>
+          <div id="tournaments-tabs-bar" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:6px">
+            <div style="font-size:.85rem;color:#9ca3af;padding:6px 0">Loading tournaments...</div>
+          </div>
         </div>
 
-        <!-- Live banner (shown only if a live fixture exists) -->
+        <!-- Active Tournament Info Banner -->
+        <div id="tourn-info-card" style="background:#fff;border:1px solid #e8ede8;border-radius:14px;padding:16px 20px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+          <div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <h2 id="tourn-name-heading" style="font-weight:900;font-size:1.15rem;color:#0d2818">Tournament Details</h2>
+              <span id="tourn-status-pill" class="badge badge-confirmed">Open</span>
+            </div>
+            <div id="tourn-meta-text" style="font-size:.78rem;color:#6b7280;margin-top:3px">
+              Loading details...
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:10px" id="tourn-action-links">
+            <!-- Injected by JS -->
+          </div>
+        </div>
+
+        <!-- Live banner (shown only if a live fixture exists in active tournament) -->
         <div id="live-banner" class="live-banner" style="display:none">
           <div class="live-dot"></div>
-          <span style="font-weight:700;font-size:.82rem;color:#92400e">LIVE:</span>
-          <span id="live-banner-text" style="font-size:.85rem;color:#78350f;flex:1">Loading live match...</span>
-          <span id="live-banner-score" style="font-weight:900;font-size:1.1rem;color:#92400e">0&ndash;0</span>
+          <span style="font-weight:800;font-size:.82rem;color:#92400e">LIVE MATCH:</span>
+          <span id="live-banner-text" style="font-size:.85rem;color:#78350f;flex:1;font-weight:600">Loading live match...</span>
+          <span id="live-banner-score" style="font-weight:900;font-size:1.2rem;color:#92400e">0&ndash;0</span>
         </div>
 
         <!-- View tabs: Fixtures / Standings -->
         <div class="view-tabs">
-          <button class="view-tab active" id="tab-fixtures-btn" onclick="showView('fixtures')">📋 Fixtures</button>
-          <button class="view-tab" id="tab-standings-btn" onclick="showView('standings')">📊 Standings</button>
+          <button class="view-tab active" id="tab-fixtures-btn" onclick="showView('fixtures')">📋 Match Fixtures</button>
+          <button class="view-tab" id="tab-standings-btn" onclick="showView('standings')">📊 Points Table</button>
         </div>
 
         <!-- Status filter -->
         <div id="status-filters" style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap">
-          <button class="filter-pill active" onclick="filterStatus('all',this)">All</button>
-          <button class="filter-pill" onclick="filterStatus('upcoming',this)">Upcoming</button>
-          <button class="filter-pill" onclick="filterStatus('live',this)">Live</button>
-          <button class="filter-pill" onclick="filterStatus('completed',this)">Completed</button>
+          <button class="filter-pill active" onclick="filterStatus('all',this)">All Matches</button>
+          <button class="filter-pill" onclick="filterStatus('my_team',this)" id="filter-my-team-btn" style="display:none">⭐ My Squad</button>
+          <button class="filter-pill" onclick="filterStatus('upcoming',this)">⏳ Upcoming</button>
+          <button class="filter-pill" onclick="filterStatus('live',this)">🔴 Live Now</button>
+          <button class="filter-pill" onclick="filterStatus('completed',this)">🏁 Completed</button>
         </div>
 
         <!-- FIXTURES VIEW -->
@@ -123,17 +293,19 @@
         <div id="standings-view" style="display:none">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
             <h3 id="standings-title" style="font-weight:800;font-size:1rem;color:#1a1a1a">Points Table</h3>
-            <div style="display:flex;align-items:center;gap:6px;font-size:.75rem;color:#6b7280">
-              <span style="width:10px;height:10px;border-radius:50%;background:#7ed321;display:inline-block"></span> Registered Teams
+            <div style="display:flex;align-items:center;gap:12px;font-size:.75rem;color:#6b7280">
+              <span style="display:flex;align-items:center;gap:4px">
+                <span style="width:10px;height:10px;border-radius:50%;background:#7ed321;display:inline-block"></span> Your Squad Highlighted
+              </span>
             </div>
           </div>
-          <div style="background:#fff;border:1px solid #e8ede8;border-radius:12px;overflow:hidden">
+          <div style="background:#fff;border:1px solid #e8ede8;border-radius:14px;overflow:hidden">
             <table class="standings-table">
               <thead>
                 <tr>
                   <th>Rank</th>
                   <th>Team</th>
-                  <th>P</th>
+                  <th>Played</th>
                   <th>W</th>
                   <th>D</th>
                   <th>L</th>
@@ -141,11 +313,12 @@
                   <th>GA</th>
                   <th>GD</th>
                   <th>Pts</th>
+                  <th>Form</th>
                 </tr>
               </thead>
               <tbody id="standings-tbody">
                 <tr>
-                  <td colspan="10" style="text-align:center;padding:30px;color:#9ca3af">
+                  <td colspan="11" style="text-align:center;padding:30px;color:#9ca3af">
                     Loading points table...
                   </td>
                 </tr>
@@ -163,13 +336,32 @@
   <script src="layout.js"></script>
   <script src="page-init.js"></script>
   <script>
+    let currentUser = null;
     let allTournaments = [];
     let activeTournamentId = 0;
     let allFixtures = [];
+    let myTeams = [];
+    let myTeamIds = [];
     let currentStatusFilter = 'all';
 
     (async function() {
-      await initPage({ navId: 'tournaments', roles: ['captain', 'player', 'owner', 'admin'] });
+      currentUser = await initPage({ navId: 'fixtures', roles: ['captain', 'player', 'owner', 'admin'] });
+      if (!currentUser) return;
+
+      // Load user's squads to highlight captain's matches & standings
+      try {
+        const teamsRes = await apiGet('teams/my-teams.php');
+        myTeams = teamsRes.teams || [];
+        myTeamIds = myTeams.map(t => t.id);
+
+        if (myTeamIds.length > 0) {
+          const myTeamBtn = document.getElementById('filter-my-team-btn');
+          if (myTeamBtn) myTeamBtn.style.display = 'inline-flex';
+        }
+      } catch (e) {
+        // No teams or not captain
+      }
+
       await loadTournaments();
     })();
 
@@ -181,32 +373,83 @@
 
         if (allTournaments.length === 0) {
           tabsBar.innerHTML = '<span style="font-size:.85rem;color:#9ca3af">No tournaments found in database.</span>';
+          document.getElementById('tourn-info-card').style.display = 'none';
           document.getElementById('fixtures-container').innerHTML = `
-            <div style="text-align:center;padding:50px 20px;color:#9ca3af">
+            <div style="text-align:center;padding:50px 20px;color:#9ca3af;background:#fff;border-radius:14px;border:1px solid #e8ede8">
               <div style="font-size:2.5rem;margin-bottom:8px">🏆</div>
-              <div style="font-weight:700;color:#1a1a1a">No Tournaments Yet</div>
-              <a href="create-tournament.html" class="btn-lime" style="display:inline-block;margin-top:12px;padding:8px 18px">
+              <div style="font-weight:700;color:#1a1a1a;font-size:1.05rem">No Tournaments Yet</div>
+              <p style="font-size:.8rem;color:#6b7280;margin-top:4px">Host the first tournament on TurfHub to generate brackets and fixtures!</p>
+              <a href="create-tournament.html" class="btn-lime" style="display:inline-block;margin-top:14px;padding:8px 20px;font-size:.85rem">
                 Host First Tournament
               </a>
             </div>`;
           return;
         }
 
-        activeTournamentId = allTournaments[0].id;
+        // Check URL parameter for pre-selection
+        const params = new URLSearchParams(window.location.search);
+        const urlTid = parseInt(params.get('tournament_id'), 10);
+        if (urlTid && allTournaments.some(t => t.id === urlTid)) {
+          activeTournamentId = urlTid;
+        } else {
+          activeTournamentId = allTournaments[0].id;
+        }
 
-        tabsBar.innerHTML = allTournaments.map((t, idx) => `
-          <button class="tournament-tab ${idx === 0 ? 'active' : ''}" onclick="selectTournament(${t.id}, this)">
-            ${escapeHtml(t.name)}
-          </button>
-        `).join('');
+        tabsBar.innerHTML = allTournaments.map(t => {
+          const isActive = t.id === activeTournamentId;
+          const statusTag = t.status === 'live' ? '🔴' : '';
+          return `
+            <button class="tournament-tab ${isActive ? 'active' : ''}" onclick="selectTournament(${t.id}, this)">
+              ${statusTag} ${escapeHtml(t.name)}
+            </button>`;
+        }).join('');
 
+        updateTournamentHeader(activeTournamentId);
         await loadFixtures(activeTournamentId);
         await loadStandings(activeTournamentId);
 
       } catch (err) {
         console.error('Failed to load tournaments:', err);
-        tabsBar.innerHTML = '<span style="color:#dc2626;font-size:.85rem">⚠️ Failed to load tournaments.</span>';
+        tabsBar.innerHTML = '<span style="color:#dc2626;font-size:.85rem">⚠️ Failed to load tournaments from database.</span>';
       }
+    }
+
+    function updateTournamentHeader(tournamentId) {
+      const tourn = allTournaments.find(t => t.id === tournamentId);
+      if (!tourn) return;
+
+      document.getElementById('tourn-name-heading').textContent = tourn.name;
+      const status = (tourn.status || 'open').toLowerCase();
+      const statusPill = document.getElementById('tourn-status-pill');
+      statusPill.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+      statusPill.className = `badge ${status === 'live' ? 'badge-live' : (status === 'completed' ? 'badge-draft' : 'badge-confirmed')}`;
+
+      const maxT = parseInt(tourn.max_teams, 10) || 8;
+      const regT = parseInt(tourn.registered_teams, 10) || 0;
+      const fee = parseInt(tourn.entry_fee, 10) || 0;
+      const prize = parseInt(tourn.prize_pool, 10) || 0;
+      const venueStr = tourn.venue_name ? `${escapeHtml(tourn.venue_name)} (${escapeHtml(tourn.venue_location || 'Dhaka')})` : 'Verified Turf';
+
+      document.getElementById('tourn-meta-text').innerHTML = `
+        ${escapeHtml(tourn.sport)} &middot; <strong>${regT}/${maxT} Teams</strong> &middot; Entry: <strong>৳${fee.toLocaleString()}</strong> ${prize > 0 ? `&middot; Prize: <strong style="color:#15803d">৳${prize.toLocaleString()}</strong>` : ''} &middot; 📍 ${venueStr}
+      `;
+
+      // Top action buttons
+      const isOrganizer = currentUser && tourn.created_by == currentUser.id;
+      const actionsEl = document.getElementById('tourn-action-links');
+      
+      let html = '';
+      if (isOrganizer) {
+        html += `
+          <a href="create-tournament.html?tournament_id=${tourn.id}" class="btn-outline" style="font-size:.78rem;padding:6px 12px">
+            ⚙️ Manage Tournament
+          </a>`;
+      }
+      html += `
+        <a href="tournament-registration.html" class="btn-lime" style="font-size:.78rem;padding:6px 14px">
+          🏆 Squad Entry
+        </a>`;
+      actionsEl.innerHTML = html;
     }
 
     async function selectTournament(id, btn) {
@@ -214,6 +457,12 @@
       document.querySelectorAll('.tournament-tab').forEach(b => b.classList.remove('active'));
       if (btn) btn.classList.add('active');
 
+      // Update URL query string
+      const url = new URL(window.location);
+      url.searchParams.set('tournament_id', id);
+      window.history.replaceState({}, '', url);
+
+      updateTournamentHeader(activeTournamentId);
       await loadFixtures(activeTournamentId);
       await loadStandings(activeTournamentId);
     }
@@ -240,7 +489,7 @@
         renderFixtures();
       } catch (err) {
         console.error('Failed to load fixtures:', err);
-        container.innerHTML = '<div style="text-align:center;padding:30px;color:#dc2626;font-size:.85rem">⚠️ Failed to retrieve match fixtures.</div>';
+        container.innerHTML = '<div style="text-align:center;padding:30px;color:#dc2626;font-size:.85rem">⚠️ Failed to retrieve match fixtures from database.</div>';
       }
     }
 
@@ -248,15 +497,27 @@
       const container = document.getElementById('fixtures-container');
       const filtered = allFixtures.filter(f => {
         if (currentStatusFilter === 'all') return true;
+        if (currentStatusFilter === 'my_team') {
+          return myTeamIds.includes(parseInt(f.home_team_id, 10)) || myTeamIds.includes(parseInt(f.away_team_id, 10));
+        }
         return (f.status || '').toLowerCase() === currentStatusFilter.toLowerCase();
       });
 
       if (filtered.length === 0) {
+        const isMyTeamFilter = currentStatusFilter === 'my_team';
         container.innerHTML = `
-          <div style="text-align:center;padding:40px;color:#9ca3af;background:#fff;border-radius:12px;border:1px solid #e8ede8">
-            <div style="font-size:2rem;margin-bottom:8px">⚽</div>
-            <div style="font-weight:700;color:#1a1a1a">No Matches Found</div>
-            <div style="font-size:.78rem;color:#6b7280;margin-top:2px">No match fixtures scheduled under this filter.</div>
+          <div style="text-align:center;padding:40px;color:#9ca3af;background:#fff;border-radius:14px;border:1px solid #e8ede8">
+            <div style="font-size:2.2rem;margin-bottom:8px">⚽</div>
+            <div style="font-weight:700;color:#1a1a1a;font-size:1rem">${isMyTeamFilter ? 'No Matches for Your Squad' : 'No Matches Found'}</div>
+            <div style="font-size:.78rem;color:#6b7280;margin-top:3px">
+              ${isMyTeamFilter 
+                ? 'Your registered squad does not have matches under this status.' 
+                : 'No match fixtures scheduled yet under this filter.'}
+            </div>
+            ${allFixtures.length === 0 ? `
+              <a href="tournament-registration.html" class="btn-lime" style="display:inline-block;margin-top:12px;font-size:.8rem;padding:7px 18px">
+                Register Squad in Tournament
+              </a>` : ''}
           </div>`;
         return;
       }
@@ -266,12 +527,22 @@
         const badgeClass = status === 'live' ? 'badge-live' : (status === 'completed' ? 'badge-confirmed' : 'badge-pending');
         const statusText = status === 'live' ? 'Live Now' : (status === 'completed' ? 'Completed' : 'Upcoming');
 
+        const isHomeMyTeam = myTeamIds.includes(parseInt(f.home_team_id, 10));
+        const isAwayMyTeam = myTeamIds.includes(parseInt(f.away_team_id, 10));
+
         const scoreMarkup = status === 'upcoming' 
           ? '<div class="fix-vs">vs</div>'
           : `<div class="fix-score">${f.home_score}&ndash;${f.away_score}</div>`;
 
         const dateStr = f.match_date ? formatMatchTime(f.match_date) : 'Date TBD';
-        const venueStr = f.venue_name ? `&#128205; ${escapeHtml(f.venue_name)}` : '&#128205; TurfHub Arena';
+        const venueStr = f.venue_name ? `📍 ${escapeHtml(f.venue_name)}` : '📍 TurfHub Arena';
+
+        // Render goal scorers if available
+        let scorersMarkup = '';
+        if (Array.isArray(f.scorers) && f.scorers.length > 0) {
+          const list = f.scorers.map(s => `⚽ ${escapeHtml(s.name || s.scorer)} (${escapeHtml(s.minute || '')})`).join(' &middot; ');
+          scorersMarkup = `<div class="fix-scorers-box"><strong>Scorers:</strong> ${list}</div>`;
+        }
 
         return `
           <div class="fixture-card">
@@ -281,14 +552,21 @@
               <span class="badge ${badgeClass} badge-dot" style="margin-left:auto">${statusText}</span>
             </div>
             <div class="fix-body">
-              <div class="fix-team-name">${escapeHtml(f.home_team_name || 'TBD')}</div>
+              <div class="fix-team-name">
+                ${escapeHtml(f.home_team_name || 'TBD')}
+                ${isHomeMyTeam ? '<span class="badge badge-confirmed" style="font-size:.65rem;margin-left:6px">Your Squad</span>' : ''}
+              </div>
               <div class="fix-center">
                 ${scoreMarkup}
                 <div class="fix-datetime">${dateStr}</div>
                 <div class="fix-venue">${venueStr}</div>
               </div>
-              <div class="fix-team-name" style="text-align:right">${escapeHtml(f.away_team_name || 'TBD')}</div>
+              <div class="fix-team-name" style="text-align:right">
+                ${isAwayMyTeam ? '<span class="badge badge-confirmed" style="font-size:.65rem;margin-right:6px">Your Squad</span>' : ''}
+                ${escapeHtml(f.away_team_name || 'TBD')}
+              </div>
             </div>
+            ${scorersMarkup}
           </div>`;
       }).join('');
     }
@@ -306,7 +584,7 @@
         if (standings.length === 0) {
           tbody.innerHTML = `
             <tr>
-              <td colspan="10" style="text-align:center;padding:30px;color:#9ca3af">
+              <td colspan="11" style="text-align:center;padding:30px;color:#9ca3af">
                 No standings data available for this tournament yet.
               </td>
             </tr>`;
@@ -316,10 +594,22 @@
         tbody.innerHTML = standings.map((s, idx) => {
           const rank = idx + 1;
           const rankClass = rank === 1 ? 'rank-1' : (rank === 2 ? 'rank-2' : (rank === 3 ? 'rank-3' : ''));
+          const isMyTeam = myTeamIds.includes(parseInt(s.team_id, 10));
+
+          // Render form badges
+          const formBadges = (s.form || []).map(res => {
+            const letter = String(res).toUpperCase();
+            const cls = letter === 'W' ? 'form-w' : (letter === 'L' ? 'form-l' : 'form-d');
+            return `<span class="form-badge ${cls}">${letter}</span>`;
+          }).join('') || '<span style="color:#9ca3af;font-size:.75rem">—</span>';
+
           return `
-            <tr>
+            <tr class="${isMyTeam ? 'my-team' : ''}">
               <td><span class="rank-badge ${rankClass}">${rank}</span></td>
-              <td>${escapeHtml(s.team_name)}</td>
+              <td>
+                ${escapeHtml(s.team_name)}
+                ${isMyTeam ? '<span class="badge badge-confirmed" style="font-size:.65rem;margin-left:6px">Your Squad</span>' : ''}
+              </td>
               <td>${s.played}</td>
               <td class="win">${s.won}</td>
               <td>${s.drawn}</td>
@@ -328,6 +618,7 @@
               <td>${s.goals_against}</td>
               <td>${s.goal_diff > 0 ? '+' + s.goal_diff : s.goal_diff}</td>
               <td class="pts">${s.points}</td>
+              <td>${formBadges}</td>
             </tr>`;
         }).join('');
 
@@ -335,8 +626,8 @@
         console.error('Failed to load standings:', err);
         tbody.innerHTML = `
           <tr>
-            <td colspan="10" style="text-align:center;padding:25px;color:#dc2626">
-              ⚠️ Could not compute standings.
+            <td colspan="11" style="text-align:center;padding:25px;color:#dc2626">
+              ⚠️ Could not compute points table from database.
             </td>
           </tr>`;
       }

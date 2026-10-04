@@ -26,13 +26,14 @@ const ROLE_CONFIG = {
     color: '#7ed321',
     dashboard: 'captain-dashboard.html',
     nav: [
-      { id: 'dashboard',   icon: '📊', label: 'Dashboard',     href: 'captain-dashboard.html' },
-      { id: 'book',        icon: '📅', label: 'Book Turf',     href: 'book-turf.html' },
-      { id: 'manage-team', icon: '👥', label: 'Manage Team',   href: 'manage-team.html' },
-      { id: 'tournaments', icon: '🏆', label: 'Tournaments',   href: 'fixtures.html' },
-      { id: 'host',        icon: '🏅', label: 'Host Tournament', href: 'create-tournament.html' },
-      { id: 'receipts',    icon: '🧾', label: 'My Receipts',   href: 'booking-receipt.html' },
-      { id: 'messages',    icon: '💬', label: 'Messages',      href: 'chat.html' },
+      { id: 'dashboard',   icon: '📊', label: 'Dashboard',         href: 'captain-dashboard.html' },
+      { id: 'book',        icon: '📅', label: 'Book Turf',         href: 'book-turf.html' },
+      { id: 'manage-team', icon: '👥', label: 'Manage Team',       href: 'manage-team.html' },
+      { id: 'tournaments', icon: '🏆', label: 'Tournaments',       href: 'tournament-registration.html' },
+      { id: 'fixtures',    icon: '📋', label: 'Fixtures & Tables', href: 'fixtures.html' },
+      { id: 'host',        icon: '🏅', label: 'Host Tournament',   href: 'create-tournament.html' },
+      { id: 'receipts',    icon: '🧾', label: 'My Receipts',       href: 'booking-receipt.html' },
+      { id: 'messages',    icon: '💬', label: 'Messages',          href: 'chat.html' },
     ]
   },
   player: {
