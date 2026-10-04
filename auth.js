@@ -61,6 +61,7 @@ const ROLE_CONFIG = {
       { id: 'categories',    icon: '🏷️', label: 'Categories',    href: 'admin-categories.html' },
       { id: 'reports',       icon: '📄', label: 'Reports',       href: 'admin-reports.html' },
       { id: 'announcements', icon: '📢', label: 'Announce',      href: 'admin-announcements.html' },
+      { id: 'messages',       icon: '📢', label: 'Broadcasts',    href: 'admin-chat.html' },
     ]
   }
 };

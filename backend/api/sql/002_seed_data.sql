@@ -110,17 +110,33 @@ INSERT INTO announcements (id, title, content, priority, target_roles, created_b
 (4, '⚡ Instant SSLCOMMERZ Payment Simulation', 'Players and Captains can now pay directly via bKash, Nagad, Rocket, and Cards with instant booking confirmations and tax receipts.', 'update', 'all', 1)
 ON DUPLICATE KEY UPDATE title=VALUES(title), content=VALUES(content);
 
--- ── 10. Demo Messages ──
+-- ── 10. Demo Messages (cross-role conversations for consistency) ──
 INSERT INTO messages (id, sender_id, receiver_id, content, is_read, created_at) VALUES
+-- Captain(3) ↔ Owner(2)
 (1, 3, 2, 'Hi Rafiqul bhai, is Pitch 1 available tonight at 8 PM for Dhaka Warriors practice?', 1, DATE_SUB(NOW(), INTERVAL 4 HOUR)),
 (2, 2, 3, 'Yes Tanvir, Pitch 1 is open! I reserved the 8 PM slot for you. See you on the pitch.', 1, DATE_SUB(NOW(), INTERVAL 3 HOUR)),
+-- Player(4) ↔ Captain(3)
 (3, 4, 3, 'Captain, confirmed for tonight match! Wearing jersey #7. Should I come 30 mins early for warm-up?', 1, DATE_SUB(NOW(), INTERVAL 2 HOUR)),
 (4, 3, 4, 'Awesome Sabbir! Yes, reach by 5:30 PM. You are in our starting 11 lineup as striker 🔥', 1, DATE_SUB(NOW(), INTERVAL 1 HOUR)),
 (5, 4, 3, 'Got it Captain! Bringing my boots and extra bibs. Let\'s win this!', 0, DATE_SUB(NOW(), INTERVAL 20 MINUTE)),
+-- Player(4) ↔ Owner(2)
 (6, 4, 2, 'Hello Rafiqul bhai, is parking free for players at The Green Arena?', 1, DATE_SUB(NOW(), INTERVAL 5 HOUR)),
 (7, 2, 4, 'Yes Sabbir, we have dedicated underground car & bike parking free for all TurfHub players.', 1, DATE_SUB(NOW(), INTERVAL 4 HOUR)),
-(8, 2, 1, 'Admin, submitted my updated councilor certificate for Pitch 2 verification.', 1, DATE_SUB(NOW(), INTERVAL 1 DAY)),
-(9, 1, 2, 'Received Rafiqul. Your documents are verified and your pitches are active on the search catalog.', 1, DATE_SUB(NOW(), INTERVAL 22 HOUR))
+-- Admin(1) Broadcasts to Owners (one-way broadcast)
+(8, 1, 2, '📢 TurfHub Official Notice: Your venue "The Green Arena" verification has been approved. All 3 pitches are now live on search catalog.', 1, DATE_SUB(NOW(), INTERVAL 1 DAY)),
+(9, 1, 5, '📢 Platform Maintenance Notice: Server optimization scheduled this Sunday 2:00 AM - 4:00 AM BST. Turfs will remain bookable.', 1, DATE_SUB(NOW(), INTERVAL 22 HOUR)),
+-- Admin(1) Broadcasts to Captains (one-way broadcast)
+(10, 1, 3, '📢 Platform Announcement: Tournament guidelines updated. All tournaments now feature automatic knockout fixture brackets.', 1, DATE_SUB(NOW(), INTERVAL 6 HOUR)),
+(11, 1, 7, '📢 Platform Announcement: Tournament guidelines updated. All tournaments now feature automatic knockout fixture brackets.', 0, DATE_SUB(NOW(), INTERVAL 5 HOUR)),
+-- Admin(1) Broadcasts to Players (one-way broadcast)
+(12, 1, 4, '📢 Welcome to TurfHub! Explore local turfs, join registered teams, and track your match stats seamlessly.', 1, DATE_SUB(NOW(), INTERVAL 8 HOUR)),
+(13, 1, 9, '📢 Welcome to TurfHub! Explore local turfs, join registered teams, and track your match stats seamlessly.', 0, DATE_SUB(NOW(), INTERVAL 7 HOUR)),
+-- Captain(7) ↔ Owner(6)
+(14, 7, 6, 'Hi Kamal bhai, can we book Smash Zone Arena for our badminton practice this weekend?', 1, DATE_SUB(NOW(), INTERVAL 10 HOUR)),
+(15, 6, 7, 'Sure Prottay! I have slots open on Saturday 4-6 PM. Shall I reserve it for Thunder FC?', 0, DATE_SUB(NOW(), INTERVAL 9 HOUR)),
+-- Player(9) ↔ Captain(3)
+(16, 9, 3, 'Captain Tanvir, I would like to join Dhaka Warriors. I play as midfielder.', 1, DATE_SUB(NOW(), INTERVAL 12 HOUR)),
+(17, 3, 9, 'Welcome aboard Arif! I have added you to the roster. Report to practice tomorrow at 5 PM.', 1, DATE_SUB(NOW(), INTERVAL 11 HOUR))
 ON DUPLICATE KEY UPDATE content=VALUES(content);
 
 SET FOREIGN_KEY_CHECKS = 1;

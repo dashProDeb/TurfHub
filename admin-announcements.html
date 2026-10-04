@@ -4,18 +4,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TurfHub — Admin Announcements</title>
+  <meta name="description" content="Publish platform announcements and broadcasts with targeted audience segmentation on TurfHub." />
   <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <style>
     .form-input-admin {
       width: 100%;
       padding: 10px 14px;
       border: 1.5px solid #e5e7eb;
-      border-radius: 8px;
+      border-radius: 10px;
       font-family: inherit;
-      font-size: .85rem;
+      font-size: .86rem;
       outline: none;
       background: #fff;
+      transition: border-color .15s;
     }
     .form-input-admin:focus {
       border-color: #7ed321;
@@ -29,41 +34,44 @@
       align-items: flex-start;
       justify-content: space-between;
       gap: 16px;
-      transition: all .2s;
+      transition: transform .15s, box-shadow .15s;
     }
     .announcement-card:hover {
-      box-shadow: 0 4px 12px rgba(0,0,0,.05);
+      box-shadow: 0 4px 12px rgba(0,0,0,.04);
+      transform: translateY(-1px);
+    }
+    .priority-badge-critical {
+      background: #fee2e2;
+      color: #991b1b;
+      font-size: .68rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 100px;
+      text-transform: uppercase;
+    }
+    .priority-badge-update {
+      background: #dcfce7;
+      color: #166534;
+      font-size: .68rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 100px;
+      text-transform: uppercase;
+    }
+    .priority-badge-maintenance {
+      background: #fef3c7;
+      color: #92400e;
+      font-size: .68rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 100px;
+      text-transform: uppercase;
     }
   </style>
 </head>
 <body>
 <div id="app-wrapper">
-  
-  <!-- Standalone Admin Sidebar or layout.js injected -->
-  <aside id="sidebar" class="sidebar">
-    <a href="index.html" class="sidebar-logo">
-      <div class="sidebar-logo-icon">TH</div>
-      <span class="sidebar-logo-text">TurfHub</span>
-    </a>
-    <div class="sidebar-user">
-      <div class="sidebar-avatar">A</div>
-      <div class="sidebar-user-info">
-        <span class="sidebar-user-name">Admin User</span>
-        <span class="sidebar-user-role">Platform Admin</span>
-      </div>
-    </div>
-    <nav class="sidebar-nav">
-      <a href="admin-dashboard.html" class="sidebar-nav-item"><span class="sidebar-label">Overview</span></a>
-      <a href="admin-approvals.html" class="sidebar-nav-item"><span class="sidebar-label">Approvals</span></a>
-      <a href="admin-analytics.html" class="sidebar-nav-item"><span class="sidebar-label">Analytics</span></a>
-      <a href="admin-categories.html" class="sidebar-nav-item"><span class="sidebar-label">Categories</span></a>
-      <a href="admin-reports.html" class="sidebar-nav-item"><span class="sidebar-label">Reports</span></a>
-      <a href="admin-announcements.html" class="sidebar-nav-item active"><span class="sidebar-label">Announce</span></a>
-    </nav>
-    <a href="login.html" class="sidebar-signout">
-      <span class="sidebar-label">Sign Out</span>
-    </a>
-  </aside>
+  <!-- Dynamic Sidebar rendered by layout.js -->
 
   <div id="main-content">
     
@@ -71,28 +79,42 @@
     <div id="topbar">
       <div class="topbar-title">
         <span class="topbar-heading">Broadcast Announcements</span>
-        <span class="topbar-sub">Send platform-wide alerts, tournament kickoff announcements, and maintenance notices</span>
+        <span class="topbar-sub">Send platform-wide alerts and notices with segmented audience targeting</span>
+      </div>
+      <div class="topbar-actions">
+        <button onclick="loadAnnouncements()" class="btn-ghost" style="padding:6px 14px;font-size:.82rem">
+          🔄 Refresh
+        </button>
       </div>
     </div>
 
     <!-- Page Body -->
     <div class="page-body">
       
-      <div style="display:grid;grid-template-columns:3fr 2fr;gap:20px;align-items:start">
+      <div style="display:grid;grid-template-columns:3fr 2fr;gap:24px;align-items:start">
         
         <!-- Left: Compose Broadcast -->
         <div class="content-panel" style="padding:22px">
           <div class="panel-header" style="margin-bottom:16px">
             <div>
               <span class="panel-title">Compose New Broadcast</span>
-              <span class="panel-sub" style="display:block;font-size:.78rem;color:#6b7280;margin-top:2px">Dispatches instantaneously across database &amp; platform feeds</span>
+              <span class="panel-sub" style="display:block;font-size:.78rem;color:#6b7280;margin-top:2px">
+                Delivered across platform in-app notices and recipient chat inboxes
+              </span>
             </div>
+            <span class="badge badge-confirmed" id="live-reach-badge">Target: All Users</span>
           </div>
 
           <form onsubmit="handleSendBroadcast(event)" style="display:flex;flex-direction:column;gap:14px">
+            <!-- Target Audience Segment -->
             <div>
-              <label style="display:block;font-size:.75rem;font-weight:700;color:#374151;margin-bottom:4px">Target Audience Segment</label>
-              <select id="target-audience" class="form-input-admin" style="font-weight:600">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+                <label style="font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#374151">
+                  Target Audience Segment <span style="color:#dc2626">*</span>
+                </label>
+                <span id="segment-count-indicator" style="font-size:.74rem;font-weight:700;color:#16a34a">~0 Users</span>
+              </div>
+              <select id="target-audience" class="form-input-admin" style="font-weight:700" onchange="onSegmentChange()">
                 <option value="all">📢 All Registered Users</option>
                 <option value="owner">🏟️ Turf Owners Only</option>
                 <option value="captain">🏆 Team Captains Only</option>
@@ -100,42 +122,67 @@
               </select>
             </div>
 
+            <!-- Priority -->
             <div>
-              <label style="display:block;font-size:.75rem;font-weight:700;color:#374151;margin-bottom:4px">Priority Level</label>
-              <select id="announcement-priority" class="form-input-admin" style="font-weight:600">
-                <option value="update">ℹ️ Regular Update</option>
-                <option value="critical">🚨 Critical / High Alert</option>
-                <option value="maintenance">🛠️ Maintenance Notice</option>
+              <label style="display:block;font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#374151;margin-bottom:4px">
+                Announcement Priority
+              </label>
+              <select id="announcement-priority" class="form-input-admin">
+                <option value="update">🟢 General Platform Update</option>
+                <option value="critical">🔴 Critical Alert / Notice</option>
+                <option value="maintenance">🟡 Scheduled Maintenance</option>
               </select>
             </div>
 
+            <!-- Announcement Title -->
             <div>
-              <label style="display:block;font-size:.75rem;font-weight:700;color:#374151;margin-bottom:4px">Announcement Title</label>
+              <label style="display:block;font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#374151;margin-bottom:4px">
+                Announcement Title <span style="color:#dc2626">*</span>
+              </label>
               <input type="text" id="announcement-title" placeholder="e.g. Monsoon Tournament Season Registration Open!" required class="form-input-admin" style="font-weight:700" />
             </div>
 
+            <!-- Message Content -->
             <div>
-              <label style="display:block;font-size:.75rem;font-weight:700;color:#374151;margin-bottom:4px">Message Content</label>
-              <textarea id="announcement-body" rows="4" placeholder="Enter full announcement details, tournament deadlines, or platform policy updates..." required class="form-input-admin" style="resize:vertical"></textarea>
+              <label style="display:block;font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#374151;margin-bottom:4px">
+                Message Content <span style="color:#dc2626">*</span>
+              </label>
+              <textarea id="announcement-body" rows="4" placeholder="Enter full announcement details, tournament deadlines, or platform policy updates..." required class="form-input-admin" style="resize:vertical;line-height:1.5"></textarea>
             </div>
 
+            <!-- Notification Channels -->
+            <div style="display:flex;gap:14px;align-items:center;padding:12px 14px;background:#f9fafb;border-radius:10px;border:1px solid #f0f3f0">
+              <label style="display:flex;align-items:center;gap:6px;font-size:.78rem;font-weight:700;color:#374151;cursor:pointer">
+                <input type="checkbox" checked id="chk-chat-inbox" /> 💬 Chat Inbox Delivery
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:.78rem;font-weight:700;color:#374151;cursor:pointer">
+                <input type="checkbox" checked id="chk-in-app" /> 🔔 In-App Notice Board
+              </label>
+            </div>
+
+            <!-- Submit Button -->
             <div style="display:flex;justify-content:flex-end">
-              <button type="submit" id="btn-submit-broadcast" class="btn-lime" style="padding:10px 24px;font-size:.85rem;cursor:pointer">
-                🚀 Send Broadcast Now
+              <button type="submit" id="btn-submit-broadcast" class="btn-lime" style="padding:11px 24px;font-size:.88rem;font-weight:800;display:flex;align-items:center;gap:8px">
+                <span>🚀 Send Broadcast Now</span>
               </button>
             </div>
           </form>
         </div>
 
         <!-- Right: Past Broadcasts Feed -->
-        <div class="content-panel" style="padding:22px">
+        <div class="content-panel" style="padding:22px;max-height:calc(100vh - 140px);overflow-y:auto">
           <div class="panel-header" style="margin-bottom:16px">
-            <span class="panel-title">Broadcast History</span>
-            <span style="font-size:.78rem;color:#6b7280" id="broadcasts-count">Live DB Feed</span>
+            <div>
+              <span class="panel-title">Broadcast History</span>
+              <span style="display:block;font-size:.75rem;color:#6b7280;margin-top:2px">Audience-targeted platform updates</span>
+            </div>
+            <span class="badge badge-pending" id="history-count-badge">0 Broadcasts</span>
           </div>
 
           <div style="display:flex;flex-direction:column;gap:12px" id="broadcasts-feed">
-            <div style="text-align:center;padding:30px;color:#9ca3af">Loading broadcasts...</div>
+            <div style="text-align:center;padding:40px;color:#9ca3af;font-size:.85rem">
+              Loading broadcast history...
+            </div>
           </div>
         </div>
 
@@ -148,98 +195,192 @@
 <script src="api-client.js"></script>
 <script src="auth.js"></script>
 <script src="layout.js"></script>
+<script src="page-init.js"></script>
 <script>
-  (async function init() {
-    const user = await initAuth('admin');
-    if (!user) return;
-    renderSidebar('announcements', user);
+  let currentUser = null;
+  let audienceData = { all: 0, owner: 0, captain: 0, player: 0 };
+
+  (async function() {
+    currentUser = await initPage({ navId: 'announcements', roles: ['admin'] });
+    if (!currentUser) return;
 
     await loadAnnouncements();
   })();
 
-  async function loadAnnouncements() {
-    try {
-      const data = await apiGet('admin/announcements.php');
-      const list = data.announcements || [];
-      const feed = document.getElementById('broadcasts-feed');
-      document.getElementById('broadcasts-count').textContent = `${list.length} Broadcast${list.length !== 1 ? 's' : ''}`;
+  function onSegmentChange() {
+    const sel = document.getElementById('target-audience');
+    const seg = sel.value;
+    const cnt = audienceData[seg] || 0;
+    const label = seg === 'all' ? 'All Roles' : (seg === 'owner' ? 'Owners' : seg === 'captain' ? 'Captains' : 'Players');
+    
+    document.getElementById('segment-count-indicator').textContent = `~${cnt} ${label}`;
+    document.getElementById('live-reach-badge').textContent = `Target: ${sel.options[sel.selectedIndex].text.split('(')[0].trim()}`;
+  }
 
-      if (list.length === 0) {
-        feed.innerHTML = `<div style="text-align:center;padding:30px;color:#9ca3af">No broadcast announcements sent yet.</div>`;
+  async function loadAnnouncements() {
+    const feed = document.getElementById('broadcasts-feed');
+    try {
+      const res = await apiGet('admin/announcements.php');
+      audienceData = res.audience || audienceData;
+
+      // Update segment dropdown labels with live dynamic counts
+      const sel = document.getElementById('target-audience');
+      if (sel) {
+        sel.options[0].text = `📢 All Registered Users (~${audienceData.all} Athletes & Hosts)`;
+        sel.options[1].text = `🏟️ Turf Owners Only (~${audienceData.owner} Hosts)`;
+        sel.options[2].text = `🏆 Team Captains Only (~${audienceData.captain} Captains)`;
+        sel.options[3].text = `⚽ Players & Squad Members (~${audienceData.player} Players)`;
+      }
+      onSegmentChange();
+
+      const items = res.announcements || [];
+      document.getElementById('history-count-badge').textContent = `${items.length} Broadcasts`;
+
+      if (items.length === 0) {
+        feed.innerHTML = `
+          <div style="text-align:center;padding:40px 20px;color:#9ca3af">
+            <div style="font-size:2.5rem;margin-bottom:8px">📭</div>
+            <div style="font-weight:700;color:#1a1a1a">No Announcements Published Yet</div>
+            <div style="font-size:.78rem;margin-top:4px">Use the form on the left to broadcast an announcement.</div>
+          </div>`;
         return;
       }
 
-      feed.innerHTML = list.map(a => {
-        const priorityColors = {
-          critical: 'background:#fee2e2;color:#dc2626',
-          maintenance: 'background:#fef3c7;color:#92400e',
-          update: 'background:#dcfce7;color:#16a34a'
-        };
-        const badgeStyle = priorityColors[a.priority] || priorityColors.update;
-        const target = a.target_roles ? a.target_roles.toUpperCase() : 'ALL USERS';
+      feed.innerHTML = items.map(item => {
+        const seg = (item.target_roles || 'all').toLowerCase();
+        const segBadge = seg === 'owner' || seg === 'owners'
+          ? '<span class="badge badge-pending">🏟️ Owners</span>'
+          : seg === 'captain' || seg === 'captains'
+          ? '<span class="badge badge-confirmed">🏆 Captains</span>'
+          : seg === 'player' || seg === 'players'
+          ? '<span class="badge badge-draft">⚽ Players</span>'
+          : '<span class="badge badge-confirmed">📢 All Users</span>';
+
+        const p = (item.priority || 'update').toLowerCase();
+        const pBadge = p === 'critical'
+          ? '<span class="priority-badge-critical">Critical</span>'
+          : p === 'maintenance'
+          ? '<span class="priority-badge-maintenance">Maintenance</span>'
+          : '<span class="priority-badge-update">Update</span>';
+
+        const reach = item.reach_count || audienceData[seg] || audienceData['all'];
+        const timeFormatted = formatTimeStr(item.created_at);
 
         return `
-          <div class="announcement-card" id="ann-card-${a.id}">
-            <div style="flex:1">
-              <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-                <span style="font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:100px;${badgeStyle}">${target}</span>
-                <span style="font-size:.72rem;color:#9ca3af">${formatDate(a.created_at)}</span>
+          <div class="announcement-card" id="ann-card-${item.id}">
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap">
+                ${segBadge}
+                ${pBadge}
+                <span style="font-size:.72rem;color:#9ca3af;margin-left:auto">${timeFormatted}</span>
               </div>
-              <h4 style="font-weight:800;font-size:.9rem;color:#1a1a1a;margin-top:4px">${a.title}</h4>
-              <p style="font-size:.78rem;color:#6b7280;margin-top:2px;line-height:1.4">${a.content}</p>
-              <div style="font-size:.72rem;color:#16a34a;font-weight:700;margin-top:4px">
-                ✓ Author: ${a.author_name || 'Admin'}
-              </div>
+              <h4 style="font-weight:800;font-size:.9rem;color:#1a1a1a;margin:0 0 4px 0">${escapeHtml(item.title)}</h4>
+              <p style="font-size:.78rem;color:#4b5563;margin:0 0 8px 0;line-height:1.45;white-space:pre-wrap">${escapeHtml(item.content)}</p>
+              <div style="font-size:.72rem;color:#16a34a;font-weight:700">✓ Delivered to ~${reach} recipients</div>
             </div>
-            <button onclick="deleteAnnouncement(${a.id})" style="background:none;border:none;color:#dc2626;cursor:pointer;font-size:.9rem;padding:4px" title="Delete Announcement">&times;</button>
-          </div>
-        `;
+            <div>
+              <button onclick="deleteAnnouncement(${item.id})" title="Delete broadcast" style="background:none;border:none;cursor:pointer;color:#9ca3af;padding:4px;border-radius:6px;transition:color .15s" onmouseover="this.style.color='#dc2626'" onmouseout="this.style.color='#9ca3af'">
+                🗑️
+              </button>
+            </div>
+          </div>`;
       }).join('');
+
     } catch (err) {
       console.error('Failed to load announcements:', err);
-      document.getElementById('broadcasts-feed').innerHTML = `<div style="color:#dc2626;padding:20px;text-align:center">⚠️ Failed to load broadcast history</div>`;
+      feed.innerHTML = `
+        <div style="text-align:center;padding:30px;color:#dc2626;font-size:.84rem">
+          ⚠️ Could not load announcements.
+        </div>`;
     }
   }
 
   async function handleSendBroadcast(e) {
     e.preventDefault();
-    const title = document.getElementById('announcement-title').value.trim();
-    const content = document.getElementById('announcement-body').value.trim();
-    const target_roles = document.getElementById('target-audience').value;
-    const priority = document.getElementById('announcement-priority').value;
-
+    const titleInput = document.getElementById('announcement-title');
+    const bodyInput = document.getElementById('announcement-body');
+    const audSelect = document.getElementById('target-audience');
+    const prioritySelect = document.getElementById('announcement-priority');
     const btn = document.getElementById('btn-submit-broadcast');
+
+    const title = titleInput.value.trim();
+    const content = bodyInput.value.trim();
+    const target_roles = audSelect.value;
+    const priority = prioritySelect.value;
+
+    if (!title || !content) {
+      alert('Please fill out both the title and content.');
+      return;
+    }
+
+    if (!confirm(`Are you sure you want to broadcast this announcement to "${audSelect.options[audSelect.selectedIndex].text.split('(')[0].trim()}"?`)) {
+      return;
+    }
+
     btn.disabled = true;
-    btn.textContent = 'Broadcasting...';
+    btn.innerHTML = '<span>⏳ Dispatching Broadcast...</span>';
 
     try {
-      await apiPost('admin/announcements.php', {
+      const res = await apiPost('admin/announcements.php', {
         title,
         content,
-        target_roles,
-        priority
+        priority,
+        target_roles
       });
 
-      document.getElementById('announcement-title').value = '';
-      document.getElementById('announcement-body').value = '';
-      alert('Announcement broadcasted successfully to database!');
+      alert(`✅ ${res.message || 'Announcement broadcasted successfully!'}`);
+      titleInput.value = '';
+      bodyInput.value = '';
+
       await loadAnnouncements();
     } catch (err) {
-      alert('Error broadcasting: ' + err.message);
+      alert('Failed to broadcast announcement: ' + (err.message || 'Unknown server error'));
     } finally {
       btn.disabled = false;
-      btn.textContent = '🚀 Send Broadcast Now';
+      btn.innerHTML = '<span>🚀 Send Broadcast Now</span>';
     }
   }
 
   async function deleteAnnouncement(id) {
-    if (!confirm('Delete this announcement from database?')) return;
+    if (!confirm('Are you sure you want to delete this announcement?')) return;
     try {
       await apiDelete('admin/announcements.php', { id });
+      const el = document.getElementById(`ann-card-${id}`);
+      if (el) el.remove();
       await loadAnnouncements();
     } catch (err) {
-      alert('Delete failed: ' + err.message);
+      alert('Failed to delete announcement: ' + err.message);
     }
+  }
+
+  function formatTimeStr(dateStr) {
+    if (!dateStr) return '';
+    try {
+      const d = new Date(dateStr);
+      const now = new Date();
+      const diffMs = now - d;
+      const diffMins = Math.floor(diffMs / 60000);
+      const diffHours = Math.floor(diffMins / 60);
+      const diffDays = Math.floor(diffHours / 24);
+
+      if (diffMins < 1) return 'Just now';
+      if (diffMins < 60) return `${diffMins}m ago`;
+      if (diffHours < 24) return `${diffHours}h ago`;
+      if (diffDays === 1) return 'Yesterday';
+      return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
+    } catch {
+      return dateStr;
+    }
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
   }
 </script>
 </body>

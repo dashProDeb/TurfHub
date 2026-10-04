@@ -19,25 +19,37 @@ if ($role === 'owner') {
         'SELECT DISTINCT u.id, u.full_name, u.role, u.avatar_url, u.email, u.phone
          FROM users u
          WHERE u.id != ?
+           AND u.role != "admin"
            AND (
-             u.role IN ("admin", "captain")
+             u.role = "captain"
              OR u.id IN (
                  SELECT b.user_id FROM bookings b
                  JOIN turf_grounds tg ON tg.id = b.turf_id
                  WHERE tg.owner_id = ?
              )
            )
-         ORDER BY u.role = "admin" DESC, u.full_name ASC
+         ORDER BY u.role = "captain" DESC, u.full_name ASC
          LIMIT 30'
     );
     $stmt->execute([$uid, $uid]);
-} else {
+} elseif ($role === 'captain' || $role === 'player') {
     $stmt = $db->prepare(
         'SELECT u.id, u.full_name, u.role, u.avatar_url, u.email, u.phone
          FROM users u
          WHERE u.id != ?
-         ORDER BY u.role = "admin" DESC, u.role = "owner" DESC, u.full_name ASC
+           AND u.role != "admin"
+         ORDER BY u.role = "owner" DESC, u.full_name ASC
          LIMIT 30'
+    );
+    $stmt->execute([$uid]);
+} else {
+    // Admin role
+    $stmt = $db->prepare(
+        'SELECT u.id, u.full_name, u.role, u.avatar_url, u.email, u.phone
+         FROM users u
+         WHERE u.id != ?
+         ORDER BY u.role = "owner" DESC, u.full_name ASC
+         LIMIT 50'
     );
     $stmt->execute([$uid]);
 }
