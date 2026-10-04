@@ -24,11 +24,17 @@ if ($receiverId === $user['id']) {
 
 $db = Database::connect();
 
-// Verify receiver exists
-$stmt = $db->prepare('SELECT id FROM users WHERE id = ?');
+// Verify receiver exists and check role
+$stmt = $db->prepare('SELECT id, role FROM users WHERE id = ?');
 $stmt->execute([$receiverId]);
-if (!$stmt->fetch()) {
+$recipient = $stmt->fetch();
+if (!$recipient) {
     jsonError('Recipient not found', 404);
+}
+
+// Prevent non-admin users from sending messages to admin
+if ($recipient['role'] === 'admin' && $user['role'] !== 'admin') {
+    jsonError('Direct messages to administrators are disabled. Administrators communicate via platform broadcasts.', 403);
 }
 
 $stmt = $db->prepare(

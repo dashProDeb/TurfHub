@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TurfHub — Admin Broadcast Center</title>
+  <meta name="description" content="Admin broadcast center for publishing official notices and alerts directly into the messages inbox of all TurfHub roles." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    .broadcast-shell {
+      display: grid;
+      grid-template-columns: 460px 1fr;
+      gap: 24px;
+      padding: 24px 28px;
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+
+    .composer-card {
+      background: #fff;
+      border: 1px solid #e8ede8;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.03);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .history-card {
+      background: #fff;
+      border: 1px solid #e8ede8;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.03);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      height: fit-content;
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+    }
+
+    .audience-selector {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .audience-option {
+      border: 1.5px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 10px 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all .15s ease;
+      background: #fbfdf9;
+      font-size: .83rem;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .audience-option:hover {
+      border-color: #7ed321;
+      background: #f5fbf0;
+    }
+
+    .audience-option.selected {
+      border-color: #0d2818;
+      background: rgba(13,40,24,.06);
+      color: #0d2818;
+      box-shadow: 0 0 0 1px #0d2818 inset;
+    }
+
+    .input-field {
+      width: 100%;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-size: .88rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color .15s;
+    }
+
+    .input-field:focus {
+      border-color: #7ed321;
+    }
+
+    .broadcast-item {
+      padding: 18px;
+      border: 1px solid #f0f3f0;
+      border-radius: 12px;
+      background: #fbfdf9;
+      margin-bottom: 12px;
+      transition: transform .15s, box-shadow .15s;
+    }
+
+    .broadcast-item:hover {
+      background: #fff;
+      box-shadow: 0 4px 12px rgba(0,0,0,.04);
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 1024px) {
+      .broadcast-shell {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+<div id="app-wrapper">
+  <!-- Dynamic Sidebar rendered by layout.js -->
+
+  <div id="main-content">
+    <!-- Topbar -->
+    <div id="topbar">
+      <div class="topbar-title">
+        <span class="topbar-heading">📢 Platform Broadcast Center</span>
+        <span class="topbar-sub">Broadcast official announcements directly into the Messages inbox of all roles</span>
+      </div>
+      <div class="topbar-actions">
+        <button onclick="loadBroadcastHistory()" class="btn-ghost" style="padding:6px 14px;font-size:.82rem" title="Refresh Feed">
+          🔄 Refresh
+        </button>
+      </div>
+    </div>
+
+    <!-- Page Body -->
+    <div class="broadcast-shell">
+      <!-- Left Column: Composer -->
+      <div class="composer-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid #f3f4f6">
+          <div style="font-weight:900;font-size:1.05rem;color:#0d2818;display:flex;align-items:center;gap:8px">
+            <span>✉️ Compose Broadcast</span>
+          </div>
+          <span class="badge badge-confirmed" id="audience-reach-badge">Reaches All Users</span>
+        </div>
+
+        <!-- Target Audience Selection -->
+        <div>
+          <label style="display:block;font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#4b5563;margin-bottom:8px">
+            Target Audience
+          </label>
+          <div class="audience-selector">
+            <div class="audience-option selected" data-role="all" onclick="selectAudience('all', this)">
+              <span>🌐</span>
+              <div>
+                <div>All Users</div>
+                <div style="font-size:.7rem;font-weight:400;color:#6b7280" id="cnt-all">All Roles</div>
+              </div>
+            </div>
+            <div class="audience-option" data-role="owner" onclick="selectAudience('owner', this)">
+              <span>🏟️</span>
+              <div>
+                <div>Turf Owners</div>
+                <div style="font-size:.7rem;font-weight:400;color:#6b7280" id="cnt-owner">Owners</div>
+              </div>
+            </div>
+            <div class="audience-option" data-role="captain" onclick="selectAudience('captain', this)">
+              <span>⚽</span>
+              <div>
+                <div>Captains</div>
+                <div style="font-size:.7rem;font-weight:400;color:#6b7280" id="cnt-captain">Team Leads</div>
+              </div>
+            </div>
+            <div class="audience-option" data-role="player" onclick="selectAudience('player', this)">
+              <span>🏃</span>
+              <div>
+                <div>Players</div>
+                <div style="font-size:.7rem;font-weight:400;color:#6b7280" id="cnt-player">Athletes</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Broadcast Subject / Headline -->
+        <div>
+          <label style="display:block;font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#4b5563;margin-bottom:6px">
+            Announcement Title (Optional)
+          </label>
+          <input type="text" id="broadcast-title" class="input-field" placeholder="e.g. Platform Notice, Maintenance Alert, Tournament Update" />
+        </div>
+
+        <!-- Broadcast Content -->
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+            <label style="font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#4b5563">
+              Message Content <span style="color:#dc2626">*</span>
+            </label>
+            <span id="char-count" style="font-size:.72rem;color:#9ca3af">0 / 800</span>
+          </div>
+          <textarea id="broadcast-content" class="input-field" style="min-height:140px;resize:vertical;line-height:1.5" placeholder="Type your broadcast message here. It will immediately show up as an official announcement thread in the Messages tab for all target users..." oninput="updateCharCount()"></textarea>
+        </div>
+
+        <!-- Delivery Notice -->
+        <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 14px;display:flex;align-items:flex-start;gap:10px;font-size:.78rem;color:#166534">
+          <span style="font-size:1.1rem;margin-top:1px">ℹ️</span>
+          <div>
+            <strong>Direct Inbox Delivery:</strong> This message will appear directly in each recipient's chat inbox from <em>TurfHub Admin</em>. Recipients will see it as an official broadcast and cannot reply directly.
+          </div>
+        </div>
+
+        <!-- Send Button -->
+        <button id="btn-broadcast" onclick="sendBroadcast()" class="btn-lime" style="width:100%;padding:13px 20px;font-size:.92rem;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px">
+          <span>📢 Send Broadcast Now</span>
+        </button>
+      </div>
+
+      <!-- Right Column: Broadcast History -->
+      <div class="history-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;border-bottom:1px solid #f3f4f6;margin-bottom:16px">
+          <div>
+            <h3 style="font-weight:900;font-size:1.05rem;color:#0d2818;margin:0">Sent Broadcast History</h3>
+            <p style="font-size:.76rem;color:#6b7280;margin:3px 0 0 0">Previously published platform announcements</p>
+          </div>
+          <span class="badge badge-pending" id="history-total-badge">0 Broadcasts</span>
+        </div>
+
+        <div id="broadcast-history-list">
+          <div style="text-align:center;padding:40px;color:#9ca3af;font-size:.85rem">
+            Loading broadcast history...
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="api-client.js"></script>
+<script src="auth.js"></script>
+<script src="layout.js"></script>
+<script src="page-init.js"></script>
+<script>
+  let currentUser = null;
+  let selectedAudience = 'all';
+  let audienceCounts = { all: 0, owner: 0, captain: 0, player: 0 };
+
+  (async function() {
+    currentUser = await initPage({ navId: 'messages', roles: ['admin'] });
+    if (!currentUser) return;
+
+    await loadBroadcastHistory();
+  })();
+
+  function selectAudience(role, el) {
+    selectedAudience = role;
+    document.querySelectorAll('.audience-option').forEach(opt => opt.classList.remove('selected'));
+    el.classList.add('selected');
+
+    const reachBadge = document.getElementById('audience-reach-badge');
+    const cnt = audienceCounts[role] || 0;
+    const roleLabel = role === 'all' ? 'All Roles' : (role === 'owner' ? 'Turf Owners' : role === 'captain' ? 'Captains' : 'Players');
+    reachBadge.textContent = `Reaches ~${cnt} ${roleLabel}`;
+  }
+
+  function updateCharCount() {
+    const val = document.getElementById('broadcast-content').value;
+    document.getElementById('char-count').textContent = `${val.length} / 800`;
+  }
+
+  async function loadBroadcastHistory() {
+    const container = document.getElementById('broadcast-history-list');
+    try {
+      const res = await apiGet('chat/broadcast.php');
+      audienceCounts = res.audience || audienceCounts;
+      
+      // Update audience count tags
+      if (document.getElementById('cnt-all')) document.getElementById('cnt-all').textContent = `~${audienceCounts.all} users`;
+      if (document.getElementById('cnt-owner')) document.getElementById('cnt-owner').textContent = `~${audienceCounts.owner} owners`;
+      if (document.getElementById('cnt-captain')) document.getElementById('cnt-captain').textContent = `~${audienceCounts.captain} captains`;
+      if (document.getElementById('cnt-player')) document.getElementById('cnt-player').textContent = `~${audienceCounts.player} players`;
+
+      // Update reach badge for currently selected
+      const currentRole = selectedAudience;
+      const roleLabel = currentRole === 'all' ? 'All Roles' : (currentRole === 'owner' ? 'Turf Owners' : currentRole === 'captain' ? 'Captains' : 'Players');
+      document.getElementById('audience-reach-badge').textContent = `Reaches ~${audienceCounts[currentRole] || 0} ${roleLabel}`;
+
+      const broadcasts = res.broadcasts || [];
+      document.getElementById('history-total-badge').textContent = `${broadcasts.length} Sent`;
+
+      if (broadcasts.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center;padding:50px 20px;color:#9ca3af">
+            <div style="font-size:2.5rem;margin-bottom:8px">📭</div>
+            <div style="font-weight:700;color:#1a1a1a">No Broadcasts Sent Yet</div>
+            <div style="font-size:.78rem;margin-top:4px">Use the composer on the left to broadcast messages to all users.</div>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = broadcasts.map(b => {
+        const targetStr = (b.target_roles || 'all').toLowerCase();
+        const targetBadge = targetStr === 'owner' 
+          ? '<span class="badge badge-pending">🏟️ Owners</span>'
+          : targetStr === 'captain' 
+          ? '<span class="badge badge-confirmed">⚽ Captains</span>'
+          : targetStr === 'player' 
+          ? '<span class="badge badge-draft">🏃 Players</span>'
+          : '<span class="badge badge-confirmed">🌐 All Roles</span>';
+
+        const reach = b.reach_count || audienceCounts[targetStr] || 0;
+        const timeStr = formatChatTime(b.created_at);
+
+        return `
+          <div class="broadcast-item">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+              <div style="display:flex;align-items:center;gap:8px">
+                ${targetBadge}
+                <span style="font-weight:800;font-size:.88rem;color:#0d2818">${escapeHtml(b.title || 'Platform Announcement')}</span>
+              </div>
+              <span style="font-size:.72rem;color:#9ca3af">${timeStr}</span>
+            </div>
+            <p style="font-size:.84rem;color:#374151;margin:0 0 10px 0;line-height:1.5;white-space:pre-wrap">${escapeHtml(b.content)}</p>
+            <div style="display:flex;align-items:center;justify-content:space-between;font-size:.72rem;color:#6b7280;border-top:1px solid #edf2ed;padding-top:8px">
+              <span>Author: <strong>${escapeHtml(b.author_name || 'Admin')}</strong></span>
+              <span style="background:#e8f5e9;color:#166534;font-weight:700;padding:2px 8px;border-radius:100px">
+                ✓ Delivered to ${reach} recipients
+              </span>
+            </div>
+          </div>`;
+      }).join('');
+
+    } catch (err) {
+      console.error('Failed to load broadcasts:', err);
+      container.innerHTML = `
+        <div style="text-align:center;padding:30px;color:#dc2626;font-size:.84rem">
+          ⚠️ Could not load broadcast history.
+        </div>`;
+    }
+  }
+
+  async function sendBroadcast() {
+    const titleInput = document.getElementById('broadcast-title');
+    const contentInput = document.getElementById('broadcast-content');
+    const btn = document.getElementById('btn-broadcast');
+
+    const title = titleInput.value.trim();
+    const content = contentInput.value.trim();
+
+    if (!content) {
+      alert('Please enter a message to broadcast.');
+      contentInput.focus();
+      return;
+    }
+
+    if (!confirm(`Are you sure you want to broadcast this message to ${selectedAudience.toUpperCase()} users? It will appear directly in their Messages inbox.`)) {
+      return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span>⏳ Broadcasting to inboxes...</span>';
+
+    try {
+      const res = await apiPost('chat/broadcast.php', {
+        title: title || 'TurfHub Platform Notice',
+        content: content,
+        target_role: selectedAudience
+      });
+
+      alert(`✅ ${res.message || 'Broadcast successfully delivered!'}`);
+      titleInput.value = '';
+      contentInput.value = '';
+      updateCharCount();
+
+      await loadBroadcastHistory();
+    } catch (err) {
+      alert('Failed to send broadcast: ' + (err.message || 'Unknown server error'));
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<span>📢 Send Broadcast Now</span>';
+    }
+  }
+
+  function formatChatTime(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    if (isNaN(d)) return '';
+    return d.toLocaleDateString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+</script>
+</body>
+</html>
