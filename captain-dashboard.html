@@ -157,17 +157,14 @@
       document.getElementById('topbar-sub').textContent =
         `${user.full_name} · Team Captain`;
 
-      // 4. Fetch team data & bookings
+      // 4. Fetch team data, bookings, tournaments & fixtures
       try {
-        // Try to get team data — captain might have a team
         let team = null;
         let members = [];
         try {
-          // Try team_id=1 (from seed data — Thunder FC captain is Tanvir)
-          // In a real app you'd query for teams by captain_id
-          const teamData = await apiGet('teams/detail.php?team_id=1');
+          const teamData = await apiGet('teams/detail.php');
           team = teamData.team;
-          members = team.members || [];
+          members = team ? (team.members || []) : [];
         } catch (e) {
           // No team yet
         }
@@ -179,17 +176,31 @@
           bookings = bookingsData.bookings || [];
         } catch (e) { /* no bookings */ }
 
-        // Fetch tournaments
+        // Fetch tournaments & registrations
         let tournaments = [];
+        let myRegistrations = [];
         try {
-          const tournData = await apiGet('tournaments/list.php');
+          const [tournData, regData] = await Promise.all([
+            apiGet('tournaments/list.php'),
+            apiGet('tournaments/my-registrations.php').catch(() => ({ registrations: [] }))
+          ]);
           tournaments = tournData.tournaments || [];
+          myRegistrations = regData.registrations || [];
         } catch (e) { /* no tournaments */ }
 
+        // Fetch real match fixtures from database for this squad (or all upcoming)
+        let fixtures = [];
+        try {
+          const fixEndpoint = team ? `fixtures/list.php?team_id=${team.id}` : 'fixtures/list.php?status=upcoming';
+          const fixData = await apiGet(fixEndpoint);
+          fixtures = fixData.fixtures || [];
+        } catch (e) { /* no fixtures */ }
+
         // ── Stats ──
+        const upcomingFixtures = fixtures.filter(f => f.status === 'upcoming' || f.status === 'live');
         document.getElementById('stat-squad').textContent = members.length || 0;
-        document.getElementById('stat-matches').textContent = '—'; // Will update if fixtures available
-        document.getElementById('stat-tournaments').textContent = tournaments.length;
+        document.getElementById('stat-matches').textContent = upcomingFixtures.length;
+        document.getElementById('stat-tournaments').textContent = myRegistrations.length > 0 ? myRegistrations.length : tournaments.length;
         document.getElementById('stat-bookings').textContent = bookings.length;
 
         // ── Team Roster ──
@@ -197,7 +208,7 @@
         if (members.length === 0) {
           rosterEl.innerHTML = `
             <div style="text-align:center;padding:30px;color:#9ca3af;font-size:.85rem">
-              No team members yet. <a href="manage-team.html" style="color:#7ed321;font-weight:700;text-decoration:none">Add players</a>
+              No team members yet. <a href="manage-team.html" style="color:#7ed321;font-weight:700;text-decoration:none">Add players to squad</a>
             </div>`;
         } else {
           rosterEl.innerHTML = members.map(m => {
@@ -226,26 +237,48 @@
           }).join('');
         }
 
-        // ── Upcoming Matches (from bookings as proxy) ──
+        // ── Upcoming Tournament Matches (from database fixtures) ──
         const matchesEl = document.getElementById('matches-list');
-        const upcomingBookings = bookings.filter(b => {
-          if (!b.slot_date) return false;
-          return new Date(b.slot_date) >= new Date();
-        }).slice(0, 3);
-
-        if (upcomingBookings.length === 0) {
-          matchesEl.innerHTML = `
-            <div style="text-align:center;padding:20px;color:#9ca3af;font-size:.85rem">
-              No upcoming matches. <a href="book-turf.html" style="color:#7ed321;font-weight:700;text-decoration:none">Book a turf</a>
-            </div>`;
+        if (fixtures.length === 0) {
+          // If no fixtures, show upcoming booking slots as fallback
+          const upcomingBookings = bookings.filter(b => b.slot_date && new Date(b.slot_date) >= new Date()).slice(0, 3);
+          if (upcomingBookings.length === 0) {
+            matchesEl.innerHTML = `
+              <div style="text-align:center;padding:24px 10px;color:#9ca3af;font-size:.85rem">
+                No upcoming fixtures scheduled.<br>
+                <a href="tournament-registration.html" style="color:#7ed321;font-weight:700;text-decoration:none;display:inline-block;margin-top:6px">Enter a Tournament &rarr;</a>
+              </div>`;
+          } else {
+            matchesEl.innerHTML = upcomingBookings.map(b => `
+              <div class="match-item">
+                <div class="match-league">${b.sport_type || 'Practice Match'}</div>
+                <div class="match-teams">${b.turf_name || 'Turf Pitch'}</div>
+                <div class="match-meta">${formatDate(b.slot_date)} &middot; ${formatTime(b.start_time)} – ${formatTime(b.end_time)}</div>
+              </div>
+            `).join('');
+          }
         } else {
-          matchesEl.innerHTML = upcomingBookings.map(b => `
-            <div class="match-item">
-              <div class="match-league">${b.sport_type || 'Match'}</div>
-              <div class="match-teams">${b.turf_name || 'TBD'}</div>
-              <div class="match-meta">${formatDate(b.slot_date)} · ${formatTime(b.start_time)} – ${formatTime(b.end_time)}</div>
-            </div>
-          `).join('');
+          matchesEl.innerHTML = fixtures.slice(0, 3).map(f => {
+            const isLive = f.status === 'live';
+            const statusBadge = isLive 
+              ? '<span class="badge badge-live badge-dot" style="font-size:.65rem">LIVE</span>' 
+              : (f.status === 'completed' ? '<span class="badge badge-confirmed" style="font-size:.65rem">FT</span>' : '');
+
+            return `
+              <div class="match-item">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <div class="match-league">${escapeHtml(f.tournament_name || 'Tournament Match')}</div>
+                  ${statusBadge}
+                </div>
+                <div class="match-teams">
+                  ${escapeHtml(f.home_team_name || 'Home')} <span>vs</span> ${escapeHtml(f.away_team_name || 'Away')}
+                  ${isLive ? `<strong style="color:#b45309;margin-left:6px">${f.home_score} - ${f.away_score}</strong>` : ''}
+                </div>
+                <div class="match-meta">
+                  ${f.match_date ? formatDate(f.match_date.split(' ')[0]) : 'Date TBD'} &middot; 📍 ${escapeHtml(f.venue_name || 'Turf Ground')}
+                </div>
+              </div>`;
+          }).join('');
         }
 
       } catch (err) {
@@ -256,6 +289,16 @@
           </div>`;
       }
     })();
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
   </script>
 </body>
 </html>

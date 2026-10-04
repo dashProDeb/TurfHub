@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../config/helpers.php';
 require_once __DIR__ . '/../auth/guard.php';
 
-$user = guardRole('owner', 'captain');
+$user = guardRole('owner', 'captain', 'player', 'admin');
 
 $tournamentId = (int) ($_GET['tournament_id'] ?? 0);
 if (!$tournamentId) {

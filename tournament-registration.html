@@ -1,165 +1,596 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TurfHub — Tournament Registration</title>
+  <meta name="description" content="Browse open tournaments, register your squad, and track your entries on TurfHub." />
   <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <style>
-    .t-card { background:#fff;border:1.5px solid #e8ede8;border-radius:14px;overflow:hidden;transition:box-shadow .2s; }
-    .t-card:hover { box-shadow:0 6px 20px rgba(0,0,0,.09); }
-    .t-card-head { background:#0d2818;padding:20px; }
-    .t-card-body { padding:18px; }
-    .stat-row { display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:8px; }
-    .stat-row span:first-child { color:#6b7280; }
-    .stat-row span:last-child { font-weight:600;color:#1a1a1a; }
-    .progress-bar { height:6px;background:#e5e7eb;border-radius:100px;overflow:hidden;margin-bottom:4px; }
-    .progress-fill { height:100%;border-radius:100px;background:#7ed321; }
-    .prize-box { background:#f5f5f0;border-radius:10px;padding:12px;text-align:center; }
-    .prize-val { font-weight:900;font-size:1.1rem;color:#1a1a1a; }
-    .prize-lbl { font-size:.7rem;color:#9ca3af;margin-top:2px; }
-    .filter-tab { padding:7px 18px;border-radius:100px;border:1.5px solid #e5e7eb;font-size:.8rem;font-weight:600;cursor:pointer;font-family:inherit;background:#fff;color:#6b7280;transition:all .15s; }
-    .filter-tab.active { background:#0d2818;border-color:#0d2818;color:#fff; }
+    .t-card {
+      background: #fff;
+      border: 1.5px solid #e8ede8;
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .t-card:hover {
+      box-shadow: 0 8px 24px rgba(0,0,0,.08);
+      transform: translateY(-2px);
+      border-color: #7ed321;
+    }
+    .t-card-head {
+      background: #0d2818;
+      padding: 20px;
+      position: relative;
+    }
+    .t-card-body {
+      padding: 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: .82rem;
+      margin-bottom: 8px;
+    }
+    .stat-row span:first-child { color: #6b7280; }
+    .stat-row span:last-child { font-weight: 700; color: #1a1a1a; }
+    .progress-bar {
+      height: 6px;
+      background: #e5e7eb;
+      border-radius: 100px;
+      overflow: hidden;
+      margin-bottom: 4px;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 100px;
+      background: #7ed321;
+      transition: width .3s ease;
+    }
+    .prize-box {
+      background: #f8faf8;
+      border: 1px solid #edf2ed;
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+    }
+    .prize-val { font-weight: 900; font-size: 1.15rem; color: #0d2818; }
+    .prize-lbl { font-size: .7rem; color: #9ca3af; margin-top: 2px; text-transform: uppercase; letter-spacing: .05em; }
+
+    .filter-tab {
+      padding: 8px 18px;
+      border-radius: 100px;
+      border: 1.5px solid #e5e7eb;
+      font-size: .82rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      background: #fff;
+      color: #6b7280;
+      transition: all .15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .filter-tab:hover:not(.active) { border-color: #9ca3af; color: #1a1a1a; }
+    .filter-tab.active { background: #0d2818; border-color: #0d2818; color: #fff; }
+
+    /* Modal styles */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-backdrop.show { display: flex; }
+    .modal-card {
+      background: #fff;
+      border-radius: 18px;
+      max-width: 500px;
+      width: 100%;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      animation: modalSlideIn .25s ease-out;
+    }
+    @keyframes modalSlideIn {
+      from { transform: translateY(20px) scale(0.96); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
   </style>
 </head>
 <body>
 <div id="app-wrapper">
-  <!-- Standalone Sidebar -->
-  <aside id="sidebar" class="sidebar">
-    <a href="index.html" class="sidebar-logo">
-      <div class="sidebar-logo-icon">TH</div>
-      <span class="sidebar-logo-text">TurfHub</span>
-    </a>
-    <div class="sidebar-user">
-      <div class="sidebar-avatar" style="background:#7ed321;color:#0d2818">T</div>
-      <div class="sidebar-user-info">
-        <span class="sidebar-user-name">Tanvir Ahmed</span>
-        <span class="sidebar-user-role">Team Captain</span>
-      </div>
-    </div>
-    <nav class="sidebar-nav">
-      <a href="captain-dashboard.html" class="sidebar-nav-item"><span class="sidebar-label">Dashboard</span></a>
-      <a href="book-turf.html" class="sidebar-nav-item"><span class="sidebar-label">Book a Turf</span></a>
-      <a href="fixtures.html" class="sidebar-nav-item active"><span class="sidebar-label">Tournaments</span></a>
-      <a href="create-tournament.html" class="sidebar-nav-item"><span class="sidebar-label">Host Tournament</span></a>
-      <a href="booking-receipt.html" class="sidebar-nav-item"><span class="sidebar-label">My Receipts</span></a>
-      <a href="chat.html" class="sidebar-nav-item"><span class="sidebar-label">Messages</span></a>
-    </nav>
-    <a href="login.html" class="sidebar-signout">
-      <span class="sidebar-label">Sign Out</span>
-    </a>
-  </aside>
+  <!-- Dynamic Sidebar rendered by layout.js -->
 
   <div id="main-content">
     <div id="topbar">
       <div class="topbar-title">
-        <span class="topbar-heading">Tournament Registration</span>
-        <span class="topbar-sub">Browse open tournaments and register your team</span>
+        <span class="topbar-heading">🏆 Tournaments Directory</span>
+        <span class="topbar-sub">Browse competitions, register your squad, and track your entries</span>
       </div>
-      <div class="topbar-actions">
-        <span class="badge badge-captain">Open Registrations</span>
+      <div class="topbar-actions" style="display:flex;gap:10px;align-items:center">
+        <a href="fixtures.html" class="btn-outline" style="font-size:.82rem;padding:7px 14px">
+          📋 Fixtures &amp; Tables
+        </a>
+        <a href="create-tournament.html" class="btn-lime" style="font-size:.82rem;padding:7px 16px">
+          ➕ Host Tournament
+        </a>
       </div>
     </div>
+
     <div class="page-body">
-      <!-- Filters -->
-      <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
-        <button class="filter-tab active" onclick="setFilter(this)">All</button>
-        <button class="filter-tab" onclick="setFilter(this)">Football</button>
-        <button class="filter-tab" onclick="setFilter(this)">Cricket</button>
-        <button class="filter-tab" onclick="setFilter(this)">Basketball</button>
-        <button class="filter-tab" onclick="setFilter(this)">Open Only</button>
+      <!-- Top banner stats -->
+      <div class="stat-grid" style="margin-bottom:20px">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#e0f2fe">🏆</div>
+          <div class="stat-body">
+            <div class="stat-value" id="kpi-open-tournaments">—</div>
+            <div class="stat-label">Open Tournaments</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#dcfce7">👥</div>
+          <div class="stat-body">
+            <div class="stat-value" id="kpi-my-teams">—</div>
+            <div class="stat-label">Your Squads</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#fef3c7">📋</div>
+          <div class="stat-body">
+            <div class="stat-value" id="kpi-registered-count">—</div>
+            <div class="stat-label">Registered Tournaments</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#ede9fe">⚡</div>
+          <div class="stat-body">
+            <div class="stat-value" id="kpi-total-pool">—</div>
+            <div class="stat-label">Total Prize Money</div>
+          </div>
+        </div>
       </div>
 
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px">
-
-        <!-- T1 - Live -->
-        <div class="t-card">
-          <div class="t-card-head">
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
-              <span style="font-size:1.6rem">&#9917;</span>
-              <span class="badge badge-live badge-dot">Live</span>
-            </div>
-            <h3 style="font-weight:800;font-size:.95rem;color:#fff;line-height:1.3;margin-bottom:4px">Inter-City Football League 2025</h3>
-            <div style="font-size:.75rem;color:rgba(255,255,255,.5)">Football &middot; Round Robin + Knockout</div>
-          </div>
-          <div class="t-card-body">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
-              <div class="prize-box"><div class="prize-val">&#2547;2,000</div><div class="prize-lbl">Entry Fee</div></div>
-              <div class="prize-box"><div class="prize-val">&#2547;50,000</div><div class="prize-lbl">Prize Pool</div></div>
-            </div>
-            <div class="stat-row"><span>Teams</span><span>12/16</span></div>
-            <div class="progress-bar"><div class="progress-fill" style="width:75%"></div></div>
-            <div class="stat-row" style="margin-top:8px"><span>Dates</span><span>1 Aug &rarr; 30 Aug 2025</span></div>
-            <div class="stat-row"><span>Venue</span><span>The Green Arena</span></div>
-            <a href="#" class="btn-lime" style="display:block;text-align:center;width:100%;justify-content:center;margin-top:12px">Register Team &rarr;</a>
-          </div>
+      <!-- Filters & View Switcher -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+        <div style="display:flex;gap:8px;flex-wrap:wrap" id="filters-container">
+          <button class="filter-tab active" onclick="setCategoryFilter('all', this)">All Sports</button>
+          <button class="filter-tab" onclick="setCategoryFilter('football', this)">⚽ Football</button>
+          <button class="filter-tab" onclick="setCategoryFilter('cricket', this)">🏏 Cricket</button>
+          <button class="filter-tab" onclick="setCategoryFilter('basketball', this)">🏀 Basketball</button>
+          <button class="filter-tab" onclick="setCategoryFilter('badminton', this)">🏸 Badminton</button>
+          <button class="filter-tab" onclick="setCategoryFilter('open_only', this)">🟢 Open Spots</button>
+          <button class="filter-tab" onclick="setCategoryFilter('my_entries', this)">⭐ My Team Entries</button>
         </div>
 
-        <!-- T2 - Open -->
-        <div class="t-card">
-          <div class="t-card-head">
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
-              <span style="font-size:1.6rem">&#127944;</span>
-              <span class="badge badge-pending badge-dot">Open</span>
-            </div>
-            <h3 style="font-weight:800;font-size:.95rem;color:#fff;line-height:1.3;margin-bottom:4px">Summer Smash Basketball Cup</h3>
-            <div style="font-size:.75rem;color:rgba(255,255,255,.5)">Basketball &middot; Knockout</div>
-          </div>
-          <div class="t-card-body">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
-              <div class="prize-box"><div class="prize-val">&#2547;1,500</div><div class="prize-lbl">Entry Fee</div></div>
-              <div class="prize-box"><div class="prize-val">&#2547;30,000</div><div class="prize-lbl">Prize Pool</div></div>
-            </div>
-            <div class="stat-row"><span>Teams</span><span>6/8</span></div>
-            <div class="progress-bar"><div class="progress-fill" style="width:75%"></div></div>
-            <div class="stat-row" style="margin-top:8px"><span>Dates</span><span>15 Aug &rarr; 20 Aug 2025</span></div>
-            <div class="stat-row"><span>Venue</span><span>Court Pro Indoor</span></div>
-            <a href="#" class="btn-lime" style="display:block;text-align:center;width:100%;justify-content:center;margin-top:12px">Register Team &rarr;</a>
-          </div>
-        </div>
-
-        <!-- T3 - Registered -->
-        <div class="t-card">
-          <div class="t-card-head">
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
-              <span style="font-size:1.6rem">&#127992;</span>
-              <span class="badge badge-confirmed badge-dot">Registered &#10003;</span>
-            </div>
-            <h3 style="font-weight:800;font-size:.95rem;color:#fff;line-height:1.3;margin-bottom:4px">Monsoon Cricket Carnival</h3>
-            <div style="font-size:.75rem;color:rgba(255,255,255,.5)">Cricket &middot; League</div>
-          </div>
-          <div class="t-card-body">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
-              <div class="prize-box"><div class="prize-val">&#2547;3,000</div><div class="prize-lbl">Entry Fee</div></div>
-              <div class="prize-box"><div class="prize-val">&#2547;80,000</div><div class="prize-lbl">Prize Pool</div></div>
-            </div>
-            <div class="stat-row"><span>Teams</span><span>8/16</span></div>
-            <div class="progress-bar"><div class="progress-fill" style="width:50%"></div></div>
-            <div class="stat-row" style="margin-top:8px"><span>Dates</span><span>10 Sep &rarr; 28 Sep 2025</span></div>
-            <div class="stat-row"><span>Venue</span><span>Champions Field</span></div>
-            <div style="background:rgba(126,211,33,.1);border:1px solid rgba(126,211,33,.3);border-radius:10px;padding:10px;text-align:center;margin-top:12px">
-              <span style="font-weight:700;font-size:.85rem;color:#5a9e12">&#10003; Thunder FC Registered</span>
-            </div>
-          </div>
-        </div>
-
+        <button onclick="loadTournamentsData()" class="btn-outline" style="font-size:.78rem;padding:6px 14px">
+          🔄 Refresh
+        </button>
       </div>
+
+      <!-- Tournaments Grid -->
+      <div id="tournaments-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:20px">
+        <div style="text-align:center;padding:50px;color:#9ca3af;grid-column:1/-1">
+          Loading tournaments from database...
+        </div>
+      </div>
+
     </div>
   </div>
+</div>
+
+<!-- Team Registration Modal -->
+<div id="registration-modal" class="modal-backdrop">
+  <div class="modal-card">
+    <div style="background:#0d2818;padding:20px 24px;display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <h3 style="color:#fff;font-weight:800;font-size:1.05rem" id="modal-tourn-name">Register Squad</h3>
+        <p style="color:rgba(255,255,255,0.65);font-size:.75rem;margin-top:2px" id="modal-tourn-sub">Tournament Registration</p>
+      </div>
+      <button onclick="closeModal()" style="background:none;border:none;color:#fff;font-size:1.4rem;cursor:pointer;padding:4px">✕</button>
+    </div>
+
+    <div style="padding:24px">
+      <!-- Tournament Summary Box -->
+      <div style="background:#f8faf8;border:1px solid #edf2ed;border-radius:12px;padding:14px;margin-bottom:18px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:.8rem">
+          <div><span style="color:#6b7280">Entry Fee:</span> <strong id="modal-fee">৳0</strong></div>
+          <div><span style="color:#6b7280">Prize Pool:</span> <strong id="modal-prize" style="color:#16a34a">৳0</strong></div>
+          <div><span style="color:#6b7280">Venue:</span> <strong id="modal-venue">Turf Ground</strong></div>
+          <div><span style="color:#6b7280">Slots:</span> <strong id="modal-slots">0/8</strong></div>
+        </div>
+      </div>
+
+      <!-- Team Selection Form -->
+      <form id="reg-form" onsubmit="submitRegistration(event)">
+        <input type="hidden" id="modal-tourn-id" value="" />
+
+        <div style="margin-bottom:16px">
+          <label style="display:block;font-size:.75rem;font-weight:700;text-transform:uppercase;color:#4b5563;margin-bottom:6px">
+            Select Your Team <span style="color:#dc2626">*</span>
+          </label>
+          <select id="modal-team-select" class="form-input" style="width:100%;padding:10px 14px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:.9rem;font-weight:600" required>
+            <option value="">Select a team...</option>
+          </select>
+          <div id="no-teams-warning" style="display:none;margin-top:8px;font-size:.78rem;color:#b45309;background:#fef3c7;padding:8px 12px;border-radius:8px">
+            ⚠️ You do not lead an active team yet. <a href="manage-team.html" style="font-weight:700;text-decoration:underline">Create or manage a team</a> first.
+          </div>
+        </div>
+
+        <div style="margin-bottom:20px;background:#f9fafb;border-radius:10px;padding:12px">
+          <label style="display:flex;align-items:flex-start;gap:8px;font-size:.78rem;color:#4b5563;cursor:pointer">
+            <input type="checkbox" id="terms-check" required style="margin-top:3px" />
+            <span>I confirm that our squad meets roster eligibility, accepts the tournament guidelines, and is ready for scheduled fixtures.</span>
+          </label>
+        </div>
+
+        <div style="display:flex;gap:10px;justify-content:flex-end">
+          <button type="button" onclick="closeModal()" class="btn-outline" style="padding:9px 18px;font-size:.85rem">
+            Cancel
+          </button>
+          <button type="submit" id="btn-confirm-reg" class="btn-lime" style="padding:9px 22px;font-size:.85rem;font-weight:800">
+            Confirm Registration
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="api-client.js"></script>
+<script src="auth.js"></script>
+<script src="layout.js"></script>
+<script src="page-init.js"></script>
 <script>
-  function setFilter(btn) {
-    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+  let currentUser = null;
+  let allTournaments = [];
+  let myRegistrations = [];
+  let myTeams = [];
+  let currentFilter = 'all';
+
+  (async function() {
+    currentUser = await initPage({ navId: 'tournaments', roles: ['captain', 'player', 'admin', 'owner'] });
+    if (!currentUser) return;
+
+    await loadTournamentsData();
+  })();
+
+  async function loadTournamentsData() {
+    const grid = document.getElementById('tournaments-grid');
+    grid.innerHTML = '<div style="text-align:center;padding:50px;color:#9ca3af;grid-column:1/-1">Loading tournaments from database...</div>';
+
+    try {
+      // Parallel fetch tournaments, my registrations, and my teams
+      const [tournRes, myTeamsRes, myRegRes] = await Promise.all([
+        apiGet('tournaments/list.php'),
+        apiGet('teams/my-teams.php').catch(() => ({ teams: [] })),
+        apiGet('tournaments/my-registrations.php').catch(() => ({ registrations: [] }))
+      ]);
+
+      allTournaments = tournRes.tournaments || [];
+      myTeams = myTeamsRes.teams || [];
+      myRegistrations = myRegRes.registrations || [];
+
+      // Update KPI Cards
+      const openCount = allTournaments.filter(t => t.status === 'open').length;
+      let totalPrize = 0;
+      allTournaments.forEach(t => { totalPrize += parseInt(t.prize_pool, 10) || 0; });
+
+      document.getElementById('kpi-open-tournaments').textContent = openCount;
+      document.getElementById('kpi-my-teams').textContent = myTeams.length;
+      document.getElementById('kpi-registered-count').textContent = myRegistrations.length;
+      document.getElementById('kpi-total-pool').textContent = '৳' + totalPrize.toLocaleString();
+
+      // Populate Team Selection Modal options
+      populateTeamSelectDropdown();
+
+      renderTournaments();
+    } catch (err) {
+      console.error('Failed to load tournament data:', err);
+      grid.innerHTML = `
+        <div style="text-align:center;padding:40px;color:#dc2626;grid-column:1/-1">
+          <div style="font-size:2rem;margin-bottom:8px">⚠️</div>
+          <div style="font-weight:700">Failed to load tournaments from database</div>
+          <div style="font-size:.8rem;color:#6b7280;margin-top:4px">${escapeHtml(err.message || '')}</div>
+        </div>`;
+    }
+  }
+
+  function populateTeamSelectDropdown() {
+    const sel = document.getElementById('modal-team-select');
+    const warning = document.getElementById('no-teams-warning');
+    const submitBtn = document.getElementById('btn-confirm-reg');
+
+    if (myTeams.length === 0) {
+      sel.innerHTML = '<option value="">No squads available</option>';
+      sel.disabled = true;
+      warning.style.display = 'block';
+      submitBtn.disabled = true;
+    } else {
+      sel.disabled = false;
+      warning.style.display = 'none';
+      submitBtn.disabled = false;
+      sel.innerHTML = '<option value="">Select your team...</option>' +
+        myTeams.map(t => `<option value="${t.id}">${escapeHtml(t.name)} (${t.sport || 'Squad'}) — ${t.active_members || 0} players</option>`).join('');
+    }
+  }
+
+  function setCategoryFilter(filter, btn) {
+    currentFilter = filter;
+    document.querySelectorAll('#filters-container .filter-tab').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderTournaments();
+  }
+
+  function renderTournaments() {
+    const grid = document.getElementById('tournaments-grid');
+
+    const filtered = allTournaments.filter(t => {
+      const sport = (t.sport || '').toLowerCase();
+      const status = (t.status || '').toLowerCase();
+      const maxTeams = parseInt(t.max_teams, 10) || 8;
+      const regTeams = parseInt(t.registered_teams, 10) || 0;
+
+      // Check if user's team is registered in this tournament
+      const isMyEntry = myRegistrations.some(r => r.tournament_id === t.id);
+
+      if (currentFilter === 'all') return true;
+      if (currentFilter === 'open_only') return status === 'open' && regTeams < maxTeams;
+      if (currentFilter === 'my_entries') return isMyEntry;
+      return sport === currentFilter;
+    });
+
+    if (filtered.length === 0) {
+      grid.innerHTML = `
+        <div style="text-align:center;padding:50px 20px;color:#9ca3af;grid-column:1/-1;background:#fff;border-radius:16px;border:1px solid #e8ede8">
+          <div style="font-size:2.5rem;margin-bottom:8px">🏆</div>
+          <div style="font-weight:700;color:#1a1a1a;font-size:1.05rem">No Tournaments Found</div>
+          <div style="font-size:.8rem;color:#6b7280;margin-top:4px">No tournaments matching the selected filter in the database.</div>
+          <button onclick="setCategoryFilter('all')" class="btn-lime" style="margin-top:14px;padding:7px 18px;font-size:.82rem">
+            View All Tournaments
+          </button>
+        </div>`;
+      return;
+    }
+
+    grid.innerHTML = filtered.map(t => {
+      const maxT = parseInt(t.max_teams, 10) || 8;
+      const regT = parseInt(t.registered_teams, 10) || 0;
+      const pct = Math.min(100, Math.round((regT / maxT) * 100));
+      const entryFee = parseInt(t.entry_fee, 10) || 0;
+      const prizePool = parseInt(t.prize_pool, 10) || 0;
+
+      const sportEmoji = getSportEmoji(t.sport);
+      const status = (t.status || 'open').toLowerCase();
+
+      // Check registration for any of captain's teams
+      const myReg = myRegistrations.find(r => r.tournament_id === t.id);
+
+      // Status Pill
+      let badgeClass = 'badge-confirmed';
+      let statusLabel = 'Open';
+      if (status === 'live' || status === 'in_progress') {
+        badgeClass = 'badge-live';
+        statusLabel = 'Live Match Stage';
+      } else if (status === 'completed') {
+        badgeClass = 'badge-draft';
+        statusLabel = 'Completed';
+      } else if (regT >= maxT) {
+        badgeClass = 'badge-rejected';
+        statusLabel = 'Spots Full';
+      }
+
+      // Action Button Markup
+      let actionMarkup = '';
+      if (myReg) {
+        const regStatus = (myReg.registration_status || 'pending').toLowerCase();
+        if (regStatus === 'approved') {
+          actionMarkup = `
+            <div style="background:rgba(126,211,33,.12);border:1.5px solid rgba(126,211,33,.4);border-radius:10px;padding:9px;text-align:center;margin-top:14px">
+              <span style="font-weight:800;font-size:.82rem;color:#15803d">✓ ${escapeHtml(myReg.team_name)} Registered (Approved)</span>
+            </div>
+            <a href="fixtures.html?tournament_id=${t.id}" class="btn-outline" style="width:100%;justify-content:center;margin-top:8px;font-size:.8rem;padding:8px">
+              📋 View Match Fixtures &rarr;
+            </a>`;
+        } else if (regStatus === 'pending') {
+          actionMarkup = `
+            <div style="background:#fef3c7;border:1.5px solid #fde68a;border-radius:10px;padding:9px;text-align:center;margin-top:14px">
+              <span style="font-weight:800;font-size:.82rem;color:#b45309">⏳ ${escapeHtml(myReg.team_name)} Pending Approval</span>
+            </div>
+            <a href="fixtures.html?tournament_id=${t.id}" class="btn-outline" style="width:100%;justify-content:center;margin-top:8px;font-size:.8rem;padding:8px">
+              📋 View Tournament Schedule &rarr;
+            </a>`;
+        } else {
+          actionMarkup = `
+            <div style="background:#fee2e2;border:1.5px solid #fca5a5;border-radius:10px;padding:9px;text-align:center;margin-top:14px">
+              <span style="font-weight:800;font-size:.82rem;color:#b91c1c">✕ Registration Rejected</span>
+            </div>`;
+        }
+      } else if (status === 'completed') {
+        actionMarkup = `
+          <a href="fixtures.html?tournament_id=${t.id}" class="btn-outline" style="width:100%;justify-content:center;margin-top:14px;font-size:.82rem;padding:9px">
+            📊 View Final Standings &rarr;
+          </a>`;
+      } else if (regT >= maxT) {
+        actionMarkup = `
+          <div style="display:flex;gap:8px;margin-top:14px">
+            <button disabled class="btn-outline" style="flex:1;opacity:.6;cursor:not-allowed;font-size:.82rem;padding:9px">
+              Tournament Full
+            </button>
+            <a href="fixtures.html?tournament_id=${t.id}" class="btn-lime" style="padding:9px 14px;font-size:.82rem">
+              Fixtures &rarr;
+            </a>
+          </div>`;
+      } else {
+        // Can register!
+        actionMarkup = `
+          <div style="display:flex;gap:8px;margin-top:14px">
+            <button onclick="openRegistrationModal(${t.id})" class="btn-lime" style="flex:1;justify-content:center;font-size:.85rem;padding:10px;font-weight:800">
+              Register Squad &rarr;
+            </button>
+            <a href="fixtures.html?tournament_id=${t.id}" class="btn-outline" title="View Fixtures & Standings" style="padding:10px 14px;font-size:.85rem">
+              📋
+            </a>
+          </div>`;
+      }
+
+      const dateStr = formatDateRange(t.start_date, t.end_date);
+      const venueStr = t.venue_name ? `${escapeHtml(t.venue_name)}${t.venue_location ? ' · ' + escapeHtml(t.venue_location) : ''}` : 'Verified Turf Ground';
+
+      return `
+        <div class="t-card">
+          <div class="t-card-head">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+              <span style="font-size:1.8rem">${sportEmoji}</span>
+              <span class="badge ${badgeClass} badge-dot">${statusLabel}</span>
+            </div>
+            <h3 style="font-weight:800;font-size:1.02rem;color:#fff;line-height:1.3;margin-bottom:4px">
+              ${escapeHtml(t.name)}
+            </h3>
+            <div style="font-size:.74rem;color:rgba(255,255,255,.6)">
+              ${escapeHtml(t.sport)} &middot; Organized by ${escapeHtml(t.organizer_name || 'TurfHub Official')}
+            </div>
+          </div>
+
+          <div class="t-card-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+              <div class="prize-box">
+                <div class="prize-val">৳${entryFee.toLocaleString()}</div>
+                <div class="prize-lbl">Entry Fee</div>
+              </div>
+              <div class="prize-box">
+                <div class="prize-val" style="color:#15803d">৳${prizePool.toLocaleString()}</div>
+                <div class="prize-lbl">Prize Pool</div>
+              </div>
+            </div>
+
+            <div class="stat-row">
+              <span>Teams Capacity</span>
+              <span>${regT} / ${maxT} Teams (${maxT - regT} left)</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width:${pct}%"></div>
+            </div>
+
+            <div class="stat-row" style="margin-top:10px">
+              <span>Tournament Dates</span>
+              <span>${dateStr}</span>
+            </div>
+            <div class="stat-row">
+              <span>Hosting Turf</span>
+              <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px">${venueStr}</span>
+            </div>
+
+            ${t.rules ? `
+              <div style="margin-top:4px;font-size:.74rem;color:#6b7280;line-height:1.4;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">
+                📝 ${escapeHtml(t.rules)}
+              </div>` : ''}
+
+            <div style="margin-top:auto">
+              ${actionMarkup}
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function openRegistrationModal(tournamentId) {
+    const t = allTournaments.find(item => item.id === tournamentId);
+    if (!t) return;
+
+    document.getElementById('modal-tourn-id').value = t.id;
+    document.getElementById('modal-tourn-name').textContent = t.name;
+    document.getElementById('modal-tourn-sub').textContent = `${t.sport} Tournament at ${t.venue_name || 'TurfHub Venue'}`;
+    document.getElementById('modal-fee').textContent = '৳' + (parseInt(t.entry_fee, 10) || 0).toLocaleString();
+    document.getElementById('modal-prize').textContent = '৳' + (parseInt(t.prize_pool, 10) || 0).toLocaleString();
+    document.getElementById('modal-venue').textContent = t.venue_name || 'Verified Pitch';
+    document.getElementById('modal-slots').textContent = `${t.registered_teams || 0}/${t.max_teams || 8} Teams`;
+
+    document.getElementById('terms-check').checked = false;
+    document.getElementById('registration-modal').classList.add('show');
+  }
+
+  function closeModal() {
+    document.getElementById('registration-modal').classList.remove('show');
+  }
+
+  async function submitRegistration(e) {
+    e.preventDefault();
+
+    const tournId = parseInt(document.getElementById('modal-tourn-id').value, 10);
+    const teamId = parseInt(document.getElementById('modal-team-select').value, 10);
+    const btn = document.getElementById('btn-confirm-reg');
+
+    if (!tournId || !teamId) {
+      alert('Please select a team to register.');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span>⏳ Submitting Entry...</span>';
+
+    try {
+      const res = await apiPost('tournaments/register-team.php', {
+        tournament_id: tournId,
+        team_id: teamId
+      });
+
+      alert('✅ Squad successfully registered for tournament! Your entry is now pending organizer approval.');
+      closeModal();
+      await loadTournamentsData();
+    } catch (err) {
+      console.error('Registration failed:', err);
+      alert('❌ Failed to register: ' + (err.message || 'Unknown server error'));
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<span>Confirm Registration</span>';
+    }
+  }
+
+  function getSportEmoji(sport) {
+    const s = (sport || '').toLowerCase();
+    if (s.includes('foot') || s.includes('soccer')) return '⚽';
+    if (s.includes('cricket')) return '🏏';
+    if (s.includes('basket')) return '🏀';
+    if (s.includes('badminton')) return '🏸';
+    if (s.includes('tennis')) return '🎾';
+    return '🏆';
+  }
+
+  function formatDateRange(startDate, endDate) {
+    if (!startDate) return 'Dates TBA';
+    const s = new Date(startDate);
+    const sStr = s.toLocaleDateString([], { month: 'short', day: 'numeric' });
+    if (!endDate) return sStr;
+    const e = new Date(endDate);
+    const eStr = e.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' });
+    return `${sStr} &rarr; ${eStr}`;
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
   }
 </script>
-
-  <script src="api-client.js"></script>
-  <script src="auth.js"></script>
-  <script src="layout.js"></script>
-  <script src="page-init.js"></script>
-  <script>
-    initPage({ navId: 'tournaments', roles: ['captain','player'] });
-  </script>
 </body>
 </html>

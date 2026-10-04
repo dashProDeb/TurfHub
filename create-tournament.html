@@ -342,8 +342,12 @@
                   <span style="display:block;font-size:.76rem;color:#6b7280;margin-top:2px">
                     Real match schedules, scores, and fixture status retrieved from database
                   </span>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <button type="button" onclick="handleAutoGenerateFixtures()" class="btn-lime" style="font-size:.76rem;padding:6px 12px">
+                    ⚡ Generate Schedule
+                  </button>
+                  <span class="badge badge-pending" id="fixtures-count-badge">0 Matches</span>
                 </div>
-                <span class="badge badge-pending" id="fixtures-count-badge">0 Matches</span>
               </div>
 
               <!-- Filter Bar -->
@@ -604,6 +608,23 @@
       } catch (err) {
         console.error('Failed to load fixtures:', err);
         container.innerHTML = '<div style="text-align:center;padding:30px;color:#dc2626;font-size:.84rem">⚠️ Failed to retrieve match fixtures.</div>';
+      }
+    }
+
+    async function handleAutoGenerateFixtures() {
+      if (!selectedTournamentId) {
+        alert('Please select a tournament first.');
+        return;
+      }
+      if (!confirm('Generate round-robin match fixtures for all approved teams in this tournament?')) return;
+
+      try {
+        const res = await apiPost('fixtures/create.php', { tournament_id: selectedTournamentId });
+        alert('✅ ' + (res.message || 'Match fixtures generated successfully!'));
+        await loadFixturesForTournament(selectedTournamentId);
+      } catch (err) {
+        console.error('Auto-generate fixtures failed:', err);
+        alert('❌ Could not generate schedule: ' + (err.message || 'Ensure at least 2 approved teams are registered.'));
       }
     }
 
