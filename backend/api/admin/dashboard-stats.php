@@ -25,7 +25,17 @@ $totalTurfs = (int) $stmt->fetch()['cnt'];
 
 // Pending KYC approvals
 $stmt = $db->query('SELECT COUNT(*) AS cnt FROM users WHERE kyc_status = "pending" AND role = "owner"');
-$pendingApprovals = (int) $stmt->fetch()['cnt'];
+$pendingKyc = (int) $stmt->fetch()['cnt'];
+
+// Pending turf listings
+$stmt = $db->query('SELECT COUNT(*) AS cnt FROM turf_grounds WHERE status = "pending_review" OR is_verified = 0');
+$pendingTurfs = (int) $stmt->fetch()['cnt'];
+
+// Pending tournaments
+$stmt = $db->query('SELECT COUNT(*) AS cnt FROM tournaments WHERE status = "draft"');
+$pendingTournaments = (int) $stmt->fetch()['cnt'];
+
+$pendingApprovals = $pendingKyc + $pendingTurfs + $pendingTournaments;
 
 // This month's revenue
 $stmt = $db->prepare(
@@ -51,12 +61,15 @@ $stmt = $db->query(
 $recentBookings = $stmt->fetchAll();
 
 jsonResponse([
-    'total_revenue'      => $totalRevenue,
-    'monthly_revenue'    => $monthlyRevenue,
-    'total_bookings'     => $totalBookings,
-    'total_users'        => $totalUsers,
-    'total_turfs'        => $totalTurfs,
-    'pending_approvals'  => $pendingApprovals,
-    'active_tournaments' => $activeTournaments,
-    'recent_bookings'    => $recentBookings
+    'total_revenue'       => $totalRevenue,
+    'monthly_revenue'     => $monthlyRevenue,
+    'total_bookings'      => $totalBookings,
+    'total_users'         => $totalUsers,
+    'total_turfs'         => $totalTurfs,
+    'pending_approvals'   => $pendingApprovals,
+    'pending_kyc'         => $pendingKyc,
+    'pending_turfs'       => $pendingTurfs,
+    'pending_tournaments' => $pendingTournaments,
+    'active_tournaments'  => $activeTournaments,
+    'recent_bookings'     => $recentBookings
 ]);
